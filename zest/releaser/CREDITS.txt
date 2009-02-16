@@ -1,0 +1,8 @@
+Credits
+=======
+
+* `Reinout van Rees <http://reinout.vanrees.org>`_ (Zest software) is the
+  originator and main author.
+
+* `Maurits van Rees <http://maurits.vanrees.org>`_ (Zest software) added
+  a heapload of improvements.

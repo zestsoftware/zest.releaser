@@ -1,0 +1,173 @@
+Changelog for zest.releaser
+===========================
+
+1.7 (unreleased)
+----------------
+
+- Supporting alternative history version header format: 'version - date'.
+  [reinout]
+
+
+1.6 (2009-02-14)
+----------------
+
+- Patch by Michael Howitz: sys.executable is used instead of a string that
+  doesn't work on every system.  [reinout]
+
+
+1.5 (2009-02-11)
+----------------
+
+- Changed y/n into Y/n, so defaulting to 'yes'.  [reinout]
+
+- Improved the documentation.  [reinout]
+
+- When a yes/no question is asked, do not treat 'no' as the default
+  but explicitly ask for an input -- it was too easy to press enter
+  and wrongly expect 'yes' as default.  [maurits]
+
+
+1.4 (2008-10-23)
+----------------
+
+- Fixed missing import of utils.  [maurits]
+
+
+1.3 (2008-10-23)
+----------------
+
+- Moved stabilize script to zest.stabilizer so that zest.releaser is just for
+  releasing individual packages. Nice, tidy, reusable.  [reinout]
+
+- Allowing '-v' option on all commands: it gives you debug-level logging.
+  [reinout]
+
+
+1.2 (2008-10-16)
+----------------
+
+- We now prefer the version from setup.py over any version.txt file
+  found.  When getting or changing the version we get/change the
+  setup.py version when it differs from the found version.txt version.
+  [maurits]
+
+
+1.1 (2008-10-15)
+----------------
+
+- Cleaned out zest-specific stuff. Cleaned up 'release'. [reinout]
+
+
+1.0 (2008-10-15)
+----------------
+
+- Stabilize looks up the most recent tag of our development packages and uses
+  gp.svndevelop to allow svn checkouts as development eggs. [reinout]
+
+- Do not look for version.txt in directories that are not handled by
+  subversion.  Use case: Products.feedfeeder, which has a buildout.cfg
+  and so can have a parts directory with lots of version.txt files...
+  [maurits]
+
+
+0.9 (2008-10-02)
+----------------
+
+- release: offer to register and upload the egg to the cheese shop.
+  After that you still have the option to upload to our own tgz
+  server.  [maurits]
+
+- postrelease: for the suggestion of a new version simply try add 1 to
+  the last character in the version; the previous logic failed for
+  example for '1.0b3'.  [maurits]
+
+- prerelease: ask user to enter next version (give him a suggestion).
+  Handy when you want to change '1.0b3 dev' into '1.0'.  [maurits]
+
+- Started 'stabilize'. [reinout]
+
+
+0.8 (2008-09-26)
+----------------
+
+- fullrelease: change back to the original directory after each
+  pre/actual/post release step.  [maurits]
+
+- release: switch back to original directory when ready to fix 'commit
+  to tag' error.  [maurits]
+
+- prerelease: quit when no version is found.  [maurits]
+
+- Reverted sleeping fix from 0.7 as it did not work.  [maurits]
+
+
+0.7 (2008-09-26)
+----------------
+
+- fullrelease: hopefully fix a 'commit on tag' bug by sleeping three
+  seconds before doing the post release.  [maurits]
+
+
+0.6 (2008-09-26)
+----------------
+
+- Added fullrelease script that does a prerelease, actual release and
+  post release in one go.  [maurits]
+
+
+0.5 (2008-09-26)
+----------------
+
+- Factored part of prerelease.check_version() out into
+  utils.cleanup_version().  We now use that while setting the version
+  in the history during postrelease.  [maurits]
+
+- Add newline at the end of the generated version.txt.  [maurits]
+
+
+0.4 (2008-09-26)
+----------------
+
+- Made the logging userfriendly.
+
+
+0.3 (2008-09-26)
+----------------
+
+- Postrelease: Better injection of history. Various other robustness fixes.
+
+
+0.2 (2008-09-26)
+----------------
+
+- postrelease: added suggestion for new version (a plain enter is enough to
+  accept it). [reinout]
+
+- prerelease: ask before changing version + solidified regex for heading
+  detection. [reinout]
+
+- prerelease: detect non-development versions better and change them.
+  [maurits]
+
+- prerelease: made the commit message read: 'Preparing release xxx'.
+  [maurits]
+
+- postrelease: made the new version something like '1.0 dev'.
+  [maurits]
+
+- postrelease: we now add some lines to the history now.  [maurits]
+
+- prerelease: try changing the version to a non-development version,
+  stripping off something like '(...)'.  [maurits]
+
+- release: Refactored so release.py has the 'main' function required
+  by setup.py.  [maurits]
+
+
+0.1 (2008-09-24)
+----------------
+
+- Got a basic version of the prerelease script working (version check, history
+  file updating, committing). [reinout]
+
+- Started by copying the guidelines script. [reinout]
