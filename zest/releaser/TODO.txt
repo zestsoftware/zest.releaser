@@ -1,6 +1,4 @@
 To do
 =====
 
-* Move from zest's svn repo to the collective.
-
-* List alternatives in readme. I thought ingeniweb had such a package, too.
+* Nothing at the moment.

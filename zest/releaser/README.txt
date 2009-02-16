@@ -87,8 +87,12 @@ are some assumptions build-in that might or might not fit you.
   That's just the style we started with.  Pretty clear and useful.  It also
   supports the current zopeskel style with ``0.3 - unreleased``.
 
-  
+
+Notes
+-----
+
 Note that there are alternative release scripts available, for instance
 http://pypi.python.org/pypi/collective.releaser .
 
-  
+The svn source can be found at
+https://svn.plone.org/svn/collective/zest.releaser/trunk .
