@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-1.7 (unreleased)
+1.7 (2009-02-16)
 ----------------
 
 - Supporting alternative history version header format: 'version - date'.

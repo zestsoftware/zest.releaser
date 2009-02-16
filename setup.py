@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.7 dev'
+version = '1.7'
 
 setup(name='zest.releaser',
       version=version,
