@@ -4,14 +4,15 @@ Changelog for zest.releaser
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Made 'longtest' work on Linux as there the command is 'rst2html' and
+  apparently on the Mac it is 'rst2html.py'.  [maurits]
 
 
 1.8 (2009-02-23)
 ----------------
 
 - Added 'longtest' command that renders a setup.py's long description
-  and opens it in a web browser.
+  and opens it in a web browser.  [reinout]
 
 
 1.7 (2009-02-16)
