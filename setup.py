@@ -42,6 +42,7 @@ setup(name='zest.releaser',
     'console_scripts': ['release = zest.releaser.release:main',
                         'prerelease = zest.releaser.prerelease:main',
                         'postrelease = zest.releaser.postrelease:main',
-                        'fullrelease = zest.releaser.fullrelease:main'],
+                        'fullrelease = zest.releaser.fullrelease:main',
+                        'longtest = zest.releaser.longtest:main'],
     },
       )

@@ -48,6 +48,10 @@ run in a subversion checkout.  These are the commands:
 
 - **fullrelease**: all of the above in order.
 
+- **longtest**: small tool that renders a setup.py's long description
+  and opens it in a web browser. This assumes an installed docutils
+  (as it needs ``rst2html.py``).
+
 
 Current assumptions
 -------------------
