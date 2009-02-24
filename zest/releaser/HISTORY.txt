@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-1.9 (unreleased)
+1.9 (2009-02-24)
 ----------------
 
 - 'release' now also makes a tag checkout in a temporary directory.
