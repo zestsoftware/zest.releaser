@@ -4,6 +4,9 @@ Changelog for zest.releaser
 1.9 (unreleased)
 ----------------
 
+- 'release' now also makes a tag checkout in a temporary directory.
+  [Reinout]
+
 - Made 'longtest' work on Linux as there the command is 'rst2html' and
   apparently on the Mac it is 'rst2html.py'.  [maurits]
 

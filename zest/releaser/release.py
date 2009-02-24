@@ -43,13 +43,16 @@ def main():
         else:
             sys.exit()
 
+    # Check out tag in temp dir
+    prefix = '%s-%s-' % (name, version)
+    tagdir = mkdtemp(prefix=prefix)
+    logger.info("Doing a checkout...")
+    print getoutput('svn co %s %s' % (tag_url, tagdir))
+    logger.info("Tag checkout placed in %s", tagdir)
+
     if utils.package_in_pypi(name):
         if utils.ask("We're on PYPI: make an egg of a fresh tag checkout"):
-            tempdir = mkdtemp()
-            os.chdir(tempdir)
-            logger.info("Doing a checkout...")
-            print getoutput('svn co %s' % tag_url)
-            os.chdir(version)
+            os.chdir(tagdir)
             logger.info("Making egg...")
             print getoutput('%s setup.py sdist' % sys.executable)
 

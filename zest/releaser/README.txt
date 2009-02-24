@@ -13,7 +13,9 @@ Summary: package releasing made easy
 
 * Tags the release in svn with the version number.
 
-* Uploads a source release to pypi (if the package is available there).
+* Uploads a source release to pypi (if the package is available
+  there).  It also checks out the tag in a temporary directory in case
+  you need to modify it.
 
 Note that zest.releaser isn't restricted to python packages. We use it
 regularly to tag buildouts. You only need a ``version.txt`` in your svn
@@ -34,7 +36,8 @@ run in a subversion checkout.  These are the commands:
   subversion.
 
 - **release**: copies the the trunk or branch of the current checkout and
-  creates a subversion tag of it.  Offers to register and upload a source dist
+  creates a subversion tag of it.  Makes a checkout of the tag in a
+  temporary directory.  Offers to register and upload a source dist
   of this package to PyPI (Python Package Index).  Note: if the package has
   not been registered yet, it will not do that for you.  You must register the
   package manually (``python setup.py register``) so this remains a conscious
