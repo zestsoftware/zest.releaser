@@ -65,14 +65,15 @@ are some assumptions build-in that might or might not fit you.
 - Your svn is structured with /trunk, /tags and optionally /branches.  Both a
   /trunk or a /branches/something checkout is ok.
 
-- There's a version.txt or setup.py in your project. The version.txt has a
-  single line with the version number (newline optional). The setup.py should
-  have a single ``version = '0.3'`` line somewhere. zest.releaser only inserts
-  such a line, though it keeps the existing indentation intact. But commas at
-  the end or so: they're all zapped.  If you need something special, you can
-  always do a ``version=version`` and put the actual version statement in a
-  zest.releaser-friendly format near the top of the file. Reading (in Plone
-  products) a version.txt into setup.py works great, too.
+- There's a version.txt or setup.py in your project. The version.txt
+  has a single line with the version number (newline optional). The
+  setup.py should have a single ``version = '0.3'`` line
+  somewhere. You can also have it in the actual ``setup()`` call, on
+  its own line still, as `` version = '0.3',``. Indentation and the
+  comma are preserved.  If you need something special, you can always
+  do a ``version=version`` and put the actual version statement in a
+  zest.releaser-friendly format near the top of the file. Reading (in
+  Plone products) a version.txt into setup.py works great, too.
 
 - The history file (either HISTORY.txt or CHANGES.txt) restriction is probably
   the most severe at the moment. zest.releaser searches for a restructuredtext

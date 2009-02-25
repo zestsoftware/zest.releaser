@@ -153,6 +153,10 @@ def update_version(version):
         match = pattern.search(line)
         if match:
             logger.debug("Matching version line found: %r", line)
+            if line.startswith(' '):
+                # oh, probably '    version = 1.0,' line.
+                indentation = line.split('version')[0]
+                good_version = indentation + good_version + ','
             setup_lines[line_number] = good_version
             break
         line_number += 1

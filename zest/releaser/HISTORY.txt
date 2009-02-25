@@ -4,7 +4,13 @@ Changelog for zest.releaser
 1.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- A ``    version = '1.0',`` in setup.py is now also rewritten
+  correctly.  Previously just a ``version = '1.0'`` would be injected,
+  so without indentation and comma.  [reinout]
+
+- Ask before checking out the tag. Sometimes the checkout is huge and
+  you know you don't want it. You don't get asked for a pypi upload,
+  though if you don't check out the tag.  [reinout]
 
 
 1.9 (2009-02-24)

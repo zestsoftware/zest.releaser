@@ -44,25 +44,26 @@ def main():
             sys.exit()
 
     # Check out tag in temp dir
-    prefix = '%s-%s-' % (name, version)
-    tagdir = mkdtemp(prefix=prefix)
-    logger.info("Doing a checkout...")
-    print getoutput('svn co %s %s' % (tag_url, tagdir))
-    logger.info("Tag checkout placed in %s", tagdir)
+    if utils.ask("Check out the tag (for tweaks or pypi upload)"):
+        prefix = '%s-%s-' % (name, version)
+        tagdir = mkdtemp(prefix=prefix)
+        logger.info("Doing a checkout...")
+        print getoutput('svn co %s %s' % (tag_url, tagdir))
+        logger.info("Tag checkout placed in %s", tagdir)
 
-    if utils.package_in_pypi(name):
-        if utils.ask("We're on PYPI: make an egg of a fresh tag checkout"):
-            os.chdir(tagdir)
-            logger.info("Making egg...")
-            print getoutput('%s setup.py sdist' % sys.executable)
+        if utils.package_in_pypi(name):
+            if utils.ask("We're on PYPI: make an egg of a fresh tag checkout"):
+                os.chdir(tagdir)
+                logger.info("Making egg...")
+                print getoutput('%s setup.py sdist' % sys.executable)
 
-            if utils.ask("Register and upload to pypi"):
-                result = getoutput(
-                    '%s setup.py register sdist upload' % sys.executable)
-                lines = [line for line in result.split('\n')]
-                print 'Showing last few lines...'
-                for line in lines[-5:]:
-                    print line
-    else:
-        logger.info("We're not registered with the cheeseshop.")
-    os.chdir(original_dir)
+                if utils.ask("Register and upload to pypi"):
+                    result = getoutput(
+                        '%s setup.py register sdist upload' % sys.executable)
+                    lines = [line for line in result.split('\n')]
+                    print 'Showing last few lines...'
+                    for line in lines[-5:]:
+                        print line
+        else:
+            logger.info("We're not registered with the cheeseshop.")
+        os.chdir(original_dir)
