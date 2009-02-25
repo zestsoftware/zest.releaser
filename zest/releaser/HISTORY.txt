@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-1.10 (unreleased)
+1.10 (2009-02-25)
 -----------------
 
 - A ``    version = '1.0',`` in setup.py is now also rewritten
