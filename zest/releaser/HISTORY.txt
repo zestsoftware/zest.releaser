@@ -4,7 +4,10 @@ Changelog for zest.releaser
 1.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- When the found history file contains no version headings, look for a
+  second history file: more than once I have the standard
+  docs/HISTORY.txt that paster creates and I just add a pointer there
+  to the real package/name/HISTORY.txt.  [maurits]
 
 
 1.10 (2009-02-25)

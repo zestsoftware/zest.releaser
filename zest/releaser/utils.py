@@ -19,8 +19,12 @@ def loglevel():
     return logging.INFO
 
 
-def filefind(name):
-    """Return first found file matching name (case-insensitive)."""
+def filefind(name, second=False):
+    """Return first found file matching name (case-insensitive).
+
+    Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
+    When second is True, we return the second match.
+    """
     for dirpath, dirnames, filenames in os.walk('.'):
         if '.svn' in dirpath:
             # We are inside a .svn directory.
@@ -35,6 +39,9 @@ def filefind(name):
             if filename.lower() == name.lower():
                 fullpath = os.path.join(dirpath, filename)
                 logger.debug("Found %s", fullpath)
+                if second:
+                    second = False
+                    continue
                 return fullpath
 
 
@@ -71,10 +78,14 @@ def extract_version():
     return get_setup_py_version() or get_version_txt_version()
 
 
-def history_file():
-    """Return history file location."""
+def history_file(second=False):
+    """Return history file location.
+
+    Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
+    When second is True, we return the second match.
+    """
     for name in ['HISTORY.txt', 'CHANGES.txt']:
-        history = filefind(name)
+        history = filefind(name, second=second)
         if history:
             return history
 

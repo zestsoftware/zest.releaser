@@ -30,15 +30,17 @@ def check_version():
     return version
 
 
-def check_history():
+def check_history(second=False):
     """Check if the history has been updated.
 
     Every history heading looks like '1.0 b4 (1972-12-25)'. Extract them,
     check if the first one matches the version and whether it has a the
     current date.
 
+    Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
+    When second is True, we check the history of the second match.
     """
-    history = utils.history_file()
+    history = utils.history_file(second=second)
     if not history:
         logger.warn("No history file found")
         return
@@ -47,6 +49,10 @@ def check_history():
     history_lines = open(history).read().split('\n')
     headings = utils.extract_headings_from_history(history_lines)
     if not len(headings):
+        if not second:
+            # Try finding a second history file.
+            check_history(second=True)
+            return
         logger.error("No detectable version heading in the history file.")
         sys.exit()
 
