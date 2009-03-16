@@ -1,4 +1,5 @@
 To do
 =====
 
-* Nothing at the moment.
+* Make it work with collective.dist (mregister/mupload):
+  http://plone.org/documentation/tutorial/how-to-upload-your-package-to-plone.org/installing-collective.dist
