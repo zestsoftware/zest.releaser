@@ -93,3 +93,4 @@ def main():
     check_history()
     # XXX Check long-description
     utils.show_diff_offer_commit('Preparing release %s' % version)
+    

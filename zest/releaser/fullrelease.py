@@ -20,9 +20,11 @@ def main():
     prerelease.main()
     os.chdir(original_dir)
     logger.info('Starting release.')
-    release.main()
+    tagdir = release.main(return_tagdir=True)
     os.chdir(original_dir)
     logger.info('Starting postrelease.')
     postrelease.main()
     os.chdir(original_dir)
     logger.info('Finished full release.')
+    if tagdir:
+        logger.info("Reminder: tag checkout is in %s", tagdir)

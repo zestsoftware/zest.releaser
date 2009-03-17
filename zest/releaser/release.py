@@ -13,7 +13,7 @@ import utils
 logger = logging.getLogger('release')
 
 
-def main():
+def main(return_tagdir=False):
     original_dir = os.getcwd()
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
@@ -67,3 +67,6 @@ def main():
         else:
             logger.info("We're not registered with the cheeseshop.")
         os.chdir(original_dir)
+        if return_tagdir:
+            # At the end, for the benefit of fullrelease.
+            return tagdir

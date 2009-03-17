@@ -4,7 +4,10 @@ Changelog for zest.releaser
 1.12 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- When doing a fullrelease and if the release step made a checkout of the tag
+  into an temp directory, that temp directory is again printed after
+  fullrelease finishes. Otherwise you've got to do a lot of scrolling.
+  [reinout]
 
 
 1.11 (2009-03-04)
