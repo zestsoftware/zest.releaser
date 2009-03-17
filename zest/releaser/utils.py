@@ -10,7 +10,6 @@ logger = logging.getLogger('utils')
 
 WRONG_IN_VERSION = ['svn', 'dev', '(']
 
-
 def loglevel():
     """Return DEBUG when -v is specified, INFO otherwise"""
     if len(sys.argv) > 1:
@@ -19,75 +18,9 @@ def loglevel():
     return logging.INFO
 
 
-def filefind(name, second=False):
-    """Return first found file matching name (case-insensitive).
-
-    Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
-    When second is True, we return the second match.
-    """
-    for dirpath, dirnames, filenames in os.walk('.'):
-        if '.svn' in dirpath:
-            # We are inside a .svn directory.
-            continue
-        if '.svn' not in dirnames:
-            # This directory is not handled by subversion.  Example:
-            # run prerelease in
-            # https://svn.plone.org/svn/collective/feedfeeder/trunk
-            # which is a buildout, so it has a parts directory.
-            continue
-        for filename in filenames:
-            if filename.lower() == name.lower():
-                fullpath = os.path.join(dirpath, filename)
-                logger.debug("Found %s", fullpath)
-                if second:
-                    second = False
-                    continue
-                return fullpath
-
-
 def strip_version(version):
     """Strip the version of all whitespace."""
     return version.strip().replace(' ', '')
-
-
-def get_setup_py_version():
-    if os.path.exists('setup.py'):
-        version = getoutput('%s setup.py --version' % sys.executable)
-        return strip_version(version)
-
-
-def get_version_txt_version():
-    version_file = filefind('version.txt')
-    if version_file:
-        f = open(version_file, 'r')
-        version = f.read()
-        return strip_version(version)
-
-
-def extract_version():
-    """Extract the version from setup.py or version.txt.
-
-    If there is a setup.py and it gives back a version that differs
-    from version.txt then this version.txt is not the one we should
-    use.  This can happen in packages like ZopeSkel that have one or
-    more version.txt files that have nothing to do with the version of
-    the package itself.
-
-    So when in doubt: use setup.py.
-    """
-    return get_setup_py_version() or get_version_txt_version()
-
-
-def history_file(second=False):
-    """Return history file location.
-
-    Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
-    When second is True, we return the second match.
-    """
-    for name in ['HISTORY.txt', 'CHANGES.txt']:
-        history = filefind(name, second=second)
-        if history:
-            return history
 
 
 def ask(question, default=True):
@@ -125,55 +58,6 @@ def fix_rst_heading(heading, below):
         return below
     below = first * len(heading)
     return below
-
-
-def show_diff_offer_commit(message):
-    """Show the svn diff and offer to commit it."""
-    diff = getoutput('svn diff')
-    logger.info("The 'svn diff':\n\n%s\n", diff)
-    if ask("OK to commit this"):
-        commit = getoutput('svn commit -m "%s"' % message)
-        logger.info(commit)
-
-
-def update_version(version):
-    """Find out where to change the version and change it.
-
-    There are two places where the version can be defined. The first one is
-    some version.txt that gets read by setup.py. The second is directly in
-    setup.py.
-    """
-    current = extract_version()
-    versionfile = filefind('version.txt')
-    if versionfile:
-        # We have a version.txt file but does it match the setup.py
-        # version (if any)?
-        setup_version = get_setup_py_version()
-        if not setup_version or (setup_version == get_version_txt_version()):
-            open(versionfile, 'w').write(version + '\n')
-            logger.info("Changed %s to %r", versionfile, version)
-            return
-    good_version = "version = '%s'" % version
-    pattern = re.compile(r"""
-    version\W*=\W*   # 'version =  ' with possible whitespace
-    \d               # Some digit, start of version.
-    """, re.VERBOSE)
-    line_number = 0
-    setup_lines = open('setup.py').read().split('\n')
-    for line in setup_lines:
-        match = pattern.search(line)
-        if match:
-            logger.debug("Matching version line found: %r", line)
-            if line.startswith(' '):
-                # oh, probably '    version = 1.0,' line.
-                indentation = line.split('version')[0]
-                good_version = indentation + good_version + ','
-            setup_lines[line_number] = good_version
-            break
-        line_number += 1
-    contents = '\n'.join(setup_lines)
-    open('setup.py', 'w').write(contents)
-    logger.info("Set setup.py's version to %r", version)
 
 
 def cleanup_version(version):
@@ -300,3 +184,4 @@ def package_in_pypi(package):
     else:
         logger.debug("Package not found on pypi: %r", result)
         return False
+
