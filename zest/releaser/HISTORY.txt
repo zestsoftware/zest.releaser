@@ -4,6 +4,9 @@ Changelog for zest.releaser
 1.13 (unreleased)
 -----------------
 
+- Also looking for ``CHANGES`` in addition to ``HISTORY.txt`` and
+  ``CHANGES.txt`` as some packages use that convention.  [reinout]
+
 - Added ``lasttagdiff`` command that shows the diff between the last release
   and the currently committed trunk.  Handy for checking whether the changelog
   is up to date.  [reinout]

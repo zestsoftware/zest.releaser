@@ -84,7 +84,7 @@ def history_file(second=False):
     Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
     When second is True, we return the second match.
     """
-    for name in ['HISTORY.txt', 'CHANGES.txt']:
+    for name in ['HISTORY.txt', 'CHANGES.txt', 'CHANGES']:
         history = filefind(name, second=second)
         if history:
             return history

@@ -32,8 +32,8 @@ run in a subversion checkout.  These are the commands:
 
 - **prerelease**: asks the user for a version number (defaults to the current
   version minus a 'dev' or so), updates the setup.py or version.txt and the
-  HISTORY.txt/CHANGES.txt with this and offers to commit those changes to
-  subversion.
+  HISTORY.txt/CHANGES.txt/CHANGES with this and offers to commit those changes
+  to subversion.
 
 - **release**: copies the the trunk or branch of the current checkout and
   creates a subversion tag of it.  Makes a checkout of the tag in a
@@ -51,9 +51,15 @@ run in a subversion checkout.  These are the commands:
 
 - **fullrelease**: all of the above in order.
 
+There are two additional tools:
+
 - **longtest**: small tool that renders a setup.py's long description
   and opens it in a web browser. This assumes an installed docutils
   (as it needs ``rst2html.py``).
+
+- **lasttagdiff**: small tool that shows the diff of the currently committed
+  trunk with the last released tag.  Handy for checking whether all the
+  changes are adequately described in the HISTORY.txt/CHANGES.txt.
 
 
 Current assumptions
