@@ -4,7 +4,9 @@ Changelog for zest.releaser
 1.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added ``lasttagdiff`` command that shows the diff between the last release
+  and the currently committed trunk.  Handy for checking whether the changelog
+  is up to date.  [reinout]
 
 
 1.12 (2009-03-17)

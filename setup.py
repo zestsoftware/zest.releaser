@@ -43,6 +43,7 @@ setup(name='zest.releaser',
                         'prerelease = zest.releaser.prerelease:main',
                         'postrelease = zest.releaser.postrelease:main',
                         'fullrelease = zest.releaser.fullrelease:main',
-                        'longtest = zest.releaser.longtest:main'],
+                        'longtest = zest.releaser.longtest:main',
+                        'lasttagdiff = zest.releaser.lasttagdiff:main'],
     },
       )
