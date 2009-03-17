@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-1.13 (unreleased)
+1.13 (2009-03-17)
 -----------------
 
 - Also looking for ``CHANGES`` in addition to ``HISTORY.txt`` and
