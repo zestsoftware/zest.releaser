@@ -108,10 +108,36 @@ class BaseVersionControl(object):
             line_number += 1
         contents = '\n'.join(setup_lines)
         open('setup.py', 'w').write(contents)
-        logger.info("Set setup.py's version to %r", version)
-
+        logger.info("Set setup.py's version to %r", version)  
+        
     #
     # Methods that need to be supplied by child classes
-    # 
+    #
+    @property
+    def name(self):
+        "Name of the project under version control"
+        pass
+    
     def show_diff_offer_commit(self, message):
+        """Show the svn diff and offer to commit it."""
+        pass
+
+    def available_tags(self):
+        """Return available tags."""
+        pass
+    
+    def tag_exists(self, version):
+        """Check if a tag has already been created with the name of the
+        version.
+        """
+        pass
+
+    def cmd_diff_last_commit_against_tag(self, version):
+        """Return diffs between a tagged version and the last commit of
+        the working copy.
+        """
+        pass
+    
+    def cmd_create_tag(self, version):
+        "Create a tag from a version name."
         pass

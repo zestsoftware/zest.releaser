@@ -116,63 +116,6 @@ def extract_headings_from_history(history_lines):
     return headings
 
 
-def svn_info():
-    """Return svn url"""
-    our_info = getoutput('svn info')
-    url = [line for line in our_info.split('\n')
-           if 'URL:' in line][0]
-    return url.replace('URL:', '').strip()
-
-
-def base_from_svn():
-    base = svn_info()
-    for remove in ['trunk', 'tags', 'branches']:
-        base = base.split(remove)[0]
-    logger.debug("Base url is %s", base)
-    return base
-
-
-def extract_name_and_base(url):
-    """Return name and base svn url from svn url."""
-    base = url
-    for remove in ['trunk', 'tags', 'branches']:
-        base = base.split(remove)[0]
-    logger.debug("Base url is %s", base)
-    parts = base.split('/')
-    parts = [part for part in parts if part]
-    name = parts[-1]
-    logger.debug("Name is %s", name)
-    return name, base
-
-
-def available_tags():
-    """Return available tags."""
-    base = base_from_svn()
-    tag_info = getoutput('svn list %stags' % base)
-    if "non-existent in that revision" in tag_info:
-        print "tags dir does not exist at %s" % base + 'tags'
-        if ask("Shall I create it"):
-            cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
-            logger.info("Running %r", cmd)
-            print getoutput(cmd)
-            tag_info = getoutput('svn list %stags' % base)
-        else:
-            sys.exit(0)
-    if 'Could not resolve hostname' in tag_info:
-        logger.error('Network problem: %s', tag_info)
-        sys.exit()
-    tags = [line.replace('/', '') for line in tag_info.split('\n')]
-    logger.debug("Available tags: %r", tags)
-    return tags
-
-
-def name_from_svn():
-    base = base_from_svn()
-    parts = base.split('/')
-    parts = [p for p in parts if p]
-    return parts[-1]
-
-
 def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
     url = 'http://pypi.python.org/simple/%s' % package
