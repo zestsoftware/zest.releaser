@@ -21,7 +21,7 @@ def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
 
-    version = vcs.extract_version()
+    version = vcs.version
     if not version:
         logger.critical("No version detected, so we can't do anything.")
         sys.exit()

@@ -2,18 +2,18 @@
 """
 import datetime
 import logging
-#import re
 import sys
 
 import utils
+import zest.releaser.choose
 
 logger = logging.getLogger('prerelease')
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 
 
-def ask_for_new_dev_version():
+def ask_for_new_dev_version(vcs):
     """Ask for and return a new dev version string."""
-    current = utils.extract_version()
+    current = vcs.version
     first = current[:-1]
     last = current[-1]
     try:
@@ -41,14 +41,14 @@ def ask_for_new_dev_version():
     return version
 
 
-def update_history(version, second=False):
+def update_history(vcs, version, second=False):
     """Update the history file.
 
     Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
     When second is True, we update the history of the second match.
     """
     version = utils.cleanup_version(version)
-    history = utils.history_file(second=second)
+    history = vcs.history_file(second=second)
     if not history:
         logger.warn("No history file found")
         return
@@ -89,7 +89,8 @@ def update_history(version, second=False):
 def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
-    version = ask_for_new_dev_version()
-    utils.update_version(version)
-    update_history(version)
-    utils.show_diff_offer_commit('Back to development: %s' % version)
+    vcs = zest.releaser.choose.version_control()
+    version = ask_for_new_dev_version(vcs)
+    vcs.version = version
+    update_history(vcs, version)
+    vcs.show_diff_offer_commit('Back to development: %s' % version)

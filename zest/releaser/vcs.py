@@ -9,7 +9,7 @@ class BaseVersionControl(object):
 
     internal_filename = '' # e.g. '.svn' or '.hgrc'
 
-    def extract_version(self):
+    def _extract_version(self):
         """Extract the version from setup.py or version.txt.
 
         If there is a setup.py and it gives back a version that differs
@@ -71,14 +71,14 @@ class BaseVersionControl(object):
             if history:
                 return history
 
-    def update_version(self, version):
+    def _update_version(self, version):
         """Find out where to change the version and change it.
 
         There are two places where the version can be defined. The first one is
         some version.txt that gets read by setup.py. The second is directly in
         setup.py.
         """
-        current = self.extract_version()
+        current = self._extract_version()
         versionfile = self.filefind('version.txt')
         if versionfile:
             # We have a version.txt file but does it match the setup.py
@@ -109,7 +109,9 @@ class BaseVersionControl(object):
         contents = '\n'.join(setup_lines)
         open('setup.py', 'w').write(contents)
         logger.info("Set setup.py's version to %r", version)  
-        
+
+    version = property(_extract_version, _update_version)
+
     #
     # Methods that need to be supplied by child classes
     #

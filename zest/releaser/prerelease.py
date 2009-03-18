@@ -13,7 +13,7 @@ TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 
 def check_version(vcs):
     """Set the version to a non-development version."""
-    original_version = vcs.extract_version()
+    original_version = vcs.version
     version = original_version
     logger.debug("Extracted version: %s", version)
     if version is None:
@@ -25,7 +25,7 @@ def check_version(vcs):
     if not version:
         version = suggestion
     if version != original_version:
-        vcs.update_version(version)
+        vcs.version = version
         logger.info("Changed version from %r to %r" % (original_version,
                                                        version))
     return version
@@ -58,7 +58,7 @@ def check_history(vcs, second=False):
         sys.exit()
 
     first = headings[0]
-    detected_version = vcs.extract_version()
+    detected_version = vcs.version
     version_ok = (first['version'] == detected_version)
     if not version_ok:
         logger.debug("First history heading's version (%r) doesn't match "
