@@ -1,8 +1,11 @@
-import os
+from commands import getoutput
 import logging
+import os
+import re
+import sys
 import zest.releaser.utils
 
-logger = logging.getLogger('utils')
+logger = logging.getLogger('zest.releaser')
 
 class BaseVersionControl(object):
     "Shared implementation between all version control systems"
@@ -27,6 +30,10 @@ class BaseVersionControl(object):
             version = getoutput('%s setup.py --version' % sys.executable)
             return zest.releaser.utils.strip_version(version)
 
+    def get_setup_py_name(self):
+        if os.path.exists('setup.py'):
+            return getoutput('%s setup.py --name' % sys.executable)
+    
     def get_version_txt_version(self):
         version_file = self.filefind('version.txt')
         if version_file:
@@ -71,6 +78,15 @@ class BaseVersionControl(object):
             if history:
                 return history
 
+    def tag_exists(self, version):
+        """Check if a tag has already been created with the name of the
+        version.
+        """
+        for tag in self.available_tags():
+            if tag == version:
+                return True
+        return False
+    
     def _update_version(self, version):
         """Find out where to change the version and change it.
 
@@ -115,25 +131,29 @@ class BaseVersionControl(object):
     #
     # Methods that need to be supplied by child classes
     #
+    
     @property
     def name(self):
         "Name of the project under version control"
-        pass
-    
-    def show_diff_offer_commit(self, message):
-        """Show the svn diff and offer to commit it."""
         pass
 
     def available_tags(self):
         """Return available tags."""
         pass
     
-    def tag_exists(self, version):
-        """Check if a tag has already been created with the name of the
-        version.
-        """
+    def prepare_checkout_dir(self):
+        """Return a tempoary checkout location. Create this directory first
+        if necessary."""
         pass
-
+    
+    def cmd_diff(self):
+        "diff command"
+        pass
+    
+    def cmd_commit(self, message):
+        "commit command: should specify a verbose option if possible"
+        pass
+    
     def cmd_diff_last_commit_against_tag(self, version):
         """Return diffs between a tagged version and the last commit of
         the working copy.

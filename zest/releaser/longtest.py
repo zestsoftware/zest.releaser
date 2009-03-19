@@ -9,7 +9,7 @@ import os
 
 import utils
 
-logger = logging.getLogger('longtest')
+logger = logging.getLogger('zest.releaser')
 
 
 def show_longdesc():

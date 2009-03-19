@@ -1,13 +1,15 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
 
+from commands import getoutput
 import datetime
 import logging
 import sys
 import utils
 import zest.releaser.choose
 
-logger = logging.getLogger('prerelease')
+logger = logging.getLogger('zest.releaser')
+
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 
 
@@ -95,4 +97,12 @@ def main():
     version = check_version(vcs)
     check_history(vcs)
     # XXX Check long-description
-    vcs.show_diff_offer_commit('Preparing release %s' % version)
+    
+    # show diff, offer commit
+    diff_cmd = vcs.cmd_diff()
+    diff = getoutput(diff_cmd)
+    logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+    if utils.ask("OK to commit this"):
+        commit_cmd = vcs.cmd_commit('Preparing release %s' % version)
+        commit = getoutput(commit_cmd)
+        logger.info(commit)

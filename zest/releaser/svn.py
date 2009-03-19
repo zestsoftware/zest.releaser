@@ -1,21 +1,15 @@
 from commands import getoutput
+from tempfile import mkdtemp
 import logging
 import zest.releaser.utils
 import zest.releaser.vcs
 
-logger = logging.getLogger('utils')
+logger = logging.getLogger('zest.releaser')
 
 class Subversion(zest.releaser.vcs.BaseVersionControl):
     """Command proxy for Subversion"""
     internal_filename = '.svn'
     
-    def show_diff_offer_commit(self, message):
-        diff = getoutput('svn diff')
-        logger.info("The 'svn diff':\n\n%s\n", diff)
-        if zest.releaser.utils.ask("OK to commit this"):
-            commit = getoutput('svn commit -m "%s"' % message)
-            logger.info(commit)
-
     def _svn_info(self):
         """Return svn url"""
         our_info = getoutput('svn info')
@@ -72,12 +66,15 @@ class Subversion(zest.releaser.vcs.BaseVersionControl):
         tags = [line.replace('/', '') for line in tag_info.split('\n')]
         logger.debug("Available tags: %r", tags)
         return tags
-
-    def tag_exists(self, version):
-        for tag in self.available_tags():
-            if tag == version:
-                return True
-        return False
+    
+    def prepare_checkout_dir(self, prefix):
+        return mkdtemp(prefix=prefix)
+    
+    def cmd_diff(self):
+        return 'svn diff'
+    
+    def cmd_commit(self, message):
+        return 'svn commit -m "%s"' % message
     
     def cmd_diff_last_commit_against_tag(self, version):
         url = self._svn_info()

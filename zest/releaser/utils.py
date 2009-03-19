@@ -6,7 +6,7 @@ import sys
 import urllib
 from commands import getoutput
 
-logger = logging.getLogger('utils')
+logger = logging.getLogger('zest.releaser')
 
 WRONG_IN_VERSION = ['svn', 'dev', '(']
 

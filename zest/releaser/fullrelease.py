@@ -9,7 +9,7 @@ from zest.releaser import release
 from zest.releaser import postrelease
 from zest.releaser import utils
 
-logger = logging.getLogger('fullrelease')
+logger = logging.getLogger('zest.releaser')
 
 
 def main():

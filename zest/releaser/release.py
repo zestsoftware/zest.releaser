@@ -6,12 +6,10 @@ import logging
 from commands import getoutput
 import os
 import sys
-from tempfile import mkdtemp
-
 import zest.releaser.choose
 import utils
 
-logger = logging.getLogger('release')
+logger = logging.getLogger('zest.releaser')
 
 
 def main():
@@ -46,8 +44,8 @@ def main():
     # Check out tag in temp dir
     if utils.ask("Check out the tag (for tweaks or pypi upload)"):
         prefix = '%s-%s-' % (vcs.name, version)
-        tagdir = mkdtemp(prefix=prefix)
         logger.info("Doing a checkout...")
+        tagdir = vcs.prepare_checkout_dir(prefix)
         cmd = vcs.cmd_checkout_from_tag(version, tagdir)
         print getoutput(cmd)
         logger.info("Tag checkout placed in %s", tagdir)
@@ -66,5 +64,5 @@ def main():
                     for line in lines[-5:]:
                         print line
         else:
-            logger.info("We're not registered with the cheeseshop.")
+            logger.info("We're not registered with PyPI.")
         os.chdir(original_dir)

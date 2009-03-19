@@ -3,11 +3,13 @@
 import datetime
 import logging
 import sys
+from commands import getoutput
 
 import utils
 import zest.releaser.choose
 
-logger = logging.getLogger('prerelease')
+logger = logging.getLogger('zest.releaser')
+
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 
 
@@ -93,4 +95,13 @@ def main():
     version = ask_for_new_dev_version(vcs)
     vcs.version = version
     update_history(vcs, version)
-    vcs.show_diff_offer_commit('Back to development: %s' % version)
+    
+    # show diff, offer commit
+    diff_cmd = vcs.cmd_diff()
+    diff = getoutput(diff_cmd)
+    logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+    if utils.ask("OK to commit this"):
+        commit_cmd = vcs.cmd_commit('Back to development: %s' % version)
+        commit = getoutput(commit_cmd)
+        logger.info(commit)
+
