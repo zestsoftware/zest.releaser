@@ -4,8 +4,9 @@ Changelog for zest.releaser
 1.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+- ``postrelease`` put a space in the new version number in
+  ``setup.py`` (between version number and ``dev``). Removed this
+  space. [icemac]
 
 1.13 (2009-03-17)
 -----------------

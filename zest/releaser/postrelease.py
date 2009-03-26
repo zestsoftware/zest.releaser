@@ -36,7 +36,7 @@ def ask_for_new_dev_version():
     if not version:
         logger.error("No version entered.")
         sys.exit()
-    version = "%s dev" % version
+    version = "%sdev" % version
     logger.info("New version string is %r", version)
     return version
 
