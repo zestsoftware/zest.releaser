@@ -6,7 +6,7 @@ Changelog for zest.releaser
 
 - ``postrelease`` put a space in the new version number in
   ``setup.py`` (between version number and ``dev``). Removed this
-  space. [icemac]
+  space as it is not necessary (in best case). [icemac]
 
 1.13 (2009-03-17)
 -----------------
