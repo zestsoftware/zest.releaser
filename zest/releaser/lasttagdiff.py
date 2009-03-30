@@ -58,4 +58,4 @@ def main():
                 "show up.")
     diff_command = "svn diff %s %s" % (full_tag, url)
     print getoutput(diff_command)
-    
+

@@ -4,9 +4,14 @@ Changelog for zest.releaser
 1.14 (unreleased)
 -----------------
 
+- Merged kteague-multi-vcs branch with, woohoo, mercurial support!  [reinout]
+
+- Mercurial support by Kevin Teague.  [kteague]
+
 - ``postrelease`` put a space in the new version number in
   ``setup.py`` (between version number and ``dev``). Removed this
   space as it is not necessary (in best case). [icemac]
+
 
 1.13 (2009-03-17)
 -----------------

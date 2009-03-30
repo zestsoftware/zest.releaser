@@ -4,7 +4,6 @@ import logging
 import sys
 import webbrowser
 import tempfile
-from commands import getoutput
 import os
 
 import utils

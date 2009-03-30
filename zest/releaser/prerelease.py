@@ -1,18 +1,21 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
+
+from commands import getoutput
 import datetime
 import logging
 import sys
-
 import utils
+import zest.releaser.choose
 
 logger = logging.getLogger('prerelease')
+
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 
 
-def check_version():
+def check_version(vcs):
     """Set the version to a non-development version."""
-    original_version = utils.extract_version()
+    original_version = vcs.version
     version = original_version
     logger.debug("Extracted version: %s", version)
     if version is None:
@@ -24,13 +27,13 @@ def check_version():
     if not version:
         version = suggestion
     if version != original_version:
-        utils.update_version(version)
+        vcs.version = version
         logger.info("Changed version from %r to %r" % (original_version,
                                                        version))
     return version
 
 
-def check_history(second=False):
+def check_history(vcs, second=False):
     """Check if the history has been updated.
 
     Every history heading looks like '1.0 b4 (1972-12-25)'. Extract them,
@@ -40,7 +43,7 @@ def check_history(second=False):
     Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
     When second is True, we check the history of the second match.
     """
-    history = utils.history_file(second=second)
+    history = vcs.history_file(second=second)
     if not history:
         logger.warn("No history file found")
         return
@@ -57,7 +60,7 @@ def check_history(second=False):
         sys.exit()
 
     first = headings[0]
-    detected_version = utils.extract_version()
+    detected_version = vcs.version
     version_ok = (first['version'] == detected_version)
     if not version_ok:
         logger.debug("First history heading's version (%r) doesn't match "
@@ -88,9 +91,17 @@ def check_history(second=False):
 def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
+    vcs = zest.releaser.choose.version_control()
+
     # XXX Check for uncommitted files.
-    version = check_version()
-    check_history()
+    version = check_version(vcs)
+    check_history(vcs)
     # XXX Check long-description
-    utils.show_diff_offer_commit('Preparing release %s' % version)
-    
+    # show diff, offer commit
+    diff_cmd = vcs.cmd_diff()
+    diff = getoutput(diff_cmd)
+    logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+    if utils.ask("OK to commit this"):
+        commit_cmd = vcs.cmd_commit('Preparing release %s' % version)
+        commit = getoutput(commit_cmd)
+        logger.info(commit)

@@ -1,25 +1,29 @@
-Zest release scripts
-====================
+Package releasing made easy
+===========================
 
 
-Summary: package releasing made easy
-------------------------------------
+zest.releaser is collection of command-line programs to help you
+automate the task of releasing a software project. It's particularly
+helpful with Python package projects, but it can also be used for
+non-Python projects. For example, it's used to tag buildouts - a project
+only needs a ``version.txt`` file to be used with zest.releaser.
 
-* Updates the version number. 0.3 dev (current) to 0.3 (release) to 0.4 dev
-  (new development version). Either in setup.py or in version.txt.
+It will help you to automate:
 
-* Updates the history/changes file (logs the release date on release) and adds
-  a new section for the upcoming changes (new development version).
+* Updating the version number. The version number can either be in setup.py
+  or version.txt. For example, 0.3 dev (current) to 0.3 (release) to 0.4 dev
+  (new development version).
 
-* Tags the release in svn with the version number.
+* Updating the history/changes file. It logs the release date on release
+  and adds a new section for the upcoming changes (new development version).
 
-* Uploads a source release to pypi (if the package is available
-  there).  It also checks out the tag in a temporary directory in case
-  you need to modify it.
+* Tagging the release. It creates a tag in your version control system
+  named after the released version number.
 
-Note that zest.releaser isn't restricted to python packages. We use it
-regularly to tag buildouts. You only need a ``version.txt`` in your svn
-checkout.
+* Uploading a source release to PyPI. It will only do this if the package
+  is already registered there, the Zest Releaser is careful not to publish
+  your private projects! It can also check out the tag in a temporary
+  directory in case you need to modify it.
 
 
 Installation
@@ -27,8 +31,27 @@ Installation
 
 Just a simple ``easy_install zest.releaser`` is enough.
 
-It gives you four commands to help in releasing python packages.  They must be
-run in a subversion checkout.  These are the commands:
+Alternatively, buildout users can install zest.releaser as part of a
+specific project's buildout, by having a buildout configuration such as::
+
+    [buildout]
+    parts = releaser
+
+    [releaser]
+    recipe = zc.recipe.egg
+    eggs = zest.releaser
+
+
+You must also have a version control system installed. Zest.releaser
+currently supports Subversion and Mercurial.
+
+
+Running
+-------
+
+Zest.releaser gives you four commands to help in releasing python
+packages.  They must be run in a version controlled checkout.  The commands
+are:
 
 - **prerelease**: asks the user for a version number (defaults to the current
   version minus a 'dev' or so), updates the setup.py or version.txt and the
@@ -36,7 +59,7 @@ run in a subversion checkout.  These are the commands:
   to subversion.
 
 - **release**: copies the the trunk or branch of the current checkout and
-  creates a subversion tag of it.  Makes a checkout of the tag in a
+  creates a version control tag of it.  Makes a checkout of the tag in a
   temporary directory.  Offers to register and upload a source dist
   of this package to PyPI (Python Package Index).  Note: if the package has
   not been registered yet, it will not do that for you.  You must register the
@@ -47,7 +70,7 @@ run in a subversion checkout.  These are the commands:
 
 - **postrelease**: asks the user for a version number (gives a sane default),
   adds a development marker to it, updates the setup.py or version.txt and the
-  HISTORY.txt with this and offers to commit those changes to subversion.
+  HISTORY.txt with this and offers to commit those changes to version control.
 
 - **fullrelease**: all of the above in order.
 
@@ -65,11 +88,12 @@ There are two additional tools:
 Current assumptions
 -------------------
 
-zest.releaser originated at `Zest software <http://zestsoftware.nl>`_ so there
+Zest.releaser originated at `Zest software <http://zestsoftware.nl>`_ so there
 are some assumptions build-in that might or might not fit you.
 
-- Your svn is structured with /trunk, /tags and optionally /branches.  Both a
-  /trunk or a /branches/something checkout is ok.
+- If you are using svn, your svn is structured with /trunk, /tags and
+  optionally /branches.  Both a /trunk or a /branches/something checkout
+  is ok.
 
 - There's a version.txt or setup.py in your project. The version.txt
   has a single line with the version number (newline optional). The

@@ -2,18 +2,20 @@
 """
 import datetime
 import logging
-#import re
 import sys
+from commands import getoutput
 
-import utils
+from zest.releaser import utils
+from zest.releaser import choose
 
-logger = logging.getLogger('prerelease')
+logger = logging.getLogger('postrelease')
+
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 
 
-def ask_for_new_dev_version():
+def ask_for_new_dev_version(vcs):
     """Ask for and return a new dev version string."""
-    current = utils.extract_version()
+    current = vcs.version
     first = current[:-1]
     last = current[-1]
     try:
@@ -41,14 +43,14 @@ def ask_for_new_dev_version():
     return version
 
 
-def update_history(version, second=False):
+def update_history(vcs, version, second=False):
     """Update the history file.
 
     Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
     When second is True, we update the history of the second match.
     """
     version = utils.cleanup_version(version)
-    history = utils.history_file(second=second)
+    history = vcs.history_file(second=second)
     if not history:
         logger.warn("No history file found")
         return
@@ -89,7 +91,16 @@ def update_history(version, second=False):
 def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
-    version = ask_for_new_dev_version()
-    utils.update_version(version)
-    update_history(version)
-    utils.show_diff_offer_commit('Back to development: %s' % version)
+    vcs = choose.version_control()
+    version = ask_for_new_dev_version(vcs)
+    vcs.version = version
+    update_history(vcs, version)
+
+    # show diff, offer commit
+    diff_cmd = vcs.cmd_diff()
+    diff = getoutput(diff_cmd)
+    logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+    if utils.ask("OK to commit this"):
+        commit_cmd = vcs.cmd_commit('Back to development: %s' % version)
+        commit = getoutput(commit_cmd)
+        logger.info(commit)
