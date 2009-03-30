@@ -1,6 +1,8 @@
 from commands import getoutput
 import logging
 import tempfile
+import os
+
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger('mercurial')
@@ -12,7 +14,13 @@ class Hg(BaseVersionControl):
 
     @property
     def name(self):
-        return self.get_setup_py_name()
+        package_name = self.get_setup_py_name()
+        if package_name:
+            return package_name
+        # No setup.py? With hg we can probably only fall back to the directory
+        # name as there's no svn-url with a usable name in it.
+        dir_name = os.path.basename(os.getcwd())
+        return dir_name
 
     def available_tags(self):
         tag_info = getoutput('hg tags')
@@ -31,7 +39,7 @@ class Hg(BaseVersionControl):
 
     def cmd_diff_last_commit_against_tag(self, version):
         current_revision = getoutput('hg identify')
-        current_revision = current_revision[:current_revision.find(' ')]
+        current_revision = current_revision.split(' ')[0]
         return "hg diff -r %s -r %s" % (version, current_revision)
 
     def cmd_create_tag(self, version):
