@@ -73,6 +73,11 @@ class Subversion(BaseVersionControl):
     def prepare_checkout_dir(self, prefix):
         return mkdtemp(prefix=prefix)
 
+    def tag_url(self, version):
+        url = self._svn_info()
+        name, base = self._extract_name_and_base(url)
+        return base + 'tags/' + version
+
     def cmd_diff(self):
         return 'svn diff'
 
@@ -81,18 +86,15 @@ class Subversion(BaseVersionControl):
 
     def cmd_diff_last_commit_against_tag(self, version):
         url = self._svn_info()
-        name, base = self._extract_name_and_base(url)
-        tag_url = base + 'tags/' + version
+        tag_url = self.tag_url(version)
         return "svn diff %s %s" % (tag_url, url)
 
     def cmd_create_tag(self, version):
         url = self._svn_info()
-        name, base = self._extract_name_and_base(url)
-        tag_url = base + 'tags/' + version
+        tag_url = self.tag_url(version)
         return 'svn cp %s %s -m "Tagging %s"' % (url, tag_url, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         url = self._svn_info()
-        name, base = self._extract_name_and_base(url)
-        tag_url = base + 'tags/' + version
+        tag_url = self.tag_url(version)
         return 'svn co %s %s' % (tag_url, checkout_dir)

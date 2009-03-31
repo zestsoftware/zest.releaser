@@ -4,6 +4,9 @@ Changelog for zest.releaser
 1.14 (unreleased)
 -----------------
 
+- Added tag_url method to get lasttagdiff (and zest.stabilizer)
+  working again.  [maurits]
+
 - Merged kteague-multi-vcs branch with, woohoo, mercurial support!  [reinout]
 
 - Mercurial support by Kevin Teague.  [kteague]

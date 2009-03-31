@@ -5,22 +5,22 @@
 from commands import getoutput
 from pkg_resources import parse_version
 import logging
-import os
 import sys
 
 import utils
-
+import zest.releaser.choose
 logger = logging.getLogger('lasttagdiff')
 
 
 def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
-    version = utils.extract_version()
+    vcs = zest.releaser.choose.version_control()
+    version = vcs.version
     if not version:
         logger.critical("No version detected, so we can't do anything.")
         sys.exit()
-    available_tags = utils.available_tags()
+    available_tags = vcs.available_tags()
     if not available_tags:
         logger.critical("No tags found, so we can't do anything.")
         sys.exit()
@@ -45,17 +45,17 @@ def main():
             parsed_tag < parsed_version):
             logger.debug("Found possible lower match: %s", tag)
             found = tag
-    url = utils.svn_info()
-    name, base = utils.extract_name_and_base(url)
-    full_tag = base + 'tags/' + found
+    name = vcs.name
+    full_tag = vcs.tag_url(found)
+
     logger.debug("Picked tag %r for %s (currently at %r).",
                  full_tag, name, version)
 
     # End of nicking from zest.stabilizer.
 
-    logger.info("Showing differences of trunk with %s", full_tag)
-    logger.info("Note: trunk on the server, so uncommitted changes won't "
-                "show up.")
-    diff_command = "svn diff %s %s" % (full_tag, url)
+    logger.info("Showing differences of trunk/branch with %s", full_tag)
+    logger.info("Note: trunk or branch on the server, so uncommitted changes "
+                "won't show up.")
+    diff_command = vcs.cmd_diff_last_commit_against_tag(found)
+    print diff_command
     print getoutput(diff_command)
-

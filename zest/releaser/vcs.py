@@ -148,6 +148,10 @@ class BaseVersionControl(object):
         if necessary."""
         pass
 
+    def tag_url(self, version):
+        "URL to tag of version."
+        pass
+
     def cmd_diff(self):
         "diff command"
         pass

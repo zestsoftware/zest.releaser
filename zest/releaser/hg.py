@@ -31,6 +31,10 @@ class Hg(BaseVersionControl):
     def prepare_checkout_dir(self, prefix):
         return tempfile.mktemp(prefix=prefix)
 
+    def tag_url(self, version):
+        # XXX How does hg do this?
+        return 'not implemented'
+
     def cmd_diff(self):
         return 'hg diff'
 
