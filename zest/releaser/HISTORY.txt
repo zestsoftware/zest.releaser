@@ -4,7 +4,8 @@ Changelog for zest.releaser
 2.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed checking for self.internal_filename: we would incorrectly
+  check ('.', 's', 'v', 'n') instead of '.svn'.  [maurits]
 
 
 2.0 (2009-04-01)

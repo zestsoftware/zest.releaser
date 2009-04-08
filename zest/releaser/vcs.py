@@ -49,16 +49,16 @@ class BaseVersionControl(object):
         When second is True, we return the second match.
         """
         for dirpath, dirnames, filenames in os.walk('.'):
-            for fname in self.internal_filename:
-                if fname in dirpath:
-                    # We are inside a version controlled directory.
-                    continue
-                if fname not in dirnames:
-                    # This directory is not handled by version control.
-                    # Example: run prerelease in
-                    # https://svn.plone.org/svn/collective/feedfeeder/trunk
-                    # which is a buildout, so it has a parts directory.
-                    continue
+            fname = self.internal_filename
+            if fname in dirpath:
+                # We are inside a version controlled directory.
+                continue
+            if fname not in dirnames:
+                # This directory is not handled by version control.
+                # Example: run prerelease in
+                # https://svn.plone.org/svn/collective/feedfeeder/trunk
+                # which is a buildout, so it has a parts directory.
+                continue
             for filename in filenames:
                 if filename.lower() == name.lower():
                     fullpath = os.path.join(dirpath, filename)
