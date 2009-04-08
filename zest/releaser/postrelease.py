@@ -43,24 +43,17 @@ def ask_for_new_dev_version(vcs):
     return version
 
 
-def update_history(vcs, version, second=False):
+def update_history(vcs, version):
     """Update the history file.
-
-    Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
-    When second is True, we update the history of the second match.
     """
     version = utils.cleanup_version(version)
-    history = vcs.history_file(second=second)
+    history = vcs.history_file()
     if not history:
         logger.warn("No history file found")
         return
     history_lines = open(history).read().split('\n')
     headings = utils.extract_headings_from_history(history_lines)
     if not len(headings):
-        if not second:
-            # Try finding a second history file.
-            update_history(version, second=True)
-            return
         logger.warn("No detectable existing version headings in the "
                     "history file.")
         inject_location = 0

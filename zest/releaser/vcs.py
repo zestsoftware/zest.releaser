@@ -42,11 +42,12 @@ class BaseVersionControl(object):
             version = f.read()
             return zest.releaser.utils.strip_version(version)
 
-    def filefind(self, name, second=False):
+    def filefind(self, name):
         """Return first found file matching name (case-insensitive).
 
-        Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
-        When second is True, we return the second match.
+        Some packages have docs/HISTORY.txt and
+        package/name/HISTORY.txt.  We make sure we only return the one
+        in the docs directory if no other can be found.
         """
         for dirpath, dirnames, filenames in os.walk('.'):
             fname = self.internal_filename
@@ -68,19 +69,13 @@ class BaseVersionControl(object):
                 if filename.lower() == name.lower():
                     fullpath = os.path.join(dirpath, filename)
                     logger.debug("Found %s", fullpath)
-                    if second:
-                        second = False
-                        continue
                     return fullpath
 
-    def history_file(self, second=False):
+    def history_file(self):
         """Return history file location.
-
-        Some packages have docs/HISTORY.txt and package/name/HISTORY.txt.
-        When second is True, we return the second match.
         """
         for name in ['HISTORY.txt', 'CHANGES.txt']:
-            history = self.filefind(name, second=second)
+            history = self.filefind(name)
             if history:
                 return history
 
