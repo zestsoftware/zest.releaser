@@ -59,6 +59,11 @@ class BaseVersionControl(object):
                 # https://svn.plone.org/svn/collective/feedfeeder/trunk
                 # which is a buildout, so it has a parts directory.
                 continue
+            if 'docs' in dirnames:
+                # Walk through the docs directory last, so we find
+                # e.g. zest/releaser/HISTORY.txt before we find
+                # docs/HISTORY.txt.
+                dirnames.append(dirnames.pop(dirnames.index('docs')))
             for filename in filenames:
                 if filename.lower() == name.lower():
                     fullpath = os.path.join(dirpath, filename)

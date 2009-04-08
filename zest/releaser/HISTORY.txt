@@ -4,6 +4,9 @@ Changelog for zest.releaser
 2.1 (unreleased)
 ----------------
 
+- Make sure we find package/name/HISTORY.txt before we find
+  docs/HISTORY.txt.  [maurits]
+
 - Fixed checking for self.internal_filename: we would incorrectly
   check ('.', 's', 'v', 'n') instead of '.svn'.  [maurits]
 
