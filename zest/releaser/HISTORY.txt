@@ -4,6 +4,10 @@ Changelog for zest.releaser
 2.1 (unreleased)
 ----------------
 
+- Fix lasttagdiff command to work with Mercurial by truncating the '+'
+  character from the revision id, since that only indicates uncommitted
+  changes exist.
+
 - Make sure we find package/name/HISTORY.txt before we find
   docs/HISTORY.txt.  [maurits]
 

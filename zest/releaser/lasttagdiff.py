@@ -53,9 +53,7 @@ def main():
 
     # End of nicking from zest.stabilizer.
 
-    logger.info("Showing differences of trunk/branch with %s", full_tag)
-    logger.info("Note: trunk or branch on the server, so uncommitted changes "
-                "won't show up.")
+    logger.info("Showing differences from the last commit against tag %s", full_tag)
     diff_command = vcs.cmd_diff_last_commit_against_tag(found)
     print diff_command
     print getoutput(diff_command)

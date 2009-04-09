@@ -32,8 +32,9 @@ class Hg(BaseVersionControl):
         return tempfile.mktemp(prefix=prefix)
 
     def tag_url(self, version):
-        # XXX How does hg do this?
-        return 'not implemented'
+        # this doesn't apply to Mercurial, so we just return the
+        # version name given ...
+        return version
 
     def cmd_diff(self):
         return 'hg diff'
@@ -44,6 +45,8 @@ class Hg(BaseVersionControl):
     def cmd_diff_last_commit_against_tag(self, version):
         current_revision = getoutput('hg identify')
         current_revision = current_revision.split(' ')[0]
+        # + at the end of the revision denotes uncommitted changes
+        current_revision = current_revision.rstrip('+')
         return "hg diff -r %s -r %s" % (version, current_revision)
 
     def cmd_create_tag(self, version):
