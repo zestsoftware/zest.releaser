@@ -4,7 +4,9 @@ Changelog for zest.releaser
 2.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed release script when the .pypirc file does not contain a
+  distutils section or that section does not contain a index-servers
+  option.  [maurits]
 
 
 2.2 (2009-05-11)

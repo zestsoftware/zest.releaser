@@ -10,6 +10,9 @@ import zest.releaser.choose
 import utils
 
 from ConfigParser import ConfigParser
+from ConfigParser import NoSectionError
+from ConfigParser import NoOptionError
+
 try:
     from collective.dist import mupload
     collective_dist = True
@@ -85,7 +88,10 @@ def main(return_tagdir=False):
             if collective_dist and os.path.exists(rc):
                 config = ConfigParser()
                 config.read(rc)
-                raw_index_servers = config.get('distutils', 'index-servers')
+                try:
+                    raw_index_servers = config.get('distutils', 'index-servers')
+                except NoSectionError, NoOptionError:
+                    raw_index_servers = ''
                 # We have already asked about uploading to pypi.
                 index_servers = [
                     server.strip() for server in raw_index_servers.split('\n')
