@@ -4,6 +4,9 @@ Changelog for zest.releaser
 2.2 (unreleased)
 ----------------
 
+- postrelease: suggestion for next version after 1.1.19 is not
+  1.1.110, but 1.1.20.  [maurits]
+
 - Make it work with collective.dist (mregister/mupload) [WouterVH]
   see http://plone.org/documentation/tutorial/how-to-upload-your-package-to-plone.org/installing-collective.dist
 

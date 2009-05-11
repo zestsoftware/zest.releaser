@@ -16,14 +16,15 @@ TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 def ask_for_new_dev_version(vcs):
     """Ask for and return a new dev version string."""
     current = vcs.version
-    first = current[:-1]
-    last = current[-1]
+    current_split = current.split('.')
+    major = '.'.join(current_split[:-1])
+    minor = current_split[-1]
     try:
-        last = int(last) + 1
-        suggestion = '%s%d' % (first, last)
+        minor = int(minor) + 1
+        suggestion = '.'.join([major, str(minor)])
     except ValueError:
         logger.warn("Version does not end with a number, so we can't "
-                    "calculate a  suggestion for a next version.")
+                    "calculate a suggestion for a next version.")
         suggestion = None
     print "Current version is %r" % current
     if suggestion:
