@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.3 (unreleased)
+2.3 (2009-05-11)
 ----------------
 
 - Fixed release script when the .pypirc file does not contain a
