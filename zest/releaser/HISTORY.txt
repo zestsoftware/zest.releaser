@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.2 (unreleased)
+2.2 (2009-05-11)
 ----------------
 
 - postrelease: suggestion for next version after 1.1.19 is not
