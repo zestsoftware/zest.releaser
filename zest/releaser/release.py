@@ -9,6 +9,16 @@ import sys
 import zest.releaser.choose
 import utils
 
+from ConfigParser import ConfigParser
+try:
+    from collective.dist import mupload
+    collective_dist = True
+except ImportError:
+    collective_dist = False
+
+index_servers = []
+DIST_CONFIG_FILE = '.pypirc'
+
 logger = logging.getLogger('release')
 
 
@@ -42,29 +52,51 @@ def main(return_tagdir=False):
             sys.exit()
 
     # Check out tag in temp dir
-    if utils.ask("Check out the tag (for tweaks or pypi upload)"):
+    if utils.ask("Check out the tag (for tweaks or pypi/distutils "
+                 "server upload)"):
         prefix = '%s-%s-' % (vcs.name, version)
         logger.info("Doing a checkout...")
         tagdir = vcs.prepare_checkout_dir(prefix)
         cmd = vcs.cmd_checkout_from_tag(version, tagdir)
         print getoutput(cmd)
         logger.info("Tag checkout placed in %s", tagdir)
+        if 'setup.py' in os.listdir(tagdir):
+            os.chdir(tagdir)
+            logger.info("Making an egg of a fresh tag checkout.")
+            print getoutput('%s setup.py sdist' % sys.executable)
+            # First ask if we want to upload to pypi, which should
+            # always work, also without collective.dist
+            if utils.package_in_pypi(vcs.name):
+                logger.info("We are on PYPI.")
+                default = True
+            else:
+                logger.info("We are currently NOT registered with PyPI.")
+                default = False
+            if utils.ask("Register and upload to PyPI", default=default):
+                result = getoutput('%s setup.py register sdist upload' %
+                                   sys.executable)
+                utils.show_last_lines(result)
 
-        if utils.package_in_pypi(vcs.name):
-            if utils.ask("We're on PYPI: make an egg of a fresh tag checkout"):
-                os.chdir(tagdir)
-                logger.info("Making egg...")
-                print getoutput('%s setup.py sdist' % sys.executable)
+            # If collective.dist is installed, the user may have
+            # defined other servers to upload to.
+            # XXX Check what needs to be done with python 2.6, where
+            # collective.dist is not needed anymore as it is built-in.
+            rc = os.path.join(os.path.expanduser('~'), DIST_CONFIG_FILE)
+            if collective_dist and os.path.exists(rc):
+                config = ConfigParser()
+                config.read(rc)
+                raw_index_servers = config.get('distutils', 'index-servers')
+                # We have already asked about uploading to pypi.
+                index_servers = [
+                    server.strip() for server in raw_index_servers.split('\n')
+                    if server.strip() not in ('', 'pypi')]
+                for server in index_servers:
+                    if utils.ask("Register and upload to %s" % server):
+                        result = getoutput(
+                            '%s setup.py mregister sdist mupload -r %s'
+                            % (sys.executable, server))
+                        utils.show_last_lines(result)
 
-                if utils.ask("Register and upload to pypi"):
-                    result = getoutput(
-                        '%s setup.py register sdist upload' % sys.executable)
-                    lines = [line for line in result.split('\n')]
-                    print 'Showing last few lines...'
-                    for line in lines[-5:]:
-                        print line
-        else:
-            logger.info("We're not registered with PyPI.")
         os.chdir(original_dir)
         if return_tagdir:
             # At the end, for the benefit of fullrelease.

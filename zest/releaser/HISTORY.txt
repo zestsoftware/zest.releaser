@@ -4,7 +4,8 @@ Changelog for zest.releaser
 2.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Make it work with collective.dist (mregister/mupload) [WouterVH]
+  see http://plone.org/documentation/tutorial/how-to-upload-your-package-to-plone.org/installing-collective.dist
 
 
 2.1 (2009-04-09)

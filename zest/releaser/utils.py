@@ -126,3 +126,10 @@ def package_in_pypi(package):
     else:
         logger.debug("Package not found on pypi: %r", result)
         return False
+
+
+def show_last_lines(result):
+    lines = [line for line in result.split('\n')]
+    print 'Showing last few lines...'
+    for line in lines[-5:]:
+        print line

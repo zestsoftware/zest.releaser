@@ -1,12 +1,15 @@
 Credits
 =======
 
-* `Reinout van Rees <http://reinout.vanrees.org>`_ (Zest software) is the
+* `Reinout van Rees <http://reinout.vanrees.org>`_ (The Health Agency) is the
   originator and main author.
 
-* `Maurits van Rees <http://maurits.vanrees.org>`_ (Zest software) added
+* `Maurits van Rees <http://maurits.vanrees.org>`_ (Zest Software) added
   a heapload of improvements.
 
 * `Kevin Teague <http://bud.ca>`_ (Canada's Michael Smith Genome Sciences
   Center) added support for multiple version control systems, most notable
   Mercurial.
+
+* `Wouter vanden Hove <http://ugent.be>`_ (University of Gent) added
+  support for uploading to multiple servers, using collective.dist.

@@ -1,9 +1,6 @@
 To do
 =====
 
-* Make it work with collective.dist (mregister/mupload):
-  http://plone.org/documentation/tutorial/how-to-upload-your-package-to-plone.org/installing-collective.dist
-
 * Add hg support for lasttagdiff.
 
 * Add support for bazaar.
