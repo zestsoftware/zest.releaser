@@ -1,6 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
+2.5 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 2.4 (2009-05-15)
 ----------------
 
