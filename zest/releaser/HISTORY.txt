@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.4 (unreleased)
+2.4 (2009-05-15)
 ----------------
 
 - Factored release.py out into a new pypi.py, solving a few possible
