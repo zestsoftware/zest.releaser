@@ -4,7 +4,8 @@ Changelog for zest.releaser
 2.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Factored release.py out into a new pypi.py, solving a few possible
+  problems with missing or misconfigured .pypirc files.  [maurits]
 
 
 2.3 (2009-05-11)
