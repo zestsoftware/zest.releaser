@@ -2,7 +2,6 @@
 import logging
 import re
 import sys
-import urllib
 
 logger = logging.getLogger('utils')
 
@@ -113,19 +112,6 @@ def extract_headings_from_history(history_lines):
             logger.debug("Found alternative heading: %r", result)
         line_number += 1
     return headings
-
-
-def package_in_pypi(package):
-    """Check whether the package is registered on pypi"""
-    url = 'http://pypi.python.org/simple/%s' % package
-    result = urllib.urlopen(url).read().strip()
-    if package in result:
-        # Some link with the package name is present. If the package doesn't
-        # exist on pypi, the result would be 'Not Found'.
-        return True
-    else:
-        logger.debug("Package not found on pypi: %r", result)
-        return False
 
 
 def show_last_lines(result):
