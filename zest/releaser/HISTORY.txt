@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.5 (unreleased)
+2.5 (2009-05-20)
 ----------------
 
 - Revert to previous behaviour: when a package has not been released
