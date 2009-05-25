@@ -22,8 +22,8 @@ def check_version(vcs):
         logger.critical('No version found.')
         sys.exit(1)
     suggestion = utils.cleanup_version(version)
-    print ("Enter version [%s]:" % suggestion)
-    version = raw_input().strip()
+    q = ("Enter version [%s]: " % suggestion)
+    version = raw_input(q).strip()
     if not version:
         version = suggestion
     if version != original_version:

@@ -4,7 +4,9 @@ Changelog for zest.releaser
 2.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Small change: the questions don't print a newline anymore after the question
+  (and before the user pressed enter).  This makes it clearer if enter has
+  been pressed yet.  Suggestion by jkolman.  [reinout]
 
 
 2.5 (2009-05-20)

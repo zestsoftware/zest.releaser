@@ -34,8 +34,8 @@ def ask(question, default=True):
             yn = 'Y/n'
         if default is False:
             yn = 'y/N'
-        print question + " (%s)?" % yn
-        input = raw_input()
+        q = question + " (%s)? " % yn
+        input = raw_input(q)
         if not input:
             if default is not None:
                 return default

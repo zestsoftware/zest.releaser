@@ -31,9 +31,9 @@ def ask_for_new_dev_version(vcs):
         suggestion_string = ' [%s]' % suggestion
     else:
         suggestion_string = ''
-    print ("Enter new development version ('dev' will be appended)"
-           "%s:" % suggestion_string)
-    version = raw_input().strip()
+    q = ("Enter new development version ('dev' will be appended)"
+         "%s: " % suggestion_string)
+    version = raw_input(q).strip()
     if not version:
         version = suggestion
     if not version:
