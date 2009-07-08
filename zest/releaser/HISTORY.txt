@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.7 (unreleased)
+2.7 (2009-07-08)
 ----------------
 
 - Before asking setup.py for its version or name, first run egg_info,
