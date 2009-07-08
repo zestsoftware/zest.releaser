@@ -4,7 +4,10 @@ Changelog for zest.releaser
 2.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Before asking setup.py for its version or name, first run egg_info,
+  as that may get rid of some warnings that otherwise end up in the
+  extracted version or name, like UserWarnings.
+  [maurits]
 
 
 2.6 (2009-05-25)

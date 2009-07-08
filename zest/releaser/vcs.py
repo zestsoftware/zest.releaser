@@ -28,11 +28,19 @@ class BaseVersionControl(object):
 
     def get_setup_py_version(self):
         if os.path.exists('setup.py'):
+            # First run egg_info, as that may get rid of some warnings
+            # that otherwise end up in the extracted version, like
+            # UserWarnings.
+            ignore = getoutput('%s setup.py egg_info' % sys.executable)
             version = getoutput('%s setup.py --version' % sys.executable)
             return zest.releaser.utils.strip_version(version)
 
     def get_setup_py_name(self):
         if os.path.exists('setup.py'):
+            # First run egg_info, as that may get rid of some warnings
+            # that otherwise end up in the extracted name, like
+            # UserWarnings.
+            ignore = getoutput('%s setup.py egg_info' % sys.executable)
             return getoutput('%s setup.py --name' % sys.executable)
 
     def get_version_txt_version(self):
