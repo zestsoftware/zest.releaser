@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.8 (unreleased)
+2.8 (2009-08-27)
 ----------------
 
 - Fixed the release command when used in a french environment.
