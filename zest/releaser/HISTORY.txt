@@ -4,7 +4,9 @@ Changelog for zest.releaser
 2.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed the release command when used in a french environment.
+  In French "svn info" returns 'URL :', not 'URL:'.
+  [vincentfretin]
 
 
 2.7 (2009-07-08)

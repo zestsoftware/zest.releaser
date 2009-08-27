@@ -17,8 +17,9 @@ class Subversion(BaseVersionControl):
         """Return svn url"""
         our_info = getoutput('svn info')
         url = [line for line in our_info.split('\n')
-               if 'URL:' in line][0]
-        return url.replace('URL:', '').strip()
+               if line.startswith('URL')][0]
+        # In English, you have 'URL:', in French 'URL :'
+        return url.split(':', 1)[1].strip()
 
     def _base_from_svn(self):
         base = self._svn_info()
