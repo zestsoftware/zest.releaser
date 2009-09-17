@@ -4,7 +4,7 @@ Changelog for zest.releaser
 2.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Ümläüts in a changelog don't break the logger anymore.  [reinout]
 
 
 2.8 (2009-08-27)
