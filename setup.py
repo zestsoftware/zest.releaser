@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import codecs
 import os
 
-version = '2.9.2'
+version = '2.10dev'
 
 
 # Adapted from
