@@ -18,13 +18,13 @@ class UltraMagicString(object):
         self.value = value
 
     def __str__(self):
-        return self.value.encode('utf-8')
-
-    def __unicode__(self):
         return self.value
 
+    def __unicode__(self):
+        return self.value.decode('utf-8')
+
     def __add__(self, other):
-        return UltraMagicString(self.value + unicode(other))
+        return UltraMagicString(self.value + str(other))
 
     def split(self, *args, **kw):
         return self.value.split(*args, **kw)
@@ -44,7 +44,7 @@ long_description = u'\n\n'.join([read('README.txt'),
 setup(name='zest.releaser',
       version=version,
       description="Scripts to help with releasing software with Zest's conventions",
-      long_description=UltraMagicString(long_description),
+      long_description=UltraMagicString(long_description.encode('utf-8')),
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
