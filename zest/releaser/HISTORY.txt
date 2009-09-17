@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.9.2 (unreleased)
+2.9.2 (2009-09-17)
 ------------------
 
 - Ümläüts in a changelog don't break the logger anymore when using python2.6.2
