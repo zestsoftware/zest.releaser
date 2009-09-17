@@ -42,8 +42,8 @@ specific project's buildout, by having a buildout configuration such as::
     eggs = zest.releaser
 
 
-You must also have a version control system installed. Zest.releaser
-currently supports Subversion and Mercurial.
+You must also have a version control system installed. Zest.releaser currently
+supports Subversion and Mercurial (and others could be added).
 
 
 Running
@@ -89,7 +89,9 @@ Current assumptions
 -------------------
 
 Zest.releaser originated at `Zest software <http://zestsoftware.nl>`_ so there
-are some assumptions build-in that might or might not fit you.
+are some assumptions build-in that might or might not fit you.  Lots of people
+are using it in various companies and open source projects, so it'll probably
+fit :-)
 
 - If you are using svn, your svn is structured with /trunk, /tags and
   optionally /branches.  Both a /trunk or a /branches/something checkout
@@ -130,7 +132,9 @@ Notes
 -----
 
 Note that there are alternative release scripts available, for instance
-http://pypi.python.org/pypi/collective.releaser .
+http://pypi.python.org/pypi/collective.releaser which installs itself as a
+setuptools command ("python setup.py release"), so it "only" works with
+setuptools projects.
 
 The svn source can be found at
 https://svn.plone.org/svn/collective/zest.releaser/trunk .
