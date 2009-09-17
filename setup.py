@@ -19,7 +19,7 @@ long_description = u'\n\n'.join([read('README.txt'),
 setup(name='zest.releaser',
       version=version,
       description="Scripts to help with releasing software with Zest's conventions",
-      long_description=long_description.encode('utf-8'),
+      long_description=long_description, # nice unicode
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
