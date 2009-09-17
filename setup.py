@@ -5,6 +5,31 @@ import os
 version = '2.9.2dev'
 
 
+# Adapted from
+# http://stackoverflow.com/questions/1162338/whats-the-right-way-to-use-unicode-metadata-in-setup-py
+class UltraMagicString(object):
+    # Catch-22:
+    # - if I return Unicode, python setup.py --long-description as well
+    #   as python setup.py upload fail with a UnicodeEncodeError
+    # - if I return UTF-8 string, python setup.py sdist register
+    #   fails with an UnicodeDecodeError
+
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return self.value.encode('utf-8')
+
+    def __unicode__(self):
+        return self.value
+
+    def __add__(self, other):
+        return UltraMagicString(self.value + unicode(other))
+
+    def split(self, *args, **kw):
+        return self.value.split(*args, **kw)
+
+
 def read(filename):
     filename = os.path.join('zest', 'releaser', filename)
     return unicode(codecs.open(filename, encoding='utf-8').read())
@@ -19,7 +44,7 @@ long_description = u'\n\n'.join([read('README.txt'),
 setup(name='zest.releaser',
       version=version,
       description="Scripts to help with releasing software with Zest's conventions",
-      long_description=long_description, # nice unicode
+      long_description=UltraMagicString(long_description),
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
