@@ -1,26 +1,25 @@
 from setuptools import setup, find_packages
+import codecs
 import os
 
 version = '2.9.1dev'
 
+
+def read(filename):
+    filename = os.path.join('zest', 'releaser', filename)
+    return unicode(codecs.open(filename, encoding='utf-8').read())
+
+
+long_description = u'\n\n'.join([read('README.txt'),
+                                 read('TODO.txt'),
+                                 read('CREDITS.txt'),
+                                 read('HISTORY.txt')])
+
+
 setup(name='zest.releaser',
       version=version,
       description="Scripts to help with releasing software with Zest's conventions",
-      long_description=(open(os.path.join('zest',
-                                          'releaser',
-                                          'README.txt')).read() +
-                        '\n\n' +
-                        open(os.path.join('zest',
-                                          'releaser',
-                                          'TODO.txt')).read() +
-                        '\n\n' +
-                        open(os.path.join('zest',
-                                          'releaser',
-                                          'CREDITS.txt')).read() +
-                        '\n\n' +
-                        open(os.path.join('zest',
-                                          'releaser',
-                                          'HISTORY.txt')).read()),
+      long_description=long_description.encode('utf-8'),
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
@@ -39,11 +38,12 @@ setup(name='zest.releaser',
           # -*- Extra requirements: -*-
       ],
       entry_points={
-    'console_scripts': ['release = zest.releaser.release:main',
-                        'prerelease = zest.releaser.prerelease:main',
-                        'postrelease = zest.releaser.postrelease:main',
-                        'fullrelease = zest.releaser.fullrelease:main',
-                        'longtest = zest.releaser.longtest:main',
-                        'lasttagdiff = zest.releaser.lasttagdiff:main'],
-    },
+          'console_scripts': [
+              'release = zest.releaser.release:main',
+              'prerelease = zest.releaser.prerelease:main',
+              'postrelease = zest.releaser.postrelease:main',
+              'fullrelease = zest.releaser.fullrelease:main',
+              'longtest = zest.releaser.longtest:main',
+              'lasttagdiff = zest.releaser.lasttagdiff:main'],
+          },
       )
