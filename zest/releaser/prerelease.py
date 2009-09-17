@@ -93,7 +93,15 @@ def main():
     # show diff, offer commit
     diff_cmd = vcs.cmd_diff()
     diff = getoutput(diff_cmd)
-    logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+    if sys.version.startswith('2.6.2'):
+        # python2.6.2 bug... http://bugs.python.org/issue5170
+        # This is the spot it can surface as we show a part of the changelog
+        # which can contain every kind of character.  The rest is mostly ascii.
+        print "Diff results:"
+        print diff
+    else:
+        # Common case
+        logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
     if utils.ask("OK to commit this"):
         commit_cmd = vcs.cmd_commit('Preparing release %s' % version)
         commit = getoutput(commit_cmd)

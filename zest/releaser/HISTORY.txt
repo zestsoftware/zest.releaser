@@ -4,7 +4,10 @@ Changelog for zest.releaser
 2.9 (unreleased)
 ----------------
 
-- Ümläüts in a changelog don't break the logger anymore.  [reinout]
+- Ümläüts in a changelog don't break the logger anymore when using python2.6.2
+  when the umlauts turn up in the diff.  This is due to a 2.6.2 regression
+  bug, see http://bugs.python.org/issue5170.  Should be fixed in 2.6.3 when it
+  comes out.  [reinout]
 
 
 2.8 (2009-08-27)
