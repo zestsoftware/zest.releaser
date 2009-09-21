@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.9.3 (unreleased)
+2.9.3 (2009-09-22)
 ------------------
 
 - Uploading to multiple package indexes should now work in python2.6
