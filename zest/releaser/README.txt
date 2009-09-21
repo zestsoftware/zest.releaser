@@ -138,3 +138,51 @@ setuptools projects.
 
 The svn source can be found at
 https://svn.plone.org/svn/collective/zest.releaser/trunk .
+
+
+Uploading to pypi server(s)
+---------------------------
+
+Like noted earlier, for safety reasons zest.releaser will only offer
+to upload your package to http://pypi.python.org when the package is
+already registered there.  If this is not the case yet, you can go to
+the directory where zest.releaser put the checkout (or make a fresh
+checkout yourself.  Then with the python version of your choice do::
+
+  python setup.py register sdist upload
+
+For this to work you will need a ``.pypirc`` file in your home
+directory that has your pypi login credentials like this::
+
+  [server-login]
+  username:maurits
+  password:secret
+
+Since python 2.6, or in earlier python versions with collective.dist,
+you can specify multiple indexes for uploading your package in
+``.pypirc``::
+
+  [distutils]
+  index-servers =
+    pypi
+    local
+
+  [pypi]
+  #pypi.python.org
+  username:maurits
+  password:secret
+
+  [local]
+  repository:http://localhost:8080/test/products/
+  username:maurits
+  password:secret
+  # You may need to specify the realm, which is the domain the
+  # server sends back when you do a challenge:
+  #realm:Zope
+
+See http://pypi.python.org/pypi/collective.dist for more info.
+
+When all this is configured correctly, zest.releaser will first
+reregister and upload at the official pypi (if the package is
+registered there already).  Then it will offer to upload to the other
+index servers that you have specified in ``.pypirc``.

@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 import urllib
 
 from ConfigParser import ConfigParser
@@ -11,7 +12,11 @@ try:
     mupload # Make pyflakes happy.
     collective_dist = True
 except ImportError:
-    collective_dist = False
+    if sys.version_info[:2] >= (2, 6):
+        # 2.6 (or higher) does not need collective.dist.
+        collective_dist = True
+    else:
+        collective_dist = False
 
 index_servers = []
 DIST_CONFIG_FILE = '.pypirc'

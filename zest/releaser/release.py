@@ -80,17 +80,21 @@ def main(return_tagdir=False):
                                            % sys.executable)
                         utils.show_last_lines(result)
 
-                # If collective.dist is installed, the user may have
-                # defined other servers to upload to.
-                # XXX Check what needs to be done with python 2.6, where
-                # collective.dist is not needed anymore as it is built-in.
+                # If collective.dist is installed (or we are using
+                # python2.6 or higher), the user may have defined
+                # other servers to upload to.
                 for server in pypi.get_distutils_servers(config):
                     if server == 'pypi' and not use_pypi:
                         continue
                     if utils.ask("Register and upload to %s" % server):
-                        result = getoutput(
-                            '%s setup.py mregister sdist mupload -r %s'
-                            % (sys.executable, server))
+                        if sys.version_info[:2] >= (2, 6):
+                            result = getoutput(
+                                '%s setup.py register sdist upload -r %s'
+                                % (sys.executable, server))
+                        else:
+                            result = getoutput(
+                                '%s setup.py mregister sdist mupload -r %s'
+                                % (sys.executable, server))
                         utils.show_last_lines(result)
 
         os.chdir(original_dir)
