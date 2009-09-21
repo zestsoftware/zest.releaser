@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-2.10 (unreleased)
------------------
+2.9.3 (unreleased)
+------------------
 
 - In subversion, first try to get the package from the setup.py before
   falling back to the svn info, just like for mercurial.  This fixes
