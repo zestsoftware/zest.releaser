@@ -48,6 +48,9 @@ class Subversion(BaseVersionControl):
 
     @property
     def name(self):
+        package_name = self.get_setup_py_name()
+        if package_name:
+            return package_name
         url = self._svn_info()
         name, base = self._extract_name_and_base(url)
         return name
