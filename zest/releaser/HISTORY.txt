@@ -4,6 +4,9 @@ Changelog for zest.releaser
 2.9.3 (unreleased)
 ------------------
 
+- Make sure the next version suggestion for 1.0rc6 is 1.0rc7.
+  [maurits]
+
 - In subversion, first try to get the package from the setup.py before
   falling back to the svn info, just like for mercurial.  This fixes
   the problem that e.g. Products.feedfeeder was not recognized as
