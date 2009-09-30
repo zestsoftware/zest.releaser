@@ -130,6 +130,7 @@ def extract_headings_from_history(history_lines):
 
 
 def show_last_lines(result):
+    """Just print the last five lines of (pypi) output"""
     lines = [line for line in result.split('\n')]
     print 'Showing last few lines...'
     for line in lines[-5:]:
