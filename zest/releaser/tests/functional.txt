@@ -1,0 +1,29 @@
+Integration test
+================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Several items are prepared for us.
+
+An svn repository:
+
+    >>> repo_url
+    'file://.../svnrepo'
+
+An svn checkout of a project:
+
+    >>> sourcedir
+    '.../tha.example'
+    >>> import commands
+    >>> print commands.getoutput("svn info %s" % sourcedir)
+    Path: .../tha.example
+    URL: file://.../svnrepo/tha.example/trunk
+    ...
+
+There are no tags yet:
+
+    >>> print commands.getoutput("svn list %s/tha.example/tags" % repo_url)
+
+
