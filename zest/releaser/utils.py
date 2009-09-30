@@ -21,11 +21,14 @@ def strip_version(version):
     return version.strip().replace(' ', '')
 
 
-def ask(question, default=True):
+def ask(question, default=True, raw_input=raw_input):
     """Ask the question in y/n form and return True/False.
 
     If you don't want a default 'yes', set default to None (or to False if you
     want a default 'no').
+
+    raw_input is only included to make the function testable.  Do not
+    overwrite this!
 
     """
     while True:
@@ -36,12 +39,30 @@ def ask(question, default=True):
             yn = 'y/N'
         q = question + " (%s)? " % yn
         input = raw_input(q)
-        if not input:
+        if input:
+            answer = input[0]
+        else:
+            answer = ''
+        if not answer:
             if default is not None:
                 return default
-            print 'Please explicitly answer y/n'
-            continue
-        return 'y' in input.lower()
+        if 'y' in answer.lower():
+            return True
+        if 'n' in answer.lower():
+            return False
+        # We really want an answer.
+        print 'Please explicitly answer y/n'
+        continue
+
+
+def cleanup_version(version):
+    """Check if the version looks like a development version."""
+    for w in WRONG_IN_VERSION:
+        if version.find(w) != -1:
+            logger.debug("Version indicates development: %s.", version)
+            version = version[:version.find(w)].strip()
+            logger.debug("Removing debug indicators: %r", version)
+    return version
 
 
 def fix_rst_heading(heading, below):
@@ -56,16 +77,6 @@ def fix_rst_heading(heading, below):
         return below
     below = first * len(heading)
     return below
-
-
-def cleanup_version(version):
-    """Check if the version looks like a development version."""
-    for w in WRONG_IN_VERSION:
-        if version.find(w) != -1:
-            logger.debug("Version indicates development: %s.", version)
-            version = version[:version.find(w)].strip()
-            logger.debug("Removing debug indicators: %r", version)
-    return version
 
 
 def extract_headings_from_history(history_lines):
