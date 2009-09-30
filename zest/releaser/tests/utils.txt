@@ -6,6 +6,7 @@ Utility functions
 We're testing ``utils.py`` here:
 
     >>> from zest.releaser import utils
+    >>> from pprint import pprint
 
 
 Log level
@@ -149,6 +150,77 @@ from causing mishaps:
     False
 
 
+Output filtering
+----------------
+
+Uploading to pypi returns quite some lines of output.  Only show the last
+part:
+
+    >>> output = "a\nb\nc\nd\ne\nf\ng\n"
+    >>> utils.show_last_lines(output)
+    Showing last few lines...
+    d
+    e
+    f
+    g
+    <BLANKLINE>
+
+Just one line: no problem:
+
+    >>> output = "just one line, no newlines"
+    >>> utils.show_last_lines(output)
+    Showing last few lines...
+    just one line, no newlines
+
+
+Changelog header detection
+--------------------------
+
+Empty changelog:
+
+    >>> lines = []
+    >>> utils.extract_headings_from_history(lines)
+    []
+
+Various forms of version+date lines are recognised.  "unreleased" or a date in
+paretheses:
+
+    >>> lines = ["1.2 (unreleased)"]
+    >>> pprint(utils.extract_headings_from_history(lines))
+    [{'date': 'unreleased', 'line': 0, 'version': '1.2'}]
+    >>> lines = ["1.1 (2008-12-25)"]
+    >>> pprint(utils.extract_headings_from_history(lines))
+    [{'date': '2008-12-25', 'line': 0, 'version': '1.1'}]
+
+And dash-separated:
+
+    >>> lines = ["1.0 - 1972-12-25"]
+    >>> pprint(utils.extract_headings_from_history(lines))
+    [{'date': '1972-12-25', 'line': 0, 'version': '1.0'}]
+
+Versions with beta markers and spaces are fine:
+
+    >>> lines = ["1.4 beta - unreleased"]
+    >>> pprint(utils.extract_headings_from_history(lines))
+    [{'date': 'unreleased', 'line': 0, 'version': '1.4 beta'}]
+
+Multiple headers:
+
+    >>> lines = ["1.2 (unreleased)",
+    ...          "----------------",
+    ...          "",
+    ...          "- I did something.  [reinout]",
+    ...          "",
+    ...          "1.1 (2008-12-25)"
+    ...          "----------------",
+    ...          "",
+    ...          "- Played Herodes in church play.  [reinout]",
+    ...          ""]
+    >>> pprint(utils.extract_headings_from_history(lines))
+    [{'date': 'unreleased', 'line': 0, 'version': '1.2'},
+     {'date': '2008-12-25', 'line': 5, 'version': '1.1'}]
+
+
 reST headings
 -------------
 
@@ -174,32 +246,14 @@ No header line?  Just return the second line as-is:
     >>> utils.fix_rst_heading(first, second)
     'just some text'
 
+Empty line?  Just return it.
+
+    >>> second = ''
+    >>> utils.fix_rst_heading(first, second)
+    ''
+
 The second line must be uniform:
 
     >>> second = '- bullet point, no header'
     >>> utils.fix_rst_heading(first, second)
     '- bullet point, no header'
-
-
-Output filtering
-----------------
-
-Uploading to pypi returns quite some lines of output.  Only show the last
-part:
-
-    >>> output = "a\nb\nc\nd\ne\nf\ng\n"
-    >>> utils.show_last_lines(output)
-    Showing last few lines...
-    d
-    e
-    f
-    g
-    <BLANKLINE>
-
-Just one line: no problem:
-
-    >>> output = "just one line, no newlines"
-    >>> utils.show_last_lines(output)
-    Showing last few lines...
-    just one line, no newlines
-
