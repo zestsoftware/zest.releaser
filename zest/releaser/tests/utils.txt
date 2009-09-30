@@ -180,3 +180,26 @@ The second line must be uniform:
     >>> utils.fix_rst_heading(first, second)
     '- bullet point, no header'
 
+
+Output filtering
+----------------
+
+Uploading to pypi returns quite some lines of output.  Only show the last
+part:
+
+    >>> output = "a\nb\nc\nd\ne\nf\ng\n"
+    >>> utils.show_last_lines(output)
+    Showing last few lines...
+    d
+    e
+    f
+    g
+    <BLANKLINE>
+
+Just one line: no problem:
+
+    >>> output = "just one line, no newlines"
+    >>> utils.show_last_lines(output)
+    Showing last few lines...
+    just one line, no newlines
+
