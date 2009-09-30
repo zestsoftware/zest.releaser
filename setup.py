@@ -43,7 +43,7 @@ long_description = u'\n\n'.join([read('README.txt'),
 
 setup(name='zest.releaser',
       version=version,
-      description="Scripts to help with releasing software with Zest's conventions",
+      description="Software releasing made easy and repeatable",
       long_description=UltraMagicString(long_description.encode('utf-8')),
       classifiers=[
         "Programming Language :: Python",
@@ -62,6 +62,8 @@ setup(name='zest.releaser',
           'setuptools',
           # -*- Extra requirements: -*-
       ],
+      extras_require={
+          'test': ['z3c.testsetup']},
       entry_points={
           'console_scripts': [
               'release = zest.releaser.release:main',

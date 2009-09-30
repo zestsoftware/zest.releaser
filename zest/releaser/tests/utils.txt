@@ -1,0 +1,51 @@
+Utility functions
+=================
+
+.. :doctest:
+
+We're testing ``utils.py`` here:
+
+    >>> from zest.releaser import utils
+
+
+Log level
+---------
+
+A ``-v`` on the commandline turns on debug level logging:
+
+    >>> import sys
+    >>> import logging
+    >>> orig_argv = sys.argv[1:]
+    >>> sys.argv[1:] = []
+    >>> utils.loglevel() == logging.INFO
+    True
+    >>> sys.argv[1:] = ['-v']
+    >>> utils.loglevel() == logging.DEBUG
+    True
+
+
+Version numbers
+---------------
+
+Strip all whitespace in a version:
+
+    >>> utils.strip_version('1.0')
+    '1.0'
+    >>> utils.strip_version(' 1.0   dev  ')
+    '1.0dev'
+
+Remove development markers in various common forms:
+
+    >>> utils.cleanup_version('1.0')
+    '1.0'
+    >>> utils.cleanup_version('1.0 dev')
+    '1.0'
+    >>> utils.cleanup_version('1.0 (svn/devel)')
+    '1.0'
+    >>> utils.cleanup_version('1.0 svn')
+    '1.0'
+    >>> utils.cleanup_version('1.0 devel 13')
+    '1.0'
+    >>> utils.cleanup_version('1.0 beta devel 13')
+    '1.0 beta'
+
