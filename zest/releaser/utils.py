@@ -21,6 +21,16 @@ def strip_version(version):
     return version.strip().replace(' ', '')
 
 
+def cleanup_version(version):
+    """Check if the version looks like a development version."""
+    for w in WRONG_IN_VERSION:
+        if version.find(w) != -1:
+            logger.debug("Version indicates development: %s.", version)
+            version = version[:version.find(w)].strip()
+            logger.debug("Removing debug indicators: %r", version)
+    return version
+
+
 def ask(question, default=True, raw_input=raw_input):
     """Ask the question in y/n form and return True/False.
 
@@ -55,16 +65,6 @@ def ask(question, default=True, raw_input=raw_input):
         continue
 
 
-def cleanup_version(version):
-    """Check if the version looks like a development version."""
-    for w in WRONG_IN_VERSION:
-        if version.find(w) != -1:
-            logger.debug("Version indicates development: %s.", version)
-            version = version[:version.find(w)].strip()
-            logger.debug("Removing debug indicators: %r", version)
-    return version
-
-
 def fix_rst_heading(heading, below):
     """If the 'below' line looks like a reST line, give it the correct length.
 
@@ -74,6 +74,10 @@ def fix_rst_heading(heading, below):
         return below
     first = below[0]
     if first not in '-=`~':
+        return below
+    if not len(below) == len([char for char in below
+                              if char == first]):
+        # The line is not uniformly the same character
         return below
     below = first * len(heading)
     return below

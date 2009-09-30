@@ -147,3 +147,36 @@ from causing mishaps:
     Question: Does mocking work? (y/n)?
     Our reply: n
     False
+
+
+reST headings
+-------------
+
+If a second line looks like a reST header line, fix up the length:
+
+    >>> first = 'Hey, a potential heading'
+    >>> second = '-------'
+    >>> utils.fix_rst_heading(first, second)
+    '------------------------'
+    >>> second = '=='
+    >>> utils.fix_rst_heading(first, second)
+    '========================'
+    >>> second = '``'
+    >>> utils.fix_rst_heading(first, second)
+    '````````````````````````'
+    >>> second = '~~'
+    >>> utils.fix_rst_heading(first, second)
+    '~~~~~~~~~~~~~~~~~~~~~~~~'
+
+No header line?  Just return the second line as-is:
+
+    >>> second = 'just some text'
+    >>> utils.fix_rst_heading(first, second)
+    'just some text'
+
+The second line must be uniform:
+
+    >>> second = '- bullet point, no header'
+    >>> utils.fix_rst_heading(first, second)
+    '- bullet point, no header'
+
