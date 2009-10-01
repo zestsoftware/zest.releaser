@@ -31,14 +31,32 @@ def cleanup_version(version):
     return version
 
 
-def ask(question, default=True, raw_input=raw_input):
+# Hack for testing, see get_input()
+TESTMODE = False
+answers_for_testing = []
+
+
+def get_input(question):
+    if not TESTMODE:
+        # Normal operation.
+        return raw_input(question)
+    # Testing means no interactive input. Get it from answers_for_testing.
+    # .pop() works from the end to the start, so give the answers in reverse
+    # order.
+    print "Question:", question
+    answer = answers_for_testing.pop()
+    if answer == '':
+        print "Our reply: <ENTER>"
+    else:
+        print "Our reply:", answer
+    return answer
+
+
+def ask(question, default=True):
     """Ask the question in y/n form and return True/False.
 
     If you don't want a default 'yes', set default to None (or to False if you
     want a default 'no').
-
-    raw_input is only included to make the function testable.  Do not
-    overwrite this!
 
     """
     while True:
@@ -48,7 +66,7 @@ def ask(question, default=True, raw_input=raw_input):
         if default is False:
             yn = 'y/N'
         q = question + " (%s)? " % yn
-        input = raw_input(q)
+        input = get_input(q)
         if input:
             answer = input[0]
         else:

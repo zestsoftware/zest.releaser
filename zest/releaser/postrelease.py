@@ -41,7 +41,7 @@ def ask_for_new_dev_version(vcs):
         suggestion_string = ''
     q = ("Enter new development version ('dev' will be appended)"
          "%s: " % suggestion_string)
-    version = raw_input(q).strip()
+    version = utils.get_input(q).strip()
     if not version:
         version = suggestion
     if not version:

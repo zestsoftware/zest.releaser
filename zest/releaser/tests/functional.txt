@@ -26,4 +26,38 @@ There are no tags yet:
 
     >>> print commands.getoutput("svn list %s/tha.example/tags" % repo_url)
 
+The changelog is at 0.1 dev:
 
+    >>> head('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Change to the source directory and run the prerelease script:
+
+    >>> import os
+    >>> os.chdir(sourcedir)
+    >>> from zest.releaser import prerelease
+    >>> utils.answers_for_testing = ['', '']
+    >>> prerelease.main()
+    Question: Enter version [0.1]:
+    Our reply: <ENTER>
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog now has a release data instead of ``(unreleased)``:
+
+    >>> head('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.1 (2009-10-01)
+    ----------------

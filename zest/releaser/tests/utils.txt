@@ -54,40 +54,35 @@ Remove development markers in various common forms:
 Asking input
 ------------
 
-Asking input on the prompt is not unittestable unless we do some mocking:
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
 
-    >>> answers = []
-    >>> def mock_raw_input(q):
-    ...     print "Question:", q
-    ...     answer = answers.pop()
-    ...     print "Our reply:", answer
-    ...     return answer
+    >>> utils.TESTMODE = True
+    >>> utils.answers_for_testing = []
 
 The default is True, so hitting enter (which means no input) returns True
 
-    >>> answers = ['']
-    >>> utils.ask('Does mocking work?', raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['']
+    >>> utils.ask('Does mocking work?')
     Question: Does mocking work? (Y/n)?
-    Our reply:
+    Our reply: <ENTER>
     True
 
 A default of False also changes the Y/n to y/N:
 
-    >>> answers = ['']
-    >>> utils.ask('Does mocking work?',
-    ...           default=False, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['']
+    >>> utils.ask('Does mocking work?', default=False)
     Question: Does mocking work? (y/N)?
-    Our reply:
+    Our reply: <ENTER>
     False
 
 A default of None requires an answer:
 
-    >>> answers = ['', 'y']
-    >>> answers.reverse() # .pop() works from the end
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['', 'y']
+    >>> utils.answers_for_testing.reverse() # .pop() works from the end
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
-    Our reply:
+    Our reply: <ENTER>
     Please explicitly answer y/n
     Question: Does mocking work? (y/n)?
     Our reply: y
@@ -95,42 +90,36 @@ A default of None requires an answer:
 
 Y and n can be upper or lower case:
 
-    >>> answers = ['y']
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['y']
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: y
     True
-    >>> answers = ['Y']
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['Y']
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: Y
     True
-    >>> answers = ['n']
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['n']
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: n
     False
-    >>> answers = ['N']
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['N']
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: N
     False
 
 Yes and no are fine:
 
-    >>> answers = ['yes']
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['yes']
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: yes
     True
-    >>> answers = ['no']
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['no']
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: no
     False
@@ -138,10 +127,9 @@ Yes and no are fine:
 The y or n must be the first character, however, to prevent accidental input
 from causing mishaps:
 
-    >>> answers = ['I reallY do not want it', 'n']
-    >>> answers.reverse() # .pop() works from the back to front.
-    >>> utils.ask('Does mocking work?',
-    ...           default=None, raw_input=mock_raw_input)
+    >>> utils.answers_for_testing = ['I reallY do not want it', 'n']
+    >>> utils.answers_for_testing.reverse() # .pop() works from the back to front.
+    >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: I reallY do not want it
     Please explicitly answer y/n

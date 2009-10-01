@@ -5,7 +5,7 @@ from commands import getoutput
 import datetime
 import logging
 import sys
-import utils
+from zest.releaser import utils
 import zest.releaser.choose
 
 logger = logging.getLogger('prerelease')
@@ -23,7 +23,7 @@ def check_version(vcs):
         sys.exit(1)
     suggestion = utils.cleanup_version(version)
     q = ("Enter version [%s]: " % suggestion)
-    version = raw_input(q).strip()
+    version = utils.get_input(q).strip()
     if not version:
         version = suggestion
     if version != original_version:

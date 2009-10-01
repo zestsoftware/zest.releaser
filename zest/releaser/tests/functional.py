@@ -8,6 +8,8 @@ import tarfile
 
 
 def setup(test):
+    partstestdir = os.getcwd() # Buildout's test run in parts/test
+    buildoutbindir = os.path.join(partstestdir, '..', '..', 'bin')
     test.tempdir = tempfile.mkdtemp()
     # TODO: check if svnadmin is installed and set variable accordingly.
     # Init svn repo.
@@ -30,9 +32,16 @@ def setup(test):
     commands.getoutput(
         'svn co %s/tha.example/trunk %s' % (repo_url, sourcedir))
 
+    def head(*filename_parts):
+        filename = os.path.join(sourcedir, *filename_parts)
+        lines = open(filename).readlines()
+        for line in lines[:5]:
+            print line,
+
     test.globs.update({'tempdir': test.tempdir,
                        'repo_url': repo_url,
-                       'sourcedir': sourcedir})
+                       'sourcedir': sourcedir,
+                       'head': head})
 
 
 def teardown(test):
