@@ -45,10 +45,6 @@ def setup(test):
 
 
 def teardown(test):
-    # Temporary we don't clean up the temp dir as we're setting up the test
-    # setup, so we need to be able to see what happens.
-    print "Left over tempdir:", test.tempdir
-
-    # TODO: delete tempdir
-    #shutil.rmtree(test.tempdir)
+    #print "Left over tempdir:", test.tempdir
+    shutil.rmtree(test.tempdir)
 
