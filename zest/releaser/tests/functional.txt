@@ -59,7 +59,7 @@ The changelog now has a release date instead of ``(unreleased)``:
     Changelog of tha.example
     =====================
     <BLANKLINE>
-    0.1 (2009-10-01)
+    0.1 (...-...-...)
     ----------------
 
 And the version number is just 0.1 and has lost its dev marker:
