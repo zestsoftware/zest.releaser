@@ -73,7 +73,6 @@ And the version number is just 0.1 and has lost its dev marker:
 The release script tags the release:
 
     >>> utils.answers_for_testing = ['y', 'n']
-    >>> utils.answers_for_testing.reverse()
     >>> from zest.releaser import release
     >>> release.main()
     To tag, you can use the following command:

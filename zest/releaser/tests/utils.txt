@@ -79,7 +79,6 @@ A default of False also changes the Y/n to y/N:
 A default of None requires an answer:
 
     >>> utils.answers_for_testing = ['', 'y']
-    >>> utils.answers_for_testing.reverse() # .pop() works from the end
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: <ENTER>
@@ -128,7 +127,6 @@ The y or n must be the first character, however, to prevent accidental input
 from causing mishaps:
 
     >>> utils.answers_for_testing = ['I reallY do not want it', 'n']
-    >>> utils.answers_for_testing.reverse() # .pop() works from the back to front.
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: I reallY do not want it

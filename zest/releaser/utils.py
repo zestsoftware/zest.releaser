@@ -41,10 +41,8 @@ def get_input(question):
         # Normal operation.
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
-    # .pop() works from the end to the start, so give the answers in reverse
-    # order.
     print "Question:", question
-    answer = answers_for_testing.pop()
+    answer = answers_for_testing.pop(0)
     if answer == '':
         print "Our reply: <ENTER>"
     else:
