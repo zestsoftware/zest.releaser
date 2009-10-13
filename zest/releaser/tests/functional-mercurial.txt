@@ -7,28 +7,22 @@ Integration test
 
 Several items are prepared for us.
 
-An svn repository:
+A mercurial directory (repository and checkout in one):
 
-    >>> repo_url
-    'file://.../svnrepo'
-
-An svn checkout of a project:
-
-    >>> svnsourcedir
-    '.../tha.example-svn'
-    >>> import commands
-    >>> print commands.getoutput("svn info %s" % svnsourcedir)
-    Path: .../tha.example-svn
-    URL: file://.../svnrepo/tha.example/trunk
-    ...
+    >>> hgsourcedir
+    '.../tha.example-hg'
+    >>> import os
+    >>> os.chdir(hgsourcedir)
 
 There are no tags yet:
 
-    >>> print commands.getoutput("svn list %s/tha.example/tags" % repo_url)
+    >>> import commands
+    >>> print commands.getoutput("hg tags")
+    tip                                0:...
 
 The changelog is at 0.1 dev:
 
-    >>> svnhead('CHANGES.txt')
+    >>> hghead('CHANGES.txt')
     Changelog of tha.example
     =====================
     <BLANKLINE>
@@ -44,7 +38,7 @@ testing hack in utils.py:
 Change to the source directory and run the prerelease script:
 
     >>> import os
-    >>> os.chdir(svnsourcedir)
+    >>> os.chdir(hgsourcedir)
     >>> from zest.releaser import prerelease
     >>> utils.answers_for_testing = ['', '']
     >>> prerelease.main()
@@ -55,7 +49,7 @@ Change to the source directory and run the prerelease script:
 
 The changelog now has a release date instead of ``(unreleased)``:
 
-    >>> svnhead('CHANGES.txt')
+    >>> hghead('CHANGES.txt')
     Changelog of tha.example
     =====================
     <BLANKLINE>
@@ -64,7 +58,7 @@ The changelog now has a release date instead of ``(unreleased)``:
 
 And the version number is just 0.1 and has lost its dev marker:
 
-    >>> svnhead('setup.py')
+    >>> hghead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
@@ -76,20 +70,19 @@ The release script tags the release:
     >>> from zest.releaser import release
     >>> release.main()
     To tag, you can use the following command:
-    svn cp file://.../tha.example/trunk file://.../tha.example/tags/0.1
-        -m "Tagging 0.1"
+    hg tag -m "Tagging 0.1" 0.1
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Committed revision 5.
     Question: Check out the tag
         (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: n
 
 There is now a tag:
 
-    >>> print commands.getoutput("svn list %s/tha.example/tags" % repo_url)
-    0.1/
+    >>> print commands.getoutput("hg tags")
+    tip  ...
+    0.1  ...
 
 And the postrelease script ups the version:
 
@@ -104,13 +97,13 @@ And the postrelease script ups the version:
 
 The changelog and setup.py are at 0.2 and indicate dev mode:
 
-    >>> svnhead('CHANGES.txt')
+    >>> hghead('CHANGES.txt')
     Changelog of tha.example
     =====================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
-    >>> svnhead('setup.py')
+    >>> hghead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
