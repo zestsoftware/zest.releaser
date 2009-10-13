@@ -1,0 +1,117 @@
+Detailed tests of hg.py
+=======================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import hg
+    >>> import commands
+    >>> import os
+
+Project name
+------------
+
+The prepared hg project has a setup.py, so the name in there is used:
+
+    >>> os.chdir(hgsourcedir)
+    >>> checkout = hg.Hg()
+    >>> checkout.name
+    'tha.example'
+
+When the setup.py doesn't exist or doesn't return a proper name, we fall back
+to the directory name.
+
+    >>> orig = checkout.get_setup_py_name
+    >>> checkout.get_setup_py_name= lambda: None  # Hack
+    >>> checkout.name
+    'tha.example-hg'
+    >>> checkout.get_setup_py_name = orig  # Restore hack
+
+
+Diff and commit
+---------------
+
+Make a change:
+
+    >>> setup_py = os.path.join(hgsourcedir, 'setup.py')
+    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> cmd = checkout.cmd_diff()
+    >>> cmd
+    'hg diff'
+    >>> print commands.getoutput(cmd)
+    diff -r ... setup.py
+    --- a/setup.py    ...
+    +++ b/setup.py    ...
+    @@ -36,3 +36,5 @@
+               'console_scripts': [
+               ]},
+           )
+    +
+    +a = 2    
+
+Commit it:
+
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd
+    'hg commit -v -m "small tweak"'
+    >>> print commands.getoutput(cmd)
+    setup.py
+    committed changeset ...
+
+
+Tags
+----
+
+Originally there are no tags (the default 'tip' tag is filtered out):
+
+    >>> checkout.available_tags()
+    []
+
+Create a tag and it will show up:
+
+    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd
+    'hg tag 0.1 -m "Tagging 0.1"'
+    >>> dont_care = commands.getoutput(cmd)
+    >>> checkout.available_tags()
+    ['0.1']
+
+A specific tag url is important for subversion, but nonsensical for
+mercurial.  We just return the version as-is:
+
+    >>> checkout.tag_url('holadijee')
+    'holadijee'
+
+Make and commit a small change:
+
+    >>> open(setup_py, 'a').write('\nb = 3\n')
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> print commands.getoutput(cmd)
+    setup.py
+    committed changeset ...
+
+Now we can request the changes since a specific tag:
+
+    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmd
+    'hg diff -r 0.1 -r ...'
+    >>> print commands.getoutput(cmd)
+    diff -r ... -r ... .hgtags
+    --- /dev/null     ...
+    +++ b/.hgtags     ...
+    @@ -0,0 +1,1 @@
+    +... 0.1
+    diff -r ... -r ... setup.py
+    --- a/setup.py    ...
+    +++ b/setup.py    ...
+    @@ -38,3 +38,5 @@
+           )
+    <BLANKLINE>
+     a = 2
+    +
+    +b = 3
+
+
