@@ -70,7 +70,7 @@ The release script tags the release:
     >>> from zest.releaser import release
     >>> release.main()
     To tag, you can use the following command:
-    hg tag -m "Tagging 0.1" 0.1
+    hg tag 0.1 -m "Tagging 0.1"
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>

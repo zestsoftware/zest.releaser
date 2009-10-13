@@ -25,6 +25,7 @@ class Hg(BaseVersionControl):
     def available_tags(self):
         tag_info = getoutput('hg tags')
         tags = [line[:line.find(' ')]  for line in tag_info.split('\n')]
+        tags.remove('tip') # Not functional for us
         logger.debug("Available tags: %r", tags)
         return tags
 
@@ -50,7 +51,7 @@ class Hg(BaseVersionControl):
         return "hg diff -r %s -r %s" % (version, current_revision)
 
     def cmd_create_tag(self, version):
-        return 'hg tag -m "Tagging %s" %s' % (version, version)
+        return 'hg tag %s -m "Tagging %s"' % (version, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         return 'hg clone -r %s . %s' % (version, checkout_dir)
