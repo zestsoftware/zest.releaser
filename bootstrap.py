@@ -19,37 +19,79 @@ use the -c option to specify an alternate configuration file.
 
 $Id$
 """
-
+import time
 import os, shutil, sys, tempfile, urllib2
 
 tmpeggs = tempfile.mkdtemp()
 
+is_jython = sys.platform.startswith('java')
+to_reload = False
 try:
     import pkg_resources
+    if not hasattr(pkg_resources, '_distribute'):
+        to_reload = True
+        raise ImportError
 except ImportError:
     ez = {}
-    exec urllib2.urlopen('http://peak.telecommunity.com/dist/ez_setup.py'
+    exec urllib2.urlopen('http://python-distribute.org/distribute_setup_dev.py'
                          ).read() in ez
-    ez['use_setuptools'](to_dir=tmpeggs, download_delay=0)
+    ez['use_setuptools'](to_dir=tmpeggs, download_delay=0, no_fake=True)
+    if to_reload:
+        reload(pkg_resources)
+    else:
+        import pkg_resources
 
-    import pkg_resources
+if sys.platform == 'win32':
+    def quote(c):
+        if ' ' in c:
+            return '"%s"' % c # work around spawn lamosity on windows
+        else:
+            return c
+else:
+    def quote (c):
+        return c
 
 cmd = 'from setuptools.command.easy_install import main; main()'
-if sys.platform == 'win32':
-    cmd = '"%s"' % cmd # work around spawn lamosity on windows
+ws  = pkg_resources.working_set
 
-ws = pkg_resources.working_set
-assert os.spawnle(
-    os.P_WAIT, sys.executable, sys.executable,
-    '-c', cmd, '-mqNxd', tmpeggs, 'zc.buildout',
-    dict(os.environ,
-         PYTHONPATH=
-         ws.find(pkg_resources.Requirement.parse('setuptools')).location
-         ),
-    ) == 0
+if len(sys.argv) > 2 and sys.argv[1] == '--version':
+    VERSION = '==%s' % sys.argv[2]
+    args = sys.argv[3:] + ['bootstrap']
+else:
+    VERSION = ''
+    args = sys.argv[1:] + ['bootstrap']
+
+if is_jython:
+    import subprocess
+
+    assert subprocess.Popen([sys.executable] + ['-c', quote(cmd), '-mqNxd',
+           quote(tmpeggs), 'zc.buildout' + VERSION],
+           env=dict(os.environ,
+               PYTHONPATH=
+               ws.find(pkg_resources.Requirement.parse('distribute')).location
+               ),
+           ).wait() == 0
+
+else:
+    assert os.spawnle(
+        os.P_WAIT, sys.executable, quote (sys.executable),
+        '-c', quote (cmd), '-mqNxd', quote (tmpeggs), 'zc.buildout' + VERSION,
+        dict(os.environ,
+            PYTHONPATH=
+            ws.find(pkg_resources.Requirement.parse('distribute')).location
+            ),
+        ) == 0
 
 ws.add_entry(tmpeggs)
-ws.require('zc.buildout')
-import zc.buildout.buildout
-zc.buildout.buildout.main(sys.argv[1:] + ['bootstrap'])
+ws.require('zc.buildout' + VERSION)
+
+from zc.buildout import buildout as zc_buildout
+import pkg_resources
+
+zc_buildout.pkg_resources_loc = pkg_resources.working_set.find(
+    pkg_resources.Requirement.parse('setuptools')).location
+
+# now calling the bootstrap process as usual
+zc_buildout.main(args)
 shutil.rmtree(tmpeggs)
+
