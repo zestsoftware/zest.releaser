@@ -16,10 +16,12 @@ class Subversion(BaseVersionControl):
     def _svn_info(self):
         """Return svn url"""
         our_info = getoutput('svn info')
-        url = [line for line in our_info.split('\n')
-               if line.startswith('URL')][0]
-        # In English, you have 'URL:', in French 'URL :'
-        return url.split(':', 1)[1].strip()
+        if not hasattr(self, '_cached_url'):
+            url = [line for line in our_info.split('\n')
+                   if line.startswith('URL')][0]
+            # In English, you have 'URL:', in French 'URL :'
+            self._cached_url = url.split(':', 1)[1].strip()
+        return self._cached_url
 
     def _base_from_svn(self):
         base = self._svn_info()
@@ -28,32 +30,21 @@ class Subversion(BaseVersionControl):
         logger.debug("Base url is %s", base)
         return base
 
-    def _extract_name_and_base(self, url):
-        """Return name and base svn url from svn url."""
-        base = url
-        for remove in ['trunk', 'tags', 'branches']:
-            base = base.split(remove)[0]
-        logger.debug("Base url is %s", base)
-        parts = base.split('/')
-        parts = [part for part in parts if part]
-        name = parts[-1]
-        logger.debug("Name is %s", name)
-        return name, base
-
     def _name_from_svn(self):
-        base = self.base_from_svn()
+        base = self._base_from_svn()
         parts = base.split('/')
         parts = [p for p in parts if p]
-        return parts[-1]
+        name = parts[-1]
+        logger.debug("Name is %s", name)
+        return name
 
     @property
     def name(self):
         package_name = self.get_setup_py_name()
         if package_name:
             return package_name
-        url = self._svn_info()
-        name, base = self._extract_name_and_base(url)
-        return name
+        else:
+            return self._name_from_svn()
 
     def available_tags(self):
         base = self._base_from_svn()
@@ -79,8 +70,7 @@ class Subversion(BaseVersionControl):
         return mkdtemp(prefix=prefix)
 
     def tag_url(self, version):
-        url = self._svn_info()
-        name, base = self._extract_name_and_base(url)
+        base = self._base_from_svn()
         return base + 'tags/' + version
 
     def cmd_diff(self):

@@ -75,7 +75,7 @@ Create a tag and it will show up:
 
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
-    'svn cp ...tha.example/trunk ...tha.example/tags/0.1 -m "Tagging 0.1"'
+    'svn cp .../tha.example/trunk .../tha.example/tags/0.1 -m "Tagging 0.1"'
     >>> dont_care = commands.getoutput(cmd)
     >>> checkout.available_tags()
     ['0.1']
@@ -83,7 +83,7 @@ Create a tag and it will show up:
 A tag url is important for subversion:
 
     >>> checkout.tag_url('holadijee')
-    'file:...tha.example/tags/holadijee'
+    'file:.../tha.example/tags/holadijee'
 
 Make and commit a small change:
 
@@ -98,7 +98,7 @@ Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'svn diff ...tha.example/tags/0.1 ...tha.example/trunk'
+    'svn diff .../tha.example/tags/0.1 .../tha.example/trunk'
     >>> print commands.getoutput(cmd)
     Index: setup.py
     ===================================================================
