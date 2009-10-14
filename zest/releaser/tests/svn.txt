@@ -146,3 +146,81 @@ And make a tag checkout:
     A    ...somename.../src/tha/example/__init__.py
     A    ...somename.../README.txt
     Checked out revision 6.
+
+
+Tag corner cases
+----------------
+
+Both corner cases do a ``sys.exit()``.  This method has been monkey patched by
+the test setup.
+
+    >>> import sys
+    >>> sys.exit(1)
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=1)
+    
+The information on tags is stored on the server, not locally.  So a network
+connection is needed.  When there's a network problem, it is reported:
+
+    >>> # Internal-detail hack
+    >>> orig = checkout._cached_url
+    >>> checkout._cached_url = 'http://non.existing/nonexisting/trunk'
+    >>> # Actual call
+    >>> checkout.available_tags()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=None)
+    >>> checkout._cached_url = orig
+
+Subversion stores tags in the /tags directory.  Just a convention.  Sometimes
+projects have only a /trunk set up and no tag directory yet.
+
+Set up a new sample project in the repository:
+
+    >>> repo_url
+    'file://.../svnrepo'
+    >>> cmd = 'svn mkdir %s/sample -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> cmd = 'svn mkdir %s/sample/trunk -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+
+Make a checkout:
+
+    >>> os.chdir(tempdir)
+    >>> cmd = 'svn co %s/sample/trunk sample' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> os.chdir('sample')
+
+Now look up the tags.  This asks us to create the tags/ directory.  For the
+answering, set up the answer test mode:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+    >>> sample_checkout = svn.Subversion()
+
+Answer 'no' the first time we get asked to create the directory.  This means
+zest.releaser has no business with this project, so exit.
+
+    >>> utils.answers_for_testing = ['n']
+    >>> sample_checkout.available_tags()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=0)
+
+Answer 'yes' and the tags dir gets created.  The available tags result is
+obviously an empty list:
+
+    >>> utils.answers_for_testing = ['y']
+    >>> sample_checkout.available_tags()
+    tags dir does not exist at file:...svnrepo/sample/tags
+    Question: Shall I create it (Y/n)?
+    Our reply: y
+    <BLANKLINE>
+    Committed revision 9.
+    []
+    >>> cmd = 'svn list %s/sample' % repo_url
+    >>> print commands.getoutput(cmd)
+    tags/
+    trunk/
+

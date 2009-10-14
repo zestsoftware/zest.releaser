@@ -5,6 +5,7 @@ import shutil
 import tempfile
 import pkg_resources
 import tarfile
+import sys
 
 
 def setup(test):
@@ -12,6 +13,13 @@ def setup(test):
     test.orig_dir = partstestdir
     buildoutbindir = os.path.join(partstestdir, '..', '..', 'bin')
     test.tempdir = tempfile.mkdtemp()
+
+    # Monkey patch sys.exit
+    test.orig_exit = sys.exit
+    def _exit(code=None):
+        msg = "SYSTEM EXIT (code=%s)" % code
+        raise RuntimeError(msg)
+    sys.exit = _exit
 
     # Extract example project
     # Note: extractall only exists in python2.5
@@ -63,6 +71,7 @@ def setup(test):
 
 
 def teardown(test):
+    sys.exit = test.orig_exit
     os.chdir(test.orig_dir)
     #print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
