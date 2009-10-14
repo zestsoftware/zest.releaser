@@ -1,0 +1,35 @@
+Detailed tests of choose.py
+===========================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import choose
+    >>> import commands
+    >>> import os
+
+Choose makes the choice between version control systems.
+
+Subversion:
+
+    >>> os.chdir(svnsourcedir)
+    >>> choose.version_control()
+    <zest.releaser.svn.Subversion object at ...>
+
+Mercurial:
+
+    >>> os.chdir(hgsourcedir)
+    >>> choose.version_control()
+    <zest.releaser.hg.Hg object at ...>
+
+When no version control system is found, zest.releaser exists (with a log
+message, but we don't test those yet):
+
+    >>> os.chdir(tempdir)
+    >>> choose.version_control()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=1)

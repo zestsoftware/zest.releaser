@@ -1,5 +1,5 @@
 Detailed tests of svn.py
-=======================
+========================
 
 .. :doctest:
 .. :setup: zest.releaser.tests.functional.setup
