@@ -1,0 +1,148 @@
+Detailed tests of svn.py
+=======================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import svn
+    >>> import commands
+    >>> import os
+
+Project name
+------------
+
+The prepared svn project has a setup.py, so the name in there is used:
+
+    >>> os.chdir(svnsourcedir)
+    >>> checkout = svn.Subversion()
+    >>> checkout.name
+    'tha.example'
+
+When the setup.py doesn't exist or doesn't return a proper name, we fall back
+to the name in the svn url before trunk/tags:
+
+    >>> orig = checkout.get_setup_py_name
+    >>> checkout.get_setup_py_name= lambda: None  # Hack
+    >>> checkout.name
+    'tha.example'
+    >>> checkout.get_setup_py_name = orig  # Restore hack
+
+
+Diff and commit
+---------------
+
+Make a change:
+
+    >>> setup_py = os.path.join(svnsourcedir, 'setup.py')
+    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> cmd = checkout.cmd_diff()
+    >>> cmd
+    'svn diff'
+    >>> print commands.getoutput(cmd)
+    Index: setup.py
+    ===================================================================
+    --- setup.py      (revision 3)
+    +++ setup.py      (working copy)
+    @@ -36,3 +36,5 @@
+               'console_scripts': [
+               ]},
+           )
+    +
+    +a = 2
+    
+Commit it:
+
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd
+    'svn commit -m "small tweak"'
+    >>> print commands.getoutput(cmd)
+    Sending        setup.py
+    Transmitting file data .
+    Committed revision 4.
+
+Tags
+----
+
+Originally there are no tags:
+
+    >>> checkout.available_tags()
+    []
+
+Create a tag and it will show up:
+
+    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd
+    'svn cp ...tha.example/trunk ...tha.example/tags/0.1 -m "Tagging 0.1"'
+    >>> dont_care = commands.getoutput(cmd)
+    >>> checkout.available_tags()
+    ['0.1']
+
+A tag url is important for subversion:
+
+    >>> checkout.tag_url('holadijee')
+    'file:...tha.example/tags/holadijee'
+
+Make and commit a small change:
+
+    >>> open(setup_py, 'a').write('\nb = 3\n')
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> print commands.getoutput(cmd)
+    Sending        setup.py
+    Transmitting file data .
+    Committed revision 6.
+
+Now we can request the changes since a specific tag:
+
+    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmd
+    'svn diff ...tha.example/tags/0.1 ...tha.example/trunk'
+    >>> print commands.getoutput(cmd)
+    Index: setup.py
+    ===================================================================
+    --- setup.py      (.../tags/0.1)  (revision 6)
+    +++ setup.py      (.../trunk)     (revision 6)
+    @@ -38,3 +38,5 @@
+           )
+    <BLANKLINE>
+     a = 2
+    +
+    +b = 3
+
+
+Making a tag checkout
+---------------------
+
+For checking out a tag, we first need a temp folder to do the checkout in:
+
+    >>> temp = checkout.prepare_checkout_dir('somename')
+    >>> temp
+    '...somename...'
+
+And make a tag checkout:
+
+    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmd
+    'svn co .../tha.example/tags/0.1 ...somename...'
+    >>> print commands.getoutput(cmd)
+    A    ...somename.../local-checkouts
+    A    ...somename.../grok-1.0a4.cfg
+    A    ...somename.../TODO.txt
+    A    ...somename.../bootstrap.py
+    A    ...somename.../buildout.cfg
+    A    ...somename.../CHANGES.txt
+    A    ...somename.../setup.py
+    A    ...somename.../src
+    A    ...somename.../src/tha
+    A    ...somename.../src/tha/__init__.py
+    A    ...somename.../src/tha/example
+    A    ...somename.../src/tha/example/USAGE.txt
+    A    ...somename.../src/tha/example/tests
+    A    ...somename.../src/tha/example/tests/sample.txt
+    A    ...somename.../src/tha/example/tests/__init__.py
+    A    ...somename.../src/tha/example/tests/test.py
+    A    ...somename.../src/tha/example/__init__.py
+    A    ...somename.../README.txt
+    Checked out revision 6.
