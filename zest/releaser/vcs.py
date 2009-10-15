@@ -13,19 +13,6 @@ class BaseVersionControl(object):
 
     internal_filename = '' # e.g. '.svn' or '.hgrc'
 
-    def _extract_version(self):
-        """Extract the version from setup.py or version.txt.
-
-        If there is a setup.py and it gives back a version that differs
-        from version.txt then this version.txt is not the one we should
-        use.  This can happen in packages like ZopeSkel that have one or
-        more version.txt files that have nothing to do with the version of
-        the package itself.
-
-        So when in doubt: use setup.py.
-        """
-        return self.get_setup_py_version() or self.get_version_txt_version()
-
     def get_setup_py_version(self):
         if os.path.exists('setup.py'):
             # First run egg_info, as that may get rid of some warnings
@@ -95,6 +82,19 @@ class BaseVersionControl(object):
             if tag == version:
                 return True
         return False
+
+    def _extract_version(self):
+        """Extract the version from setup.py or version.txt.
+
+        If there is a setup.py and it gives back a version that differs
+        from version.txt then this version.txt is not the one we should
+        use.  This can happen in packages like ZopeSkel that have one or
+        more version.txt files that have nothing to do with the version of
+        the package itself.
+
+        So when in doubt: use setup.py.
+        """
+        return self.get_setup_py_version() or self.get_version_txt_version()
 
     def _update_version(self, version):
         """Find out where to change the version and change it.

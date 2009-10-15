@@ -6,103 +6,130 @@ import datetime
 import logging
 import sys
 from zest.releaser import utils
-import zest.releaser.choose
+from zest.releaser import choose
 
 logger = logging.getLogger('prerelease')
 
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
+HISTORY_HEADER = '%(new_version)s (%(today)s)'
+PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
 
 
-def check_version(vcs):
-    """Set the version to a non-development version."""
-    original_version = vcs.version
-    version = original_version
-    logger.debug("Extracted version: %s", version)
-    if version is None:
-        logger.critical('No version found.')
-        sys.exit(1)
-    suggestion = utils.cleanup_version(version)
-    q = ("Enter version [%s]: " % suggestion)
-    version = utils.get_input(q).strip()
-    if not version:
-        version = suggestion
-    if version != original_version:
-        vcs.version = version
-        logger.info("Changed version from %r to %r" % (original_version,
-                                                       version))
-    return version
+class Prereleaser(object):
+    """WORK IN PROGRESS
 
+    self.data holds data that can optionally be changed by plugins.
 
-def check_history(vcs):
-    """Check if the history has been updated.
-
-    Every history heading looks like '1.0 b4 (1972-12-25)'. Extract them,
-    check if the first one matches the version and whether it has a the
-    current date.
     """
-    history = vcs.history_file()
-    if not history:
-        logger.warn("No history file found")
-        return
-    logger.debug("Checking %s", history)
 
-    history_lines = open(history).read().split('\n')
-    headings = utils.extract_headings_from_history(history_lines)
-    if not len(headings):
-        logger.error("No detectable version heading in the history file.")
-        sys.exit()
+    def __init__(self):
+        self.vcs = choose.version_control()
+        # Prepare some defaults for potential overriding.
+        self.data = dict(
+            today=datetime.datetime.today().strftime('%Y-%m-%d'),
+            history_header=HISTORY_HEADER,
+            commit_msg=PRERELEASE_COMMIT_MSG,
+            )
 
-    first = headings[0]
-    detected_version = vcs.version
-    version_ok = (first['version'] == detected_version)
-    if not version_ok:
-        logger.debug("First history heading's version (%r) doesn't match "
-                      "the detected version (%r).",
-                      first['version'], detected_version)
-    date_ok = (first['date'] == TODAY)
-    if not date_ok:
-        logger.debug("First history heading's date (%r) doesn't match "
-                     "today's date (%r).",
-                     first['date'], TODAY)
-    if not (date_ok and version_ok):
-        good_heading = '%s (%s)' % (detected_version, TODAY)
+    def prepare(self):
+        """Prepare self.data by asking about new version etc."""
+        self._grab_version()
+        self._grab_history()
+
+    def execute(self):
+        """Make the changes and offer a commit"""
+        self._write_version()
+        self._write_history()
+        self._diff_and_commit()
+
+    def _grab_version(self):
+        """Set the version to a non-development version."""
+        original_version = self.vcs.version
+        logger.debug("Extracted version: %s", original_version)
+        if original_version is None:
+            logger.critical('No version found.')
+            sys.exit(1)
+        suggestion = utils.cleanup_version(original_version)
+        q = ("Enter version [%s]: " % suggestion)
+        new_version = utils.get_input(q).strip()
+        if not new_version:
+            new_version = suggestion
+        self.data['original_version'] = original_version
+        self.data['new_version'] = new_version
+
+    def _write_version(self):
+        if self.data['new_version'] != self.data['original_version']:
+            # self.vcs.version writes it to the file it got the version from.
+            self.vcs.version = self.data['new_version']
+            logger.info("Changed version from %r to %r",
+                        self.data['original_version'],
+                        self.data['new_version'])
+
+    def _grab_history(self):
+        """Calculate the needed history/changelog changes
+
+        Every history heading looks like '1.0 b4 (1972-12-25)'. Extract them,
+        check if the first one matches the version and whether it has a the
+        current date.
+        """
+        history_file = self.vcs.history_file()
+        if not history_file:
+            logger.warn("No history file found")
+            return
+        logger.debug("Checking %s", history_file)
+        history_lines = open(history_file).read().split('\n')
+        # ^^^ TODO: .readlines()?
+        headings = utils.extract_headings_from_history(history_lines)
+        if not len(headings):
+            logger.error("No detectable version heading in the history "
+                         "file %s", history_file)
+            sys.exit()
+        first = headings[0]
+        good_heading = self.data['history_header'] % self.data
+        # ^^^ history_header is a string with %(abc)s replacements.
         line = headings[0]['line']
         previous = history_lines[line]
         history_lines[line] = good_heading
-        logger.debug("Set heading to %r.", good_heading)
+        logger.debug("Set heading from %r to %r.", previous, good_heading)
         history_lines[line+1] = utils.fix_rst_heading(
             heading=good_heading,
             below=history_lines[line+1])
         logger.debug("Set line below heading to %r",
                      history_lines[line+1])
-        contents = '\n'.join(history_lines)
+        self.data['history_lines'] = history_lines
+        self.data['history_file'] = history_file
+        # TODO: add line number where an extra changelog entry can be
+        # inserted.
+
+    def _write_history(self):
+        """Write previously-calculated history lines back to the file"""
+        contents = '\n'.join(self.data['history_lines'])
+        history = self.data['history_file']
         open(history, 'w').write(contents)
-        logger.info("History file %s updated, first heading set to %r "
-                    "from %r", history, good_heading, previous)
+        logger.info("History file %s updated.", history)
+
+    def _diff_and_commit(self):
+        diff_cmd = self.vcs.cmd_diff()
+        diff = getoutput(diff_cmd)
+        if sys.version.startswith('2.6.2'):
+            # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
+            # spot it can surface as we show a part of the changelog which can
+            # contain every kind of character.  The rest is mostly ascii.
+            print "Diff results:"
+            print diff
+        else:
+            # Common case
+            logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+        if utils.ask("OK to commit this"):
+            msg = self.data['commit_msg'] % self.data
+            commit_cmd = self.vcs.cmd_commit(msg)
+            commit = getoutput(commit_cmd)
+            logger.info(commit)
 
 
 def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
-    vcs = zest.releaser.choose.version_control()
-
-    # XXX Check for uncommitted files.
-    version = check_version(vcs)
-    check_history(vcs)
-    # XXX Check long-description
-    # show diff, offer commit
-    diff_cmd = vcs.cmd_diff()
-    diff = getoutput(diff_cmd)
-    if sys.version.startswith('2.6.2'):
-        # python2.6.2 bug... http://bugs.python.org/issue5170
-        # This is the spot it can surface as we show a part of the changelog
-        # which can contain every kind of character.  The rest is mostly ascii.
-        print "Diff results:"
-        print diff
-    else:
-        # Common case
-        logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
-    if utils.ask("OK to commit this"):
-        commit_cmd = vcs.cmd_commit('Preparing release %s' % version)
-        commit = getoutput(commit_cmd)
-        logger.info(commit)
+    prereleaser = Prereleaser()
+    prereleaser.prepare()
+    prereleaser.execute()
