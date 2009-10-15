@@ -15,6 +15,20 @@ HISTORY_HEADER = '%(new_version)s (%(today)s)'
 PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
 
 
+DATA = {
+    # Documentation for self.data.  You get runtime warnings when something is
+    # in self.data that is not in this list.  Embarrasment-driven
+    # documentation!
+    'today': 'Date string used in history header',
+    'new_version': 'New version (so 1.0 instead of 1.0dev)',
+    'history_file': 'Filename of history/changelog file',
+    'history_lines': 'List with all history file lines',
+    'original_version': 'Version before prereleasing (e.g. 1.0dev)',
+    'commit_msg': 'Message template used when committing',
+    'history_header': 'Header template used for 1st history header',
+    }
+
+
 class Prereleaser(object):
     """WORK IN PROGRESS
 
@@ -35,6 +49,7 @@ class Prereleaser(object):
         """Prepare self.data by asking about new version etc."""
         self._grab_version()
         self._grab_history()
+        self._check_data_dict()
 
     def execute(self):
         """Make the changes and offer a commit"""
@@ -125,6 +140,14 @@ class Prereleaser(object):
             commit_cmd = self.vcs.cmd_commit(msg)
             commit = getoutput(commit_cmd)
             logger.info(commit)
+
+    def _check_data_dict(self):
+        """Ensure that the self.data dict is fully documented"""
+        undocumented = [key for key in self.data
+                        if key not in DATA]
+        if undocumented:
+            logger.warn('Internal detail: key(s) %s are not documented',
+                        undocumented)
 
 
 def main():
