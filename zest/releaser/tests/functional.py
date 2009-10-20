@@ -16,9 +16,11 @@ def setup(test):
 
     # Monkey patch sys.exit
     test.orig_exit = sys.exit
+
     def _exit(code=None):
         msg = "SYSTEM EXIT (code=%s)" % code
         raise RuntimeError(msg)
+
     sys.exit = _exit
 
     # Extract example project
@@ -75,4 +77,3 @@ def teardown(test):
     os.chdir(test.orig_dir)
     #print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
-

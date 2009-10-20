@@ -53,7 +53,8 @@ def main():
 
     # End of nicking from zest.stabilizer.
 
-    logger.info("Showing differences from the last commit against tag %s", full_tag)
+    logger.info("Showing differences from the last commit against tag %s",
+                full_tag)
     diff_command = vcs.cmd_diff_last_commit_against_tag(found)
     print diff_command
     print getoutput(diff_command)

@@ -106,11 +106,11 @@ class Prereleaser(object):
         previous = history_lines[line]
         history_lines[line] = good_heading
         logger.debug("Set heading from %r to %r.", previous, good_heading)
-        history_lines[line+1] = utils.fix_rst_heading(
+        history_lines[line + 1] = utils.fix_rst_heading(
             heading=good_heading,
-            below=history_lines[line+1])
+            below=history_lines[line + 1])
         logger.debug("Set line below heading to %r",
-                     history_lines[line+1])
+                     history_lines[line + 1])
         self.data['history_lines'] = history_lines
         self.data['history_file'] = history_file
         # TODO: add line number where an extra changelog entry can be
