@@ -1,0 +1,147 @@
+Detailed tests of git.py
+=======================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import git
+    >>> import commands
+    >>> import os
+
+Project name
+------------
+
+The prepared git project has a setup.py, so the name in there is used:
+
+    >>> os.chdir(gitsourcedir)
+    >>> checkout = git.Git()
+    >>> checkout.name
+    'tha.example'
+
+When the setup.py doesn't exist or doesn't return a proper name, we fall back
+to the directory name.
+
+    >>> orig = checkout.get_setup_py_name
+    >>> checkout.get_setup_py_name= lambda: None  # Hack
+    >>> checkout.name
+    'tha.example-git'
+    >>> checkout.get_setup_py_name = orig  # Restore hack
+
+
+Diff and commit
+---------------
+
+Make a change:
+
+    >>> setup_py = os.path.join(gitsourcedir, 'setup.py')
+    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> cmd = checkout.cmd_diff()
+    >>> cmd
+    'git diff'
+    >>> print commands.getoutput(cmd)
+    diff --git a/setup.py b/setup.py
+    index ...
+    --- a/setup.py
+    +++ b/setup.py
+    @@ -36,3 +36,5 @@ setup(name='tha.example',
+               'console_scripts': [
+               ]},
+           )
+    +
+    +a = 2
+    
+Commit it:
+
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd
+    'git commit -a -m "small tweak"'
+    >>> print commands.getoutput(cmd)
+    [master ...] small tweak
+     1 files changed, 2 insertions(+), 0 deletions(-)
+
+
+Tags
+----
+
+Originally there are no tags:
+
+    >>> checkout.available_tags()
+    []
+
+Create a tag and it will show up:
+
+    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd
+    'git tag 0.1 -m "Tagging 0.1"'
+    >>> dont_care = commands.getoutput(cmd)
+    >>> checkout.available_tags()
+    ['0.1']
+
+A specific tag url is important for subversion, but nonsensical for
+git.  We just return the version as-is:
+
+    >>> checkout.tag_url('holadijee')
+    'holadijee'
+
+Make and commit a small change:
+
+    >>> open(setup_py, 'a').write('\nb = 3\n')
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> print commands.getoutput(cmd)
+    [master ...] small tweak
+     1 files changed, 2 insertions(+), 0 deletions(-)
+    
+Now we can request the changes since a specific tag:
+
+    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmd
+    'git diff 0.1'
+    >>> print commands.getoutput(cmd)
+    diff --git a/setup.py b/setup.py
+    index ...
+    --- a/setup.py
+    +++ b/setup.py
+    @@ -38,3 +38,5 @@ setup(name='tha.example',
+           )
+    <BLANKLINE>
+     a = 2
+    +
+    +b = 3
+
+
+Making a tag checkout
+---------------------
+
+For checking out a tag with subversion or mercurial, we first create a temp
+dir and afterwards do a checkout/clone of a tag.  With git, we immediately
+make a clone of the repository in a tempdir and afterwards switch ("checkout")
+that directory to the tag.
+
+For checking out a tag, we first need a checkout dir with a clone of the repository.
+
+    >>> temp = checkout.prepare_checkout_dir('somename')
+    >>> temp
+    '...somename...'
+
+For git, we have to change to that directory!  Git doesn't work with paths.
+
+    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=1)
+
+Chdir and make a tag checkout:
+
+    >>> os.chdir(temp)
+    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmd
+    'git checkout 0.1'
+    >>> print commands.getoutput(cmd)
+    Note: moving to "0.1" which isn't a local branch
+    If you want to create a new branch from this checkout, you may do so
+    (now or later) by using -b with the checkout command again. Example:
+      git checkout -b <new_branch_name>
+    HEAD is now at ... small tweak

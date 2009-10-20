@@ -2,6 +2,7 @@ from commands import getoutput
 import logging
 import tempfile
 import os
+import sys
 
 from zest.releaser.vcs import BaseVersionControl
 
@@ -24,12 +25,15 @@ class Git(BaseVersionControl):
 
     def available_tags(self):
         tag_info = getoutput('git tag')
-        tags = [line[:line.find(' ')]  for line in tag_info.split('\n')]
+        tags = [line for line in tag_info.split('\n') if line]
         logger.debug("Available tags: %r", tags)
         return tags
 
     def prepare_checkout_dir(self, prefix):
-        return tempfile.mktemp(prefix=prefix)
+        temp = tempfile.mktemp(prefix=prefix)
+        cmd = 'git clone %s %s' % (self.workingdir, temp)
+        logger.debug(getoutput(cmd))
+        return temp
 
     def tag_url(self, version):
         # this doesn't apply to Git, so we just return the
@@ -43,14 +47,16 @@ class Git(BaseVersionControl):
         return 'git commit -a -m "%s"' % message
 
     def cmd_diff_last_commit_against_tag(self, version):
-        current_revision = getoutput('git identify')
-        current_revision = current_revision.split(' ')[0]
-        # + at the end of the revision denotes uncommitted changes
-        current_revision = current_revision.rstrip('+')
-        return "git diff -r %s -r %s" % (version, current_revision)
+        return "git diff %s" % version
 
     def cmd_create_tag(self, version):
         return 'git tag %s -m "Tagging %s"' % (version, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
-        return 'git clone -r %s . %s' % (version, checkout_dir)
+        if not (os.path.realpath(os.getcwd()) ==
+                os.path.realpath(checkout_dir)):
+            # Specific to git: we need to be in that directory for the command
+            # to work.
+            logger.warn("We haven't been chdir'ed to %s", checkout_dir)
+            sys.exit(1)
+        return 'git checkout %s' % version

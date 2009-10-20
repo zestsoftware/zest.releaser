@@ -49,13 +49,13 @@ def main(return_tagdir=False):
         prefix = '%s-%s-' % (package, version)
         logger.info("Doing a checkout...")
         tagdir = vcs.prepare_checkout_dir(prefix)
+        os.chdir(tagdir)
         cmd = vcs.cmd_checkout_from_tag(version, tagdir)
         print getoutput(cmd)
         logger.info("Tag checkout placed in %s", tagdir)
 
         if 'setup.py' in os.listdir(tagdir):
             # See if creating an egg actually works.
-            os.chdir(tagdir)
             logger.info("Making an egg of a fresh tag checkout.")
             print getoutput('%s setup.py sdist' % sys.executable)
 

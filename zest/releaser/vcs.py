@@ -13,6 +13,12 @@ class BaseVersionControl(object):
 
     internal_filename = '' # e.g. '.svn' or '.hgrc'
 
+    def __init__(self, workingdir=None):
+        if workingdir:
+            self.workingdir = workingdir
+        else:
+            self.workingdir = os.getcwd()
+
     def get_setup_py_version(self):
         if os.path.exists('setup.py'):
             # First run egg_info, as that may get rid of some warnings
