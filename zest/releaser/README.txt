@@ -43,7 +43,7 @@ specific project's buildout, by having a buildout configuration such as::
 
 
 You must also have a version control system installed. Zest.releaser currently
-supports Subversion and Mercurial (and others could be added).
+supports Subversion, Mercurial and Git (and others could be added).
 
 
 Running

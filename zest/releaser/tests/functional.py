@@ -52,6 +52,15 @@ def setup(test):
     commands.getoutput("hg add %s" % hgsourcedir)
     commands.getoutput("hg commit %s -m 'init'" % hgsourcedir)
 
+    # Git initialization
+    gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
+    shutil.copytree(sourcedir, gitsourcedir)
+    os.chdir(gitsourcedir)
+    commands.getoutput("git init")
+    commands.getoutput("git add .")
+    commands.getoutput("git commit -a -m 'init'")
+    os.chdir(test.orig_dir)
+
     def svnhead(*filename_parts):
         filename = os.path.join(svnsourcedir, *filename_parts)
         lines = open(filename).readlines()
@@ -64,12 +73,21 @@ def setup(test):
         for line in lines[:5]:
             print line,
 
+    def githead(*filename_parts):
+        filename = os.path.join(gitsourcedir, *filename_parts)
+        lines = open(filename).readlines()
+        for line in lines[:5]:
+            print line,
+
     test.globs.update({'tempdir': test.tempdir,
                        'repo_url': repo_url,
                        'svnsourcedir': svnsourcedir,
                        'hgsourcedir': hgsourcedir,
+                       'gitsourcedir': gitsourcedir,
                        'svnhead': svnhead,
-                       'hghead': hghead})
+                       'hghead': hghead,
+                       'githead': githead,
+                       })
 
 
 def teardown(test):

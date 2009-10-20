@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from zest.releaser import git
 from zest.releaser import hg
 from zest.releaser import svn
 
@@ -15,6 +16,8 @@ def version_control():
         return svn.Subversion()
     elif '.hg' in curdir_contents:
         return hg.Hg()
+    elif '.git' in curdir_contents:
+        return git.Git()
     else:
         logger.critical('No version control system detected.')
         sys.exit(1)

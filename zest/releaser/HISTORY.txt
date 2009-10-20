@@ -4,6 +4,10 @@ Changelog for zest.releaser
 2.9.4 (unreleased)
 ------------------
 
+- Added support for git.  [reinout]
+
+- Lots of internal refactoring and small fixes.  [reinout]
+
 - Started unit tests.  [reinout]
 
 

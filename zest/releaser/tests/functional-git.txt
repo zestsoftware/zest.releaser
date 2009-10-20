@@ -1,0 +1,115 @@
+Integration test
+================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Several items are prepared for us.
+
+A git directory (repository and checkout in one):
+
+    >>> gitsourcedir
+    '.../tha.example-git'
+    >>> import os
+    >>> os.chdir(gitsourcedir)
+
+There are no tags yet:
+
+    >>> import commands
+    >>> print commands.getoutput("git tag")
+    <BLANKLINE>
+
+The changelog is at 0.1 dev:
+
+    >>> githead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Change to the source directory and run the prerelease script:
+
+    >>> import os
+    >>> os.chdir(gitsourcedir)
+    >>> from zest.releaser import prerelease
+    >>> utils.answers_for_testing = ['', '']
+    >>> prerelease.main()
+    Question: Enter version [0.1]:
+    Our reply: <ENTER>
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog now has a release date instead of ``(unreleased)``:
+
+    >>> githead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.1 (...-...-...)
+    ----------------
+
+And the version number is just 0.1 and has lost its dev marker:
+
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.1'
+
+The release script tags the release:
+
+    >>> utils.answers_for_testing = ['y', 'n']
+    >>> from zest.releaser import release
+    >>> release.main()
+    To tag, you can use the following command:
+    git tag 0.1 -m "Tagging 0.1"
+    Question: Run this command (Y/n)?
+    Our reply: y
+    <BLANKLINE>
+    Question: Check out the tag
+        (for tweaks or pypi/distutils server upload) (Y/n)?
+    Our reply: n
+
+There is now a tag:
+
+    >>> print commands.getoutput("git tag")
+    0.1
+
+And the postrelease script ups the version:
+
+    >>> utils.answers_for_testing = ['', '']
+    >>> from zest.releaser import postrelease
+    >>> postrelease.main()
+    Current version is '0.1'
+    Question: Enter new development version ('dev' will be appended) [0.2]:
+    Our reply: <ENTER>
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog and setup.py are at 0.2 and indicate dev mode:
+
+    >>> githead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.2 (unreleased)
+    ----------------
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.2dev'
+
+And there are no uncommitted changes:
+
+    >>> print commands.getoutput("git status")
+    # On branch master
+    nothing to commit (working directory clean)
