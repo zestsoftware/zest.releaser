@@ -1,0 +1,61 @@
+Detailed tests of vcs.py
+========================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import vcs
+    >>> import commands
+    >>> import os
+
+BaseVersionControl is the base class for subversion/mercurial/git support.  It
+handles some base cases and has a bunch of NotImplementedError methods.
+
+When started, it stores the current working directory:
+
+    >>> svnsourcedir
+    '...tha.example-svn'
+    >>> os.chdir(svnsourcedir)
+    >>> checkout = vcs.BaseVersionControl()
+    >>> checkout.workingdir
+    '...tha.example-svn'
+
+
+Methods that must be implemented in subclasses
+----------------------------------------------
+
+    >>> checkout.name()
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.available_tags()
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.prepare_checkout_dir()
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.tag_url('arg')
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.cmd_diff()
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.cmd_commit('arg')
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.cmd_diff_last_commit_against_tag('arg')
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> checkout.cmd_create_tag('arg')
+    Traceback (most recent call last):
+    ...
+    NotImplementedError

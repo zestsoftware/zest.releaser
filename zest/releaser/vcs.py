@@ -11,13 +11,10 @@ logger = logging.getLogger('vcs')
 class BaseVersionControl(object):
     "Shared implementation between all version control systems"
 
-    internal_filename = '' # e.g. '.svn' or '.hgrc'
+    internal_filename = '' # e.g. '.svn' or '.hg'
 
-    def __init__(self, workingdir=None):
-        if workingdir:
-            self.workingdir = workingdir
-        else:
-            self.workingdir = os.getcwd()
+    def __init__(self):
+        self.workingdir = os.getcwd()
 
     def get_setup_py_version(self):
         if os.path.exists('setup.py'):
@@ -151,35 +148,35 @@ class BaseVersionControl(object):
     @property
     def name(self):
         "Name of the project under version control"
-        pass
+        raise NotImplementedError()
 
     def available_tags(self):
         """Return available tags."""
-        pass
+        raise NotImplementedError()
 
     def prepare_checkout_dir(self):
         """Return a tempoary checkout location. Create this directory first
         if necessary."""
-        pass
+        raise NotImplementedError()
 
     def tag_url(self, version):
         "URL to tag of version."
-        pass
+        raise NotImplementedError()
 
     def cmd_diff(self):
         "diff command"
-        pass
+        raise NotImplementedError()
 
     def cmd_commit(self, message):
         "commit command: should specify a verbose option if possible"
-        pass
+        raise NotImplementedError()
 
     def cmd_diff_last_commit_against_tag(self, version):
         """Return diffs between a tagged version and the last commit of
         the working copy.
         """
-        pass
+        raise NotImplementedError()
 
     def cmd_create_tag(self, version):
         "Create a tag from a version name."
-        pass
+        raise NotImplementedError()

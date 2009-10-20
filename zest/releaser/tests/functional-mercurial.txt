@@ -35,10 +35,8 @@ testing hack in utils.py:
     >>> from zest.releaser import utils
     >>> utils.TESTMODE = True
 
-Change to the source directory and run the prerelease script:
+Run the prerelease script:
 
-    >>> import os
-    >>> os.chdir(hgsourcedir)
     >>> from zest.releaser import prerelease
     >>> utils.answers_for_testing = ['', '']
     >>> prerelease.main()
