@@ -71,7 +71,7 @@ def main(return_tagdir=False):
             logger.info("Making an egg of a fresh tag checkout.")
             print commands.getoutput(utils.setup_py('sdist'))
 
-            pypiconfig = pypi.Pypiconfig()
+            pypiconfig = pypi.PypiConfig()
             if not pypiconfig.config:
                 logger.warn("You must have a properly configured %s file in "
                             "your home dir to upload an egg.",
