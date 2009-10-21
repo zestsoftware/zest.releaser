@@ -88,7 +88,7 @@ def main(return_tagdir=False):
                                 "do this manually the first time.")
                 else:
                     logger.info("This package is registered on PyPI.")
-                    if pypiconfig.has_old_pypi_config() and utils.ask(
+                    if pypiconfig.is_old_pypi_config() and utils.ask(
                         "Register and upload to PyPI"):
                         result = commands.getoutput(
                             utils.setup_py('register sdist upload'))
