@@ -17,12 +17,24 @@ logger = logging.getLogger('pypi')
 
 
 def collective_dist_available():
-    """Return whether collective.dist's functionality is available"""
+    """Return whether collective.dist is available"""
     if mupload is not None:
         return True
+    return False
+
+
+def new_distutils_available():
+    """Return whether a recent enough python is available for multiple pypi"""
     if sys.version_info[:2] >= (2, 6):
         # 2.6 (or higher) does not need collective.dist: distutils includes
         # the needed functionality.
+        return True
+    return False
+
+
+def multiple_pypi_support():
+    """Return whether we can upload to multiple pypi servers"""
+    if collective_dist_available() or new_distutils_available():
         return True
     return False
 
@@ -57,7 +69,7 @@ class PypiConfig(object):
         return True
 
     def is_new_pypi_config(self):
-        if not collective_dist_available():
+        if not multiple_pypi_support():
             return False
         try:
             new = self.config.get('distutils', 'index-servers')
@@ -71,7 +83,7 @@ class PypiConfig(object):
         If the config has an old pypi config, remove the default pypi
         server from the list.
         """
-        if not collective_dist_available():
+        if not multiple_pypi_support():
             return []
         try:
             raw_index_servers = self.config.get('distutils', 'index-servers')

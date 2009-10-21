@@ -19,33 +19,51 @@ runs, so we can only check if it is available:
 
     >>> dont_care = pypi.mupload
 
-If mupload is not None, collective.dist is available:
+If mupload is not None, collective.dist is available, otherwise not.
 
     >>> pypi.mupload = 'something'
     >>> pypi.collective_dist_available()
     True
-
-If it *is* None, a check for python versions is made.
-
     >>> pypi.mupload = None
+    >>> pypi.collective_dist_available()
+    False
+
+A check for python versions is also made.
+
     >>> import sys
     >>> orig_version = sys.version_info
 
 Python 2.6 and higher provide the needed functionality (in distutils;
 collective.dist just backports that to older python versions):
 
+    >>> sys.version_info = (2, 5)
+    >>> pypi.new_distutils_available()
+    False
     >>> sys.version_info = (2, 6)
-    >>> pypi.collective_dist_available()
+    >>> pypi.new_distutils_available()
     True
     >>> sys.version_info = (3, 1)
-    >>> pypi.collective_dist_available()
+    >>> pypi.new_distutils_available()
     True
 
-Pythons 2.5 and lower lack the necessary functionality:
+If any of these two is true, multiple pypi support is available.
 
+    >>> pypi.mupload = None
     >>> sys.version_info = (2, 5)
-    >>> pypi.collective_dist_available()
+    >>> pypi.multiple_pypi_support()
     False
+    >>> pypi.mupload = 'available'
+    >>> sys.version_info = (2, 5)
+    >>> pypi.multiple_pypi_support()
+    True
+    >>> pypi.mupload = None
+    >>> sys.version_info = (2, 6)
+    >>> pypi.multiple_pypi_support()
+    True
+    >>> pypi.mupload = 'available'
+    >>> sys.version_info = (2, 6)
+    >>> pypi.multiple_pypi_support()
+    True
 
 For the rest of the tests we assume that collective.dist is available:
 
@@ -149,10 +167,11 @@ A file with both is also possible:
     >>> pypiconfig.is_new_pypi_config()
     True
 
-If there's no collective.dist, a config file in the new format isn't
+If there's no multiple pypi support, a config file in the new format isn't
 recognized as the new format as it cannot possibly function:
 
     >>> pypi.mupload = None
+    >>> sys.version_info = (2, 5)
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> pypiconfig.config == None # Format isn't right, so no config.
     True
