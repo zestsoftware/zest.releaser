@@ -2,6 +2,7 @@
 import commands
 import logging
 import os
+import urllib
 import sys
 
 from zest.releaser import choose
