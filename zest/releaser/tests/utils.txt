@@ -243,3 +243,31 @@ The second line must be uniform:
     >>> second = '- bullet point, no header'
     >>> utils.fix_rst_heading(first, second)
     '- bullet point, no header'
+
+
+Safe setup.py running
+---------------------
+
+``setup_py()`` returns the ``python setup.py xyz`` command line by using
+sys.executable.
+
+    >>> cmd = utils.setup_py('cook a cow')
+    >>> print cmd.replace(sys.executable, 'python') # test normalization
+    python setup.py cook a cow
+
+When the setup.py arguments include arguments that indicate pypi interaction,
+the python executable is replaced by ``echo`` for safety reasons.  This only
+happens when TESTMODE is on
+
+    >>> utils.TESTMODE = True
+    >>> print utils.setup_py('upload')
+    echo setup.py upload
+    >>> print utils.setup_py('mupload')
+    echo setup.py mupload
+    >>> print utils.setup_py('register')
+    echo setup.py register
+    >>> print utils.setup_py('mregister')
+    echo setup.py mregister
+
+
+

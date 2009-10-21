@@ -153,7 +153,14 @@ def show_last_lines(result):
         print line
 
 
-def setup_py(rest):
+def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
-    return '%s setup.py %s' % (sys.executable, rest)
+    executable = sys.executable
+    if TESTMODE:
+        # Hack for testing
+        for unsafe in ['upload', 'register']:
+            if unsafe in rest_of_cmdline:
+                executable = 'echo'
+
+    return '%s setup.py %s' % (executable, rest_of_cmdline)
 
