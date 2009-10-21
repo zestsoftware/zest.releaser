@@ -1,0 +1,39 @@
+Detailed tests of release.py
+============================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import release
+    >>> import commands
+    >>> import os
+
+
+Check availability on pypi
+--------------------------
+
+"Testing" means "don't really poll pypi", so the test setup does some
+monkeypatching for us:
+
+    >>> import urllib
+    >>> urllib.urlopen
+    <function _mock_urlopen at ...>
+
+There's a mock list of packages that our mock pypi provides:
+
+    >>> mock_pypi_available
+    []
+
+Search a non-existing package:
+
+    >>> release.package_in_pypi('zest.releaser')
+    False
+
+Now search for an "existing" package:
+
+    >>> mock_pypi_available.append('zest.releaser')
+    >>> release.package_in_pypi('zest.releaser')
+    True

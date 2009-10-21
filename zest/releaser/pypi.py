@@ -1,7 +1,6 @@
 import logging
 import os
 import sys
-import urllib
 
 from ConfigParser import ConfigParser
 from ConfigParser import NoSectionError

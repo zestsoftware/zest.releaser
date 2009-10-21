@@ -1,11 +1,13 @@
 """Set up functional test fixtures"""
 import commands
 import os
-import shutil
-import tempfile
 import pkg_resources
-import tarfile
+import shutil
 import sys
+import tarfile
+import tempfile
+import urllib
+import StringIO
 
 
 def setup(test):
@@ -22,6 +24,21 @@ def setup(test):
         raise RuntimeError(msg)
 
     sys.exit = _exit
+
+    # Monkey patch urllib for pypi access mocking.
+    test.orig_urlopen = urllib.urlopen
+    test.mock_pypi_available = []
+
+    def _mock_urlopen(url):
+        #print "Mock opening", url
+        package = url.replace('http://pypi.python.org/simple/', '')
+        if package not in test.mock_pypi_available:
+            answer = 'Not found'
+        else:
+            answer = ' '.join(test.mock_pypi_available)
+        return StringIO.StringIO(buf=answer)
+
+    urllib.urlopen = _mock_urlopen
 
     # Extract example project
     example_tar = pkg_resources.resource_filename(
@@ -94,11 +111,13 @@ def setup(test):
                        'svnhead': svnhead,
                        'hghead': hghead,
                        'githead': githead,
+                       'mock_pypi_available': test.mock_pypi_available,
                        })
 
 
 def teardown(test):
     sys.exit = test.orig_exit
+    urllib.urlopen = test.orig_urlopen
     os.chdir(test.orig_dir)
     #print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
