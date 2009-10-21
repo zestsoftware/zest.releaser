@@ -96,8 +96,8 @@ class PypiConfig(object):
             # We have already asked about uploading to pypi using the normal
             # upload.
             ignore_servers.append('pypi')
-            # TODO: reinout wonders if you can even have an old pypi config
-            # with a [distutils] server list???
+            # Yes, you can even have an old pypi config with a
+            # [distutils] server list.
         index_servers = [
             server.strip() for server in raw_index_servers.split('\n')
             if server.strip() not in ignore_servers]
