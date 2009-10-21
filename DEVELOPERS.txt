@@ -1,16 +1,34 @@
 Information for developers of zest.releaser
 ===========================================
 
+Needed python
+-------------
+
+The tests currently pass on python 2.4.5, 2.5.4 and 2.6.3.  Using
+2.6.2 specifically will give test failures.
+
+
+Needed programs
+---------------
+
 To run the tests, you need to have the supported versioning systems
 installed: svn, hg (mercurial) and git.  There may be test failures
 when you have different versions of these programs.  In that case,
 please investigate as these may be genuine errors.
+
+
+Needed setuptools
+-----------------
 
 You also need setuptools or distribute in your system path.  This is
 because we basically call 'sys.executable setup.py egg_info' directly
 (in the tests and in the actual code), which will give an import error
 on setuptools otherwise.  There is a branch with a hack that solves
 this but it sounds too hacky.
+
+
+Needed configuration
+--------------------
 
 For mercurial you may get test failures because of extra output like
 this::
