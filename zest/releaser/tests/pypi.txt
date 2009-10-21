@@ -119,6 +119,36 @@ And the new format that allows multiple uploads:
     >>> pypiconfig.is_new_pypi_config()
     True
 
+A file with both is also possible:
+
+    >>> pypirc_both = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_both.txt')
+    >>> print open(pypirc_both).read()
+    [server-login]
+    username:bdfl
+    password:secret
+    <BLANKLINE>
+    [distutils]
+    index-servers =
+      pypi
+      local
+    <BLANKLINE>
+    [pypi]
+    username:bdfl
+    password:secret
+    <BLANKLINE>
+    [local]
+    repository:http://localhost:8080/test/products
+    username:bdfl
+    password:secret
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
+    >>> pypiconfig.config
+    <ConfigParser.ConfigParser instance at ...>
+    >>> pypiconfig.is_old_pypi_config()
+    True
+    >>> pypiconfig.is_new_pypi_config()
+    True
+
 If there's no collective.dist, a config file in the new format isn't
 recognized as the new format as it cannot possibly function:
 
@@ -152,3 +182,11 @@ If we have an old config file, the distutils server list is also empty:
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
     >>> pypiconfig.distutils_servers()
     []
+
+And with a file with both an "old" and a "new" set of sections, the pypi entry
+is filtered out of the distutils servers list as that's handled by the "old"
+part:
+
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
+    >>> pprint(sorted(pypiconfig.distutils_servers()))
+    ['local']
