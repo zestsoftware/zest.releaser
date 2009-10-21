@@ -57,7 +57,7 @@ def setup(test):
     shutil.copytree(sourcedir, hgsourcedir)
     commands.getoutput("hg init %s" % hgsourcedir)
     commands.getoutput("hg add %s" % hgsourcedir)
-    commands.getoutput("hg commit %s -m 'init'" % hgsourcedir)
+    commands.getoutput("hg commit -m 'init' %s" % hgsourcedir)
 
     # Git initialization
     gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
