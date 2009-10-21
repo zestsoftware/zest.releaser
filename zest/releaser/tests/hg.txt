@@ -5,6 +5,16 @@ Detailed tests of hg.py
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
+When running these tests you may get failures because of extra output
+like this:
+
+No username found, using 'name@domain' instead.
+
+To avoid this, create a file ~/.hgrc with something like this in it::
+
+  [ui]
+  username = Author Name <email@address>
+
 Some initial imports:
 
     >>> from zest.releaser import hg
