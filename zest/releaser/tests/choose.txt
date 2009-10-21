@@ -25,7 +25,7 @@ Mercurial:
     >>> choose.version_control()
     <zest.releaser.hg.Hg object at ...>
 
-When no version control system is found, zest.releaser exists (with a log
+When no version control system is found, zest.releaser exits (with a log
 message, but we don't test those yet):
 
     >>> os.chdir(tempdir)
