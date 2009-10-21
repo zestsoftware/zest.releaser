@@ -2,8 +2,8 @@ from commands import getoutput
 import logging
 import os
 import re
-import sys
-import zest.releaser.utils
+
+from zest.releaser import utils
 
 logger = logging.getLogger('vcs')
 
@@ -21,24 +21,24 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            ignore = getoutput('%s setup.py egg_info' % sys.executable)
-            version = getoutput('%s setup.py --version' % sys.executable)
-            return zest.releaser.utils.strip_version(version)
+            ignore = getoutput(utils.setup_py('egg_info'))
+            version = getoutput(utils.setup_py('--version'))
+            return utils.strip_version(version)
 
     def get_setup_py_name(self):
         if os.path.exists('setup.py'):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            ignore = getoutput('%s setup.py egg_info' % sys.executable)
-            return getoutput('%s setup.py --name' % sys.executable)
+            ignore = getoutput(utils.setup_py('egg_info'))
+            return getoutput(utils.setup_py('--name'))
 
     def get_version_txt_version(self):
         version_file = self.filefind('version.txt')
         if version_file:
             f = open(version_file, 'r')
             version = f.read()
-            return zest.releaser.utils.strip_version(version)
+            return utils.strip_version(version)
 
     def filefind(self, name):
         """Return first found file matching name (case-insensitive).

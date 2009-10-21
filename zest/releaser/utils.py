@@ -151,3 +151,9 @@ def show_last_lines(result):
     print 'Showing last few lines...'
     for line in lines[-5:]:
         print line
+
+
+def setup_py(rest):
+    """Return 'python setup.py' command (with hack for testing)"""
+    return '%s setup.py %s' % (sys.executable, rest)
+
