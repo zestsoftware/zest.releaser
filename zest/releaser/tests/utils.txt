@@ -261,13 +261,13 @@ happens when TESTMODE is on
 
     >>> utils.TESTMODE = True
     >>> print utils.setup_py('upload')
-    echo setup.py upload
+    echo MOCK setup.py upload
     >>> print utils.setup_py('mupload')
-    echo setup.py mupload
+    echo MOCK setup.py mupload
     >>> print utils.setup_py('register')
-    echo setup.py register
+    echo MOCK setup.py register
     >>> print utils.setup_py('mregister')
-    echo setup.py mregister
+    echo MOCK setup.py mregister
 
 
 

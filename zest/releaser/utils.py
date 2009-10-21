@@ -160,7 +160,7 @@ def setup_py(rest_of_cmdline):
         # Hack for testing
         for unsafe in ['upload', 'register']:
             if unsafe in rest_of_cmdline:
-                executable = 'echo'
+                executable = 'echo MOCK'
 
     return '%s setup.py %s' % (executable, rest_of_cmdline)
 
