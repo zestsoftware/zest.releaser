@@ -11,6 +11,19 @@ from zest.releaser import utils
 logger = logging.getLogger('release')
 
 
+def package_in_pypi(package):
+    """Check whether the package is registered on pypi"""
+    url = 'http://pypi.python.org/simple/%s' % package
+    result = urllib.urlopen(url).read().strip()
+    if package in result:
+        # Some link with the package name is present. If the package doesn't
+        # exist on pypi, the result would be the *string* 'Not Found'.
+        return True
+    else:
+        logger.debug("Package not found on pypi: %r", result)
+        return False
+
+
 def main(return_tagdir=False):
     vcs = choose.version_control()
 
@@ -67,7 +80,7 @@ def main(return_tagdir=False):
             else:
                 # First ask if we want to upload to pypi, which should always
                 # work, also without collective.dist.
-                use_pypi = pypi.package_in_pypi(package)
+                use_pypi = package_in_pypi(package)
                 if not use_pypi:
                     logger.info("This package is currently NOT registered on "
                                 "PyPI. If you want to register, you need to "

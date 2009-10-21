@@ -28,19 +28,6 @@ def collective_dist_available():
     return False
 
 
-def package_in_pypi(package):
-    """Check whether the package is registered on pypi"""
-    url = 'http://pypi.python.org/simple/%s' % package
-    result = urllib.urlopen(url).read().strip()
-    if package in result:
-        # Some link with the package name is present. If the package doesn't
-        # exist on pypi, the result would be the *string* 'Not Found'.
-        return True
-    else:
-        logger.debug("Package not found on pypi: %r", result)
-        return False
-
-
 class PypiConfig(object):
     """Wrapper around the pypi config file"""
 
