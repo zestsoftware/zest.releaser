@@ -84,7 +84,7 @@ Create a tag and it will show up:
 
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
-    'hg tag 0.1 -m "Tagging 0.1"'
+    'hg tag -m "Tagging 0.1" 0.1'
     >>> dont_care = commands.getoutput(cmd)
     >>> checkout.available_tags()
     ['0.1']

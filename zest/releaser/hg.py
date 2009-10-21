@@ -51,7 +51,8 @@ class Hg(BaseVersionControl):
         return "hg diff -r %s -r %s" % (version, current_revision)
 
     def cmd_create_tag(self, version):
-        return 'hg tag %s -m "Tagging %s"' % (version, version)
+        # Note: place the '-m' before the argument for hg 1.1 support.
+        return 'hg tag -m "Tagging %s" %s' % (version, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         return 'hg clone -r %s . %s' % (version, checkout_dir)
