@@ -99,8 +99,7 @@ The release script tags the release and uploads it:
     Question: Register and upload to PyPI (Y/n)?
     Our reply: y
     Showing last few lines...
-    MOCK setup.py register sdist upload
-    ...
+    MOCK setup.py register sdist upload...
 
 If collective.dist is installed, the last dots above could be saying
 that we upload to alternative pypis as well.
