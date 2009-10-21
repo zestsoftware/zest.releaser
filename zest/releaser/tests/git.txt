@@ -58,8 +58,14 @@ Commit it:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
     'git commit -a -m "small tweak"'
-    >>> print commands.getoutput(cmd)
-    [master ...] small tweak
+
+In some cases we get this output:
+``[master ...] small tweak``
+and in other this:
+``Created commit ...: small tweak``
+
+    >>> print 'dummy', commands.getoutput(cmd)
+    dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
 
@@ -90,8 +96,8 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print commands.getoutput(cmd)
-    [master ...] small tweak
+    >>> print 'dummy', commands.getoutput(cmd)
+    dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
     
 Now we can request the changes since a specific tag:
