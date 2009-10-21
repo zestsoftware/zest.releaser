@@ -24,10 +24,17 @@ def setup(test):
     sys.exit = _exit
 
     # Extract example project
-    # Note: extractall only exists in python2.5
     example_tar = pkg_resources.resource_filename(
         'zest.releaser.tests', 'example.tar')
-    tarfile.TarFile(example_tar).extractall(path=test.tempdir)
+    tf = tarfile.TarFile(example_tar)
+    try:
+        tf.extractall(path=test.tempdir)
+    except AttributeError:
+        # BBB for python2.4
+        for name in tf.getnames():
+            tf.extract(name, test.tempdir)
+
+
     sourcedir = os.path.join(test.tempdir, 'tha.example')
 
     # Init svn repo.
