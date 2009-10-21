@@ -1,0 +1,19 @@
+[distutils]
+index-servers =
+    pypi
+    plone.org
+    mycompany
+
+[pypi]
+username:user
+password:password
+
+[plone.org]
+repository:http://plone.org/products
+username:ploneuser
+password:password
+
+[plone.org]
+repository:http://my.company/products
+username:user
+password:password

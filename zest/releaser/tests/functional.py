@@ -102,3 +102,12 @@ def teardown(test):
     os.chdir(test.orig_dir)
     #print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
+
+
+def restore_mupload(test):
+    from zest.releaser import pypi
+    try:
+        from collective.dist import mupload
+    except ImportError:
+        mupload = None
+    pypi.mupload = mupload

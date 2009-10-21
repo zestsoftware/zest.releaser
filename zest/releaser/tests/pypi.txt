@@ -1,0 +1,154 @@
+Detailed tests of pypi.py
+===========================
+
+.. :doctest:
+.. :teardown: zest.releaser.tests.functional.restore_mupload
+
+Note on test setup: we don't use the "big" setup/teardown methods here.
+
+    >>> from zest.releaser import pypi
+    >>> import pkg_resources
+
+
+Multiple pypi servers support detection
+---------------------------------------
+
+The module attempts to import ``mupload`` from collective.dist and sets it to
+None otherwise.  We don't influence the setup on the machine where this test
+runs, so we can only check if it is available:
+
+    >>> dont_care = pypi.mupload
+
+If mupload is not None, collective.dist is available:
+
+    >>> pypi.mupload = 'something'
+    >>> pypi.collective_dist_available()
+    True
+
+If it *is* None, a check for python versions is made.
+
+    >>> pypi.mupload = None
+    >>> import sys
+    >>> orig_version = sys.version_info
+
+Python 2.6 and higher provide the needed functionality (in distutils;
+collective.dist just backports that to older python versions):
+
+    >>> sys.version_info = (2, 6)
+    >>> pypi.collective_dist_available()
+    True
+    >>> sys.version_info = (3, 1)
+    >>> pypi.collective_dist_available()
+    True
+
+Pythons 2.5 and lower lack the necessary functionality:
+
+    >>> sys.version_info = (2, 5)
+    >>> pypi.collective_dist_available()
+    False
+
+For the rest of the tests we assume that collective.dist is available:
+
+    >>> pypi.mupload = 'mock that collective.dist is available'
+
+
+
+Parsing the configuration file
+------------------------------
+
+For pypi uploads and collective.dist-style uploads to multiple servers, a
+configuration file needs to be available:
+
+    >>> pypi.DIST_CONFIG_FILE
+    '.pypirc'
+
+This is the default.  For testing purposes, you *can* pass in a config file's
+name yourself.  We'll do that in the rest of these tests.
+
+A missing file doesn't lead to an error:
+
+    >>> pypiconfig = pypi.PypiConfig(config_filename='non/existing')
+    >>> pypiconfig.config == None
+    True
+
+There are two styles of ``.pypirc`` files.  The old one just for pypi:
+
+    >>> pypirc_old = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_old.txt')
+    >>> print open(pypirc_old).read()
+    [server-login]
+    username:pipo_de_clown
+    password:asjemenou
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
+    >>> pypiconfig.config
+    <ConfigParser.ConfigParser instance at ...>
+    >>> pypiconfig.is_old_pypi_config()
+    True
+    >>> pypiconfig.is_new_pypi_config()
+    False
+
+And the new format that allows multiple uploads:
+
+    >>> pypirc_new = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_new.txt')
+    >>> print open(pypirc_new).read()
+    [distutils]
+    index-servers =
+        pypi
+        plone.org
+        mycompany
+    <BLANKLINE>
+    [pypi]
+    username:user
+    password:password
+    <BLANKLINE>
+    [plone.org]
+    repository:http://plone.org/products
+    username:ploneuser
+    password:password
+    <BLANKLINE>
+    [plone.org]
+    repository:http://my.company/products
+    username:user
+    password:password
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
+    >>> pypiconfig.config
+    <ConfigParser.ConfigParser instance at ...>
+    >>> pypiconfig.is_old_pypi_config()
+    False
+    >>> pypiconfig.is_new_pypi_config()
+    True
+
+If there's no collective.dist, a config file in the new format isn't
+recognized as the new format as it cannot possibly function:
+
+    >>> pypi.mupload = None
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
+    >>> pypiconfig.config == None # Format isn't right, so no config.
+    True
+    >>> pypiconfig.is_old_pypi_config()
+    False
+    >>> pypiconfig.is_new_pypi_config()
+    False
+
+If there's no collective.dist, there's also no list of distutils servers:
+
+    >>> pypiconfig.distutils_servers()
+    []
+
+Reset the collective.dist again:
+
+    >>> pypi.mupload = 'mock that collective.dist is available'
+
+Now we can parse the new format again and query a list of distutils servers:
+
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
+    >>> from pprint import pprint
+    >>> pprint(sorted(pypiconfig.distutils_servers()))
+    ['mycompany', 'plone.org', 'pypi']
+
+If we have an old config file, the distutils server list is also empty:
+
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
+    >>> pypiconfig.distutils_servers()
+    []

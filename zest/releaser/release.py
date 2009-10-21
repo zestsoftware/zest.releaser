@@ -1,20 +1,18 @@
-#! /usr/bin/env python2.4
 # GPL, (c) Reinout van Rees
-#
-# Script to tag releases.
+import commands
 import logging
-from commands import getoutput
 import os
 import sys
-import zest.releaser.choose
-import utils
-import pypi
+
+from zest.releaser import choose
+from zest.releaser import pypi
+from zest.releaser import utils
 
 logger = logging.getLogger('release')
 
 
 def main(return_tagdir=False):
-    vcs = zest.releaser.choose.version_control()
+    vcs = choose.version_control()
 
     original_dir = os.getcwd()
     logging.basicConfig(level=utils.loglevel(),
@@ -32,13 +30,13 @@ def main(return_tagdir=False):
         if utils.ask(q):
             diff_command = vcs.cmd_diff_last_commit_against_tag(version)
             print diff_command
-            print getoutput(diff_command)
+            print commands.getoutput(diff_command)
     else:
         print "To tag, you can use the following command:"
         cmd = vcs.cmd_create_tag(version)
         print cmd
         if utils.ask("Run this command"):
-            print getoutput(cmd)
+            print commands.getoutput(cmd)
         else:
             sys.exit()
 
@@ -51,22 +49,24 @@ def main(return_tagdir=False):
         tagdir = vcs.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = vcs.cmd_checkout_from_tag(version, tagdir)
-        print getoutput(cmd)
+        print commands.getoutput(cmd)
         logger.info("Tag checkout placed in %s", tagdir)
 
         if 'setup.py' in os.listdir(tagdir):
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
-            print getoutput('%s setup.py sdist' % sys.executable)
+            print commands.getoutput('%s setup.py sdist' % sys.executable)
 
-            config = pypi.get_pypi_config()
-            if not config:
+            pypiconfig = pypi.Pypyconfig()
+            if not pypiconfig.config:
                 logger.warn("You must have a properly configured %s file in "
                             "your home dir to upload an egg.",
                             pypi.DIST_CONFIG_FILE)
+                # TODO: when refactoring, zap the "else" and just put a
+                # "return" here.
             else:
-                # First ask if we want to upload to pypi, which should
-                # always work, also without collective.dist.
+                # First ask if we want to upload to pypi, which should always
+                # work, also without collective.dist.
                 use_pypi = pypi.package_in_pypi(package)
                 if not use_pypi:
                     logger.info("This package is currently NOT registered on "
@@ -74,25 +74,26 @@ def main(return_tagdir=False):
                                 "do this manually the first time.")
                 else:
                     logger.info("This package is registered on PyPI.")
-                    if pypi.has_old_pypi_config(config) and utils.ask(
+                    if pypiconfig.has_old_pypi_config() and utils.ask(
                         "Register and upload to PyPI"):
-                        result = getoutput('%s setup.py register sdist upload'
-                                           % sys.executable)
+                        result = commands.getoutput(
+                            '%s setup.py register sdist upload'
+                            % sys.executable)
                         utils.show_last_lines(result)
 
                 # If collective.dist is installed (or we are using
                 # python2.6 or higher), the user may have defined
                 # other servers to upload to.
-                for server in pypi.get_distutils_servers(config):
+                for server in pypiconfig.distutils_servers():
                     if server == 'pypi' and not use_pypi:
                         continue
                     if utils.ask("Register and upload to %s" % server):
                         if sys.version_info[:2] >= (2, 6):
-                            result = getoutput(
+                            result = commands.getoutput(
                                 '%s setup.py register sdist upload -r %s'
                                 % (sys.executable, server))
                         else:
-                            result = getoutput(
+                            result = commands.getoutput(
                                 '%s setup.py mregister sdist mupload -r %s'
                                 % (sys.executable, server))
                         utils.show_last_lines(result)

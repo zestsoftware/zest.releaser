@@ -59,3 +59,85 @@ Methods that must be implemented in subclasses
     Traceback (most recent call last):
     ...
     NotImplementedError
+
+
+Tag handling
+------------
+
+Extraction of tags is handled by the subclasses.  The one thing that the
+baseclass does is to check if a tag has already been made earlier:
+
+    >>> def mock_available_tags():
+    ...     return ['0.1', '0.2']
+    >>> checkout.available_tags = mock_available_tags
+    >>> checkout.tag_exists('1.0')
+    False
+    >>> checkout.tag_exists('0.2')
+    True
+
+
+Version handling
+----------------
+
+Create a project with a ``version.txt`` in it like often found in old zope
+products:
+
+    >>> versiontxtproject = os.path.join(tempdir, 'vp')
+    >>> os.mkdir(versiontxtproject)
+    >>> os.chdir(versiontxtproject)
+    >>> open('version.txt', 'w').write('1.0 dev')
+
+We need some version control marker (like an ``.svn`` dir):
+
+    >>> os.mkdir('.marker')
+    >>> checkout = vcs.BaseVersionControl()
+    >>> checkout.internal_filename = '.marker'
+
+Open the project with the BaseVersionControl and it finds the version file and
+returns the cleaned-up version:
+
+    >>> checkout.get_version_txt_version()
+    '1.0dev'
+
+Setting the version works also with version.txt files (the setup.py scenario
+is tested in the other tests).
+
+    >>> checkout.version = '1.1'
+    >>> print open('version.txt').read()
+    1.1
+
+In Plone products, the setup.py often reads the version.txt and uses that as
+the version value.  In those cases, the version must be written to the
+version.txt and the setup.py must be left unmolested.
+
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh', version=open('version.txt').read().strip())"]
+    >>> open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.2'
+    >>> print open('version.txt').read()
+    1.2
+    >>> print open('setup.py').read()
+    from setuptools import setup
+    setup(name='urgh', version=open('version.txt').read().strip())
+
+If the setup.py version is different, this takes precedence and the
+version.txt is the one left as-is.
+
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version='1.3',",
+    ...     "      )"]
+    >>> open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print open('version.txt').read() # Still at 1.2
+    1.2
+    >>> print open('setup.py').read() # Modified into 1.4
+    from setuptools import setup
+    setup(name='urgh',
+          version = '1.4',
+          )
+
+The version writing breaks down if there's more than just a "version=" on that
+line.  The 99.9% case works, though.
