@@ -35,10 +35,14 @@ def read(filename):
     return unicode(codecs.open(filename, encoding='utf-8').read())
 
 
+def read_from_here(filename):
+    return unicode(codecs.open(filename, encoding='utf-8').read())
+
+
 long_description = u'\n\n'.join([read('README.txt'),
                                  read('TODO.txt'),
                                  read('CREDITS.txt'),
-                                 read('HISTORY.txt')])
+                                 read_from_here('CHANGES.txt')])
 
 
 setup(name='zest.releaser',
