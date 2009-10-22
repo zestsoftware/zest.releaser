@@ -8,7 +8,7 @@ Changelog for zest.releaser
 
 - Lots of internal refactoring and small fixes.  [reinout]
 
-- Started unit tests.  [reinout]
+- Started tests.  zest.releaser went from 0 to 94% coverage.  [reinout]
 
 
 2.9.3 (2009-09-22)
