@@ -8,6 +8,7 @@ Detailed tests of release.py
 Some initial imports:
 
     >>> from zest.releaser import release
+    >>> from zest.releaser import utils
     >>> import commands
     >>> import os
 
@@ -37,3 +38,80 @@ Now search for an "existing" package:
     >>> mock_pypi_available.append('zest.releaser')
     >>> release.package_in_pypi('zest.releaser')
     True
+
+
+Version grabbing
+----------------
+
+    >>> os.chdir(svnsourcedir)
+    >>> releaser = release.Releaser()
+
+Grab the version:
+
+    >>> releaser._grab_version()
+    >>> releaser.data['version']
+    '0.1dev'
+
+If, by some weird twist of fate, there's no release: we exit.
+
+    >>> releaser.vcs.get_setup_py_version = lambda: None
+    >>> releaser._grab_version()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=None)
+
+
+Check tag existence
+-------------------
+
+We check if a tag already exists.  First set the version to 0.1:
+
+    >>> releaser = release.Releaser()
+    >>> releaser.vcs.version = '0.1'
+    >>> releaser._grab_version()
+    >>> releaser._check_if_tag_already_exists()
+    >>> releaser.data['tag_already_exists']
+    False
+
+Mock that the tag exists and check again:
+
+    >>> orig = releaser.vcs.tag_exists
+    >>> releaser.vcs.tag_exists = lambda x: True
+    >>> utils.answers_for_testing = ['n']
+    >>> releaser._check_if_tag_already_exists()
+    Question: There is already a tag 0.1, show if there are differences? (Y/n)?
+    Our reply: n
+    >>> releaser.data['tag_already_exists']
+    True
+    >>> utils.answers_for_testing = ['y']
+    >>> releaser._check_if_tag_already_exists()
+    Question: There is already a tag 0.1, show if there are differences? (Y/n)?
+    Our reply: y
+    svn diff file:/...tha.example/tags/0.1 file:/...tha.example/trunk
+    ...
+    >>> releaser.data['tag_already_exists']
+    True
+    >>> releaser.vcs.tag_exists = orig # Revert mock
+
+
+Making tags
+-----------
+
+If the tag doesn't exist yet, we can make one.  The actual tag creation is
+tested already, here we test that you get a sys.exit if you refuse to run the
+tag command:
+
+    >>> releaser = release.Releaser()
+    >>> releaser.data['tag_already_exists'] = False
+    >>> releaser.data['version'] = '0.1'
+    >>> utils.answers_for_testing = ['n']
+    >>> releaser._make_tag()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=None)
+
+If the the tag already exists, we just return without doing anything.
+
+    >>> releaser.data['tag_already_exists'] = True
+    >>> releaser._make_tag()
+

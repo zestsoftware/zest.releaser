@@ -14,7 +14,6 @@ TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 HISTORY_HEADER = '%(new_version)s (%(today)s)'
 PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
 
-
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven

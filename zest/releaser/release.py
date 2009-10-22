@@ -9,6 +9,15 @@ from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
 
+DATA = {
+    # Documentation for self.data.  You get runtime warnings when something is
+    # in self.data that is not in this list.  Embarrasment-driven
+    # documentation!
+    'tagdir': 'Directory where the tag checkout is placed',
+    'version': "Version we're releasing",
+    'tag_already_exists': "Internal detail",
+    }
+
 logger = logging.getLogger('release')
 
 
@@ -25,48 +34,75 @@ def package_in_pypi(package):
         return False
 
 
-def main(return_tagdir=False):
-    vcs = choose.version_control()
+class Releaser(object):
+    """Release the projct, for instance by uploading to pypi"""
 
-    original_dir = os.getcwd()
-    logging.basicConfig(level=utils.loglevel(),
-                        format="%(levelname)s: %(message)s")
+    def __init__(self):
+        self.vcs = choose.version_control()
+        # Prepare some defaults for potential overriding.
+        self.data = dict(
+            )
 
-    version = vcs.version
-    if not version:
-        logger.critical("No version detected, so we can't do anything.")
-        sys.exit()
+    def prepare(self):
+        """Collect some data needed for releasing"""
+        self._grab_version()
+        self._check_if_tag_already_exists()
 
-    # check if a tag already exists
-    if vcs.tag_exists(version):
-        q = ("There is already a tag %s, show "
-             "if there are differences?" % version)
-        if utils.ask(q):
-            diff_command = vcs.cmd_diff_last_commit_against_tag(version)
-            print diff_command
-            print commands.getoutput(diff_command)
-    else:
+    def execute(self):
+        """Do the actual releasing"""
+        self._make_tag()
+        self._release()
+
+    def _grab_version(self):
+        """Just grab the version"""
+        version = self.vcs.version
+        if not version:
+            logger.critical("No version detected, so we can't do anything.")
+            sys.exit()
+        self.data['version'] = version
+
+    def _check_if_tag_already_exists(self):
+        """Check if tag already exists and show the difference if so"""
+        version = self.data['version']
+        if self.vcs.tag_exists(version):
+            self.data['tag_already_exists'] = True
+            q = ("There is already a tag %s, show "
+                 "if there are differences?" % version)
+            if utils.ask(q):
+                diff_command = self.vcs.cmd_diff_last_commit_against_tag(
+                    version)
+                print diff_command
+                print commands.getoutput(diff_command)
+        else:
+            self.data['tag_already_exists'] = False
+
+    def _make_tag(self):
+        if self.data['tag_already_exists']:
+            return
         print "To tag, you can use the following command:"
-        cmd = vcs.cmd_create_tag(version)
+        cmd = self.vcs.cmd_create_tag(self.data['version'])
         print cmd
         if utils.ask("Run this command"):
             print commands.getoutput(cmd)
         else:
             sys.exit()
 
-    # Check out tag in temp dir
-    if utils.ask("Check out the tag (for tweaks or pypi/distutils "
-                 "server upload)"):
-        package = vcs.name
+    def _release(self):
+        """Upload the release, when desired"""
+        if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
+                         "server upload)"):
+            return
+        package = self.vcs.name
+        version = self.data['version']
         prefix = '%s-%s-' % (package, version)
         logger.info("Doing a checkout...")
-        tagdir = vcs.prepare_checkout_dir(prefix)
-        os.chdir(tagdir)
-        cmd = vcs.cmd_checkout_from_tag(version, tagdir)
+        self.tagdir = self.vcs.prepare_checkout_dir(prefix)
+        os.chdir(self.tagdir)
+        cmd = self.vcs.cmd_checkout_from_tag(version, self.tagdir)
         print commands.getoutput(cmd)
-        logger.info("Tag checkout placed in %s", tagdir)
+        logger.info("Tag checkout placed in %s", self.tagdir)
 
-        if 'setup.py' in os.listdir(tagdir):
+        if 'setup.py' in os.listdir(self.tagdir):
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
             print commands.getoutput(utils.setup_py('sdist'))
@@ -111,7 +147,15 @@ def main(return_tagdir=False):
                                                % server))
                         utils.show_last_lines(result)
 
-        os.chdir(original_dir)
-        if return_tagdir:
-            # At the end, for the benefit of fullrelease.
-            return tagdir
+        os.chdir(self.vcs.workingdir)
+
+
+def main(return_tagdir=False):
+    logging.basicConfig(level=utils.loglevel(),
+                        format="%(levelname)s: %(message)s")
+    releaser = Releaser()
+    releaser.prepare()
+    releaser.execute()
+    if return_tagdir:
+        # At the end, for the benefit of fullrelease.
+        return getattr(releaser, 'tagdir', None)
