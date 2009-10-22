@@ -1,0 +1,122 @@
+Integration test
+================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Several items are prepared for us.
+
+An svn repository:
+
+    >>> repo_url
+    'file://.../svnrepo'
+
+An svn checkout of a project:
+
+    >>> svnsourcedir
+    '.../tha.example-svn'
+    >>> import os
+    >>> os.chdir(svnsourcedir)
+    >>> import commands
+    >>> print commands.getoutput("svn info %s" % svnsourcedir)
+    Path: .../tha.example-svn
+    URL: file://.../svnrepo/tha.example/trunk
+    ...
+
+The version is at 0.1 dev:
+
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.1dev'
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Run the postrelease script.  Since the version number does not end
+with a number, the script cannot make a suggestion:
+
+    >>> utils.answers_for_testing = ['0.2', '']
+    >>> from zest.releaser import postrelease
+    >>> postrelease.main()
+    Current version is '0.1dev'
+    Question: Enter new development version ('dev' will be appended): 
+    Our reply: 0.2
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog and setup.py are at 0.2 and indicate dev mode:
+
+    >>> svnhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.2 (unreleased)
+    ----------------
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.2dev'
+
+To check some corner cases we switch back and forth between prerelease
+and postrelease.  The next version after 0.2.19 should not be 0.2.110
+but 0.2.20:
+
+    >>> from zest.releaser import prerelease
+    >>> utils.answers_for_testing = ['0.2.19', '']
+    >>> prerelease.main()
+    Question: Enter version [0.2]:
+    Our reply: 0.2.19
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> utils.answers_for_testing = ['', '']
+    >>> postrelease.main()
+    Current version is '0.2.19'
+    Question: Enter new development version ('dev' will be appended) [0.2.20]: 
+    Our reply: <ENTER>
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+Releases without numbers at the end should not fluster us even when we
+cannot suggest a reasonable number:
+
+    >>> utils.answers_for_testing = ['0.3beta', '']
+    >>> prerelease.main()
+    Question: Enter version [0.2.20]:
+    Our reply: 0.3beta
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> utils.answers_for_testing = ['', '']
+    >>> postrelease.main()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=None)
+    >>> utils.answers_for_testing = ['0.3rc', '']
+    >>> postrelease.main()
+    Current version is '0.3beta'
+    Question: Enter new development version ('dev' will be appended): 
+    Our reply: 0.3rc
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+Numbers and characters can be combined:
+
+    >>> utils.answers_for_testing = ['1.0a1', '']
+    >>> prerelease.main()
+    Question: Enter version [0.3rc]:
+    Our reply: 1.0a1
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> utils.answers_for_testing = ['', '']
+    >>> postrelease.main()
+    Current version is '1.0a1'
+    Question: Enter new development version ('dev' will be appended) [1.0a2]: 
+    Our reply: <ENTER>
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
