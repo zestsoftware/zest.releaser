@@ -4,7 +4,10 @@ import z3c.testsetup
 import re
 from zope.testing import renormalizing
 checker = renormalizing.RENormalizing([
+    # .pypirc seems to be case insensitive
     (re.compile('[Pp][Yy][Pp][Ii]'), 'pypi'),
+    # hg warns when it does not find a username
+    (re.compile('No username found, using .* instead'), ''),
     ])
 
 

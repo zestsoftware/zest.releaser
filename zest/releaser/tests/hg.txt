@@ -51,6 +51,7 @@ Make a change:
            )
     +
     +a = 2    
+    ...
 
 Commit it:
 
@@ -59,6 +60,7 @@ Commit it:
     'hg commit -v -m "small tweak"'
     >>> print commands.getoutput(cmd)
     setup.py
+    ...
     committed changeset ...
 
 
@@ -134,6 +136,6 @@ And make a tag checkout:
     adding changesets
     adding manifests
     adding file changes
-    added 2 changesets with 22 changes to 21 files
+    added 2 changesets with ... changes to 21 files
     updating working directory
     21 files updated, 0 files merged, 0 files removed, 0 files unresolved    
