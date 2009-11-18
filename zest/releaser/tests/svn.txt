@@ -42,8 +42,8 @@ Make a change:
     >>> cmd
     'svn diff'
     >>> print commands.getoutput(cmd)
-    Index: setup.py
-    ===================================================================
+    Index: ...
+    ...
     --- setup.py      (revision 3)
     +++ setup.py      (working copy)
     @@ -36,3 +36,5 @@
@@ -60,7 +60,8 @@ Commit it:
     'svn commit -m "small tweak"'
     >>> print commands.getoutput(cmd)
     Sending        setup.py
-    Transmitting file data .
+    ...
+    Transmitting file data...
     Committed revision 4.
 
 Tags
