@@ -146,7 +146,7 @@ Chdir and make a tag checkout:
     >>> cmd
     'git checkout 0.1'
     >>> print commands.getoutput(cmd)
-    Note: moving to "0.1" which isn't a local branch
+    Note: moving to ...0.1... which isn't a local branch
     If you want to create a new branch from this checkout, you may do so
     (now or later) by using -b with the checkout command again. Example:
       git checkout -b <new_branch_name>
