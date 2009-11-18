@@ -4,7 +4,7 @@ Changelog for zest.releaser
 2.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed tests failures. [gotcha]
 
 
 2.10 (2009-10-22)
