@@ -17,14 +17,42 @@ Simply run this script in a directory containing a buildout.cfg.
 The script accepts buildout command-line options, so you can
 use the -c option to specify an alternate configuration file.
 
-$Id$
+$Id: bootstrap.py 105417 2009-11-01 15:15:20Z tarek $
 """
-import time
+
 import os, shutil, sys, tempfile, urllib2
+from optparse import OptionParser
 
 tmpeggs = tempfile.mkdtemp()
 
 is_jython = sys.platform.startswith('java')
+
+# parsing arguments
+parser = OptionParser()
+parser.add_option("-v", "--version", dest="version",
+                          help="use a specific zc.buildout version")
+parser.add_option("-d", "--distribute",
+                   action="store_true", dest="distribute", default=False,
+                   help="Use Disribute rather than Setuptools.")
+
+parser.add_option("-c", None, action="store", dest="config_file",
+                   help=("Specify the path to the buildout configuration "
+                         "file to be used."))
+
+options, args = parser.parse_args()
+
+# if -c was provided, we push it back into args for buildout' main function
+if options.config_file is not None:
+    args += ['-c', options.config_file]
+
+if options.version is not None:
+    VERSION = '==%s' % options.version
+else:
+    VERSION = ''
+
+USE_DISTRIBUTE = options.distribute
+args = args + ['bootstrap']
+
 to_reload = False
 try:
     import pkg_resources
@@ -33,9 +61,15 @@ try:
         raise ImportError
 except ImportError:
     ez = {}
-    exec urllib2.urlopen('http://python-distribute.org/distribute_setup.py'
+    if USE_DISTRIBUTE:
+        exec urllib2.urlopen('http://python-distribute.org/distribute_setup.py'
                          ).read() in ez
-    ez['use_setuptools'](to_dir=tmpeggs, download_delay=0, no_fake=True)
+        ez['use_setuptools'](to_dir=tmpeggs, download_delay=0, no_fake=True)
+    else:
+        exec urllib2.urlopen('http://peak.telecommunity.com/dist/ez_setup.py'
+                             ).read() in ez
+        ez['use_setuptools'](to_dir=tmpeggs, download_delay=0)
+
     if to_reload:
         reload(pkg_resources)
     else:
@@ -54,12 +88,10 @@ else:
 cmd = 'from setuptools.command.easy_install import main; main()'
 ws  = pkg_resources.working_set
 
-if len(sys.argv) > 2 and sys.argv[1] == '--version':
-    VERSION = '==%s' % sys.argv[2]
-    args = sys.argv[3:] + ['bootstrap']
+if USE_DISTRIBUTE:
+    requirement = 'distribute'
 else:
-    VERSION = ''
-    args = sys.argv[1:] + ['bootstrap']
+    requirement = 'setuptools'
 
 if is_jython:
     import subprocess
@@ -68,7 +100,7 @@ if is_jython:
            quote(tmpeggs), 'zc.buildout' + VERSION],
            env=dict(os.environ,
                PYTHONPATH=
-               ws.find(pkg_resources.Requirement.parse('distribute')).location
+               ws.find(pkg_resources.Requirement.parse(requirement)).location
                ),
            ).wait() == 0
 
@@ -78,20 +110,12 @@ else:
         '-c', quote (cmd), '-mqNxd', quote (tmpeggs), 'zc.buildout' + VERSION,
         dict(os.environ,
             PYTHONPATH=
-            ws.find(pkg_resources.Requirement.parse('distribute')).location
+            ws.find(pkg_resources.Requirement.parse(requirement)).location
             ),
         ) == 0
 
 ws.add_entry(tmpeggs)
 ws.require('zc.buildout' + VERSION)
-
-from zc.buildout import buildout as zc_buildout
-import pkg_resources
-
-zc_buildout.pkg_resources_loc = pkg_resources.working_set.find(
-    pkg_resources.Requirement.parse('setuptools')).location
-
-# now calling the bootstrap process as usual
-zc_buildout.main(args)
+import zc.buildout.buildout
+zc.buildout.buildout.main(args)
 shutil.rmtree(tmpeggs)
-
