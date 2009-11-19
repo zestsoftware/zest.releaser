@@ -98,7 +98,7 @@ fit :-)
   is ok.
 
 - If your svn repository is structured with /tag and /branch, you may add a
-  ``.zest.release.rc`` file at the root of the project::
+  ``.zest.releaser.cfg`` file at the root of the project::
 
     [subversion]
     tags=tag

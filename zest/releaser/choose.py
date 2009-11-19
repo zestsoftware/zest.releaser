@@ -11,7 +11,7 @@ logger = logging.getLogger('chooser')
 
 class VersionControlFactory(object):
 
-    CONFIGFILE = '.zest.release.rc'
+    CONFIGFILE = '.zest.releaser.cfg'
     DEFAULTS = {'subversion': {'tags': 'tags'}}
 
     def __init__(self):
