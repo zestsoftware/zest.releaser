@@ -13,6 +13,17 @@ class Subversion(BaseVersionControl):
     """Command proxy for Subversion"""
     internal_filename = '.svn'
 
+    def __init__(self, tags='tags'):
+        super(Subversion, self).__init__()
+        self.tags = tags
+        if tags == 'tags':
+            self.branches = 'branches'
+        elif tags == 'tag':
+            self.branches = 'branch'
+        else:
+            raise ValueError(
+                '%s: svn can be configured only with "tags" or "tag".' % tags)
+
     def _svn_info(self):
         """Return svn url"""
         our_info = getoutput('svn info')
@@ -25,7 +36,7 @@ class Subversion(BaseVersionControl):
 
     def _base_from_svn(self):
         base = self._svn_info()
-        for remove in ['trunk', 'tags', 'branches']:
+        for remove in ['trunk', self.tags, self.branches]:
             base = base.split(remove)[0]
         logger.debug("Base url is %s", base)
         return base
@@ -48,14 +59,15 @@ class Subversion(BaseVersionControl):
 
     def available_tags(self):
         base = self._base_from_svn()
-        tag_info = getoutput('svn list %stags' % base)
+        tag_info = getoutput('svn list %s%s' % (base, self.tags))
         if "non-existent in that revision" in tag_info:
-            print "tags dir does not exist at %s" % base + 'tags'
+            print "tags dir does not exist at %s" % base + self.tags
             if utils.ask("Shall I create it"):
-                cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
+                cmd = 'svn mkdir %s%s -m "Creating tags directory."' % (base,
+                    self.tags)
                 logger.info("Running %r", cmd)
                 print getoutput(cmd)
-                tag_info = getoutput('svn list %stags' % base)
+                tag_info = getoutput('svn list %s%s' % (base, self.tags))
             else:
                 sys.exit(0)
         if 'Could not resolve hostname' in tag_info:
@@ -71,7 +83,7 @@ class Subversion(BaseVersionControl):
 
     def tag_url(self, version):
         base = self._base_from_svn()
-        return base + 'tags/' + version
+        return base + self.tags + '/' + version
 
     def cmd_diff(self):
         return 'svn diff'

@@ -4,6 +4,8 @@ Changelog for zest.releaser
 2.11 (unreleased)
 -----------------
 
+- Added /tag besides /tags for subversion [gotcha]
+
 - Fixed tests failures. [gotcha]
 
 

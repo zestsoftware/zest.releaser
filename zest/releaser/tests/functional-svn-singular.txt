@@ -2,7 +2,7 @@ Integration test
 ================
 
 .. :doctest:
-.. :setup: zest.releaser.tests.functional.setup
+.. :setup: zest.releaser.tests.functional.setup_singular
 .. :teardown: zest.releaser.tests.functional.teardown
 
 Several items are prepared for us.
@@ -10,7 +10,7 @@ Several items are prepared for us.
 An svn repository:
 
     >>> repo_url
-    'file://.../svnrepo'
+    'file://.../svnrepo-singular'
 
 An svn checkout of a project:
 
@@ -21,12 +21,13 @@ An svn checkout of a project:
     >>> import commands
     >>> print commands.getoutput("svn info %s" % svnsourcedir)
     Path: .../tha.example-svn
-    URL: file://.../svnrepo/tha.example/trunk
+    URL: file://.../svnrepo-singular/tha.example/trunk
     ...
 
 There are no tags yet:
 
-    >>> print commands.getoutput("svn list %s/tha.example/tags" % repo_url)
+    >>> print commands.getoutput("svn list %s/tha.example/tag" %
+    ... repo_url)
 
 The changelog is unreleased:
 
@@ -85,7 +86,7 @@ The release script tags the release and uploads it:
     >>> from zest.releaser import release
     >>> release.main()
     To tag, you can use the following command:
-    svn cp file:/.../tha.example/trunk file:/.../tha.example/tags/0.1 -m "Tagging 0.1"
+    svn cp file:/.../tha.example/trunk file:/.../tha.example/tag/0.1 -m "Tagging 0.1"
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
@@ -114,7 +115,8 @@ that we upload to alternative pypis as well.
 
 There is now a tag:
 
-    >>> print commands.getoutput("svn list %s/tha.example/tags" % repo_url)
+    >>> print commands.getoutput("svn list %s/tha.example/tag" %
+    ... repo_url)
     0.1/
 
 And the postrelease script ups the version:
