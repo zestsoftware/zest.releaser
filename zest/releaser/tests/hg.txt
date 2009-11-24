@@ -51,7 +51,6 @@ Make a change:
            )
     +
     +a = 2    
-    ...
 
 Commit it:
 
@@ -60,7 +59,6 @@ Commit it:
     'hg commit -v -m "small tweak"'
     >>> print commands.getoutput(cmd)
     setup.py
-    ...
     committed changeset ...
 
 

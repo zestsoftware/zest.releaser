@@ -8,7 +8,6 @@ import tarfile
 import tempfile
 import urllib
 import StringIO
-from zest.releaser import choose
 
 
 def setup(test):
@@ -92,34 +91,6 @@ def setup(test):
         for line in lines[:5]:
             print line,
 
-    # Init svn repo with tag (singular).
-    repodir = os.path.join(test.tempdir, 'svnrepo-singular')
-    commands.getoutput('svnadmin create %s' % repodir)
-    repo_url_singular = 'file://' + repodir # TODO: urllib or so for windows
-    # Import example project
-    commands.getoutput('svn mkdir %s/tha.example -m "mkdir"' % repo_url_singular)
-    commands.getoutput('svn mkdir %s/tha.example/tag -m "mkdir"' %
-        repo_url_singular)
-    commands.getoutput(
-        'svn import %s %s/tha.example/trunk -m "import"' % (sourcedir,
-                                                            repo_url_singular))
-    # Subversion checkout
-    svnsourcedir_singular = os.path.join(test.tempdir, 'singular', 'tha.example-svn')
-    commands.getoutput(
-        'svn co %s/tha.example/trunk %s' % (repo_url_singular, svnsourcedir_singular))
-    file = open(os.path.join(svnsourcedir_singular,
-        choose.VersionControlFactory.CONFIGFILE), mode='w')
-    file.write('''
-[subversion]
-tags=tag
-    ''')
-    file.close()
-
-    def svnhead_singular(*filename_parts):
-        filename = os.path.join(svnsourcedir_singular, *filename_parts)
-        lines = open(filename).readlines()
-        for line in lines[:5]:
-            print line,
     def hghead(*filename_parts):
         filename = os.path.join(hgsourcedir, *filename_parts)
         lines = open(filename).readlines()
@@ -141,17 +112,8 @@ tags=tag
                        'hghead': hghead,
                        'githead': githead,
                        'mock_pypi_available': test.mock_pypi_available,
-                       'repo_url_singular': repo_url_singular,
-                       'svnsourcedir_singular': svnsourcedir_singular,
-                       'svnhead_singular': svnhead_singular,
                        })
 
-
-def setup_singular(test):
-    setup(test)
-    test.globs['repo_url'] = test.globs['repo_url_singular']
-    test.globs['svnsourcedir'] = test.globs['svnsourcedir_singular']
-    test.globs['svnhead'] = test.globs['svnhead_singular']
 
 def teardown(test):
     sys.exit = test.orig_exit

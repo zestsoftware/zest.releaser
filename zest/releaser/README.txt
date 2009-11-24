@@ -97,12 +97,6 @@ fit :-)
   optionally /branches.  Both a /trunk or a /branches/something checkout
   is ok.
 
-- If your svn repository is structured with /tag and /branch, you may add a
-  ``.zest.releaser.cfg`` file at the root of the project::
-
-    [subversion]
-    tags=tag
-
 - There's a version.txt or setup.py in your project. The version.txt
   has a single line with the version number (newline optional). The
   setup.py should have a single ``version = '0.3'`` line
