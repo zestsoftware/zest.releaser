@@ -25,7 +25,7 @@ class Subversion(BaseVersionControl):
 
     def _base_from_svn(self):
         base = self._svn_info()
-        for remove in ['trunk', 'tags', 'branches']:
+        for remove in ['trunk', 'tags', 'branches', 'tag', 'branch']:
             base = base.split(remove)[0]
         logger.debug("Base url is %s", base)
         return base
@@ -39,6 +39,28 @@ class Subversion(BaseVersionControl):
         return name
 
     @property
+    def _tags_name(self):
+        """Return name for tags dir
+
+        Normally the plural /tags, but some projects have the singular /tag.
+
+        """
+        default_plural = 'tags'
+        fallback_singular = 'tag'
+        failure_message = "non-existent in that revision"
+        base = self._base_from_svn()
+        tag_info = getoutput('svn list %s%s' % (base, default_plural))
+        if not failure_message in tag_info:
+            return default_plural
+        logger.debug("tags dir does not exist at %s%s", base, default_plural)
+
+        tag_info = getoutput('svn list %s%s' % (base, fallback_singular))
+        if not failure_message in tag_info:
+            return fallback_singular
+        logger.debug("tags dir does not exist at %s%s, either", base, fallback_singular)
+        return None
+
+    @property
     def name(self):
         package_name = self.get_setup_py_name()
         if package_name:
@@ -48,16 +70,20 @@ class Subversion(BaseVersionControl):
 
     def available_tags(self):
         base = self._base_from_svn()
-        tag_info = getoutput('svn list %stags' % base)
-        if "non-existent in that revision" in tag_info:
+        tags_name = self._tags_name
+        if tags_name == None:
+            # Suggest to create a tags dir with the default plural /tags name.
             print "tags dir does not exist at %s" % base + 'tags'
             if utils.ask("Shall I create it"):
                 cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
                 logger.info("Running %r", cmd)
                 print getoutput(cmd)
-                tag_info = getoutput('svn list %stags' % base)
+                tags_name = self._tags_name
+                assert tags_name == 'tags'
             else:
                 sys.exit(0)
+
+        tag_info = getoutput('svn list %s%s' % (base, tags_name))
         if 'Could not resolve hostname' in tag_info:
             logger.error('Network problem: %s', tag_info)
             sys.exit()
@@ -71,7 +97,7 @@ class Subversion(BaseVersionControl):
 
     def tag_url(self, version):
         base = self._base_from_svn()
-        return base + 'tags/' + version
+        return base + self._tags_name + '/' + version
 
     def cmd_diff(self):
         return 'svn diff'

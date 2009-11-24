@@ -71,6 +71,11 @@ Originally there are no tags:
     >>> checkout.available_tags()
     []
 
+The name of the /tags directory (so: a plural) is succesfully detected:
+
+    >>> checkout._tags_name
+    'tags'
+
 Create a tag and it will show up:
 
     >>> cmd = checkout.cmd_create_tag('0.1')
@@ -199,6 +204,12 @@ answering, set up the answer test mode:
     >>> utils.TESTMODE = True
     >>> sample_checkout = svn.Subversion()
 
+There is no tags dir yet, so the tags name detection (/tag or /tags) returns
+none:
+
+    >>> sample_checkout._tags_name == None
+    True
+
 Answer 'no' the first time we get asked to create the directory.  This means
 zest.releaser has no business with this project, so exit.
 
@@ -224,3 +235,93 @@ obviously an empty list:
     tags/
     trunk/
 
+
+Singular /tag instead of /tags dir
+----------------------------------
+
+Subversion stores tags in the /tags directory.  Just a convention.  But for
+instance on codespeak, the singular /tag (and /branch) is the convention.
+Zest.releaser supports that.
+
+Set up a new sample project in the repository:
+
+    >>> repo_url
+    'file://.../svnrepo'
+    >>> cmd = 'svn mkdir %s/singular -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> cmd = 'svn mkdir %s/singular/trunk -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+
+And make a /tag directory.  We don't support adding one ourselves (we always
+suggest /tags, make a /tag dir yourself if you really really need it), but we
+*do* detect and use one:
+
+    >>> cmd = 'svn mkdir %s/singular/tag -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+
+Make a checkout:
+
+    >>> os.chdir(tempdir)
+    >>> cmd = 'svn co %s/singular/trunk singular' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> os.chdir('singular')
+
+Now look up the tags.  This asks us to create the tags/ directory.  For the
+answering, set up the answer test mode:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Fire up zest.releaser's subversion support.  The _tags_name() method figures
+out the correct name:
+
+    >>> singular_checkout = svn.Subversion()
+    >>> singular_checkout._tags_name
+    'tag'
+
+There are no tags yet:
+
+    >>> singular_checkout.available_tags()
+    []
+
+Tag urls are formed correctly with the singular name:
+
+    >>> singular_checkout.tag_url('0.1')
+    'file://.../singular/tag/0.1'
+
+Tag and checkout commands also use the singular:
+
+    >>> cmd = singular_checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmd
+    'svn co .../singular/tag/0.1 ...somename...'
+    >>> cmd = singular_checkout.cmd_create_tag('0.1')
+    >>> cmd
+    'svn cp .../singular/trunk .../singular/tag/0.1 -m "Tagging 0.1"'
+
+If we have branch checkout, the base url is still extracted correctly, even if
+the singular /tag and /branch is used:
+
+    >>> cmd = 'svn mkdir %s/singular/branch -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> cmd = 'svn mkdir %s/singular/branch/mybranch -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> cmd = 'svn mkdir %s/singular/tag/mytag -m "mkdir"' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+
+    >>> os.chdir(tempdir)
+    >>> cmd = 'svn co %s/singular/branch/mybranch mysingularbranch' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+    >>> cmd = 'svn co %s/singular/tag/mytag mysingulartag' % repo_url
+    >>> dont_care = commands.getoutput(cmd)
+
+    >>> os.chdir(tempdir)
+    >>> os.chdir('mysingularbranch')
+    >>> singular_checkout = svn.Subversion()
+    >>> singular_checkout._base_from_svn()
+    'file://.../singular/'
+
+    >>> os.chdir(tempdir)
+    >>> os.chdir('mysingulartag')
+    >>> singular_checkout = svn.Subversion()
+    >>> singular_checkout._base_from_svn()
+    'file://.../singular/'
