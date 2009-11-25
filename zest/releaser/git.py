@@ -30,7 +30,7 @@ class Git(BaseVersionControl):
         return tags
 
     def prepare_checkout_dir(self, prefix):
-        temp = tempfile.mktemp(prefix=prefix)
+        temp = tempfile.mkdtemp(prefix=prefix)
         cmd = 'git clone %s %s' % (self.workingdir, temp)
         logger.debug(getoutput(cmd))
         return temp

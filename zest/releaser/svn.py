@@ -1,5 +1,5 @@
 from commands import getoutput
-from tempfile import mkdtemp
+import tempfile
 import logging
 import sys
 
@@ -93,7 +93,7 @@ class Subversion(BaseVersionControl):
         return tags
 
     def prepare_checkout_dir(self, prefix):
-        return mkdtemp(prefix=prefix)
+        return tempfile.mkdtemp(prefix=prefix)
 
     def tag_url(self, version):
         base = self._base_from_svn()

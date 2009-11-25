@@ -132,6 +132,11 @@ For checking out a tag, we first need a checkout dir with a clone of the reposit
     >>> temp
     '...somename...'
 
+And temp should be a directory:
+
+    >>> os.path.isdir(temp)
+    True
+
 For git, we have to change to that directory!  Git doesn't work with paths.
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
@@ -151,3 +156,6 @@ Chdir and make a tag checkout:
     (now or later) by using -b with the checkout command again. Example:
       git checkout -b <new_branch_name>
     HEAD is now at ... small tweak
+
+TODO: this doesn not actually work. Do something like 'git clone
+///workingcopy' and then 'git checkout'.

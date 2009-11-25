@@ -30,7 +30,7 @@ class Hg(BaseVersionControl):
         return tags
 
     def prepare_checkout_dir(self, prefix):
-        return tempfile.mktemp(prefix=prefix)
+        return tempfile.mkdtemp(prefix=prefix)
 
     def tag_url(self, version):
         # this doesn't apply to Mercurial, so we just return the
@@ -55,4 +55,6 @@ class Hg(BaseVersionControl):
         return 'hg tag -m "Tagging %s" %s' % (version, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
-        return 'hg clone -r %s . %s' % (version, checkout_dir)
+        source = self.workingdir
+        target = checkout_dir
+        return 'hg clone -r %s %s %s' % (version, source, target)

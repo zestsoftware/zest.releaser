@@ -124,11 +124,16 @@ For checking out a tag, we first need a checkout dir:
     >>> temp
     '...somename...'
 
+And temp should be a directory:
+
+    >>> os.path.isdir(temp)
+    True
+
 And make a tag checkout:
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'hg clone -r 0.1 . ...somename...'
+    'hg clone -r 0.1 .../tha.example-hg .../somename...'
     >>> print commands.getoutput(cmd)
     requesting all changes
     adding changesets
