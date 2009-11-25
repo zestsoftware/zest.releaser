@@ -80,7 +80,7 @@ And the version number is just 0.1 and has lost its dev marker:
 
 The release script tags the release and uploads it:
 
-    >>> utils.answers_for_testing = ['y', 'y', 'y', 'y']
+    >>> utils.answers_for_testing = ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']
     >>> mock_pypi_available.append('tha.example')
     >>> from zest.releaser import release
     >>> release.main()
@@ -108,6 +108,9 @@ The release script tags the release and uploads it:
     Our reply: y
     Showing last few lines...
     MOCK setup.py register sdist upload...
+
+That last line might be something like "mregister sdist mupload -r
+pypi" but we catch that with the test normalizer.
 
 If collective.dist is installed, the last dots above could be saying
 that we upload to alternative pypis as well.
