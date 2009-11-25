@@ -89,6 +89,8 @@ class Prereleaser(object):
         history_file = self.vcs.history_file()
         if not history_file:
             logger.warn("No history file found")
+            self.data['history_lines'] = None
+            self.data['history_file'] = None
             return
         logger.debug("Checking %s", history_file)
         history_lines = open(history_file).read().split('\n')
@@ -117,6 +119,8 @@ class Prereleaser(object):
 
     def _write_history(self):
         """Write previously-calculated history lines back to the file"""
+        if self.data['history_file'] is None:
+            return
         contents = '\n'.join(self.data['history_lines'])
         history = self.data['history_file']
         open(history, 'w').write(contents)

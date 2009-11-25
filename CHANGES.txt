@@ -4,7 +4,8 @@ Changelog for zest.releaser
 2.12 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- A missing history file does not result anymore in a keyerror in prerelease.
+  [reinout]
 
 
 2.11 (2009-11-25)
