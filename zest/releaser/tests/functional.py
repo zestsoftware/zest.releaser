@@ -87,6 +87,8 @@ def setup(test):
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
     commands.getoutput("git init")
+    open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
+        'tha.example.egg-info\n')
     commands.getoutput("git add .")
     commands.getoutput("git commit -a -m 'init'")
     os.chdir(test.orig_dir)
