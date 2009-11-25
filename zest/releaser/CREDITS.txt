@@ -14,5 +14,5 @@ Credits
 * `Wouter vanden Hove <http://ugent.be>`_ (University of Gent) added
   support for uploading to multiple servers, using collective.dist.
 
-* `Godefroid Chapelle <http://bubblenet.be>`(BubbleNet) added /tag besides 
-  /tags for subversion
+* `Godefroid Chapelle <http://bubblenet.be>`_ (BubbleNet) added /tag besides
+  /tags for subversion.
