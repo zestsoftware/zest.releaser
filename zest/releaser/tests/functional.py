@@ -68,6 +68,10 @@ def setup(test):
     svnsourcedir = os.path.join(test.tempdir, 'tha.example-svn')
     commands.getoutput(
         'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
+    commands.getoutput(
+        'svn propset svn:ignore tha.example.egg-info %s/src '% svnsourcedir)
+    commands.getoutput('svn up %s' % svnsourcedir)
+    commands.getoutput('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
 
     # Mercurial initialization
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')

@@ -61,7 +61,7 @@ Commit it:
     >>> print commands.getoutput(cmd)
     Sending        setup.py
     Transmitting file data...
-    Committed revision 4.
+    Committed revision 5.
 
 Tags
 ----
@@ -97,7 +97,7 @@ Make and commit a small change:
     >>> print commands.getoutput(cmd)
     Sending        setup.py
     Transmitting file data .
-    Committed revision 6.
+    Committed revision 7.
 
 Now we can request the changes since a specific tag:
 
@@ -107,8 +107,8 @@ Now we can request the changes since a specific tag:
     >>> print commands.getoutput(cmd)
     Index: setup.py
     ===================================================================
-    --- setup.py      (.../tags/0.1)  (revision 6)
-    +++ setup.py      (.../trunk)     (revision 6)
+    --- setup.py      (.../tags/0.1)  (revision 7)
+    +++ setup.py      (.../trunk)     (revision 7)
     @@ -38,3 +38,5 @@
            )
     <BLANKLINE>
@@ -150,7 +150,7 @@ And make a tag checkout:
     A    ...somename.../src/tha/example/tests/test.py
     A    ...somename.../src/tha/example/__init__.py
     A    ...somename.../README.txt
-    Checked out revision 6.
+    Checked out revision 7.
 
 
 Tag corner cases
@@ -228,7 +228,7 @@ obviously an empty list:
     Question: Shall I create it (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Committed revision 9.
+    Committed revision 10.
     []
     >>> cmd = 'svn list %s/sample' % repo_url
     >>> print commands.getoutput(cmd)

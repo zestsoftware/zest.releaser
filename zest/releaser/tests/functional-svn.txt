@@ -89,12 +89,12 @@ The release script tags the release and uploads it:
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Committed revision 5.
+    Committed revision 6.
     Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
     A    .../tha.example-0.1-.../local-checkouts
     ...
-    Checked out revision 5.
+    Checked out revision 6.
     running sdist
     running egg_info
     ...
