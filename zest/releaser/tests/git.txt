@@ -43,7 +43,7 @@ Make a change:
     'git diff'
     >>> print commands.getoutput(cmd)
     diff --git a/setup.py b/setup.py
-    index ...
+    index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
     @@ -36,3 +36,5 @@ setup(name='tha.example',
@@ -107,7 +107,7 @@ Now we can request the changes since a specific tag:
     'git diff 0.1'
     >>> print commands.getoutput(cmd)
     diff --git a/setup.py b/setup.py
-    index ...
+    index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
     @@ -38,3 +38,5 @@ setup(name='tha.example',
@@ -130,7 +130,7 @@ For checking out a tag, we first need a checkout dir with a clone of the reposit
 
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
-    '...somename...'
+    'TMPDIR/somename...'
 
 And temp should be a directory:
 

@@ -10,7 +10,7 @@ Several items are prepared for us.
 A mercurial directory (repository and checkout in one):
 
     >>> hgsourcedir
-    '.../tha.example-hg'
+    'TESTTEMP/tha.example-hg'
     >>> import os
     >>> os.chdir(hgsourcedir)
 
@@ -18,7 +18,7 @@ There are no tags yet:
 
     >>> import commands
     >>> print commands.getoutput("hg tags")
-    tip                                0:...
+    tip 1:234567890abc
 
 The changelog is at 0.1 dev:
 
@@ -51,7 +51,7 @@ The changelog now has a release date instead of ``(unreleased)``:
     Changelog of tha.example
     =====================
     <BLANKLINE>
-    0.1 (...-...-...)
+    0.1 (2007-01-14)
     ----------------
 
 And the version number is just 0.1 and has lost its dev marker:
@@ -79,8 +79,8 @@ The release script tags the release:
 There is now a tag:
 
     >>> print commands.getoutput("hg tags")
-    tip  ...
-    0.1  ...
+    tip  1:234567890abc
+    0.1  1:234567890abc
 
 And the postrelease script ups the version:
 

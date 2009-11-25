@@ -17,11 +17,11 @@ handles some base cases and has a bunch of NotImplementedError methods.
 When started, it stores the current working directory:
 
     >>> svnsourcedir
-    '...tha.example-svn'
+    'TESTTEMP/tha.example-svn'
     >>> os.chdir(svnsourcedir)
     >>> checkout = vcs.BaseVersionControl()
     >>> checkout.workingdir
-    '...tha.example-svn'
+    'TESTTEMP/tha.example-svn'
 
 
 Methods that must be implemented in subclasses

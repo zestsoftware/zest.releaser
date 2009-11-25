@@ -14,7 +14,7 @@ def setup(test):
     partstestdir = os.getcwd() # Buildout's test run in parts/test
     test.orig_dir = partstestdir
     buildoutbindir = os.path.join(partstestdir, '..', '..', 'bin')
-    test.tempdir = tempfile.mkdtemp()
+    test.tempdir = tempfile.mkdtemp(prefix='testtemp')
 
     # Monkey patch sys.exit
     test.orig_exit = sys.exit

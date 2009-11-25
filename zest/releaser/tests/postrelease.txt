@@ -10,18 +10,18 @@ Several items are prepared for us.
 An svn repository:
 
     >>> repo_url
-    'file://.../svnrepo'
+    'file://TESTREPO'
 
 An svn checkout of a project:
 
     >>> svnsourcedir
-    '.../tha.example-svn'
+    'TESTTEMP/tha.example-svn'
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> import commands
     >>> print commands.getoutput("svn info %s" % svnsourcedir)
-    Path: .../tha.example-svn
-    URL: file://.../svnrepo/tha.example/trunk
+    Path: TESTTEMP/tha.example-svn
+    URL: file://TESTREPO/tha.example/trunk
     ...
 
 The version is at 0.1 dev:

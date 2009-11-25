@@ -43,7 +43,6 @@ Make a change:
     'svn diff'
     >>> print commands.getoutput(cmd)
     Index: ...
-    ...
     --- setup.py      (revision 3)
     +++ setup.py      (working copy)
     @@ -36,3 +36,5 @@
@@ -80,7 +79,7 @@ Create a tag and it will show up:
 
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
-    'svn cp .../tha.example/trunk .../tha.example/tags/0.1 -m "Tagging 0.1"'
+    'svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"'
     >>> dont_care = commands.getoutput(cmd)
     >>> checkout.available_tags()
     ['0.1']
@@ -88,7 +87,7 @@ Create a tag and it will show up:
 A tag url is important for subversion:
 
     >>> checkout.tag_url('holadijee')
-    'file:.../tha.example/tags/holadijee'
+    'file://TESTREPO/tha.example/tags/holadijee'
 
 Make and commit a small change:
 
@@ -103,7 +102,7 @@ Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'svn diff .../tha.example/tags/0.1 .../tha.example/trunk'
+    'svn diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk'
     >>> print commands.getoutput(cmd)
     Index: setup.py
     ===================================================================
@@ -124,32 +123,32 @@ For checking out a tag, we first need a temp folder to do the checkout in:
 
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
-    '...somename...'
+    'TMPDIR/somename...'
 
 And make a tag checkout:
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'svn co .../tha.example/tags/0.1 ...somename...'
+    'svn co file://TESTREPO/tha.example/tags/0.1 TMPDIR/somename...'
     >>> print commands.getoutput(cmd)
-    A    ...somename.../local-checkouts
-    A    ...somename.../grok-1.0a4.cfg
-    A    ...somename.../TODO.txt
-    A    ...somename.../bootstrap.py
-    A    ...somename.../buildout.cfg
-    A    ...somename.../CHANGES.txt
-    A    ...somename.../setup.py
-    A    ...somename.../src
-    A    ...somename.../src/tha
-    A    ...somename.../src/tha/__init__.py
-    A    ...somename.../src/tha/example
-    A    ...somename.../src/tha/example/USAGE.txt
-    A    ...somename.../src/tha/example/tests
-    A    ...somename.../src/tha/example/tests/sample.txt
-    A    ...somename.../src/tha/example/tests/__init__.py
-    A    ...somename.../src/tha/example/tests/test.py
-    A    ...somename.../src/tha/example/__init__.py
-    A    ...somename.../README.txt
+    A    TMPDIR/somename.../local-checkouts
+    A    TMPDIR/somename.../grok-1.0a4.cfg
+    A    TMPDIR/somename.../TODO.txt
+    A    TMPDIR/somename.../bootstrap.py
+    A    TMPDIR/somename.../buildout.cfg
+    A    TMPDIR/somename.../CHANGES.txt
+    A    TMPDIR/somename.../setup.py
+    A    TMPDIR/somename.../src
+    A    TMPDIR/somename.../src/tha
+    A    TMPDIR/somename.../src/tha/__init__.py
+    A    TMPDIR/somename.../src/tha/example
+    A    TMPDIR/somename.../src/tha/example/USAGE.txt
+    A    TMPDIR/somename.../src/tha/example/tests
+    A    TMPDIR/somename.../src/tha/example/tests/sample.txt
+    A    TMPDIR/somename.../src/tha/example/tests/__init__.py
+    A    TMPDIR/somename.../src/tha/example/tests/test.py
+    A    TMPDIR/somename.../src/tha/example/__init__.py
+    A    TMPDIR/somename.../README.txt
     Checked out revision 7.
 
 
@@ -184,7 +183,7 @@ projects have only a /trunk set up and no tag directory yet.
 Set up a new sample project in the repository:
 
     >>> repo_url
-    'file://.../svnrepo'
+    'file://TESTREPO'
     >>> cmd = 'svn mkdir %s/sample -m "mkdir"' % repo_url
     >>> dont_care = commands.getoutput(cmd)
     >>> cmd = 'svn mkdir %s/sample/trunk -m "mkdir"' % repo_url
@@ -224,7 +223,7 @@ obviously an empty list:
 
     >>> utils.answers_for_testing = ['y']
     >>> sample_checkout.available_tags()
-    tags dir does not exist at file:...svnrepo/sample/tags
+    tags dir does not exist at file://TESTREPO/sample/tags
     Question: Shall I create it (Y/n)?
     Our reply: y
     <BLANKLINE>
@@ -246,7 +245,7 @@ Zest.releaser supports that.
 Set up a new sample project in the repository:
 
     >>> repo_url
-    'file://.../svnrepo'
+    'file://TESTREPO'
     >>> cmd = 'svn mkdir %s/singular -m "mkdir"' % repo_url
     >>> dont_care = commands.getoutput(cmd)
     >>> cmd = 'svn mkdir %s/singular/trunk -m "mkdir"' % repo_url
@@ -287,16 +286,16 @@ There are no tags yet:
 Tag urls are formed correctly with the singular name:
 
     >>> singular_checkout.tag_url('0.1')
-    'file://.../singular/tag/0.1'
+    'file://TESTREPO/singular/tag/0.1'
 
 Tag and checkout commands also use the singular:
 
     >>> cmd = singular_checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'svn co .../singular/tag/0.1 ...somename...'
+    'svn co file://TESTREPO/singular/tag/0.1 TMPDIR/somename...'
     >>> cmd = singular_checkout.cmd_create_tag('0.1')
     >>> cmd
-    'svn cp .../singular/trunk .../singular/tag/0.1 -m "Tagging 0.1"'
+    'svn cp file://TESTREPO/singular/trunk file://TESTREPO/singular/tag/0.1 -m "Tagging 0.1"'
 
 If we have branch checkout, the base url is still extracted correctly, even if
 the singular /tag and /branch is used:
@@ -318,10 +317,10 @@ the singular /tag and /branch is used:
     >>> os.chdir('mysingularbranch')
     >>> singular_checkout = svn.Subversion()
     >>> singular_checkout._base_from_svn()
-    'file://.../singular/'
+    'file://TESTREPO/singular/'
 
     >>> os.chdir(tempdir)
     >>> os.chdir('mysingulartag')
     >>> singular_checkout = svn.Subversion()
     >>> singular_checkout._base_from_svn()
-    'file://.../singular/'
+    'file://TESTREPO/singular/'

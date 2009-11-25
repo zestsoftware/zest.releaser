@@ -7,6 +7,9 @@ Changelog for zest.releaser
 - A missing history file does not result anymore in a keyerror in prerelease.
   [reinout]
 
+- Added lots of test output normalization so that errors aren't hidden by
+  the large number of ``...`` in the doctests.  [reinout]
+
 
 2.11 (2009-11-25)
 -----------------

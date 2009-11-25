@@ -42,7 +42,7 @@ Make a change:
     >>> cmd
     'hg diff'
     >>> print commands.getoutput(cmd)
-    diff -r ... setup.py
+    diff -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
     @@ -36,3 +36,5 @@
@@ -59,7 +59,7 @@ Commit it:
     'hg commit -v -m "small tweak"'
     >>> print commands.getoutput(cmd)
     setup.py
-    committed changeset ...
+    committed changeset 1:234567890abc
 
 
 Tags
@@ -91,20 +91,20 @@ Make and commit a small change:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print commands.getoutput(cmd)
     setup.py
-    committed changeset ...
+    committed changeset 1:234567890abc
 
 Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'hg diff -r 0.1 -r ...'
+    'hg diff -r 0.1 -r 234567890abc'
     >>> print commands.getoutput(cmd)
-    diff -r ... -r ... .hgtags
+    diff -r 234567890abc -r 234567890abc .hgtags
     --- /dev/null     ...
     +++ b/.hgtags     ...
     @@ -0,0 +1,1 @@
     +... 0.1
-    diff -r ... -r ... setup.py
+    diff -r 234567890abc -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
     @@ -38,3 +38,5 @@
@@ -122,7 +122,7 @@ For checking out a tag, we first need a checkout dir:
 
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
-    '...somename...'
+    'TMPDIR/somename...'
 
 And temp should be a directory:
 
@@ -133,7 +133,7 @@ And make a tag checkout:
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'hg clone -r 0.1 .../tha.example-hg .../somename...'
+    'hg clone -r 0.1 TESTTEMP/tha.example-hg TMPDIR/somename...'
     >>> print commands.getoutput(cmd)
     requesting all changes
     adding changesets

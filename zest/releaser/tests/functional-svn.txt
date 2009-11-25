@@ -10,18 +10,18 @@ Several items are prepared for us.
 An svn repository:
 
     >>> repo_url
-    'file://.../svnrepo'
+    'file://TESTREPO'
 
 An svn checkout of a project:
 
     >>> svnsourcedir
-    '.../tha.example-svn'
+    'TESTTEMP/tha.example-svn'
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> import commands
     >>> print commands.getoutput("svn info %s" % svnsourcedir)
-    Path: .../tha.example-svn
-    URL: file://.../svnrepo/tha.example/trunk
+    Path: TESTTEMP/tha.example-svn
+    URL: file://TESTREPO/tha.example/trunk
     ...
 
 There are no tags yet:
@@ -67,7 +67,7 @@ The changelog now has a release date instead of ``(unreleased)``:
     Changelog of tha.example
     =====================
     <BLANKLINE>
-    0.1 (...-...-...)
+    0.1 (1996-08-24)
     ----------------
 
 And the version number is just 0.1 and has lost its dev marker:
@@ -85,14 +85,14 @@ The release script tags the release and uploads it:
     >>> from zest.releaser import release
     >>> release.main()
     To tag, you can use the following command:
-    svn cp file:/.../tha.example/trunk file:/.../tha.example/tags/0.1 -m "Tagging 0.1"
+    svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
     Committed revision 6.
     Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
-    A    .../tha.example-0.1-.../local-checkouts
+    A    TMPDIR/tha.example-0.1-.../local-checkouts
     ...
     Checked out revision 6.
     running sdist

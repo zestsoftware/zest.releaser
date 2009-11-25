@@ -10,7 +10,7 @@ Several items are prepared for us.
 A git directory (repository and checkout in one):
 
     >>> gitsourcedir
-    '.../tha.example-git'
+    'TESTTEMP/tha.example-git'
     >>> import os
     >>> os.chdir(gitsourcedir)
 
@@ -51,7 +51,7 @@ The changelog now has a release date instead of ``(unreleased)``:
     Changelog of tha.example
     =====================
     <BLANKLINE>
-    0.1 (...-...-...)
+    0.1 (2008-12-20)
     ----------------
 
 And the version number is just 0.1 and has lost its dev marker:
