@@ -72,6 +72,8 @@ def setup(test):
     # Mercurial initialization
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')
     shutil.copytree(sourcedir, hgsourcedir)
+    open(os.path.join(hgsourcedir, '.hgignore'), 'w').write(
+        'syntax: glob\n\n*.egg-info\n')
     commands.getoutput("hg init %s" % hgsourcedir)
     commands.getoutput("hg add %s" % hgsourcedir)
     commands.getoutput("hg commit -m 'init' %s" % hgsourcedir)
