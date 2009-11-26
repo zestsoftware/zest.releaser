@@ -47,7 +47,6 @@ class Postreleaser(baserelease.Basereleaser):
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
         self._ask_for_new_dev_version()
-        self._check_data_dict()
 
     def execute(self):
         """Make the changes and offer a commit"""
@@ -95,10 +94,6 @@ class Postreleaser(baserelease.Basereleaser):
         self.data['dev_version'] = dev_version
         logger.info("New version string is %r",
                     dev_version)
-
-    def _check_data_dict(self):
-        """Ensure that the self.data dict is fully documented"""
-        utils.is_data_documented(self.data, documentation=DATA)
 
     def _update_version(self):
         """Update the version in vcs"""
@@ -157,6 +152,11 @@ class Postreleaser(baserelease.Basereleaser):
             commit_cmd = self.vcs.cmd_commit(msg)
             commit = getoutput(commit_cmd)
             logger.info(commit)
+
+
+def datacheck(data):
+    """Entrypoint: ensure that the data dict is fully documented"""
+    utils.is_data_documented(data, documentation=DATA)
 
 
 def main():

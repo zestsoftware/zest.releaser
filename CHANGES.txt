@@ -4,7 +4,9 @@ Changelog for zest.releaser
 2.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added support for extension by means of entry points.  There is no
+  documentation that advertises it yet as I want to treat it as experimental
+  till I've used it a few times.  [reinout]
 
 
 2.12 (2009-11-26)

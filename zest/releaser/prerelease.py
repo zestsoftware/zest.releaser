@@ -50,7 +50,6 @@ class Prereleaser(baserelease.Basereleaser):
         """Prepare self.data by asking about new version etc."""
         self._grab_version()
         self._grab_history()
-        self._check_data_dict()
 
     def execute(self):
         """Make the changes and offer a commit"""
@@ -146,9 +145,11 @@ class Prereleaser(baserelease.Basereleaser):
             commit = getoutput(commit_cmd)
             logger.info(commit)
 
-    def _check_data_dict(self):
-        """Ensure that the self.data dict is fully documented"""
-        utils.is_data_documented(self.data, documentation=DATA)
+
+
+def datacheck(data):
+    """Entrypoint: ensure that the data dict is fully documented"""
+    utils.is_data_documented(data, documentation=DATA)
 
 
 def main():

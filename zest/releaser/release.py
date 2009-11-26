@@ -48,7 +48,6 @@ class Releaser(baserelease.Basereleaser):
         """Collect some data needed for releasing"""
         self._grab_version()
         self._check_if_tag_already_exists()
-        self._check_data_dict()
 
     def execute(self):
         """Do the actual releasing"""
@@ -77,10 +76,6 @@ class Releaser(baserelease.Basereleaser):
                 print commands.getoutput(diff_command)
         else:
             self.data['tag_already_exists'] = False
-
-    def _check_data_dict(self):
-        """Ensure that the self.data dict is fully documented"""
-        utils.is_data_documented(self.data, documentation=DATA)
 
     def _make_tag(self):
         if self.data['tag_already_exists']:
@@ -154,6 +149,11 @@ class Releaser(baserelease.Basereleaser):
                         utils.show_last_lines(result)
 
         os.chdir(self.vcs.workingdir)
+
+
+def datacheck(data):
+    """Entrypoint: ensure that the data dict is fully documented"""
+    utils.is_data_documented(data, documentation=DATA)
 
 
 def main(return_tagdir=False):

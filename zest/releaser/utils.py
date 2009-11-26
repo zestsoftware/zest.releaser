@@ -3,6 +3,8 @@ import logging
 import re
 import sys
 
+import pkg_resources
+
 logger = logging.getLogger('utils')
 
 WRONG_IN_VERSION = ['svn', 'dev', '(']
@@ -175,3 +177,19 @@ def is_data_documented(data, documentation={}):
     if undocumented:
         logger.warn('Internal detail: key(s) %s are not documented',
                     undocumented)
+
+
+def run_entry_points(which_releaser, when, data):
+    """Run the requested entry points.
+
+    which_releaser can be prereleaser, releaser, postreleaser.
+
+    when can be before, middle, after.
+
+    """
+    group = 'zest.releaser.%s.%s' % (which_releaser, when)
+    for entrypoint in pkg_resources.iter_entry_points(group=group):
+        # Grab the function that is the actual plugin.
+        plugin = entrypoint.load()
+        # Feed the data dict to the plugin.
+        plugin(data)
