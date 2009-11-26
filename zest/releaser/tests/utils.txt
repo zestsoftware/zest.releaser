@@ -257,7 +257,7 @@ sys.executable.
 
 When the setup.py arguments include arguments that indicate pypi interaction,
 the python executable is replaced by ``echo`` for safety reasons.  This only
-happens when TESTMODE is on
+happens when TESTMODE is on:
 
     >>> utils.TESTMODE = True
     >>> print utils.setup_py('upload')
@@ -270,4 +270,23 @@ happens when TESTMODE is on
     echo MOCK setup.py mregister
 
 
+Data dict documentation
+-----------------------
+
+The releasers have a data dict that is passed to entry points (and used
+internally).  Because of the entry points, good documentation is necessary.
+So we can check whether all keys have attached documentation:
+
+    >>> data = {'commit_msg': 'get me some booze'}
+    >>> documentation = {'commit_msg': 'Commit message for svn',
+    ...                  'target': 'Some other thingy'}
+    >>> utils.is_data_documented(data, documentation)
+    Checking data dict
+
+We print a warning when something is undocumented:
+
+    >>> data = {'version': '0.1'}
+    >>> utils.is_data_documented(data, documentation)
+    Checking data dict
+    Internal detail: key(s) ['version'] are not documented
 

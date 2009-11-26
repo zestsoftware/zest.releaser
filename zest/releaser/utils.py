@@ -175,8 +175,7 @@ def is_data_documented(data, documentation={}):
     undocumented = [key for key in data
                     if key not in documentation]
     if undocumented:
-        logger.warn('Internal detail: key(s) %s are not documented',
-                    undocumented)
+        print 'Internal detail: key(s) %s are not documented' % undocumented
 
 
 def run_entry_points(which_releaser, when, data):
