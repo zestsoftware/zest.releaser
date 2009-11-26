@@ -124,8 +124,10 @@ For checking out a tag, we first need a temp folder to do the checkout in:
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
     'TMPDIR/somename...'
+    >>> os.path.isdir(temp)
+    True
 
-And make a tag checkout:
+The tag checkout command makes a checkout in that tempdir:
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
@@ -150,6 +152,12 @@ And make a tag checkout:
     A    TMPDIR/somename.../src/tha/example/__init__.py
     A    TMPDIR/somename.../README.txt
     Checked out revision 7.
+
+The checkout is done directly in that temporary directory, so not in a newly
+created subdirectory of it:
+
+    >>> sorted(os.listdir(temp))
+    ['.svn', 'CHANGES.txt', ...]
 
 
 Tag corner cases

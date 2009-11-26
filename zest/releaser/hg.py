@@ -30,6 +30,7 @@ class Hg(BaseVersionControl):
         return tags
 
     def prepare_checkout_dir(self, prefix):
+        """Return directory where a tag checkout can be made"""
         return tempfile.mkdtemp(prefix=prefix)
 
     def tag_url(self, version):

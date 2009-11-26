@@ -118,18 +118,15 @@ Now we can request the changes since a specific tag:
 Making a tag checkout
 ---------------------
 
-For checking out a tag, we first need a checkout dir:
+For checking out a tag, we first need a temp folder to do the checkout in:
 
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
     'TMPDIR/somename...'
-
-And temp should be a directory:
-
     >>> os.path.isdir(temp)
     True
 
-And make a tag checkout:
+The tag checkout command makes a checkout in that tempdir:
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
@@ -142,3 +139,9 @@ And make a tag checkout:
     added 2 changesets with ... changes to 14 files
     updating working directory
     14 files updated, 0 files merged, 0 files removed, 0 files unresolved    
+
+The checkout is done directly in that temporary directory, so not in a newly
+created subdirectory of it:
+
+    >>> sorted(os.listdir(temp))
+    ['.hg', '.hgignore', 'CHANGES.txt', ...]
