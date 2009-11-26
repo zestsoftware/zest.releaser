@@ -126,16 +126,24 @@ dir and afterwards do a checkout/clone of a tag.  With git, we immediately
 make a clone of the repository in a tempdir and afterwards switch ("checkout")
 that directory to the tag.
 
-For checking out a tag, we first need a checkout dir with a clone of the repository.
+For checking out a tag, we first need a temporary dir with a clone of the
+repository.
 
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
     'TMPDIR/somename...'
-
-And temp should be a directory:
-
     >>> os.path.isdir(temp)
     True
+
+The checked out clone is really a clone and not an empty directory.  The
+setup.py also contains our latest "b = 3" change:
+
+    >>> sorted(os.listdir(temp))
+    ['.git', '.gitignore', 'CHANGES.txt', ...]
+    >>> print open(os.path.join(temp, 'setup.py')).read()
+    from setuptools import setup, find_packages
+    ...
+    b = 3
 
 For git, we have to change to that directory!  Git doesn't work with paths.
 
@@ -157,5 +165,9 @@ Chdir and make a tag checkout:
       git checkout -b <new_branch_name>
     HEAD is now at ... small tweak
 
-TODO: this doesn not actually work. Do something like 'git clone
-///workingcopy' and then 'git checkout'.
+The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
+
+    >>> print open(os.path.join(temp, 'setup.py')).read()
+    from setuptools import setup, find_packages
+    ...
+    a = 2
