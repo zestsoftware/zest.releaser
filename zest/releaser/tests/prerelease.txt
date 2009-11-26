@@ -1,0 +1,21 @@
+Detailed tests of prerelease.py
+===============================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+An svn checkout of a project:
+
+    >>> svnsourcedir
+    'TESTTEMP/tha.example-svn'
+
+Test setup:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+    >>> import os
+    >>> os.chdir(svnsourcedir)
+    >>> from zest.releaser import prerelease
+
+TODO!

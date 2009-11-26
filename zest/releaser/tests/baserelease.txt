@@ -1,0 +1,36 @@
+Detailed tests of baserelease.py
+================================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Change to an svn dir:
+
+    >>> svnsourcedir
+    'TESTTEMP/tha.example-svn'
+    >>> import os
+    >>> os.chdir(svnsourcedir)
+
+Init the Basereleaser, which is otherwise only used as a base class.
+
+    >>> from zest.releaser import baserelease
+    >>> base = baserelease.Basereleaser()
+
+An empty data dict is initialized.  And a vcs is chosen:
+
+    >>> base.data
+    {}
+    >>> base.vcs
+    <zest.releaser.svn.Subversion object at ...>
+
+Two methods are unimplemented:
+
+    >>> base.prepare()
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
+    >>> base.execute()
+    Traceback (most recent call last):
+    ...
+    NotImplementedError
