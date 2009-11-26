@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-2.12 (unreleased)
+2.12 (2009-11-26)
 -----------------
 
 - Fixed mercurial sdist creation.  [reinout]
