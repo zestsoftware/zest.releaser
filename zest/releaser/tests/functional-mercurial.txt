@@ -62,9 +62,10 @@ And the version number is just 0.1 and has lost its dev marker:
     <BLANKLINE>
     version = '0.1'
 
-The release script tags the release:
+The release script tags the release and uploads it:
 
-    >>> utils.answers_for_testing = ['y', 'n']
+    >>> utils.answers_for_testing = ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']
+    >>> mock_pypi_available.append('tha.example')
     >>> from zest.releaser import release
     >>> release.main()
     To tag, you can use the following command:
@@ -74,8 +75,27 @@ The release script tags the release:
     <BLANKLINE>
     Question: Check out the tag
         (for tweaks or pypi/distutils server upload) (Y/n)?
-    Our reply: n
-
+    Our reply: y
+    requesting all changes
+    ...
+    running sdist
+    running egg_info
+    creating src/tha.example.egg-info
+    ...
+    creating tha.example-0.1
+    ...
+    making hard links in tha.example-0.1...
+    hard linking README.txt -> tha.example-0.1
+    ...
+    creating dist
+    tar -cf dist/tha.example-0.1.tar tha.example-0.1
+    gzip -f9 dist/tha.example-0.1.tar
+    removing 'tha.example-0.1' (and everything under it)
+    Question: Register and upload to pypi (Y/n)?
+    Our reply: y
+    Showing last few lines...
+    MOCK setup.py register sdist upload
+    
 There is now a tag:
 
     >>> print commands.getoutput("hg tags")
