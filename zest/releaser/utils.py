@@ -164,3 +164,14 @@ def setup_py(rest_of_cmdline):
 
     return '%s setup.py %s' % (executable, rest_of_cmdline)
 
+
+def is_data_documented(data, documentation={}):
+    """check that the self.data dict is fully documented"""
+    if TESTMODE:
+        # Hack for testing
+        print "Checking data dict"
+    undocumented = [key for key in data
+                    if key not in documentation]
+    if undocumented:
+        logger.warn('Internal detail: key(s) %s are not documented',
+                    undocumented)

@@ -47,6 +47,7 @@ with a number, the script cannot make a suggestion:
     Current version is '0.1dev'
     Question: Enter new development version ('dev' will be appended): 
     Our reply: 0.2
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
@@ -73,6 +74,7 @@ but 0.2.20:
     >>> prerelease.main()
     Question: Enter version [0.2]:
     Our reply: 0.2.19
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
     >>> utils.answers_for_testing = ['', '']
@@ -80,6 +82,7 @@ but 0.2.20:
     Current version is '0.2.19'
     Question: Enter new development version ('dev' will be appended) [0.2.20]: 
     Our reply: <ENTER>
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
@@ -90,6 +93,7 @@ cannot suggest a reasonable number:
     >>> prerelease.main()
     Question: Enter version [0.2.20]:
     Our reply: 0.3beta
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
     >>> utils.answers_for_testing = ['', '']
@@ -102,6 +106,7 @@ cannot suggest a reasonable number:
     Current version is '0.3beta'
     Question: Enter new development version ('dev' will be appended): 
     Our reply: 0.3rc
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
@@ -111,6 +116,7 @@ Numbers and characters can be combined:
     >>> prerelease.main()
     Question: Enter version [0.3rc]:
     Our reply: 1.0a1
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
     >>> utils.answers_for_testing = ['', '']
@@ -118,5 +124,6 @@ Numbers and characters can be combined:
     Current version is '1.0a1'
     Question: Enter new development version ('dev' will be appended) [1.0a2]: 
     Our reply: <ENTER>
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>

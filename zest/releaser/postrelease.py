@@ -97,11 +97,7 @@ class Postreleaser(object):
 
     def _check_data_dict(self):
         """Ensure that the self.data dict is fully documented"""
-        undocumented = [key for key in self.data
-                        if key not in DATA]
-        if undocumented:
-            logger.warn('Internal detail: key(s) %s are not documented',
-                        undocumented)
+        utils.is_data_documented(self.data, documentation=DATA)
 
     def _update_version(self):
         """Update the version in vcs"""

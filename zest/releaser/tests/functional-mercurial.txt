@@ -42,6 +42,7 @@ Run the prerelease script:
     >>> prerelease.main()
     Question: Enter version [0.1]:
     Our reply: <ENTER>
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
@@ -68,6 +69,7 @@ The release script tags the release and uploads it:
     >>> mock_pypi_available.append('tha.example')
     >>> from zest.releaser import release
     >>> release.main()
+    Checking data dict
     To tag, you can use the following command:
     hg tag -m "Tagging 0.1" 0.1
     Question: Run this command (Y/n)?
@@ -110,6 +112,7 @@ And the postrelease script ups the version:
     Current version is '0.1'
     Question: Enter new development version ('dev' will be appended) [0.2]:
     Our reply: <ENTER>
+    Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
