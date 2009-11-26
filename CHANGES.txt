@@ -4,6 +4,8 @@ Changelog for zest.releaser
 2.12 (unreleased)
 -----------------
 
+- Fixed mercurial sdist creation.  [reinout]
+
 - A missing history file does not result anymore in a keyerror in prerelease.
   [reinout]
 
