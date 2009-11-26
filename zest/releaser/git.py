@@ -30,10 +30,15 @@ class Git(BaseVersionControl):
         return tags
 
     def prepare_checkout_dir(self, prefix):
+        # Watch out: some git versions can't clone into an existing
+        # directory, even when it is empty.
         temp = tempfile.mkdtemp(prefix=prefix)
-        cmd = 'git clone %s %s' % (self.workingdir, temp)
+        cwd = os.getcwd()
+        os.chdir(temp)
+        cmd = 'git clone %s %s' % (self.workingdir, 'gitclone')
         logger.debug(getoutput(cmd))
-        return temp
+        os.chdir(cwd)
+        return os.path.join(temp, 'gitclone')
 
     def tag_url(self, version):
         # this doesn't apply to Git, so we just return the
