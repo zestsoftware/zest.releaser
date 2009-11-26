@@ -5,6 +5,8 @@ from commands import getoutput
 import datetime
 import logging
 import sys
+
+from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser import choose
 
@@ -28,7 +30,7 @@ DATA = {
     }
 
 
-class Prereleaser(object):
+class Prereleaser(baserelease.Basereleaser):
     """WORK IN PROGRESS
 
     self.data holds data that can optionally be changed by plugins.
@@ -36,7 +38,7 @@ class Prereleaser(object):
     """
 
     def __init__(self):
-        self.vcs = choose.version_control()
+        baserelease.Basereleaser.__init__(self)
         # Prepare some defaults for potential overriding.
         self.data = dict(
             today=datetime.datetime.today().strftime('%Y-%m-%d'),
@@ -153,5 +155,4 @@ def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
     prereleaser = Prereleaser()
-    prereleaser.prepare()
-    prereleaser.execute()
+    prereleaser.run()

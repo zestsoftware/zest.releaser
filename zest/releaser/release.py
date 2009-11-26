@@ -5,6 +5,7 @@ import os
 import urllib
 import sys
 
+from zest.releaser import baserelease
 from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
@@ -34,11 +35,11 @@ def package_in_pypi(package):
         return False
 
 
-class Releaser(object):
+class Releaser(baserelease.Basereleaser):
     """Release the projct, for instance by uploading to pypi"""
 
     def __init__(self):
-        self.vcs = choose.version_control()
+        baserelease.Basereleaser.__init__(self)
         # Prepare some defaults for potential overriding.
         self.data = dict(
             )
@@ -159,8 +160,7 @@ def main(return_tagdir=False):
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
     releaser = Releaser()
-    releaser.prepare()
-    releaser.execute()
+    releaser.run()
     if return_tagdir:
         # At the end, for the benefit of fullrelease.
         return getattr(releaser, 'tagdir', None)

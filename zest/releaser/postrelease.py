@@ -5,6 +5,7 @@ import logging
 import sys
 from commands import getoutput
 
+from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser import choose
 
@@ -28,7 +29,7 @@ DATA = {
     }
 
 
-class Postreleaser(object):
+class Postreleaser(baserelease.Basereleaser):
     """WORK IN PROGRESS
 
     self.data holds data that can optionally be changed by plugins.
@@ -36,7 +37,7 @@ class Postreleaser(object):
     """
 
     def __init__(self):
-        self.vcs = choose.version_control()
+        baserelease.Basereleaser.__init__(self)
         # Prepare some defaults for potential overriding.
         self.data = dict(
             nothing_changed_yet=NOTHING_CHANGED_YET,
@@ -162,5 +163,4 @@ def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
     postreleaser = Postreleaser()
-    postreleaser.prepare()
-    postreleaser.execute()
+    postreleaser.run()
