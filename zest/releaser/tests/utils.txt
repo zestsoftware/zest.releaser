@@ -289,4 +289,3 @@ We print a warning when something is undocumented:
     >>> utils.is_data_documented(data, documentation)
     Checking data dict
     Internal detail: key(s) ['version'] are not documented
-

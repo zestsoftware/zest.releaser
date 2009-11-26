@@ -1,5 +1,5 @@
-Integration test
-================
+Detailed tests of postrelease.py
+================================
 
 .. :doctest:
 .. :setup: zest.releaser.tests.functional.setup
@@ -127,3 +127,60 @@ Numbers and characters can be combined:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+
+If there's an empty history file, it gets a fresh header.
+
+    >>> utils.answers_for_testing = ['1.0', '']
+    >>> prerelease.main()
+    Question: ...
+    >>> open('CHANGES.txt', 'w').write('')
+    >>> utils.answers_for_testing = ['', '']
+    >>> postrelease.main()
+    Current ...
+    >>> print open('CHANGES.txt', 'r').read()
+    1.1 (unreleased)
+    ----------------
+    <BLANKLINE>
+    - Nothing changed yet.
+
+If there is no history file, we get no errors and a new history file is not
+created:
+
+    >>> utils.answers_for_testing = ['', '']
+    >>> prerelease.main()
+    Question: ...
+    >>> os.remove('CHANGES.txt')
+    >>> utils.answers_for_testing = ['8.2', '']
+    >>> postrelease.main() # The setup complains, but that's ok for the test
+    Current version is 'Traceback...Nosuchfileordirectory...
+    Our reply: 8.2
+    ...
+    >>> open('CHANGES.txt') # Nope, doesn't exist.
+    Traceback (most recent call last):
+    ...
+    IOError: [Errno 2] No such file or directory: 'CHANGES.txt'
+
+Re-instate the history file again, but omit the restructuredtext header line:
+
+    >>> open('CHANGES.txt', 'w').write('1.0 (1972-12-25)\n\n- hello\n')
+    >>> utils.answers_for_testing = ['1.3', '']
+    >>> prerelease.main()
+    Question: ...
+    >>> utils.answers_for_testing = ['', '']
+    >>> postrelease.main()
+    Current ...
+
+No errors are raised and an ``----`` underline is assumed for the new header.
+The old one is left untouched:
+
+    >>> print open('CHANGES.txt').read()
+    1.4 (unreleased)
+    ----------------
+    <BLANKLINE>
+    - Nothing changed yet.
+    <BLANKLINE>
+    <BLANKLINE>
+    1.3 (2009-11-26)
+    <BLANKLINE>
+    - hello
+ 
