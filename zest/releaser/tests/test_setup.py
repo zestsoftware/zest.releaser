@@ -15,6 +15,12 @@ checker = renormalizing.RENormalizing([
     # Git diff hash formatting
     (re.compile(r'[0-9a-f]{7}\.\.[0-9a-f]{7} [0-9a-f]{6}'),
      '1234567..890abcd ef0123'),
+    # Some git versions use '0.1' others "0.1" here:
+    # Note: moving to '0.1' which isn't a local branch
+    (re.compile("Note: moving to \""),
+     "Note: moving to '"),
+    (re.compile("\" which isn't a local branch"),
+     "' which isn't a local branch"),
     # .pypirc seems to be case insensitive
     (re.compile('[Pp][Yy][Pp][Ii]'), 'pypi'),
     # Normalize tempdirs.  For this to work reliably, we need to use a prefix
