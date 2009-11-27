@@ -87,5 +87,10 @@ setup(name='zest.releaser',
           'zest.releaser.postreleaser.middle': [
               'datacheck = zest.releaser.postrelease:datacheck',
               ],
+          # Documentation generation
+          'zest.releaser.prereleaser.before': [
+              'datacheck = zest.releaser.utils:prepare_documentation_entrypoint',
+              ],
+
           },
       )

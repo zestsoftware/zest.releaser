@@ -21,6 +21,7 @@ DATA = {
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
     'workingdir': 'Original working directory',
+    'name': 'Name of the project being released',
     'nothing_changed_yet': 'First line in new changelog section',
     'new_version': 'New development version (so 1.1)',
     'dev_version': 'New development version with dev marker (so 1.1dev)',

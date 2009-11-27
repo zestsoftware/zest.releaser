@@ -8,7 +8,8 @@ class Basereleaser(object):
 
     def __init__(self):
         self.vcs = choose.version_control()
-        self.data = {'workingdir': self.vcs.workingdir}
+        self.data = {'workingdir': self.vcs.workingdir,
+                     'name': self.vcs.name}
 
     def _run_entry_points(self, when):
         which_releaser = self.__class__.__name__.lower()

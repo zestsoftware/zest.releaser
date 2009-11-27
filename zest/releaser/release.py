@@ -15,6 +15,7 @@ DATA = {
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
     'workingdir': 'Original working directory',
+    'name': 'Name of the project being released',
     'tagdir': 'Directory where the tag checkout is placed',
     'version': "Version we're releasing",
     'tag_already_exists': "Internal detail",
