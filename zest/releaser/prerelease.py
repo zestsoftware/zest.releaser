@@ -32,7 +32,7 @@ DATA = {
 
 
 class Prereleaser(baserelease.Basereleaser):
-    """WORK IN PROGRESS
+    """Prepare release, ready for making a tag and an sdist.
 
     self.data holds data that can optionally be changed by plugins.
 

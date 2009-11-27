@@ -1,4 +1,4 @@
-"""Do the checks and tasks that have to happen before doing a release.
+"""Do the checks and tasks that have to happen after doing a release.
 """
 import datetime
 import logging
@@ -31,7 +31,7 @@ DATA = {
 
 
 class Postreleaser(baserelease.Basereleaser):
-    """WORK IN PROGRESS
+    """Post-release tasks like resetting version number.
 
     self.data holds data that can optionally be changed by plugins.
 

@@ -37,7 +37,7 @@ def package_in_pypi(package):
 
 
 class Releaser(baserelease.Basereleaser):
-    """Release the projct, for instance by uploading to pypi"""
+    """Release the project by tagging it and optionally uploading to pypi."""
 
     def __init__(self):
         baserelease.Basereleaser.__init__(self)
