@@ -9,7 +9,7 @@ in your egg.
 Every release step (prerelease, release and postrelease) has three points
 where you can hook in an entry point:
 
-before 
+before
     Only the ``workingdir`` and ``name`` are available in the data
     dictionary, nothing has happened yet.
 
