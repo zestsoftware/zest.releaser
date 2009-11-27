@@ -1,7 +1,7 @@
 To do
 =====
 
-* Add tests.
+* Add some more tests (test coverage *is* at 95%, btw).
 
 * Add hg support for lasttagdiff.
 
