@@ -40,6 +40,7 @@ def read_from_here(filename):
 
 
 long_description = u'\n\n'.join([read('README.txt'),
+                                 read('entrypoints.txt'),
                                  read('TODO.txt'),
                                  read('CREDITS.txt'),
                                  read_from_here('CHANGES.txt')])
