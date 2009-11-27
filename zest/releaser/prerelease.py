@@ -20,6 +20,7 @@ DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
+    'workingdir': 'Original working directory',
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
     'history_file': 'Filename of history/changelog file',
@@ -40,11 +41,11 @@ class Prereleaser(baserelease.Basereleaser):
     def __init__(self):
         baserelease.Basereleaser.__init__(self)
         # Prepare some defaults for potential overriding.
-        self.data = dict(
+        self.data.update(dict(
             today=datetime.datetime.today().strftime('%Y-%m-%d'),
             history_header=HISTORY_HEADER,
             commit_msg=PRERELEASE_COMMIT_MSG,
-            )
+            ))
 
     def prepare(self):
         """Prepare self.data by asking about new version etc."""

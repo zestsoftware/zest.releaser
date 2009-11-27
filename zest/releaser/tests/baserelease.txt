@@ -17,10 +17,10 @@ Init the Basereleaser, which is otherwise only used as a base class.
     >>> from zest.releaser import baserelease
     >>> base = baserelease.Basereleaser()
 
-An empty data dict is initialized.  And a vcs is chosen:
+The data dict is initialized.  And a vcs is chosen:
 
     >>> base.data
-    {}
+    {'workingdir': 'TESTTEMP/tha.example-svn'}
     >>> base.vcs
     <zest.releaser.svn.Subversion object at ...>
 

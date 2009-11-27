@@ -14,6 +14,7 @@ DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
+    'workingdir': 'Original working directory',
     'tagdir': 'Directory where the tag checkout is placed',
     'version': "Version we're releasing",
     'tag_already_exists': "Internal detail",
@@ -41,8 +42,9 @@ class Releaser(baserelease.Basereleaser):
     def __init__(self):
         baserelease.Basereleaser.__init__(self)
         # Prepare some defaults for potential overriding.
-        self.data = dict(
-            )
+        self.data.update(dict(
+            # Nothing yet
+            ))
 
     def prepare(self):
         """Collect some data needed for releasing"""

@@ -20,6 +20,7 @@ DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
+    'workingdir': 'Original working directory',
     'nothing_changed_yet': 'First line in new changelog section',
     'new_version': 'New development version (so 1.1)',
     'dev_version': 'New development version with dev marker (so 1.1dev)',
@@ -39,10 +40,10 @@ class Postreleaser(baserelease.Basereleaser):
     def __init__(self):
         baserelease.Basereleaser.__init__(self)
         # Prepare some defaults for potential overriding.
-        self.data = dict(
+        self.data.update(dict(
             nothing_changed_yet=NOTHING_CHANGED_YET,
             commit_msg=COMMIT_MSG,
-            dev_version_template=DEV_VERSION_TEMPLATE)
+            dev_version_template=DEV_VERSION_TEMPLATE))
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
