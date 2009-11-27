@@ -212,3 +212,24 @@ def prepare_documentation_entrypoint(data):
         result.append(line)
     result.append(marker)
     result.append('')
+
+    # Preventing circular imports
+    from zest.releaser import prerelease
+    from zest.releaser import release
+    from zest.releaser import postrelease
+
+    for name, datadict in (
+        ('prerelease', prerelease.DATA),
+        ('release', release.DATA),
+        ('postrelease', postrelease.DATA)):
+        heading = '%s data dict items' % name.capitalize()
+        result.append(heading)
+        result.append('-' * len(heading))
+        result.append('')
+        for key in sorted(datadict.keys()):
+            result.append(key)
+            result.append('    ' + datadict[key])
+            result.append('')
+
+    open(target, 'w').write('\n'.join(result))
+    print "Wrote entry point documentation to", target
