@@ -16,9 +16,10 @@ DATA = {
     # documentation!
     'workingdir': 'Original working directory',
     'name': 'Name of the project being released',
-    'tagdir': 'Directory where the tag checkout is placed',
+    'tagdir': '''Directory where the tag checkout is placed (*if* a tag
+    checkout has been made)''',
     'version': "Version we're releasing",
-    'tag_already_exists': "Internal detail",
+    'tag_already_exists': "Internal detail, don't touch this :-)",
     }
 
 logger = logging.getLogger('release')

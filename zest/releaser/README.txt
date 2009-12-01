@@ -25,6 +25,8 @@ It will help you to automate:
   your private projects! It can also check out the tag in a temporary
   directory in case you need to modify it.
 
+.. contents::
+
 
 Installation
 ------------
@@ -85,6 +87,10 @@ There are two additional tools:
   changes are adequately described in the HISTORY.txt/CHANGES.txt.
 
 
+Details
+=======
+
+
 Current assumptions
 -------------------
 
@@ -128,16 +134,20 @@ fit :-)
   supports the current zopeskel style with ``0.3 - unreleased``.
 
 
-Notes
------
+Development notes, bug tracker
+------------------------------
+
+The svn source can be found at
+https://svn.plone.org/svn/collective/zest.releaser/trunk . If you have access
+to the collective, you can fix bugs right away.  Bigger changes on a branch
+please and mail reinout@vanrees.org and maurits@vanrees.org about it :-)
+
+Bugs can be added to https://bugs.launchpad.net/zest.releaser .
 
 Note that there are alternative release scripts available, for instance
 http://pypi.python.org/pypi/collective.releaser which installs itself as a
 setuptools command ("python setup.py release"), so it "only" works with
 setuptools projects.
-
-The svn source can be found at
-https://svn.plone.org/svn/collective/zest.releaser/trunk .
 
 
 Uploading to pypi server(s)
