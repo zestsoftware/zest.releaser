@@ -25,8 +25,12 @@ class Subversion(BaseVersionControl):
 
     def _base_from_svn(self):
         base = self._svn_info()
-        for remove in ['trunk', 'tags', 'branches', 'tag', 'branch']:
+        # Note: slashes are used to prevent problems with 'tha.tagfinder'-like
+        # project names...
+        for remove in ['/trunk', '/tags', '/branches', '/tag', '/branch']:
             base = base.split(remove)[0]
+        if not base.endswith('/'):
+            base += '/'
         logger.debug("Base url is %s", base)
         return base
 
