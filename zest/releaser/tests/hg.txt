@@ -8,7 +8,7 @@ Detailed tests of hg.py
 Some initial imports:
 
     >>> from zest.releaser import hg
-    >>> from commands import getoutput
+    >>> from zest.releaser.utils import system as getoutput
     >>> import os
 
 Project name

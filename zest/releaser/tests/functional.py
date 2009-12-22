@@ -1,5 +1,5 @@
 """Set up functional test fixtures"""
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 import os
 import pkg_resources
 import shutil

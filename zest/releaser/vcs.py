@@ -1,4 +1,4 @@
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 import logging
 import os
 import re
@@ -31,7 +31,7 @@ class BaseVersionControl(object):
             # that otherwise end up in the extracted name, like
             # UserWarnings.
             ignore = getoutput(utils.setup_py('egg_info'))
-            return getoutput(utils.setup_py('--name'))
+            return getoutput(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
         version_file = self.filefind('version.txt')

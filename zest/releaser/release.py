@@ -1,5 +1,5 @@
 # GPL, (c) Reinout van Rees
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 import logging
 import os
 import urllib

@@ -16,7 +16,7 @@ A mercurial directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from commands import getoutput
+    >>> from zest.releaser.utils import system as getoutput
     >>> print getoutput("hg tags")
     tip 1:234567890abc
 

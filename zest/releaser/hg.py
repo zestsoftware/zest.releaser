@@ -1,4 +1,4 @@
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 import logging
 import tempfile
 import os
@@ -24,7 +24,8 @@ class Hg(BaseVersionControl):
 
     def available_tags(self):
         tag_info = getoutput('hg tags')
-        tags = [line[:line.find(' ')]  for line in tag_info.split('\n')]
+        tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
+        tags = [tag for tag in tags if tag]
         tags.remove('tip') # Not functional for us
         logger.debug("Available tags: %r", tags)
         return tags

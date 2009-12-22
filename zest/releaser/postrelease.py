@@ -3,7 +3,7 @@
 import datetime
 import logging
 import sys
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 
 from zest.releaser import baserelease
 from zest.releaser import utils

@@ -1,4 +1,4 @@
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 import tempfile
 import logging
 import sys

@@ -1,7 +1,7 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
 
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 import datetime
 import logging
 import sys

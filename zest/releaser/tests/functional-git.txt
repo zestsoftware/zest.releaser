@@ -16,7 +16,7 @@ A git directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from commands import getoutput
+    >>> from zest.releaser.utils import system as getoutput
     >>> print getoutput("git tag")
     <BLANKLINE>
 

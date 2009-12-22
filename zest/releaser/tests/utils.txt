@@ -344,3 +344,4 @@ been replaced by the generated documentation:
 Clean up
 
     >>> shutil.rmtree(tempdir)
+

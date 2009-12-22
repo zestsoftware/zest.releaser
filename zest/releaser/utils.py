@@ -2,6 +2,7 @@
 import logging
 import os
 import re
+import subprocess
 import sys
 
 import pkg_resources
@@ -9,6 +10,8 @@ import pkg_resources
 logger = logging.getLogger('utils')
 
 WRONG_IN_VERSION = ['svn', 'dev', '(']
+# For zc.buildout's system() method:
+MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 
 def loglevel():
@@ -233,3 +236,22 @@ def prepare_documentation_entrypoint(data):
 
     open(target, 'w').write('\n'.join(result))
     print "Wrote entry point documentation to", target
+
+
+def system(command, input=''):
+    """commands.getoutput() replacement that also works on windows"""
+    #print "CMD: %r" % command
+    p = subprocess.Popen(command,
+                         shell=True,
+                         stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE,
+                         close_fds=MUST_CLOSE_FDS)
+    i, o, e = (p.stdin, p.stdout, p.stderr)
+    if input:
+        i.write(input)
+    i.close()
+    result = o.read() + e.read()
+    o.close()
+    e.close()
+    return result

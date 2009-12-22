@@ -2,7 +2,7 @@
 # GPL, (c) Reinout van Rees
 #
 # Script to show the diff with the last relevant tag.
-from commands import getoutput
+from zest.releaser.utils import system as getoutput
 from pkg_resources import parse_version
 import logging
 import sys
