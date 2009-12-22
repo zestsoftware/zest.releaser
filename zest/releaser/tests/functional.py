@@ -1,5 +1,4 @@
 """Set up functional test fixtures"""
-from zest.releaser.utils import system as getoutput
 import os
 import pkg_resources
 import shutil
@@ -8,6 +7,8 @@ import tarfile
 import tempfile
 import urllib
 import StringIO
+
+from zest.releaser.utils import system
 
 
 def setup(test):
@@ -56,41 +57,41 @@ def setup(test):
 
     # Init svn repo.
     repodir = os.path.join(test.tempdir, 'svnrepo')
-    getoutput('svnadmin create %s' % repodir)
+    system('svnadmin create %s' % repodir)
     repo_url = 'file://' + repodir # TODO: urllib or so for windows
     # Import example project
-    getoutput('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
-    getoutput('svn mkdir %s/tha.example/tags -m "mkdir"' % repo_url)
-    getoutput(
+    system('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
+    system('svn mkdir %s/tha.example/tags -m "mkdir"' % repo_url)
+    system(
         'svn import %s %s/tha.example/trunk -m "import"' % (sourcedir,
                                                             repo_url))
     # Subversion checkout
     svnsourcedir = os.path.join(test.tempdir, 'tha.example-svn')
-    getoutput(
+    system(
         'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
-    getoutput(
+    system(
         'svn propset svn:ignore tha.example.egg-info %s/src '% svnsourcedir)
-    getoutput('svn up %s' % svnsourcedir)
-    getoutput('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
+    system('svn up %s' % svnsourcedir)
+    system('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
 
     # Mercurial initialization
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')
     shutil.copytree(sourcedir, hgsourcedir)
-    getoutput("hg init %s" % hgsourcedir)
+    system("hg init %s" % hgsourcedir)
     open(os.path.join(hgsourcedir, '.hgignore'), 'w').write(
         'tha.example.egg-info\n')
-    getoutput("hg add %s" % hgsourcedir)
-    getoutput("hg commit -m 'init' %s" % hgsourcedir)
+    system("hg add %s" % hgsourcedir)
+    system("hg commit -m 'init' %s" % hgsourcedir)
 
     # Git initialization
     gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
-    getoutput("git init")
+    system("git init")
     open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
         'tha.example.egg-info\n')
-    getoutput("git add .")
-    getoutput("git commit -a -m 'init'")
+    system("git add .")
+    system("git commit -a -m 'init'")
     os.chdir(test.orig_dir)
 
     def svnhead(*filename_parts):

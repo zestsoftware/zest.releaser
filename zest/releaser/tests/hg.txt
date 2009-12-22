@@ -8,7 +8,7 @@ Detailed tests of hg.py
 Some initial imports:
 
     >>> from zest.releaser import hg
-    >>> from zest.releaser.utils import system as getoutput
+    >>> from zest.releaser.utils import system 
     >>> import os
 
 Project name
@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'hg diff'
-    >>> print getoutput(cmd)
+    >>> print system(cmd)
     diff -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
@@ -57,7 +57,7 @@ Commit it:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
     'hg commit -v -m "small tweak"'
-    >>> print getoutput(cmd)
+    >>> print system(cmd)
     setup.py
     committed changeset 1:234567890abc
 
@@ -75,7 +75,7 @@ Create a tag and it will show up:
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
     'hg tag -m "Tagging 0.1" 0.1'
-    >>> dont_care = getoutput(cmd)
+    >>> dont_care = system(cmd)
     >>> checkout.available_tags()
     ['0.1']
 
@@ -89,7 +89,7 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print getoutput(cmd)
+    >>> print system(cmd)
     setup.py
     committed changeset 1:234567890abc
 
@@ -98,7 +98,7 @@ Now we can request the changes since a specific tag:
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
     'hg diff -r 0.1 -r 234567890abc'
-    >>> print getoutput(cmd)
+    >>> print system(cmd)
     diff -r 234567890abc -r 234567890abc .hgtags
     --- /dev/null     ...
     +++ b/.hgtags     ...
@@ -131,7 +131,7 @@ The tag checkout command makes a checkout in that tempdir:
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
     'hg clone -r 0.1 TESTTEMP/tha.example-hg TMPDIR/somename...'
-    >>> print getoutput(cmd)
+    >>> print system(cmd)
     requesting all changes
     adding changesets
     adding manifests

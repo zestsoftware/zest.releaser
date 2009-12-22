@@ -1,4 +1,4 @@
-from zest.releaser.utils import system as getoutput
+from zest.releaser.utils import system
 import logging
 import os
 import re
@@ -21,8 +21,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            ignore = getoutput(utils.setup_py('egg_info'))
-            version = getoutput(utils.setup_py('--version'))
+            ignore = system(utils.setup_py('egg_info'))
+            version = system(utils.setup_py('--version'))
             return utils.strip_version(version)
 
     def get_setup_py_name(self):
@@ -30,8 +30,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            ignore = getoutput(utils.setup_py('egg_info'))
-            return getoutput(utils.setup_py('--name')).strip()
+            ignore = system(utils.setup_py('egg_info'))
+            return system(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
         version_file = self.filefind('version.txt')

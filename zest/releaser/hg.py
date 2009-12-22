@@ -1,8 +1,8 @@
-from zest.releaser.utils import system as getoutput
 import logging
 import tempfile
 import os
 
+from zest.releaser.utils import system
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger('mercurial')
@@ -23,7 +23,7 @@ class Hg(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = getoutput('hg tags')
+        tag_info = system('hg tags')
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         tags.remove('tip') # Not functional for us
@@ -46,7 +46,7 @@ class Hg(BaseVersionControl):
         return 'hg commit -v -m "%s"' % message
 
     def cmd_diff_last_commit_against_tag(self, version):
-        current_revision = getoutput('hg identify')
+        current_revision = system('hg identify')
         current_revision = current_revision.split(' ')[0]
         # + at the end of the revision denotes uncommitted changes
         current_revision = current_revision.rstrip('+')

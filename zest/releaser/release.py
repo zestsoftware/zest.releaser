@@ -1,5 +1,4 @@
 # GPL, (c) Reinout van Rees
-from zest.releaser.utils import system as getoutput
 import logging
 import os
 import urllib
@@ -9,6 +8,7 @@ from zest.releaser import baserelease
 from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
+from zest.releaser.utils import system
 
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
@@ -77,7 +77,7 @@ class Releaser(baserelease.Basereleaser):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(
                     version)
                 print diff_command
-                print getoutput(diff_command)
+                print system(diff_command)
         else:
             self.data['tag_already_exists'] = False
 
@@ -88,7 +88,7 @@ class Releaser(baserelease.Basereleaser):
         cmd = self.vcs.cmd_create_tag(self.data['version'])
         print cmd
         if utils.ask("Run this command"):
-            print getoutput(cmd)
+            print system(cmd)
         else:
             sys.exit()
 
@@ -104,13 +104,13 @@ class Releaser(baserelease.Basereleaser):
         self.tagdir = self.vcs.prepare_checkout_dir(prefix)
         os.chdir(self.tagdir)
         cmd = self.vcs.cmd_checkout_from_tag(version, self.tagdir)
-        print getoutput(cmd)
+        print system(cmd)
         logger.info("Tag checkout placed in %s", self.tagdir)
 
         if 'setup.py' in os.listdir(self.tagdir):
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
-            print getoutput(utils.setup_py('sdist'))
+            print system(utils.setup_py('sdist'))
 
             pypiconfig = pypi.PypiConfig()
             if not pypiconfig.config:
@@ -131,7 +131,7 @@ class Releaser(baserelease.Basereleaser):
                     logger.info("This package is registered on PyPI.")
                     if pypiconfig.is_old_pypi_config() and utils.ask(
                         "Register and upload to PyPI"):
-                        result = getoutput(
+                        result = system(
                             utils.setup_py('register sdist upload'))
                         utils.show_last_lines(result)
 
@@ -143,11 +143,11 @@ class Releaser(baserelease.Basereleaser):
                         continue
                     if utils.ask("Register and upload to %s" % server):
                         if pypi.new_distutils_available():
-                            result = getoutput(
+                            result = system(
                                 utils.setup_py('register sdist upload -r %s'
                                                % server))
                         else:
-                            result = getoutput(
+                            result = system(
                                 utils.setup_py('mregister sdist mupload -r %s'
                                                % server))
                         utils.show_last_lines(result)

@@ -1,9 +1,9 @@
-from zest.releaser.utils import system as getoutput
 import logging
 import tempfile
 import os
 import sys
 
+from zest.releaser.utils import system
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger('git')
@@ -24,7 +24,7 @@ class Git(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = getoutput('git tag')
+        tag_info = system('git tag')
         tags = [line for line in tag_info.split('\n') if line]
         logger.debug("Available tags: %r", tags)
         return tags
@@ -36,7 +36,7 @@ class Git(BaseVersionControl):
         cwd = os.getcwd()
         os.chdir(temp)
         cmd = 'git clone %s %s' % (self.workingdir, 'gitclone')
-        logger.debug(getoutput(cmd))
+        logger.debug(system(cmd))
         os.chdir(cwd)
         return os.path.join(temp, 'gitclone')
 

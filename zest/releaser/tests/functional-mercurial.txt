@@ -16,8 +16,8 @@ A mercurial directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from zest.releaser.utils import system as getoutput
-    >>> print getoutput("hg tags")
+    >>> from zest.releaser.utils import system 
+    >>> print system("hg tags")
     tip 1:234567890abc
 
 The changelog is at 0.1 dev:
@@ -100,7 +100,7 @@ The release script tags the release and uploads it:
     
 There is now a tag:
 
-    >>> print getoutput("hg tags")
+    >>> print system("hg tags")
     tip  1:234567890abc
     0.1  1:234567890abc
 

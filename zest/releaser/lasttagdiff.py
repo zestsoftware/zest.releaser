@@ -2,13 +2,14 @@
 # GPL, (c) Reinout van Rees
 #
 # Script to show the diff with the last relevant tag.
-from zest.releaser.utils import system as getoutput
 from pkg_resources import parse_version
 import logging
 import sys
 
 import utils
 import zest.releaser.choose
+from zest.releaser.utils import system
+
 logger = logging.getLogger('lasttagdiff')
 
 
@@ -57,4 +58,4 @@ def main():
                 full_tag)
     diff_command = vcs.cmd_diff_last_commit_against_tag(found)
     print diff_command
-    print getoutput(diff_command)
+    print system(diff_command)

@@ -1,9 +1,9 @@
-from zest.releaser.utils import system as getoutput
 import tempfile
 import logging
 import sys
 
 from zest.releaser import utils
+from zest.releaser.utils import system
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger('zest.releaser')
@@ -15,7 +15,7 @@ class Subversion(BaseVersionControl):
 
     def _svn_info(self):
         """Return svn url"""
-        our_info = getoutput('svn info')
+        our_info = system('svn info')
         if not hasattr(self, '_cached_url'):
             url = [line for line in our_info.split('\n')
                    if line.startswith('URL')][0]
@@ -53,12 +53,12 @@ class Subversion(BaseVersionControl):
         fallback_singular = 'tag'
         failure_message = "non-existent in that revision"
         base = self._base_from_svn()
-        tag_info = getoutput('svn list %s%s' % (base, default_plural))
+        tag_info = system('svn list %s%s' % (base, default_plural))
         if not failure_message in tag_info:
             return default_plural
         logger.debug("tags dir does not exist at %s%s", base, default_plural)
 
-        tag_info = getoutput('svn list %s%s' % (base, fallback_singular))
+        tag_info = system('svn list %s%s' % (base, fallback_singular))
         if not failure_message in tag_info:
             return fallback_singular
         logger.debug("tags dir does not exist at %s%s, either", base, fallback_singular)
@@ -81,13 +81,13 @@ class Subversion(BaseVersionControl):
             if utils.ask("Shall I create it"):
                 cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
                 logger.info("Running %r", cmd)
-                print getoutput(cmd)
+                print system(cmd)
                 tags_name = self._tags_name
                 assert tags_name == 'tags'
             else:
                 sys.exit(0)
 
-        tag_info = getoutput('svn list %s%s' % (base, tags_name))
+        tag_info = system('svn list %s%s' % (base, tags_name))
         if 'Could not resolve hostname' in tag_info:
             logger.error('Network problem: %s', tag_info)
             sys.exit()

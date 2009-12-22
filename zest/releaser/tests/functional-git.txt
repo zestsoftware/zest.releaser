@@ -16,8 +16,8 @@ A git directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from zest.releaser.utils import system as getoutput
-    >>> print getoutput("git tag")
+    >>> from zest.releaser.utils import system
+    >>> print system("git tag")
     <BLANKLINE>
 
 The changelog is at 0.1 dev:
@@ -100,7 +100,7 @@ The release script tags the release and uploads it:
 
 There is now a tag:
 
-    >>> print getoutput("git tag")
+    >>> print system("git tag")
     0.1
 
 And the postrelease script ups the version:
@@ -131,6 +131,6 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 
 And there are no uncommitted changes:
 
-    >>> print getoutput("git status")
+    >>> print system("git status")
     # On branch master
     nothing to commit (working directory clean)
