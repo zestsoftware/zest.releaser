@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.2 (unreleased)
+3.2 (2009-12-22)
 ----------------
 
 - Replaced commands.getoutput() with a system() function grabbed from buildout
