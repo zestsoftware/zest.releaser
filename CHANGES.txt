@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.2 (unreleased)
 ----------------
 
+- Replaced commands.getoutput() with a system() function grabbed from buildout
+  on suggestion by Adam Groszer.  Goal: make zest.releaser work also on
+  windows.
+
 - Improved entry point documentation.
 
 - Added launchpad bugtracker at https://bugs.launchpad.net/zest.releaser (and
