@@ -18,8 +18,8 @@ An svn checkout of a project:
     'TESTTEMP/tha.example-svn'
     >>> import os
     >>> os.chdir(svnsourcedir)
-    >>> import commands
-    >>> print commands.getoutput("svn info %s" % svnsourcedir)
+    >>> from commands import getoutput
+    >>> print getoutput("svn info %s" % svnsourcedir)
     Path: TESTTEMP/tha.example-svn
     URL: file://TESTREPO/tha.example/trunk
     ...

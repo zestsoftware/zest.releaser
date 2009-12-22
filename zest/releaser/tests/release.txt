@@ -9,7 +9,6 @@ Some initial imports:
 
     >>> from zest.releaser import release
     >>> from zest.releaser import utils
-    >>> import commands
     >>> import os
 
 

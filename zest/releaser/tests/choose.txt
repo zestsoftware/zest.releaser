@@ -8,7 +8,6 @@ Detailed tests of choose.py
 Some initial imports:
 
     >>> from zest.releaser import choose
-    >>> import commands
     >>> import os
 
 Choose makes the choice between version control systems.

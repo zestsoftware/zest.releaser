@@ -8,7 +8,6 @@ Detailed tests of vcs.py
 Some initial imports:
 
     >>> from zest.releaser import vcs
-    >>> import commands
     >>> import os
 
 BaseVersionControl is the base class for subversion/mercurial/git support.  It
