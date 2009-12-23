@@ -30,6 +30,15 @@ this but it sounds too hacky.
 Needed configuration
 --------------------
 
+We expect a functioning .pypirc file in your home dir.  Currently for
+the tests this should contain only an old-style configuration; we
+should change the tests to work with both styles.  Example config::
+
+  [server-login]
+  username:dentarthurdent
+  password:secret
+
+
 For mercurial you may get test failures because of extra output like
 this::
 
