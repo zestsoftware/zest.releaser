@@ -209,3 +209,7 @@ part:
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
     >>> pprint(sorted(pypiconfig.distutils_servers()))
     ['local']
+
+We are done with testing so we restore the original version:
+
+    >>> sys.version_info = orig_version
