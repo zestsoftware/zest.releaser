@@ -180,3 +180,11 @@ class BaseVersionControl(object):
     def cmd_create_tag(self, version):
         "Create a tag from a version name."
         raise NotImplementedError()
+
+    def checkout_from_tag(self, version):
+        package = self.name
+        prefix = '%s-%s-' % (package, version)
+        tagdir = self.prepare_checkout_dir(prefix)
+        os.chdir(tagdir)
+        cmd = self.cmd_checkout_from_tag(version, tagdir)
+        print system(cmd)

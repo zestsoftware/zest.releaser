@@ -60,3 +60,13 @@ class Hg(BaseVersionControl):
         source = self.workingdir
         target = checkout_dir
         return 'hg clone -r %s %s %s' % (version, source, target)
+
+    def checkout_from_tag(self, version):
+        package = self.name
+        prefix = '%s-%s-' % (package, version)
+        # Not all hg versions can do a checkout in an existing or even
+        # just in the current directory.
+        tagdir = tempfile.mktemp(prefix=prefix)
+        cmd = self.cmd_checkout_from_tag(version, tagdir)
+        print system(cmd)
+        os.chdir(tagdir)

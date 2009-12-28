@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed the release command for hg 1.1 (e.g. Ubuntu 9.04).
+  [maurits]
 
 
 3.2 (2009-12-22)

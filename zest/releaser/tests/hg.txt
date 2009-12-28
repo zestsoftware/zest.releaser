@@ -118,20 +118,11 @@ Now we can request the changes since a specific tag:
 Making a tag checkout
 ---------------------
 
-For checking out a tag, we first need a temp folder to do the checkout in:
+Some hg versions cannot checkout in an existing directory, so contrary
+svn we will not create an empty tempdir before doing a checkout.
+The tag checkout command makes a checkout in a fresh dir:
 
-    >>> temp = checkout.prepare_checkout_dir('somename')
-    >>> temp
-    'TMPDIR/somename...'
-    >>> os.path.isdir(temp)
-    True
-
-The tag checkout command makes a checkout in that tempdir:
-
-    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
-    >>> cmd
-    'hg clone -r 0.1 TESTTEMP/tha.example-hg TMPDIR/somename...'
-    >>> print system(cmd)
+    >>> checkout.checkout_from_tag('0.1')
     requesting all changes
     adding changesets
     adding manifests
@@ -140,8 +131,11 @@ The tag checkout command makes a checkout in that tempdir:
     updating working directory
     14 files updated, 0 files merged, 0 files removed, 0 files unresolved    
 
-The checkout is done directly in that temporary directory, so not in a newly
-created subdirectory of it:
+At the end of the command we are in the created directory.  The
+checkout is done directly in that temporary directory, so not in a
+newly created subdirectory of it:
 
-    >>> sorted(os.listdir(temp))
+    >>> os.getcwd()
+    '/tmp/tha.example-0.1-...'
+    >>> sorted(os.listdir('.'))
     ['.hg', '.hgignore', 'CHANGES.txt', ...]
