@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.3 (unreleased)
+3.3 (2009-12-29)
 ----------------
 
 - Fixed test failures when run on a computer with a new style pypi
