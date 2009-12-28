@@ -164,7 +164,7 @@ def setup_py(rest_of_cmdline):
     executable = sys.executable
     if TESTMODE:
         # Hack for testing
-        for unsafe in ['upload', 'register']:
+        for unsafe in ['upload', 'register', 'mregister']:
             if unsafe in rest_of_cmdline:
                 executable = 'echo MOCK'
 
