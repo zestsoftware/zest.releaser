@@ -49,9 +49,12 @@ class PypiConfig(object):
 
     def _read_configfile(self):
         """Read the config file and store it (when valid)"""
-        rc = os.path.join(os.path.expanduser('~'), self.config_filename)
+        rc = self.config_filename
+        if not os.path.isabs(rc):
+            rc = os.path.join(os.path.expanduser('~'), self.config_filename)
         if not os.path.exists(rc):
             self.config = None
+            return
         self.config = ConfigParser()
         self.config.read(rc)
         if (not self.is_old_pypi_config() and

@@ -30,15 +30,6 @@ this but it sounds too hacky.
 Needed configuration
 --------------------
 
-We expect a functioning .pypirc file in your home dir.  Currently for
-the tests this should contain only an old-style configuration; we
-should change the tests to work with both styles.  Example config::
-
-  [server-login]
-  username:dentarthurdent
-  password:secret
-
-
 For mercurial you may get test failures because of extra output like
 this::
 
@@ -48,3 +39,7 @@ To avoid this, create a file ~/.hgrc with something like this in it::
 
   [ui]
   username = Author Name <email@address.domain>
+
+For release testing we expected a functioning .pypirc file in your
+home dir, with an old-style configuration, but the tests now use an
+own config file.

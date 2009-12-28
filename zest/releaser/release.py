@@ -3,9 +3,9 @@ import logging
 import os
 import urllib
 import sys
+import pkg_resources
 
 from zest.releaser import baserelease
-from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
 from zest.releaser.utils import system
@@ -109,7 +109,12 @@ class Releaser(baserelease.Basereleaser):
             logger.info("Making an egg of a fresh tag checkout.")
             print system(utils.setup_py('sdist'))
 
-            pypiconfig = pypi.PypiConfig()
+            if utils.TESTMODE:
+                pypirc_old = pkg_resources.resource_filename(
+                    'zest.releaser.tests', 'pypirc_old.txt')
+                pypiconfig = pypi.PypiConfig(pypirc_old)
+            else:
+                pypiconfig = pypi.PypiConfig()
             if not pypiconfig.config:
                 logger.warn("You must have a properly configured %s file in "
                             "your home dir to upload an egg.",

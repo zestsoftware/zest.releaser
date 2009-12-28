@@ -4,6 +4,11 @@ Changelog for zest.releaser
 3.3 (unreleased)
 ----------------
 
+- Fixed test failures when run on a computer with a new style pypi
+  config.  We now always use an old style config when running the
+  tests.
+  [maurits]
+
 - Fixed the release command for hg 1.1 (e.g. Ubuntu 9.04).
   [maurits]
 
