@@ -12,6 +12,7 @@ class BaseVersionControl(object):
     "Shared implementation between all version control systems"
 
     internal_filename = '' # e.g. '.svn' or '.hg'
+    spreaded_internal = True # are the internal_filename in every folder.
 
     def __init__(self):
         self.workingdir = os.getcwd()
@@ -52,7 +53,7 @@ class BaseVersionControl(object):
             if fname in dirpath:
                 # We are inside a version controlled directory.
                 continue
-            if fname not in dirnames:
+            if fname not in dirnames and self.spreaded_internal:
                 # This directory is not handled by version control.
                 # Example: run prerelease in
                 # https://svn.plone.org/svn/collective/feedfeeder/trunk

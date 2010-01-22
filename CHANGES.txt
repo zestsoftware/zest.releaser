@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- bugfix: added 'spreaded_internal' property to BaseVersionControl
+  objects, so filefind() does not exclude a directory just because
+  there is no '.git' folder in it. It still excludes directory where
+  there is no '.svn' folder in SVN repositories. [vincent]
 
 
 3.3 (2009-12-29)
