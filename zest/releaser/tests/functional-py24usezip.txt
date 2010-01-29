@@ -102,7 +102,7 @@ The release script tags the release and uploads it:
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
     Showing last few lines...
-    MOCK setup.py register sdist upload --format=zip
+    MOCK setup.py register sdist --formats=zip upload
 
 There is now a tag:
 

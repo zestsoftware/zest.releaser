@@ -95,12 +95,12 @@ class Releaser(baserelease.Basereleaser):
     def _isPython24(self):
         return sys.hexversion < 0x02050000
 
-    def _getBuildOptions(self):
-        options = ['']
+    def _getSDistOptions(self):
+        options = []
         if self._isPython24():
             # Due to a bug in python24, tar files might get corrupted.
             # We circumvent that by forcing zip files
-            options.append('--format=zip')
+            options.append('--formats=zip')
         return " ".join(options)
 
     def _release(self):
@@ -114,13 +114,12 @@ class Releaser(baserelease.Basereleaser):
         self.vcs.checkout_from_tag(version)
         tagdir = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", tagdir)
-        build_options = self._getBuildOptions()
+        sdist_options = self._getSDistOptions()
 
         if 'setup.py' in os.listdir(tagdir):
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
-            build_options = self._getBuildOptions()
-            print system(utils.setup_py('sdist' + build_options))
+            print system(utils.setup_py('sdist ' + sdist_options))
 
             if utils.TESTMODE:
                 pypirc_old = pkg_resources.resource_filename(
@@ -147,8 +146,8 @@ class Releaser(baserelease.Basereleaser):
                     if pypiconfig.is_old_pypi_config() and utils.ask(
                         "Register and upload to PyPI"):
                         result = system(
-                            utils.setup_py('register sdist upload' + 
-                                           build_options))
+                            utils.setup_py('register sdist %s upload' %
+                                           sdist_options))
                         utils.show_last_lines(result)
 
                 # If collective.dist is installed (or we are using
@@ -160,13 +159,13 @@ class Releaser(baserelease.Basereleaser):
                     if utils.ask("Register and upload to %s" % server):
                         if pypi.new_distutils_available():
                             result = system(
-                                utils.setup_py('register sdist upload -r %s %s'
-                                               % (server, build_options)))
+                                utils.setup_py('register sdist %s upload -r %s'
+                                               % (sdist_options, server)))
                         else:
                             result = system(
-                                utils.setup_py('mregister sdist mupload '
-                                               '-r %s %s'
-                                               % (server, build_options)))
+                                utils.setup_py('mregister sdist %s mupload '
+                                               '-r %s'
+                                               % (sdist_options, server)))
                         utils.show_last_lines(result)
 
         os.chdir(self.vcs.workingdir)
