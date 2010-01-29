@@ -92,12 +92,12 @@ class Releaser(baserelease.Basereleaser):
         else:
             sys.exit()
 
-    def _isPython24(self):
+    def _is_python24(self):
         return sys.hexversion < 0x02050000
 
-    def _getSDistOptions(self):
+    def _sdist_options(self):
         options = []
-        if self._isPython24():
+        if self._is_python24():
             # Due to a bug in python24, tar files might get corrupted.
             # We circumvent that by forcing zip files
             options.append('--formats=zip')
@@ -114,7 +114,7 @@ class Releaser(baserelease.Basereleaser):
         self.vcs.checkout_from_tag(version)
         tagdir = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", tagdir)
-        sdist_options = self._getSDistOptions()
+        sdist_options = self._sdist_options()
 
         if 'setup.py' in os.listdir(tagdir):
             # See if creating an egg actually works.

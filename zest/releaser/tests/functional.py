@@ -11,7 +11,7 @@ import StringIO
 from zest.releaser.utils import system
 from zest.releaser.release import Releaser
 
-orig_python24check = None
+orig_python24_check = None
 
 def setup(test):
     partstestdir = os.getcwd() # Buildout's test run in parts/test
@@ -24,8 +24,8 @@ def setup(test):
 
     # Monkey patch for python 24 check. Otherwise we would need different tests
     # For python24 and higher
-    orig_python24check = Releaser._isPython24
-    Releaser._isPython24 = lambda(self): False
+    orig_python24_check = Releaser._is_python24
+    Releaser._is_python24 = lambda(self): False
 
     def _exit(code=None):
         msg = "SYSTEM EXIT (code=%s)" % code
@@ -143,7 +143,7 @@ def restore_mupload(test):
     from zest.releaser import pypi
 
     # Undo monkey patch
-    Releaser._isPython24 = orig_python24check
+    Releaser._is_python24 = orig_python24_check
     try:
         from collective.dist import mupload
     except ImportError:

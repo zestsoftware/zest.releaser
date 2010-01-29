@@ -10,7 +10,7 @@ The other tests deactivate this feature, we reactivate it here unconditionally
 for testing
 
     >>> from zest.releaser.release import Releaser
-    >>> Releaser._isPython24 = lambda x: True
+    >>> Releaser._is_python24 = lambda x: True
 
 Several items are prepared for us.
 
