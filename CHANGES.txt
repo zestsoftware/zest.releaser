@@ -9,6 +9,8 @@ Changelog for zest.releaser
   there is no '.git' folder in it. It still excludes directory where
   there is no '.svn' folder in SVN repositories. [vincent]
 
+- Always build zip files if using python2.4 [do3cc]
+
 
 3.3 (2009-12-29)
 ----------------

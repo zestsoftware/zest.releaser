@@ -133,6 +133,9 @@ fit :-)
   That's just the style we started with.  Pretty clear and useful.  It also
   supports the current zopeskel style with ``0.3 - unreleased``.
 
+- If using Python 2.4 you don't want to have tar.gz eggs due to `an obscure bug
+  on python <http://bugs.python.org/issue1719898>`_
+
 
 Development notes, bug tracker
 ------------------------------
