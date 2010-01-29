@@ -69,7 +69,7 @@ def ask(question, default=True):
             yn = 'Y/n'
         if default is False:
             yn = 'y/N'
-        q = question + " (%s)? " % yn
+        q = question + " (%s)?" % yn
         input = get_input(q)
         if input:
             answer = input[0]
