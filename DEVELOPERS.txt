@@ -40,6 +40,9 @@ To avoid this, create a file ~/.hgrc with something like this in it::
   [ui]
   username = Author Name <email@address.domain>
 
+If you keep having problems, `Ubuntu explains it
+<https://help.ubuntu.com/community/Mercurial>`_ quite good.
+
 For release testing we expected a functioning .pypirc file in your
 home dir, with an old-style configuration, but the tests now use an
 own config file.

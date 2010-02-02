@@ -145,18 +145,15 @@ https://svn.plone.org/svn/collective/zest.releaser/trunk . If you have access
 to the collective, you can fix bugs right away.  Bigger changes on a branch
 please and mail reinout@vanrees.org and maurits@vanrees.org about it :-)
 
+If you are going to do a fix or want to run the tests, please see the
+``DEVELOPERS.txt`` file in the root of the package.
+
 Bugs can be added to https://bugs.launchpad.net/zest.releaser .
 
 Note that there are alternative release scripts available, for instance
 http://pypi.python.org/pypi/collective.releaser which installs itself as a
 setuptools command ("python setup.py release"), so it "only" works with
 setuptools projects.
-
-Be aware that a number of tests use versioning tools, that you might need to
-configure. Mercurial will give warnings in the tests if it is not configure
-and fail in some tests.
-`Ubuntu explains it <https://help.ubuntu.com/community/Mercurial>`_ quite good
-
 
 
 Uploading to pypi server(s)
