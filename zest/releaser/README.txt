@@ -133,6 +133,9 @@ fit :-)
   That's just the style we started with.  Pretty clear and useful.  It also
   supports the current zopeskel style with ``0.3 - unreleased``.
 
+- If using Python 2.4 you don't want to have tar.gz eggs due to `an obscure bug
+  on python <http://bugs.python.org/issue1719898>`_
+
 
 Development notes, bug tracker
 ------------------------------
@@ -141,6 +144,9 @@ The svn source can be found at
 https://svn.plone.org/svn/collective/zest.releaser/trunk . If you have access
 to the collective, you can fix bugs right away.  Bigger changes on a branch
 please and mail reinout@vanrees.org and maurits@vanrees.org about it :-)
+
+If you are going to do a fix or want to run the tests, please see the
+``DEVELOPERS.txt`` file in the root of the package.
 
 Bugs can be added to https://bugs.launchpad.net/zest.releaser .
 

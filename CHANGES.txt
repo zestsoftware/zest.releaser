@@ -4,6 +4,8 @@ Changelog for zest.releaser
 3.4 (unreleased)
 ----------------
 
+- Always build zip files if using python2.4 [do3cc]
+
 - bugfix: added 'spreaded_internal' property to BaseVersionControl
   objects, so filefind() does not exclude a directory just because
   there is no '.git' folder in it. It still excludes directory where
