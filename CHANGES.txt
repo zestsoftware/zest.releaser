@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.4 (unreleased)
+3.4 (2010-02-02)
 ----------------
 
 - Always build zip files if using python2.4 [do3cc]
