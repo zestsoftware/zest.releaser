@@ -55,10 +55,10 @@ Zest.releaser gives you four commands to help in releasing python
 packages.  They must be run in a version controlled checkout.  The commands
 are:
 
-- **prerelease**: asks the user for a version number (defaults to the current
+- **prerelease**: asks you for a version number (defaults to the current
   version minus a 'dev' or so), updates the setup.py or version.txt and the
-  HISTORY.txt/CHANGES.txt/CHANGES with this and offers to commit those changes
-  to subversion.
+  HISTORY.txt/CHANGES.txt/CHANGES with this new version number and offers to
+  commit those changes to subversion (or bzr or hg or git)
 
 - **release**: copies the the trunk or branch of the current checkout and
   creates a version control tag of it.  Makes a checkout of the tag in a
@@ -70,8 +70,8 @@ are:
   uploaded our client code to the internet; and this is the initial version
   with the plaintext root passwords."
 
-- **postrelease**: asks the user for a version number (gives a sane default),
-  adds a development marker to it, updates the setup.py or version.txt and the
+- **postrelease**: asks you for a version number (gives a sane default), adds
+  a development marker to it, updates the setup.py or version.txt and the
   HISTORY.txt with this and offers to commit those changes to version control.
 
 - **fullrelease**: all of the above in order.
