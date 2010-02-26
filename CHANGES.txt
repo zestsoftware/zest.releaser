@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Treat CHANGES.txt and HISTORY.txt the same: the first that is found
+  in a directory is chosen for changing, instead of first looking
+  everywhere for a HISTORY.txt and then for a CHANGES.txt.
+  [maurits]
 
 
 3.4 (2010-02-02)

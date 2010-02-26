@@ -41,13 +41,23 @@ class BaseVersionControl(object):
             version = f.read()
             return utils.strip_version(version)
 
-    def filefind(self, name):
+    def filefind(self, names):
         """Return first found file matching name (case-insensitive).
 
         Some packages have docs/HISTORY.txt and
         package/name/HISTORY.txt.  We make sure we only return the one
         in the docs directory if no other can be found.
+
+        'names' can be a string or a list of strings; if you have both
+        a CHANGES.txt and a docs/HISTORY.txt, you want the top level
+        CHANGES.txt to be found first.
         """
+        if isinstance(names, basestring):
+            names = [names]
+        lower_names = []
+        for name in names:
+            lower_names.append(name.lower())
+        names = lower_names
         for dirpath, dirnames, filenames in os.walk('.'):
             fname = self.internal_filename
             if fname in dirpath:
@@ -65,7 +75,7 @@ class BaseVersionControl(object):
                 # docs/HISTORY.txt.
                 dirnames.append(dirnames.pop(dirnames.index('docs')))
             for filename in filenames:
-                if filename.lower() == name.lower():
+                if filename.lower() in names:
                     fullpath = os.path.join(dirpath, filename)
                     logger.debug("Found %s", fullpath)
                     return fullpath
@@ -73,10 +83,9 @@ class BaseVersionControl(object):
     def history_file(self):
         """Return history file location.
         """
-        for name in ['HISTORY.txt', 'CHANGES.txt']:
-            history = self.filefind(name)
-            if history:
-                return history
+        history = self.filefind(['HISTORY.txt', 'CHANGES.txt'])
+        if history:
+            return history
 
     def tag_exists(self, version):
         """Check if a tag has already been created with the name of the
