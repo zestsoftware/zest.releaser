@@ -4,7 +4,12 @@ Changelog for zest.releaser
 3.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Got rid of ugly setup.py hack with UltraMagicString that was meant
+  to avoid encoding errors when registering this package at pypi but
+  which was not working for python2.4 (at least with collective.dist).
+  Only ascii is allowed in the long_description if you want to avoid
+  problems at one point or another.
+  [maurits]
 
 
 3.5 (2010-02-26)
@@ -117,7 +122,7 @@ Changelog for zest.releaser
 2.9.2 (2009-09-17)
 ------------------
 
-- Ümläüts in a changelog don't break the logger anymore when using python2.6.2
+- Umlauts in a changelog don't break the logger anymore when using python2.6.2
   when the umlauts turn up in the diff.  This is due to a 2.6.2 regression
   bug, see http://bugs.python.org/issue5170.  Should be fixed in 2.6.3 when it
   comes out.  [reinout]
@@ -125,6 +130,7 @@ Changelog for zest.releaser
 - (Release 2.9 and 2.9.1 are unreleased because of a setuptools bug with,
   sigh, non-ascii characters which made a dirty setup.py hack necessary).
   [reinout]
+
 
 2.8 (2009-08-27)
 ----------------
