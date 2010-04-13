@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.6 (unreleased)
+3.6 (2010-04-13)
 ----------------
 
 - A ``version='1.0',`` string inside the ``setup()`` call no longer has
