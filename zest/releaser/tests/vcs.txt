@@ -135,7 +135,7 @@ version.txt is the one left as-is.
     >>> print open('setup.py').read() # Modified into 1.4
     from setuptools import setup
     setup(name='urgh',
-          version = '1.4',
+          version='1.4',
           )
 
 The version writing breaks down if there's more than just a "version=" on that

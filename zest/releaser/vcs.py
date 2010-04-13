@@ -141,7 +141,8 @@ class BaseVersionControl(object):
                 if line.startswith(' '):
                     # oh, probably '    version = 1.0,' line.
                     indentation = line.split('version')[0]
-                    good_version = indentation + good_version + ','
+                    # Note: no spaces around the '='.
+                    good_version = indentation + "version='%s'," % version
                 setup_lines[line_number] = good_version
                 break
             line_number += 1

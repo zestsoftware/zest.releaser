@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.6 (unreleased)
 ----------------
 
+- A ``version='1.0',`` string inside the ``setup()`` call no longer has
+  non-pep8 spaces around the ``=``.  Fixes
+  https://bugs.launchpad.net/zest.releaser/+bug/562122  [reinout]
+
 - Got rid of ugly setup.py hack with UltraMagicString that was meant
   to avoid encoding errors when registering this package at pypi but
   which was not working for python2.4 (at least with collective.dist).
