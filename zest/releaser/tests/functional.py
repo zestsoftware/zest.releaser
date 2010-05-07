@@ -90,6 +90,15 @@ def setup(test):
     system("hg add %s" % hgsourcedir)
     system("hg commit -m 'init' %s" % hgsourcedir)
 
+    # Bazaar initialization
+    bzrsourcedir = os.path.join(test.tempdir, 'tha.example-bzr')
+    shutil.copytree(sourcedir, bzrsourcedir)
+    system("bzr init %s" % bzrsourcedir)
+    open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
+        'tha.example.egg-info\n')
+    system("bzr add %s" % bzrsourcedir)
+    system("bzr commit -m 'init' %s" % bzrsourcedir)
+
     # Git initialization
     gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
     shutil.copytree(sourcedir, gitsourcedir)
@@ -113,6 +122,12 @@ def setup(test):
         for line in lines[:5]:
             print line,
 
+    def bzrhead(*filename_parts):
+        filename = os.path.join(bzrsourcedir, *filename_parts)
+        lines = open(filename).readlines()
+        for line in lines[:5]:
+            print line,
+
     def githead(*filename_parts):
         filename = os.path.join(gitsourcedir, *filename_parts)
         lines = open(filename).readlines()
@@ -123,9 +138,11 @@ def setup(test):
                        'repo_url': repo_url,
                        'svnsourcedir': svnsourcedir,
                        'hgsourcedir': hgsourcedir,
+                       'bzrsourcedir': bzrsourcedir,
                        'gitsourcedir': gitsourcedir,
                        'svnhead': svnhead,
                        'hghead': hghead,
+                       'bzrhead': bzrhead,
                        'githead': githead,
                        'mock_pypi_available': test.mock_pypi_available,
                        })

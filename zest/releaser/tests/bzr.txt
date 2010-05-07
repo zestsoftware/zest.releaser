@@ -1,0 +1,131 @@
+Detailed tests of bzr.py
+=======================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import bzr
+    >>> from zest.releaser.utils import system 
+    >>> import os
+
+Project name
+------------
+
+The prepared bzr project has a setup.py, so the name in there is used:
+
+    >>> os.chdir(bzrsourcedir)
+    >>> checkout = bzr.Bzr()
+    >>> checkout.name
+    'tha.example'
+
+When the setup.py doesn't exist or doesn't return a proper name, we fall back
+to the directory name.
+
+    >>> orig = checkout.get_setup_py_name
+    >>> checkout.get_setup_py_name= lambda: None  # Hack
+    >>> checkout.name
+    'tha.example-bzr'
+    >>> checkout.get_setup_py_name = orig  # Restore hack
+
+
+Diff and commit
+---------------
+
+Make a change:
+
+    >>> setup_py = os.path.join(bzrsourcedir, 'setup.py')
+    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> cmd = checkout.cmd_diff()
+    >>> cmd
+    'bzr diff'
+    >>> print system(cmd)
+    === modified file 'setup.py'
+    --- setup.py	...
+    +++ setup.py	...
+    @@ -36,3 +36,5 @@
+               'console_scripts': [
+               ]},
+           )
+    +
+    +a = 2    
+
+Commit it:
+
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd
+    'bzr commit -v -m "small tweak"'
+    >>> print system(cmd)
+    Committing to: TESTTEMP/tha.example-bzr/
+    modified setup.py
+    Committed revision 2.
+
+
+Tags
+----
+
+Originally there are no tags (the default 'tip' tag is filtered out):
+
+    >>> checkout.available_tags()
+    []
+
+Create a tag and it will show up:
+
+    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd
+    'bzr tag 0.1'
+    >>> dont_care = system(cmd)
+    >>> checkout.available_tags()
+    ['0.1']
+
+A specific tag url is important for subversion, but nonsensical for
+bazaar.  We just return the version as-is:
+
+    >>> checkout.tag_url('holadijee')
+    'holadijee'
+
+Make and commit a small change:
+
+    >>> open(setup_py, 'a').write('\nb = 3\n')
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> print system(cmd)
+    Committing to: TESTTEMP/tha.example-bzr/
+    modified setup.py
+    Committed revision 3.
+
+Now we can request the changes since a specific tag:
+
+    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmd
+    'bzr diff -r 0.1..-1'
+    >>> print system(cmd)
+    === modified file 'setup.py'
+    --- setup.py	...
+    +++ setup.py	...
+    @@ -38,3 +38,5 @@
+           )
+    <BLANKLINE>
+     a = 2
+    +
+    +b = 3
+
+
+Making a tag checkout
+---------------------
+
+Some bzr versions cannot checkout in an existing directory, so contrary
+svn we will not create an empty tempdir before doing a checkout.
+The tag checkout command makes a checkout in a fresh dir:
+
+    >>> checkout.checkout_from_tag('0.1')
+
+At the end of the command we are in the created directory.  The
+checkout is done directly in that temporary directory, so not in a
+newly created subdirectory of it:
+
+    >>> os.getcwd()
+    '/tmp/tha.example-0.1-...'
+    >>> sorted(os.listdir('.'))
+    ['.bzr', '.bzrignore', 'CHANGES.txt', ...]

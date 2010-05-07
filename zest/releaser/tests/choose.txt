@@ -24,6 +24,12 @@ Mercurial:
     >>> choose.version_control()
     <zest.releaser.hg.Hg object at ...>
 
+Bazaar:
+
+    >>> os.chdir(bzrsourcedir)
+    >>> choose.version_control()
+    <zest.releaser.bzr.Bzr object at ...>
+
 When no version control system is found, zest.releaser exits (with a log
 message, but we don't test those yet):
 

@@ -1,0 +1,129 @@
+Integration test
+================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Several items are prepared for us.
+
+A Bazaar directory (repository and checkout in one):
+
+    >>> bzrsourcedir
+    'TESTTEMP/tha.example-bzr'
+    >>> import os
+    >>> os.chdir(bzrsourcedir)
+
+There are no tags yet:
+
+    >>> from zest.releaser.utils import system 
+    >>> print system("bzr tags")
+
+The changelog is at 0.1 dev:
+
+    >>> bzrhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Run the prerelease script:
+
+    >>> from zest.releaser import prerelease
+    >>> utils.answers_for_testing = ['', '']
+    >>> prerelease.main()
+    Question: Enter version [0.1]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog now has a release date instead of ``(unreleased)``:
+
+    >>> bzrhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.1 (2007-01-14)
+    ----------------
+
+And the version number is just 0.1 and has lost its dev marker:
+
+    >>> bzrhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.1'
+
+The release script tags the release and uploads it:
+
+    >>> utils.answers_for_testing = ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']
+    >>> mock_pypi_available.append('tha.example')
+    >>> from zest.releaser import release
+    >>> release.main()
+    Checking data dict
+    To tag, you can use the following command:
+    bzr tag 0.1
+    Question: Run this command (Y/n)?
+    Our reply: y
+    Created tag 0.1.
+    <BLANKLINE>
+    Question: Check out the tag
+        (for tweaks or pypi/distutils server upload) (Y/n)?
+    Our reply: y
+    running sdist
+    running egg_info
+    creating src/tha.example.egg-info
+    ...
+    creating tha.example-0.1
+    ...
+    making hard links in tha.example-0.1...
+    hard linking README.txt -> tha.example-0.1
+    ...
+    creating dist
+    tar -cf dist/tha.example-0.1.tar tha.example-0.1
+    gzip -f9 dist/tha.example-0.1.tar
+    removing 'tha.example-0.1' (and everything under it)
+    Question: Register and upload to pypi (Y/n)?
+    Our reply: y
+    Showing last few lines...
+    MOCK setup.py register sdist upload
+    
+There is now a tag:
+
+    >>> print system("bzr tags")
+    0.1                  2
+
+And the postrelease script ups the version:
+
+    >>> utils.answers_for_testing = ['', '']
+    >>> from zest.releaser import postrelease
+    >>> postrelease.main()
+    Current version is '0.1'
+    Question: Enter new development version ('dev' will be appended) [0.2]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog and setup.py are at 0.2 and indicate dev mode:
+
+    >>> bzrhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.2 (unreleased)
+    ----------------
+    >>> bzrhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.2dev'
+

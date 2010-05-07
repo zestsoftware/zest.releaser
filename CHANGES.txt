@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added support for bzr.  Fixes
+  https://bugs.launchpad.net/zest.releaser/+bug/490816  [menesis]
 
 
 3.6 (2010-04-13)

@@ -3,6 +3,7 @@ import os
 import sys
 from zest.releaser import git
 from zest.releaser import hg
+from zest.releaser import bzr
 from zest.releaser import svn
 
 logger = logging.getLogger('chooser')
@@ -16,6 +17,8 @@ def version_control():
         return svn.Subversion()
     elif '.hg' in curdir_contents:
         return hg.Hg()
+    elif '.bzr' in curdir_contents:
+        return bzr.Bzr()
     elif '.git' in curdir_contents:
         return git.Git()
     else:
