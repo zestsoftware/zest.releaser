@@ -83,7 +83,7 @@ class BaseVersionControl(object):
     def history_file(self):
         """Return history file location.
         """
-        history = self.filefind(['HISTORY.txt', 'CHANGES.txt'])
+        history = self.filefind(['HISTORY.txt', 'CHANGES.txt', 'CHANGES'])
         if history:
             return history
 

@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Also allowing ``CHANGES`` in addition to ``HISTORY.txt`` and ``CHANGES.txt``
+  as a history filename.  Keeps several Django packages happy.
 
 
 3.7 (2010-05-07)
