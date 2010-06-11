@@ -136,6 +136,6 @@ checkout is done directly in that temporary directory, so not in a
 newly created subdirectory of it:
 
     >>> os.getcwd()
-    '/tmp/tha.example-0.1-...'
+    '.../tha.example-0.1-...'
     >>> sorted(os.listdir('.'))
     ['.hg', '.hgignore', 'CHANGES.txt', ...]

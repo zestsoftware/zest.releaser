@@ -12,6 +12,9 @@ checker = renormalizing.RENormalizing([
     (re.compile(r'\d:[0-9a-f]{12}'), '1:234567890abc'),
     # Hg bare hash formatting
     (re.compile(r'[0-9a-f]{12}'), '234567890abc'),
+    # Hg has an updated comment
+    (re.compile('updating working directory'),
+     'updating to branch default'),
     # Git diff hash formatting
     (re.compile(r'[0-9a-f]{7}\.\.[0-9a-f]{7} [0-9a-f]{6}'),
      '1234567..890abcd ef0123'),
