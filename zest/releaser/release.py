@@ -112,11 +112,11 @@ class Releaser(baserelease.Basereleaser):
         version = self.data['version']
         logger.info("Doing a checkout...")
         self.vcs.checkout_from_tag(version)
-        tagdir = os.path.realpath(os.getcwd())
-        logger.info("Tag checkout placed in %s", tagdir)
+        self.tagdir = os.path.realpath(os.getcwd())
+        logger.info("Tag checkout placed in %s", self.tagdir)
         sdist_options = self._sdist_options()
 
-        if 'setup.py' in os.listdir(tagdir):
+        if 'setup.py' in os.listdir(self.tagdir):
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
             print system(utils.setup_py('sdist ' + sdist_options))

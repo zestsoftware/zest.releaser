@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Again at the end of a fullrelease report the location of the
+  directory containing the checkout of the tag, if it has been made.
+  [maurits]
 
 
 3.8 (2010-05-28)
