@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.9 (unreleased)
+3.9 (2010-06-11)
 ----------------
 
 - Again at the end of a fullrelease report the location of the
