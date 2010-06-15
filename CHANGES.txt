@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.10 (unreleased)
+3.10 (2010-06-15)
 -----------------
 
 - Fix : when running 'release' with python2.6 against a private egg server,
