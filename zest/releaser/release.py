@@ -158,9 +158,10 @@ class Releaser(baserelease.Basereleaser):
                         continue
                     if utils.ask("Register and upload to %s" % server):
                         if pypi.new_distutils_available():
-                            result = system(
-                                utils.setup_py('register sdist %s upload -r %s'
-                                               % (sdist_options, server)))
+                            commands = ('register', '-r', server, 'sdist',
+                                         sdist_options, 'upload', '-r', server)
+                            shell_command = utils.setup_py(' '.join(commands))
+                            result = system(shell_command)
                         else:
                             result = system(
                                 utils.setup_py('mregister sdist %s mupload '
