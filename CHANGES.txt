@@ -4,9 +4,9 @@ Changelog for zest.releaser
 3.10 (unreleased)
 -----------------
 
-- Fix : when using python2.6 and private egg server,
-  register command would run against PyPI
-  while upload command would run against private server
+- Fix : when running 'release' with python2.6 against a private egg server,
+  the distutils 'register' command would run against PyPI
+  while 'upload' command would run against private server.
   (-r option needs to be stated twice)
   [gotcha]
 
