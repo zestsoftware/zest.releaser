@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.11 (unreleased)
+3.11 (2010-06-25)
 -----------------
 
 - Small tweak: allowing zc.rst2's "rst2 html" in addition to docutils' own
