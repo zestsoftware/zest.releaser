@@ -25,8 +25,13 @@ def show_longdesc():
         # On Linux it needs to be 'rst2html', without the '.py'
         error = os.system('rst2html %s > %s' % (filename1, filename2))
     if error:
-        logging.error('Error generating html. Please install docutils.')
+        # Alternatively, zc.rst2 provides rst2 xyz.
+        error = os.system('rst2 html %s > %s' % (filename1, filename2))
+    if error:
+        logging.error(
+            'Error generating html. Please install docutils (or zc.rst2).')
         sys.exit()
+    logging.info("Opening %s in your webbrowser.", filename2)
     webbrowser.open(filename2)
 
 
