@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.12 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed tests to also pass with slightly newer git.
+  [maurits]
 
 
 3.11 (2010-06-25)
