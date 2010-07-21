@@ -37,11 +37,13 @@ An entry point is configured like this in your setup.py::
           #'console_scripts': [
           #    'myscript = my.package.scripts:main'],
           'zest.releaser.prereleaser.middle': [
-              'dosomething = my.package.some:some_entrypoint,
+              'dosomething = my.package.some:some_entrypoint',
               ]},
 
 Replace ``prereleaser`` and ``middle`` in ``zest.releaser.prereleaser.middle``
 with prerelease/release/postrelease and before/middle/after where needed.
+
+See the ``setup.py`` of ``zest.releaser`` itself for some real world examples.
 
 You'll have to make sure that the zest.releaser scripts know about your entry
 points, for instance by placing your egg (with entry point) in the same
