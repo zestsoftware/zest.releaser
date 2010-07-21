@@ -5,8 +5,3 @@ To do
 
 * Add hg support for lasttagdiff.
   https://bugs.launchpad.net/zest.releaser/+bug/490817
-
-* Add support for bazaar.
-  https://bugs.launchpad.net/zest.releaser/+bug/490817
-
-* Fix git tag checkout behaviour.
