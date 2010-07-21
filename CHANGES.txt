@@ -4,6 +4,11 @@ Changelog for zest.releaser
 3.12 (unreleased)
 -----------------
 
+- Fix: in the zest.releaser.releaser.after entry point data, pass the
+  'tagdir' value (if a checkout has been made).  Patch by Wolfgang
+  Schnerring, thanks!
+  [maurits]
+
 - Fixed tests to also pass with slightly newer git.
   [maurits]
 
