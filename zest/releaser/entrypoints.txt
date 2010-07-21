@@ -28,6 +28,16 @@ after
     to pypi or whatever.
 
 
+For the release step it made sense to create one extra entry point:
+
+after_checkout
+    The middle entry point has been handled, the tag has been made, a
+    checkout of that tag has been made and we are now in that checkout
+    directory.  Of course, when the user chooses not to do a checkout,
+    this entry point never triggers.
+
+
+
 Entry point specification
 -------------------------
 

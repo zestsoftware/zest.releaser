@@ -115,6 +115,8 @@ class Releaser(baserelease.Basereleaser):
         self.data['tagdir'] = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
         sdist_options = self._sdist_options()
+        # Run extra entry point
+        self._run_entry_points('after_checkout') 
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
             # See if creating an egg actually works.

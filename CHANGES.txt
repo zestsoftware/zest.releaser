@@ -4,6 +4,12 @@ Changelog for zest.releaser
 3.12 (unreleased)
 -----------------
 
+- Added extra entry point for the release step: ``after_checkout``.
+  When this is run, the middle entry point has been handled, the tag
+  has been made, a checkout of that tag has been made and we are now
+  in that checkout directory.  Idea: Jan-Wijbrand Kolman.
+  [maurits]
+
 - Fix: in the zest.releaser.releaser.after entry point data, pass the
   'tagdir' value (if a checkout has been made).  Patch by Wolfgang
   Schnerring, thanks!
