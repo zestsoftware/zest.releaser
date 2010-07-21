@@ -31,6 +31,13 @@ It will help you to automate:
 Installation
 ------------
 
+Getting a good installation consists of two steps: getting the
+zest.releaser commands, and setting up your environment so you can
+upload releases to pypi (if you want that).
+
+Get the zest.releaser commands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
 Just a simple ``easy_install zest.releaser`` is enough.
 
 Alternatively, buildout users can install zest.releaser as part of a
@@ -44,8 +51,50 @@ specific project's buildout, by having a buildout configuration such as::
     eggs = zest.releaser
 
 
-You must also have a version control system installed. Zest.releaser currently
-supports Subversion, Mercurial, Git and Bzr (and others could be added).
+Prepare for pypi distribution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course you must have a version control system installed.
+zest.releaser currently supports:
+
+- Subversion (svn)
+
+- Mercurial (hg)
+
+- Git (git)
+
+- Bazaar (bzr)
+
+Others could be added if there are volunteers.
+
+When the (full)release command tries to upload your package to a pypi
+server, zest.releaser basically just executes the command ``python
+setup.py register sdist upload``.  The ``python`` here is the same
+python that was used to install zest.releaser.  If that command would
+fail when you try it manually (for example because you have not
+configured a .pypirc file yet), then zest.releaser does not magically
+make it work.  This means that you may need to have some extra python
+packages installed:
+
+- setuptools or distribute (when using subversion 1.5 or higher you
+  need setuptools 0.6c11 or higher or any distribute version)
+
+- setuptools-git (Setuptools plugin for finding files under Git
+  version control)
+
+- setuptools_hg (Setuptools plugin for finding files under Mercurial
+  version control)
+
+- setuptools_bzr (Setuptools plugin for finding files under Bazaar
+  version control)
+
+- collective.dist (when using python2.4, depending on your
+  ``~/.pypirc`` file)
+
+The setuptools plugins are mostly so you do not miss files in the
+generated sdist that is uploaded to pypi.
+
+For more info, see the section on `Uploading to pypi server(s)`_.
 
 
 Running
@@ -99,9 +148,9 @@ are some assumptions build-in that might or might not fit you.  Lots of people
 are using it in various companies and open source projects, so it'll probably
 fit :-)
 
-- If you are using svn, your svn is structured with /trunk, /tags and
-  optionally /branches.  Both a /trunk or a /branches/something checkout
-  is ok.
+- If you are using svn, your svn is structured with /trunk, /tags (or
+  /tag) and optionally /branches (or /branch).  Both a /trunk or a
+  /branches/something checkout is ok.
 
 - There's a version.txt or setup.py in your project. The version.txt
   has a single line with the version number (newline optional). The
@@ -113,9 +162,10 @@ fit :-)
   zest.releaser-friendly format near the top of the file. Reading (in
   Plone products) a version.txt into setup.py works great, too.
 
-- The history file (either HISTORY.txt or CHANGES.txt) restriction is probably
-  the most severe at the moment. zest.releaser searches for a restructuredtext
-  header with parenthesis. So something like::
+- The history file (either HISTORY.txt, CHANGES.txt or CHANGES)
+  restriction is probably the most severe at the moment. zest.releaser
+  searches for a restructuredtext header with parenthesis. So
+  something like::
 
     Changelog for xyz
     =================
