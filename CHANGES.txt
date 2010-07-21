@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.12 (unreleased)
+3.12 (2010-07-22)
 -----------------
 
 - Added extra entry point for the release step: ``after_checkout``.
