@@ -36,6 +36,21 @@ after_checkout
     directory.  Of course, when the user chooses not to do a checkout,
     this entry point never triggers.
 
+Note that an entry point can be specific for one package (usually the
+package that you are now releasing) or generic for all packages.  An
+example of a generic one is `gocept.zestreleaser.customupload`_, which
+offers to upload the generated distribution to a chosen destination
+(like a server for internal company use).  If your entry point is
+specific for the current package only, you should add an extra check
+to make sure it is not run while releasing other packages; something
+like this should do the trick::
+
+    def my_entry_point(data):
+        if data['name'] != 'my.package':
+            return
+        ...
+
+.. _`gocept.zestreleaser.customupload`: http://pypi.python.org/pypi/gocept.zestreleaser.customupload
 
 
 Entry point specification
