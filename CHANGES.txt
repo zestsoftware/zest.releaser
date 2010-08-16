@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.13 (unreleased)
+3.13 (2010-08-16)
 -----------------
 
 - Fixed check that tested whether a package was already available on
