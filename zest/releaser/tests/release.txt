@@ -10,6 +10,8 @@ Some initial imports:
     >>> from zest.releaser import release
     >>> from zest.releaser import utils
     >>> import os
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
 
 
 Check availability on pypi
@@ -18,8 +20,8 @@ Check availability on pypi
 "Testing" means "don't really poll pypi", so the test setup does some
 monkeypatching for us:
 
-    >>> import urllib
-    >>> urllib.urlopen
+    >>> import urllib2
+    >>> urllib2.urlopen
     <function _mock_urlopen at ...>
 
 There's a mock list of packages that our mock pypi provides:

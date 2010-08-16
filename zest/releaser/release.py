@@ -1,7 +1,7 @@
 # GPL, (c) Reinout van Rees
 import logging
 import os
-import urllib
+import urllib2
 import sys
 import pkg_resources
 
@@ -28,13 +28,11 @@ logger = logging.getLogger('release')
 def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
     url = 'http://pypi.python.org/simple/%s' % package
-    result = urllib.urlopen(url).read().strip()
-    if package in result:
-        # Some link with the package name is present. If the package doesn't
-        # exist on pypi, the result would be the *string* 'Not Found'.
+    try:
+        urllib2.urlopen(url)
         return True
-    else:
-        logger.debug("Package not found on pypi: %r", result)
+    except urllib2.HTTPError, e:
+        logger.debug("Package not found on pypi: %s", e)
         return False
 
 

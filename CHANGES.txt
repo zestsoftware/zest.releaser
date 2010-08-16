@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed check that tested whether a package was already available on
+  pypi, as the pypi implementation changed slightly.  We now just
+  check for a 404 status.  Patch by Wolfgang Schnerring.
+  [maurits]
 
 
 3.12 (2010-07-22)
@@ -40,6 +43,7 @@ Changelog for zest.releaser
   while 'upload' command would run against private server.
   (-r option needs to be stated twice)
   [gotcha]
+
 
 3.9 (2010-06-11)
 ----------------

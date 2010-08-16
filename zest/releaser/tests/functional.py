@@ -5,7 +5,7 @@ import shutil
 import sys
 import tarfile
 import tempfile
-import urllib
+import urllib2
 import StringIO
 
 from zest.releaser.utils import system
@@ -34,19 +34,22 @@ def setup(test):
     sys.exit = _exit
 
     # Monkey patch urllib for pypi access mocking.
-    test.orig_urlopen = urllib.urlopen
+    test.orig_urlopen = urllib2.urlopen
     test.mock_pypi_available = []
 
     def _mock_urlopen(url):
         #print "Mock opening", url
         package = url.replace('http://pypi.python.org/simple/', '')
         if package not in test.mock_pypi_available:
-            answer = 'Not found'
+            raise urllib2.HTTPError(
+                url, 404,
+                'HTTP Error 404: Not Found (%s does not have any releases)'
+                % package, None, None)
         else:
             answer = ' '.join(test.mock_pypi_available)
         return StringIO.StringIO(buf=answer)
 
-    urllib.urlopen = _mock_urlopen
+    urllib2.urlopen = _mock_urlopen
 
     # Extract example project
     example_tar = pkg_resources.resource_filename(
@@ -150,7 +153,7 @@ def setup(test):
 
 def teardown(test):
     sys.exit = test.orig_exit
-    urllib.urlopen = test.orig_urlopen
+    urllib2.urlopen = test.orig_urlopen
     os.chdir(test.orig_dir)
     #print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
