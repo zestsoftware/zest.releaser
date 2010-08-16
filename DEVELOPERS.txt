@@ -43,6 +43,12 @@ To avoid this, create a file ~/.hgrc with something like this in it::
 If you keep having problems, `Ubuntu explains it
 <https://help.ubuntu.com/community/Mercurial>`_ quite good.
 
+There is a similar problem with bazaar.  Since bzr version 2.2, it
+refuses to guess what your username and email is, so you have to
+set it once, like this, otherwise you get test failures:
+
+  bzr whoami "Author Name <email@address.domain>"
+
 For release testing we expected a functioning .pypirc file in your
 home dir, with an old-style configuration, but the tests now use an
 own config file.
