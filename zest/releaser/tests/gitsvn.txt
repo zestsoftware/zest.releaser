@@ -1,0 +1,121 @@
+Detailed tests of gitsvn aspects of git.py
+==========================================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Some initial imports:
+
+    >>> from zest.releaser import git
+    >>> from zest.releaser.utils import system 
+    >>> import os
+
+Project name
+------------
+
+The prepared git project has a setup.py, so the name in there is used:
+
+    >>> os.chdir(gitsvnsourcedir)
+    >>> checkout = git.Git()
+    >>> checkout.name
+    'tha.example'
+
+When the setup.py doesn't exist or doesn't return a proper name, we fall back
+to the directory name.
+
+    >>> orig = checkout.get_setup_py_name
+    >>> checkout.get_setup_py_name= lambda: None  # Hack
+    >>> checkout.name
+    'tha.example-gitsvn'
+    >>> checkout.get_setup_py_name = orig  # Restore hack
+
+
+Diff and commit
+---------------
+
+Make a change:
+
+    >>> setup_py = os.path.join(gitsvnsourcedir, 'setup.py')
+    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> cmd = checkout.cmd_diff()
+    >>> cmd
+    'git diff'
+    >>> print system(cmd)
+    diff --git a/setup.py b/setup.py
+    index 9c14143..54fa3b9 100644
+    --- a/setup.py
+    +++ b/setup.py
+    @@ -36,3 +36,5 @@ setup(name='tha.example',
+               'console_scripts': [
+               ]},
+           )
+    +
+    +a = 2
+    
+Commit it:
+
+    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd
+    'git commit -a -m "small tweak"'
+
+In some cases we get this output:
+``[master ...] small tweak``
+and in other this:
+``Created commit ...: small tweak``
+
+    >>> print 'dummy', system(cmd)
+    dummy...small tweak
+     1 files changed, 2 insertions(+), 0 deletions(-)
+
+
+Tags
+----
+
+Originally there are no tags:
+
+    >>> checkout.available_tags()
+    []
+
+Create a tag and it will show up (master diverges from trunk):
+
+    >>> cmds = checkout.cmd_create_tag('0.1')
+    <BLANKLINE>
+    EXPERIMENTAL support for git-svn tagging!
+    <BLANKLINE>
+    You are on branch master.
+    Your local master diverges from trunk.
+    <BLANKLINE>
+    >>> cmds
+    ['git svn dcommit',
+     'git tag 0.1 -m "Tagging 0.1"',
+     'git svn tag -m "Tagging 0.1" 0.1']
+    >>> for cmd in cmds:
+    ...     dont_care = system(cmd)
+    >>> checkout.available_tags()
+    ['0.1']
+
+Create a tag and it will show up (master == trunk):
+
+    >>> cmds = checkout.cmd_create_tag('0.2')
+    <BLANKLINE>
+    EXPERIMENTAL support for git-svn tagging!
+    <BLANKLINE>
+    You are on branch master.
+    >>> cmds
+    ['git tag 0.2 -m "Tagging 0.2"',
+     'git svn tag -m "Tagging 0.2" 0.2']
+    >>> for cmd in cmds:
+    ...     dont_care = system(cmd)
+    >>> checkout.available_tags()
+    ['0.1', '0.2']
+
+Work on a branch different from master (unsupported):
+
+    >>> dontcare = system('git checkout -b foo')
+    >>> cmds = checkout.cmd_create_tag('0.3')
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=None)
+    >>> checkout.available_tags()
+    ['0.1', '0.2']

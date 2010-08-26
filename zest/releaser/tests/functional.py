@@ -113,6 +113,12 @@ def setup(test):
     system("git commit -a -m 'init'")
     os.chdir(test.orig_dir)
 
+    # Git svn initialization
+    gitsvnsourcedir = os.path.join(test.tempdir, 'tha.example-gitsvn')
+    system(
+        'git svn clone -s %s/tha.example %s' % (repo_url, gitsvnsourcedir))
+    os.chdir(test.orig_dir)
+
     def svnhead(*filename_parts):
         filename = os.path.join(svnsourcedir, *filename_parts)
         lines = open(filename).readlines()
@@ -143,6 +149,7 @@ def setup(test):
                        'hgsourcedir': hgsourcedir,
                        'bzrsourcedir': bzrsourcedir,
                        'gitsourcedir': gitsourcedir,
+                       'gitsvnsourcedir': gitsvnsourcedir,
                        'svnhead': svnhead,
                        'hghead': hghead,
                        'bzrhead': bzrhead,

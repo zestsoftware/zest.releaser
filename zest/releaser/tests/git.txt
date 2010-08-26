@@ -1,5 +1,5 @@
 Detailed tests of git.py
-=======================
+========================
 
 .. :doctest:
 .. :setup: zest.releaser.tests.functional.setup
