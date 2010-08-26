@@ -4,6 +4,9 @@ Changelog for zest.releaser
 3.14 (unreleased)
 -----------------
 
+- experimental support for git svn tagging
+  [chaoflow]
+
 - svn available_tags method: intercept 'Repository moved' note in svn
   info and stop processing then.
   [maurits]
