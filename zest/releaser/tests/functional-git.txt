@@ -70,7 +70,7 @@ The release script tags the release and uploads it:
     >>> from zest.releaser import release
     >>> release.main()
     Checking data dict
-    To tag, you can use the following command:
+    Tag needed to proceed, you can use the following command:
     git tag 0.1 -m "Tagging 0.1"
     Question: Run this command (Y/n)?
     Our reply: y

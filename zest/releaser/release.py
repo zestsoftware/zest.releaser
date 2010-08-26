@@ -82,13 +82,20 @@ class Releaser(baserelease.Basereleaser):
     def _make_tag(self):
         if self.data['tag_already_exists']:
             return
-        print "To tag, you can use the following command:"
-        cmd = self.vcs.cmd_create_tag(self.data['version'])
-        print cmd
-        if utils.ask("Run this command"):
-            print system(cmd)
-        else:
-            sys.exit()
+        cmds = self.vcs.cmd_create_tag(self.data['version'])
+        if not isinstance(cmds, list):
+            cmds = [cmds]
+        if len(cmds) == 1:
+            print "Tag needed to proceed, you can use the following command:"
+        for cmd in cmds:
+            print cmd
+            if utils.ask("Run this command"):
+                print system(cmd)
+            else:
+                # all commands are needed in order to proceed normally
+                print "Please create a tag for %s yourself and rerun." % \
+                        (self.data['version'],)
+                sys.exit()
 
     def _is_python24(self):
         return sys.hexversion < 0x02050000
