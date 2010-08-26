@@ -61,7 +61,8 @@ class Subversion(BaseVersionControl):
         tag_info = system('svn list %s%s' % (base, fallback_singular))
         if not failure_message in tag_info:
             return fallback_singular
-        logger.debug("tags dir does not exist at %s%s, either", base, fallback_singular)
+        logger.debug("tags dir does not exist at %s%s, either", base,
+                     fallback_singular)
         return None
 
     @property
@@ -93,7 +94,7 @@ class Subversion(BaseVersionControl):
             logger.error('Network problem: %s', tag_info)
             sys.exit()
         tags = [line.replace('/', '') for line in tag_info.split('\n')]
-        tags = [tag for tag in tags if tag] # filter empty ones
+        tags = [tag for tag in tags if tag]  # filter empty ones
         logger.debug("Available tags: %r", tags)
         return tags
 
@@ -122,6 +123,5 @@ class Subversion(BaseVersionControl):
         return 'svn cp %s %s -m "Tagging %s"' % (url, tag_url, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
-        url = self._svn_info()
         tag_url = self.tag_url(version)
         return 'svn co %s %s' % (tag_url, checkout_dir)
