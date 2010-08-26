@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- svn available_tags method: intercept 'Repository moved' note in svn
+  info and stop processing then.
+  [maurits]
 
 
 3.13 (2010-08-16)
