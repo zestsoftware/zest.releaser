@@ -96,6 +96,9 @@ class Releaser(baserelease.Basereleaser):
                 print "Please create a tag for %s yourself and rerun." % \
                         (self.data['version'],)
                 sys.exit()
+        if not self.vcs.tag_exists(self.data['version']):
+            print "\nFailed to create tag %s!" % (self.data['version'],)
+            sys.exit()
 
     def _is_python24(self):
         return sys.hexversion < 0x02050000
