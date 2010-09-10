@@ -252,3 +252,20 @@ When all this is configured correctly, zest.releaser will first
 reregister and upload at the official pypi (if the package is
 registered there already).  Then it will offer to upload to the other
 index servers that you have specified in ``.pypirc``.
+
+Note that since version 3.15, zest.releaser also looks for this
+information in the setup.cfg if your package has that file.  One way
+to use this, is to restrict the servers that zest.releaser will ask
+you upload to.  If you have defined 40 index-servers in your pypirc
+but you have the following in your setup.cfg, you will not be asked to
+upload to any server::
+
+  [distutils]
+  index-servers =
+
+Note that after creating the tag we still ask you if you want to
+checkout that tag for tweaks or pypi/distutils server upload.  We
+could add some extra checks to see if that is really needed, but
+someone who does not have index-servers listed, may still want to use
+an entry point like `gocept.zestreleaser.customupload`_ to do
+uploading, or do some manual steps steps first before uploading.
