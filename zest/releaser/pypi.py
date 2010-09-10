@@ -52,11 +52,13 @@ class PypiConfig(object):
         rc = self.config_filename
         if not os.path.isabs(rc):
             rc = os.path.join(os.path.expanduser('~'), self.config_filename)
-        if not os.path.exists(rc):
+        # If there is a setup.cfg in the package, parse it
+        files = [f for f in [rc, 'setup.cfg'] if os.path.exists(f)]
+        if not files:
             self.config = None
             return
         self.config = ConfigParser()
-        self.config.read(rc)
+        self.config.read(files)
         if (not self.is_old_pypi_config() and
             not self.is_new_pypi_config()):
             # Safety valve
