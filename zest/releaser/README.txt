@@ -268,4 +268,4 @@ checkout that tag for tweaks or pypi/distutils server upload.  We
 could add some extra checks to see if that is really needed, but
 someone who does not have index-servers listed, may still want to use
 an entry point like `gocept.zestreleaser.customupload`_ to do
-uploading, or do some manual steps steps first before uploading.
+uploading, or do some manual steps first before uploading.
