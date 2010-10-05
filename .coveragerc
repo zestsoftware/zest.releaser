@@ -1,0 +1,11 @@
+[report]
+omit =
+    /home/*/.buildout/eggs/*
+    local_checkouts/*
+    /var/lib/hudson/.buildout/*
+    /usr/*
+    parts/*
+    eggs/*
+    */test*
+
+ignore_errors = true
