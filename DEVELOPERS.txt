@@ -12,9 +12,9 @@ Needed programs
 ---------------
 
 To run the tests, you need to have the supported versioning systems
-installed: svn, hg (mercurial) and git.  There may be test failures
-when you have different versions of these programs.  In that case,
-please investigate as these may be genuine errors.
+installed: svn, hg (mercurial), git and git-svn.  There may be test
+failures when you have different versions of these programs.  In that
+case, please investigate as these may be genuine errors.
 
 
 Needed setuptools
