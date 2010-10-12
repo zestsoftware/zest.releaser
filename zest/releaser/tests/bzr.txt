@@ -99,7 +99,7 @@ Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'bzr diff -r 0.1..-1'
+    'bzr diff -r tag:0.1..-1'
     >>> print system(cmd)
     === modified file 'setup.py'
     --- setup.py	...

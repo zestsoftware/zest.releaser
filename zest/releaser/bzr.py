@@ -45,7 +45,7 @@ class Bzr(BaseVersionControl):
         return 'bzr commit -v -m "%s"' % message
 
     def cmd_diff_last_commit_against_tag(self, version):
-        return "bzr diff -r %s..-1" % version
+        return "bzr diff -r tag:%s..-1" % version
 
     def cmd_create_tag(self, version):
         return 'bzr tag %s' % version
@@ -53,4 +53,4 @@ class Bzr(BaseVersionControl):
     def cmd_checkout_from_tag(self, version, checkout_dir):
         source = self.workingdir
         target = checkout_dir
-        return 'bzr checkout -r %s %s %s' % (version, source, target)
+        return 'bzr checkout -r tag:%s %s %s' % (version, source, target)

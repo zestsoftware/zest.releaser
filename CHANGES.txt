@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Specify bazaar (bzr) tag numbers using the 'tag' revision specifier
+  (like 'tag:0.1') instead of only the tag number (0.1) to add
+  compatibility with earlier bzr versions (tested with 2.0.2).
+  [maurits]
 
 
 3.15 (2010-09-10)
