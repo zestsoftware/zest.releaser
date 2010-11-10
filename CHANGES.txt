@@ -4,6 +4,12 @@ Changelog for zest.releaser
 3.16 (unreleased)
 -----------------
 
+- See if pypirc or setup.cfg has a [zest.releaser] section with option
+  release = yes/no.  During the release stage, when 'yes', always
+  create a tag checkout, when 'no' never checkout, when not set, ask
+  the user.
+  [maurits]
+
 - Specify bazaar (bzr) tag numbers using the 'tag' revision specifier
   (like 'tag:0.1') instead of only the tag number (0.1) to add
   compatibility with earlier bzr versions (tested with 2.0.2).

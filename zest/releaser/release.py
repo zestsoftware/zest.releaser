@@ -113,9 +113,35 @@ class Releaser(baserelease.Basereleaser):
 
     def _release(self):
         """Upload the release, when desired"""
-        if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
-                         "server upload)"):
+        if utils.TESTMODE:
+            pypirc_old = pkg_resources.resource_filename(
+                'zest.releaser.tests', 'pypirc_old.txt')
+            pypiconfig = pypi.PypiConfig(pypirc_old)
+        else:
+            pypiconfig = pypi.PypiConfig()
+        if not pypiconfig.config:
+            logger.warn("You must have a properly configured %s file in "
+                        "your home dir to upload an egg or tweak the tag.",
+                        pypi.DIST_CONFIG_FILE)
             return
+
+        # Does the user want a real release?
+        if pypiconfig.want_release() is None:
+            # No specific setting, so we ask the user.
+            if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
+                             "server upload)"):
+                return
+        elif not pypiconfig.want_release():
+            # User says 'no'.
+            logger.info("Found option release=False in [zest.releaser] "
+                        "section in ~/.pypirc or setup.cfg, so not making "
+                        "checkout of tag for pypi upload or tweaks.")
+            return
+        else:
+            logger.info("Found option release=True in [zest.releaser] "
+                        "section in ~/.pypirc or setup.cfg, so making "
+                        "checkout of tag for pypi upload or tweaks.")
+
         package = self.vcs.name
         version = self.data['version']
         logger.info("Doing a checkout...")
@@ -124,60 +150,47 @@ class Releaser(baserelease.Basereleaser):
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
         sdist_options = self._sdist_options()
         # Run extra entry point
-        self._run_entry_points('after_checkout') 
+        self._run_entry_points('after_checkout')
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
             print system(utils.setup_py('sdist ' + sdist_options))
 
-            if utils.TESTMODE:
-                pypirc_old = pkg_resources.resource_filename(
-                    'zest.releaser.tests', 'pypirc_old.txt')
-                pypiconfig = pypi.PypiConfig(pypirc_old)
+            # First ask if we want to upload to pypi, which should always
+            # work, also without collective.dist.
+            use_pypi = package_in_pypi(package)
+            if not use_pypi:
+                logger.info("This package is currently NOT registered on "
+                            "PyPI. If you want to register, you need to "
+                            "do this manually the first time.")
             else:
-                pypiconfig = pypi.PypiConfig()
-            if not pypiconfig.config:
-                logger.warn("You must have a properly configured %s file in "
-                            "your home dir to upload an egg.",
-                            pypi.DIST_CONFIG_FILE)
-                # TODO: when refactoring, zap the "else" and just put a
-                # "return" here.
-            else:
-                # First ask if we want to upload to pypi, which should always
-                # work, also without collective.dist.
-                use_pypi = package_in_pypi(package)
-                if not use_pypi:
-                    logger.info("This package is currently NOT registered on "
-                                "PyPI. If you want to register, you need to "
-                                "do this manually the first time.")
-                else:
-                    logger.info("This package is registered on PyPI.")
-                    if pypiconfig.is_old_pypi_config() and utils.ask(
-                        "Register and upload to PyPI"):
-                        result = system(
-                            utils.setup_py('register sdist %s upload' %
-                                           sdist_options))
-                        utils.show_last_lines(result)
+                logger.info("This package is registered on PyPI.")
+                if pypiconfig.is_old_pypi_config() and utils.ask(
+                    "Register and upload to PyPI"):
+                    result = system(
+                        utils.setup_py('register sdist %s upload' %
+                                       sdist_options))
+                    utils.show_last_lines(result)
 
-                # If collective.dist is installed (or we are using
-                # python2.6 or higher), the user may have defined
-                # other servers to upload to.
-                for server in pypiconfig.distutils_servers():
-                    if server == 'pypi' and not use_pypi:
-                        continue
-                    if utils.ask("Register and upload to %s" % server):
-                        if pypi.new_distutils_available():
-                            commands = ('register', '-r', server, 'sdist',
-                                         sdist_options, 'upload', '-r', server)
-                            shell_command = utils.setup_py(' '.join(commands))
-                            result = system(shell_command)
-                        else:
-                            result = system(
-                                utils.setup_py('mregister sdist %s mupload '
-                                               '-r %s'
-                                               % (sdist_options, server)))
-                        utils.show_last_lines(result)
+            # If collective.dist is installed (or we are using
+            # python2.6 or higher), the user may have defined
+            # other servers to upload to.
+            for server in pypiconfig.distutils_servers():
+                if server == 'pypi' and not use_pypi:
+                    continue
+                if utils.ask("Register and upload to %s" % server):
+                    if pypi.new_distutils_available():
+                        commands = ('register', '-r', server, 'sdist',
+                                     sdist_options, 'upload', '-r', server)
+                        shell_command = utils.setup_py(' '.join(commands))
+                        result = system(shell_command)
+                    else:
+                        result = system(
+                            utils.setup_py('mregister sdist %s mupload '
+                                           '-r %s'
+                                           % (sdist_options, server)))
+                    utils.show_last_lines(result)
 
         os.chdir(self.vcs.workingdir)
 
