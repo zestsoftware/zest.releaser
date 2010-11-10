@@ -49,6 +49,11 @@ set it once, like this, otherwise you get test failures:
 
   bzr whoami "Author Name <email@address.domain>"
 
+And the same for git, so you should do:
+
+  git config --global user.name "Your Name"
+  git config --global user.email you@example.com
+
 For release testing we expected a functioning .pypirc file in your
 home dir, with an old-style configuration, but the tests now use an
 own config file.
