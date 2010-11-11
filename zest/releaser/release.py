@@ -130,11 +130,13 @@ class Releaser(baserelease.Basereleaser):
             logger.info("This package is registered on PyPI.")
         if pypiconfig.is_old_pypi_config():
             pypi_command = 'register sdist %s upload' % sdist_options
+            shell_command = utils.setup_py(pypi_command)
             if not use_pypi:
                 logger.info(not_on_pypi_warning)
-                logger.info(pypi_command)
+                logger.info(shell_command)
             elif utils.ask("Register and upload to PyPI"):
-                result = system(utils.setup_py(pypi_command))
+                logger.info("Running: %s", shell_command)
+                result = system(shell_command)
                 utils.show_last_lines(result)
 
         # If collective.dist is installed (or we are using
@@ -155,8 +157,9 @@ class Releaser(baserelease.Basereleaser):
             shell_command = utils.setup_py(' '.join(commands))
             if server == 'pypi' and not use_pypi:
                 logger.info(not_on_pypi_warning)
-                logger.info(pypi_command)
+                logger.info(shell_command)
             elif utils.ask("Register and upload to %s" % server):
+                logger.info("Running: %s", shell_command)
                 result = system(shell_command)
                 utils.show_last_lines(result)
 
