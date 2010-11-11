@@ -119,37 +119,45 @@ class Releaser(baserelease.Basereleaser):
         # First ask if we want to upload to pypi, which should always
         # work, also without collective.dist.
         use_pypi = package_in_pypi(package)
-        if not use_pypi:
-            logger.info("This package is currently NOT registered on "
-                        "PyPI. If you want to register, you need to "
-                        "do this manually the first time.")
-        else:
+        # We want to print the same warning in different spots, so we
+        # safe it here.
+        not_on_pypi_warning = (
+            "This package is currently NOT registered on "
+            "PyPI. If you want to register, you need to "
+            "do this manually the first time. "
+            "You can use this command:")
+        if use_pypi:
             logger.info("This package is registered on PyPI.")
-            if pypiconfig.is_old_pypi_config() and utils.ask(
-                "Register and upload to PyPI"):
-                result = system(
-                    utils.setup_py('register sdist %s upload' %
-                                   sdist_options))
+        if pypiconfig.is_old_pypi_config():
+            pypi_command = 'register sdist %s upload' % sdist_options
+            if not use_pypi:
+                logger.info(not_on_pypi_warning)
+                logger.info(pypi_command)
+            elif utils.ask("Register and upload to PyPI"):
+                result = system(utils.setup_py(pypi_command))
                 utils.show_last_lines(result)
 
         # If collective.dist is installed (or we are using
         # python2.6 or higher), the user may have defined
         # other servers to upload to.
         for server in pypiconfig.distutils_servers():
+            if pypi.new_distutils_available():
+                commands = ('register', '-r', server, 'sdist',
+                            sdist_options, 'upload', '-r', server)
+            else:
+                ## This would be logical, given the lines above:
+                #commands = ('mregister', '-r', server, 'sdist',
+                #            sdist_options, 'mupload', '-r', server)
+                ## But according to the collective.dist documentation
+                ## it should be this (with just one '-r'):
+                commands = ('mregister', 'sdist',
+                            sdist_options, 'mupload', '-r', server)
+            shell_command = utils.setup_py(' '.join(commands))
             if server == 'pypi' and not use_pypi:
-                # We already handled the 'not use_pypi' case
-                continue
-            if utils.ask("Register and upload to %s" % server):
-                if pypi.new_distutils_available():
-                    commands = ('register', '-r', server, 'sdist',
-                                 sdist_options, 'upload', '-r', server)
-                    shell_command = utils.setup_py(' '.join(commands))
-                    result = system(shell_command)
-                else:
-                    result = system(
-                        utils.setup_py('mregister sdist %s mupload '
-                                       '-r %s'
-                                       % (sdist_options, server)))
+                logger.info(not_on_pypi_warning)
+                logger.info(pypi_command)
+            elif utils.ask("Register and upload to %s" % server):
+                result = system(shell_command)
                 utils.show_last_lines(result)
 
     def _release(self):
