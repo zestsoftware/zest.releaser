@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.16 (unreleased)
 -----------------
 
+- For (pypi) output, also show the first few lines instead of only the
+  last few.
+  [maurits]
+
 - See if pypirc or setup.cfg has a [zest.releaser] section with option
   release = yes/no.  During the release stage, this influences the
   default answer when asked if you want to make a checkout of the tag.

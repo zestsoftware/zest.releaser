@@ -151,11 +151,42 @@ part:
     g
     <BLANKLINE>
 
+Or the first and last few lines, though we make sure we do not print
+too much in case there are not 'enough' lines:
+
+    >>> utils.show_first_and_last_lines(output)
+    a
+    b
+    c
+    d
+    e
+    f
+    g
+    <BLANKLINE>
+    >>> import string
+    >>> output = '\n'.join(string.ascii_lowercase)   
+    >>> utils.show_first_and_last_lines(output)
+    Showing first few lines...
+    a
+    b
+    c
+    d
+    e
+    ...
+    Showing last few lines...
+    v
+    w
+    x
+    y
+    z
+
 Just one line: no problem:
 
     >>> output = "just one line, no newlines"
     >>> utils.show_last_lines(output)
     Showing last few lines...
+    just one line, no newlines
+    >>> utils.show_first_and_last_lines(output)
     just one line, no newlines
 
 

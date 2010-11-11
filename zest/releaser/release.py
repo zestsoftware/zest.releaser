@@ -137,7 +137,7 @@ class Releaser(baserelease.Basereleaser):
             elif utils.ask("Register and upload to PyPI"):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
-                utils.show_last_lines(result)
+                utils.show_first_and_last_lines(result)
 
         # If collective.dist is installed (or we are using
         # python2.6 or higher), the user may have defined
@@ -161,7 +161,7 @@ class Releaser(baserelease.Basereleaser):
             elif utils.ask("Register and upload to %s" % server):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
-                utils.show_last_lines(result)
+                utils.show_first_and_last_lines(result)
 
     def _release(self):
         """Upload the release, when desired"""
