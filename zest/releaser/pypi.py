@@ -107,34 +107,35 @@ class PypiConfig(object):
         return index_servers
 
     def want_release(self):
-        """Does the user want to release this package.
+        """Does the user normally want to release this package.
 
-        Some colleagues find it irritating to have to answer the
-        question "Check out the tag (for tweaks or pypi/distutils
-        server upload)" each time when in 99 percent of the cases they
-        just make a release specific for a customer, so they always
-        answer 'no' here.  This is where an extra config option comes
-        in handy.
+        Some colleagues find it irritating to have to remember to
+        answer the question "Check out the tag (for tweaks or
+        pypi/distutils server upload)" with the non-default 'no' when
+        in 99 percent of the cases they just make a release specific
+        for a customer, so they always answer 'no' here.  This is
+        where an extra config option comes in handy: you can influence
+        the default answer so you can just keep hitting 'Enter' until
+        zest.releaser is done.
 
         Either in your ~/.pypirc or in a setup.cfg in a specific
-        package, add this when you want the answer to this question to
-        always be 'no':
+        package, add this when you want the default answer to this
+        question to be 'no':
 
         [zest.releaser]
         release = no
 
-        The default when this option has not been set is None, which
-        means we ask the user.
+        The default when this option has not been set is True.
 
         Standard config rules apply, so you can use upper or lower or
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
+        default = True
         if self.config == None:
-            return None
+            return default
         try:
-            # This might raise a ValueError, but that is actually sensible.
             result = self.config.getboolean('zest.releaser', 'release')
-        except (NoSectionError, NoOptionError):
-            return None
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
         return result

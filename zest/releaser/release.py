@@ -119,28 +119,12 @@ class Releaser(baserelease.Basereleaser):
             pypiconfig = pypi.PypiConfig(pypirc_old)
         else:
             pypiconfig = pypi.PypiConfig()
-        if not pypiconfig.config:
-            logger.warn("You must have a properly configured %s file in "
-                        "your home dir to upload an egg or tweak the tag.",
-                        pypi.DIST_CONFIG_FILE)
-            return
 
-        # Does the user want a real release?
-        if pypiconfig.want_release() is None:
-            # No specific setting, so we ask the user.
-            if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
-                             "server upload)"):
-                return
-        elif not pypiconfig.want_release():
-            # User says 'no'.
-            logger.info("Found option release=False in [zest.releaser] "
-                        "section in ~/.pypirc or setup.cfg, so not making "
-                        "checkout of tag for pypi upload or tweaks.")
+        # Does the user normally want a real release?
+        default_answer = pypiconfig.want_release()
+        if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
+                         "server upload)", default=default_answer):
             return
-        else:
-            logger.info("Found option release=True in [zest.releaser] "
-                        "section in ~/.pypirc or setup.cfg, so making "
-                        "checkout of tag for pypi upload or tweaks.")
 
         package = self.vcs.name
         version = self.data['version']
@@ -153,6 +137,12 @@ class Releaser(baserelease.Basereleaser):
         self._run_entry_points('after_checkout')
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
+            if not pypiconfig.config:
+                logger.warn("You must have a properly configured %s file in "
+                            "your home dir to upload an egg.",
+                            pypi.DIST_CONFIG_FILE)
+                os.chdir(self.vcs.workingdir)
+                return
             # See if creating an egg actually works.
             logger.info("Making an egg of a fresh tag checkout.")
             print system(utils.setup_py('sdist ' + sdist_options))

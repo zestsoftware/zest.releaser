@@ -215,15 +215,17 @@ Asking for making a release or not
 ----------------------------------
 
 Some people hardly ever want to make a full release of a package to
-pypi; a subversion tag may be enough.  They can tell zest.release to
-not even ask to make a checkout for a release.
+pypi; a subversion tag may be enough.  They can tell zest.releaser to
+use a different default answer when it asks to make a checkout for a
+release.  This means you can usually just press Enter on all questions
+that zest.releaser asks.
 
 We try to read a [zest.releaser] section, either in pypirc or
 setup.cfg.  Currently we only check for a 'release' option.  We can
-ask for the result like this:
+ask for the result like this, which by default is True:
 
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
-    >>> pypiconfig.want_release() is None
+    >>> pypiconfig.want_release()
     True
 
 We have a pypirc for this:
