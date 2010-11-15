@@ -15,6 +15,8 @@ checker = renormalizing.RENormalizing([
     # Hg has an updated comment
     (re.compile('updating working directory'),
      'updating to branch default'),
+    # Newer Hg no longer prints 'requesting all changes'
+    (re.compile('requesting all changes'), ''),
     # Git diff hash formatting
     (re.compile(r'[0-9a-f]{7}\.\.[0-9a-f]{7} [0-9a-f]{6}'),
      '1234567..890abcd ef0123'),
@@ -27,7 +29,7 @@ checker = renormalizing.RENormalizing([
      'TESTREPO'),
     (re.compile(
         '/private%s/testtemp[^/]+' % re.escape(tempfile.gettempdir())),
-     'TESTTEMP'), # OSX madness
+     'TESTTEMP'),  # OSX madness
     (re.compile(
         '%s/testtemp[^/]+' % re.escape(tempfile.gettempdir())),
      'TESTTEMP'),

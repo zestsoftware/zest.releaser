@@ -210,6 +210,40 @@ part:
     >>> pprint(sorted(pypiconfig.distutils_servers()))
     ['local']
 
+
+Asking for making a release or not
+----------------------------------
+
+Some people hardly ever want to make a full release of a package to
+pypi; a subversion tag may be enough.  They can tell zest.releaser to
+use a different default answer when it asks to make a checkout for a
+release.  This means you can usually just press Enter on all questions
+that zest.releaser asks.
+
+We try to read a [zest.releaser] section, either in pypirc or
+setup.cfg.  Currently we only check for a 'release' option.  We can
+ask for the result like this, which by default is True:
+
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
+    >>> pypiconfig.want_release()
+    True
+
+We have a pypirc for this:
+
+    >>> pypirc_no_release = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_no_release.txt')
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_no_release)
+    >>> pypiconfig.want_release()
+    False
+
+We can also specify to always do that checkout during a release:
+
+    >>> pypirc_yes_release = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_yes_release.txt')
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release)
+    >>> pypiconfig.want_release()
+    True
+
 We are done with testing so we restore the original version:
 
     >>> sys.version_info = orig_version

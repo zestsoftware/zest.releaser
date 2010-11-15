@@ -105,3 +105,37 @@ class PypiConfig(object):
             server.strip() for server in raw_index_servers.split('\n')
             if server.strip() not in ignore_servers]
         return index_servers
+
+    def want_release(self):
+        """Does the user normally want to release this package.
+
+        Some colleagues find it irritating to have to remember to
+        answer the question "Check out the tag (for tweaks or
+        pypi/distutils server upload)" with the non-default 'no' when
+        in 99 percent of the cases they just make a release specific
+        for a customer, so they always answer 'no' here.  This is
+        where an extra config option comes in handy: you can influence
+        the default answer so you can just keep hitting 'Enter' until
+        zest.releaser is done.
+
+        Either in your ~/.pypirc or in a setup.cfg in a specific
+        package, add this when you want the default answer to this
+        question to be 'no':
+
+        [zest.releaser]
+        release = no
+
+        The default when this option has not been set is True.
+
+        Standard config rules apply, so you can use upper or lower or
+        mixed case and specify 0, false, no or off for boolean False,
+        and 1, on, true or yes for boolean True.
+        """
+        default = True
+        if self.config == None:
+            return default
+        try:
+            result = self.config.getboolean('zest.releaser', 'release')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result

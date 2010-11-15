@@ -4,6 +4,18 @@ Changelog for zest.releaser
 3.16 (unreleased)
 -----------------
 
+- For (pypi) output, also show the first few lines instead of only the
+  last few.
+  [maurits]
+
+- See if pypirc or setup.cfg has a [zest.releaser] section with option
+  release = yes/no.  During the release stage, this influences the
+  default answer when asked if you want to make a checkout of the tag.
+  The default when not set, is 'yes'.  You may want to set this to
+  'no' if most of the time you only make releaser of internal packages
+  for customers and only need the tag.
+  [maurits]
+
 - Specify bazaar (bzr) tag numbers using the 'tag' revision specifier
   (like 'tag:0.1') instead of only the tag number (0.1) to add
   compatibility with earlier bzr versions (tested with 2.0.2).

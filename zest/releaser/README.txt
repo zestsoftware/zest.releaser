@@ -269,3 +269,18 @@ could add some extra checks to see if that is really needed, but
 someone who does not have index-servers listed, may still want to use
 an entry point like `gocept.zestreleaser.customupload`_ to do
 uploading, or do some manual steps first before uploading.
+
+Some people will hardly ever want to do a release on pypi but only
+want to create a tag in 99 out of 100 cases.  They won't like the
+default answer of 'yes' to that question of whether to create a
+checkout of the tag.  So since version 3.16 you can influence this
+default answer.  You can add some lines to the ``.pypirc`` file in
+your home directory to change the default answer for all packages, or
+change it for individual packages in their ``setup.cfg`` file.  The
+lines are this::
+
+  [zest.releaser]
+  release = no
+
+You can use no/false/off/0 or yes/true/on/1 as answers; upper, lower
+or mixed case are all fine.

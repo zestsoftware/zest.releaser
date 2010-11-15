@@ -93,7 +93,6 @@ The release script tags the release and uploads it:
     removing 'tha.example-0.1' (and everything under it)
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
-    Showing last few lines...
     MOCK setup.py register sdist upload
     
 There is now a tag:
