@@ -172,8 +172,19 @@ class Releaser(baserelease.Basereleaser):
         else:
             pypiconfig = pypi.PypiConfig()
 
-        # Does the user normally want a real release?
-        default_answer = pypiconfig.want_release()
+        # Does the user normally want a real release?  We are
+        # interested in getting a sane default answer here, so you can
+        # override it in the exceptional case but just hit Enter in
+        # the usual case.
+        main_files = os.listdir(self.data['workingdir'])
+        if 'setup.py' not in main_files and 'setup.cfg' not in main_files:
+            # Neither setup.py nor setup.cfg, so this is no python
+            # package, so at least a pypi release is not useful.
+            # Expected case: this is a buildout directory.
+            default_answer = False
+        else:
+            default_answer = pypiconfig.want_release()
+
         if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
                          "server upload)", default=default_answer):
             return

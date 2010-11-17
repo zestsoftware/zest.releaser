@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.17 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- When the package that is being released neither has a setup.py nor a
+  setup.cfg, use No as default answer for creating a checkout of the
+  tag.
+  [maurits]
 
 
 3.16 (2010-11-15)
