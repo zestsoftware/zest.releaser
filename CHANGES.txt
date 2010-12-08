@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.18 (unreleased)
+3.18 (2010-12-08)
 -----------------
 
 - Added ``--non-interactive--`` option to the ``svn diff`` command used in
