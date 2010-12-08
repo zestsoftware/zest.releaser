@@ -115,7 +115,7 @@ class Subversion(BaseVersionControl):
     def cmd_diff_last_commit_against_tag(self, version):
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        return "svn diff %s %s" % (tag_url, url)
+        return "svn --non-interactive diff %s %s" % (tag_url, url)
 
     def cmd_create_tag(self, version):
         url = self._svn_info()

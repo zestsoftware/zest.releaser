@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.18 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added ``--non-interactive--`` option to the ``svn diff`` command used in
+  lasttagdiff.  This makes it usable in cronjobs and post-commit hooks.
+  Fixes https://bugs.launchpad.net/zest.releaser/+bug/687530
 
 
 3.17 (2010-11-17)

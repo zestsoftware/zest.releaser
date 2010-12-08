@@ -8,7 +8,7 @@ Detailed tests of svn.py
 Some initial imports:
 
     >>> from zest.releaser import svn
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> import os
 
 Project name
@@ -51,7 +51,7 @@ Make a change:
            )
     +
     +a = 2
-    
+
 Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
@@ -98,11 +98,13 @@ Make and commit a small change:
     Transmitting file data .
     Committed revision 7.
 
-Now we can request the changes since a specific tag:
+Now we can request the changes since a specific tag.  Note that we use the
+``--non-interactive`` option to make sure it can be run from cronjobs or
+post-commit hooks:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'svn diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk'
+    'svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk'
     >>> print system(cmd)
     Index: setup.py
     ===================================================================
@@ -171,7 +173,7 @@ the test setup.
     Traceback (most recent call last):
     ...
     RuntimeError: SYSTEM EXIT (code=1)
-    
+
 The information on tags is stored on the server, not locally.  So a network
 connection is needed.  When there's a network problem, it is reported:
 
