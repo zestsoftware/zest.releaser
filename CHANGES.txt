@@ -4,7 +4,12 @@ Changelog for zest.releaser
 3.19 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- No longer refuse to register and upload a package on pypi if it is
+  not there yet, forcing people to do this manually the first time.
+  Instead, we ask the question and simply have 'No' as the default
+  answer.  The idea is still to avoid making it too easy to release an
+  internal package on pypi by accident.
+  [maurits]
 
 
 3.18 (2010-12-08)

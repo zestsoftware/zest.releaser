@@ -119,22 +119,21 @@ class Releaser(baserelease.Basereleaser):
         # First ask if we want to upload to pypi, which should always
         # work, also without collective.dist.
         use_pypi = package_in_pypi(package)
-        # We want to print the same warning in different spots, so we
-        # safe it here.
-        not_on_pypi_warning = (
-            "This package is currently NOT registered on "
-            "PyPI. If you want to register, you need to "
-            "do this manually the first time. "
-            "You can use this command:")
         if use_pypi:
             logger.info("This package is registered on PyPI.")
+        else:
+            logger.warn("This package is NOT registered on PyPI.")
         if pypiconfig.is_old_pypi_config():
             pypi_command = 'register sdist %s upload' % sdist_options
             shell_command = utils.setup_py(pypi_command)
-            if not use_pypi:
-                logger.info(not_on_pypi_warning)
-                logger.info(shell_command)
-            elif utils.ask("Register and upload to PyPI"):
+            if use_pypi:
+                default = True
+            else:
+                # We are not yet on pypi.  To avoid an 'Oops...,
+                # sorry!' when registering and uploading an internal
+                # package we default to False here.
+                default = False
+            if utils.ask("Register and upload to PyPI", default=default):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
                 utils.show_first_and_last_lines(result)
@@ -155,10 +154,14 @@ class Releaser(baserelease.Basereleaser):
                 commands = ('mregister', 'sdist',
                             sdist_options, 'mupload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))
+            default = True
             if server == 'pypi' and not use_pypi:
-                logger.info(not_on_pypi_warning)
-                logger.info(shell_command)
-            elif utils.ask("Register and upload to %s" % server):
+                # We are not yet on pypi.  To avoid an 'Oops...,
+                # sorry!' when registering and uploading an internal
+                # package we default to False here.
+                default = False
+            if utils.ask("Register and upload to %s" % server,
+                         default=default):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
                 utils.show_first_and_last_lines(result)
