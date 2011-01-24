@@ -128,12 +128,15 @@ class Releaser(baserelease.Basereleaser):
             shell_command = utils.setup_py(pypi_command)
             if use_pypi:
                 default = True
+                exact = False
             else:
                 # We are not yet on pypi.  To avoid an 'Oops...,
                 # sorry!' when registering and uploading an internal
                 # package we default to False here.
                 default = False
-            if utils.ask("Register and upload to PyPI", default=default):
+                exact = True
+            if utils.ask("Register and upload to PyPI", default=default,
+                         exact=exact):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
                 utils.show_first_and_last_lines(result)
@@ -155,13 +158,15 @@ class Releaser(baserelease.Basereleaser):
                             sdist_options, 'mupload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))
             default = True
+            exact = False
             if server == 'pypi' and not use_pypi:
                 # We are not yet on pypi.  To avoid an 'Oops...,
                 # sorry!' when registering and uploading an internal
                 # package we default to False here.
                 default = False
+                exact = True
             if utils.ask("Register and upload to %s" % server,
-                         default=default):
+                         default=default, exact=exact):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
                 utils.show_first_and_last_lines(result)
