@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.19 (unreleased)
+3.19 (2011-01-24)
 -----------------
 
 - No longer refuse to register and upload a package on pypi if it is
