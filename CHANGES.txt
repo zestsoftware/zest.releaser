@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.20 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Also allowing CHANGES.rst and CHANGES.markdown in addition to
+  CHANGES.txt.
 
 
 3.19 (2011-01-24)
