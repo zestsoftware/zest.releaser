@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.21 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Accept a twiggle (or whatever '~' is called) when searching for
+  headers in a changelog; seen in some packages (at least
+  zopeskel.dexterity).
+  [maurits]
 
 
 3.20 (2011-01-25)

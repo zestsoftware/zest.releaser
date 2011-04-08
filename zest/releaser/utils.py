@@ -121,8 +121,10 @@ def extract_headings_from_history(history_lines):
     using. Just fix up your first heading and you should be set.
 
     As an alternative, we support an alternative format used by some
-    zope/plone paster templates: '2.10 - unreleased'
+    zope/plone paster templates: '2.10 - unreleased' or '2.10 ~ unreleased'
 
+    Note that new headers that zest.releaser sets are in our preferred
+    form (so 'version (date)').
     """
     pattern = re.compile(r"""
     (?P<version>.+)  # Version string
@@ -134,7 +136,7 @@ def extract_headings_from_history(history_lines):
     alt_pattern = re.compile(r"""
     ^                # Start of line
     (?P<version>.+)  # Version string
-    \ -\             # space dash space
+    \ [-~]\          # space dash/twiggle space
     (?P<date>.+)     # Date
     \W*$             # Possible whitespace at end of line.
     """, re.VERBOSE)
