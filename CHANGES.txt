@@ -8,6 +8,10 @@ Changelog for zest.releaser
   headers in a changelog; seen in some packages (at least
   zopeskel.dexterity).
   [maurits]
+  
+- Fix Mercurial (hg) support. As spreaded_internal should be set 
+  to False (as it happens with git)
+  [erico_andrei]
 
 
 3.20 (2011-01-25)
