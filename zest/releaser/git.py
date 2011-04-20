@@ -55,6 +55,12 @@ class Git(BaseVersionControl):
     def cmd_diff_last_commit_against_tag(self, version):
         return "git diff %s" % version
 
+    def cmd_log_since_tag(self, version):
+        """Return log since a tagged version till the last commit of
+        the working copy.
+        """
+        return "git log %s..HEAD" % version
+
     def cmd_create_tag(self, version):
         msg = "Tagging %s" % (version,)
         cmd = 'git tag %s -m "%s"' % (version, msg)
