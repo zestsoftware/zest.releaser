@@ -53,6 +53,13 @@ class Hg(BaseVersionControl):
         current_revision = current_revision.rstrip('+')
         return "hg diff -r %s -r %s" % (version, current_revision)
 
+    def cmd_log_since_tag(self, version):
+        current_revision = system('hg identify')
+        current_revision = current_revision.split(' ')[0]
+        # + at the end of the revision denotes uncommitted changes
+        current_revision = current_revision.rstrip('+')
+        return "hg log -r %s -r %s" % (version, current_revision)
+
     def cmd_create_tag(self, version):
         # Note: place the '-m' before the argument for hg 1.1 support.
         return 'hg tag -m "Tagging %s" %s' % (version, version)

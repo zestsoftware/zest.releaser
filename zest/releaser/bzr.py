@@ -47,6 +47,9 @@ class Bzr(BaseVersionControl):
     def cmd_diff_last_commit_against_tag(self, version):
         return "bzr diff -r tag:%s..-1" % version
 
+    def cmd_log_since_tag(self, version):
+        return "bzr log -r tag:%s..-1" % version
+
     def cmd_create_tag(self, version):
         return 'bzr tag %s' % version
 

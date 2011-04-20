@@ -5,7 +5,6 @@ Changelog for zest.releaser
 -----------------
 
 - Added lasttaglog command that list the log since the last tag.
-  Only implemented in subversion and git for the moment.
   [maurits]
  
 - Fix Mercurial (hg) support. As spreaded_internal should be set 
