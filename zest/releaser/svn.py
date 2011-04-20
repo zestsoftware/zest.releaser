@@ -117,6 +117,25 @@ class Subversion(BaseVersionControl):
         tag_url = self.tag_url(version)
         return "svn --non-interactive diff %s %s" % (tag_url, url)
 
+    def cmd_log_since_tag(self, version):
+        """Return log since a tagged version till the last commit of
+        the working copy.
+        """
+        url = self._svn_info()
+        tag_url = self.tag_url(version)
+        tag_info = system('svn info %s' % tag_url)
+        # Search for: Last Changed Rev: 42761
+        revision = None
+        for line in tag_info.split('\n'):
+            line = line.lower()
+            if len(line.split(':')) == 2:
+                revision = line.split(':')[-1].strip()
+        if not revision:
+            logger.error('Could not find revision when tag was made: %s',
+                         tag_info)
+            sys.exit()
+        return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
+
     def cmd_create_tag(self, version):
         url = self._svn_info()
         tag_url = self.tag_url(version)

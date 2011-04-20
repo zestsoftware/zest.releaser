@@ -50,7 +50,9 @@ setup(name='zest.releaser',
               'postrelease = zest.releaser.postrelease:main',
               'fullrelease = zest.releaser.fullrelease:main',
               'longtest = zest.releaser.longtest:main',
-              'lasttagdiff = zest.releaser.lasttagdiff:main'],
+              'lasttagdiff = zest.releaser.lasttagdiff:main',
+              'lasttaglog = zest.releaser.lasttaglog:main',
+              ],
           # The datachecks are implemented as entry points to be able to check
           # our entry point implementation.
           'zest.releaser.prereleaser.middle': [

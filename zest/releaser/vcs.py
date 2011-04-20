@@ -189,6 +189,12 @@ class BaseVersionControl(object):
         """
         raise NotImplementedError()
 
+    def cmd_log_since_tag(self, version):
+        """Return log since a tagged version till the last commit of
+        the working copy.
+        """
+        raise NotImplementedError()
+
     def cmd_create_tag(self, version):
         "Create a tag from a version name."
         raise NotImplementedError()
