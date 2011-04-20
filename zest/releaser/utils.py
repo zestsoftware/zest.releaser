@@ -1,6 +1,7 @@
 # Small utility methods.
 import logging
 import os
+from pkg_resources import parse_version
 import re
 import subprocess
 import sys
@@ -281,3 +282,41 @@ def system(command, input=''):
     o.close()
     e.close()
     return result
+
+
+def get_last_tag(vcs):
+    """Get last tag number, compared to current version.
+
+    Note: when this cannot get a proper tag for some reason, it may
+    exit the program completely.
+    """
+    version = vcs.version
+    if not version:
+        logger.critical("No version detected, so we can't do anything.")
+        sys.exit()
+    available_tags = vcs.available_tags()
+    if not available_tags:
+        logger.critical("No tags found, so we can't do anything.")
+        sys.exit()
+
+    # Mostly nicked from zest.stabilizer.
+
+    # We seek a tag that's the same or less than the version as determined
+    # by setuptools' version parsing. A direct match is obviously
+    # right. The 'less' approach handles development eggs that have
+    # already been switched back to development.
+    available_tags.reverse()
+    found = available_tags[0]
+    parsed_version = parse_version(version)
+    for tag in available_tags:
+        parsed_tag = parse_version(tag)
+        parsed_found = parse_version(found)
+        if parsed_tag == parsed_version:
+            found = tag
+            logger.debug("Found exact match: %s", found)
+            break
+        if (parsed_tag >= parsed_found and
+            parsed_tag < parsed_version):
+            logger.debug("Found possible lower match: %s", tag)
+            found = tag
+    return found
