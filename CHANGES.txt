@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.21 (unreleased)
+3.21 (2011-04-20)
 -----------------
 
 - Added lasttaglog command that list the log since the last tag.
