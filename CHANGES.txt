@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.22 (unreleased)
+3.22 (2011-05-05)
 -----------------
 
 - Allow specifying a tag on the command line when using lasttaglog or
