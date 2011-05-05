@@ -3,6 +3,7 @@
 #
 # Script to show the diff with the last relevant tag.
 import logging
+import sys
 
 import zest.releaser.choose
 from zest.releaser.utils import system
@@ -15,7 +16,10 @@ def main():
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
     vcs = zest.releaser.choose.version_control()
-    found = utils.get_last_tag(vcs)
+    if len(sys.argv) > 1:
+        found = sys.argv[-1]
+    else:
+        found = utils.get_last_tag(vcs)
     name = vcs.name
     full_tag = vcs.tag_url(found)
     logger.debug("Picked tag %r for %s (currently at %r).",

@@ -4,7 +4,11 @@ Changelog for zest.releaser
 3.22 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Allow specifying a tag on the command line when using lasttaglog or
+  lasttagdiff, to show the log or diff since that tag instead of the
+  latest.  Useful when you are on a branch and the last tag was from
+  trunk.
+  [maurits]
 
 
 3.21 (2011-04-20)
