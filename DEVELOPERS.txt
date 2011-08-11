@@ -1,6 +1,18 @@
 Information for developers of zest.releaser
 ===========================================
 
+Running tests
+-------------
+
+We like to use zc.buildout to get a test environment with any versions
+of needed python packages pinned.  When you are in the root folder of
+a subversion checkout of zest.releaser, do this::
+
+  python2.6 bootstrap.py  # or a different python
+  bin/buildout
+  bin/test
+
+
 Needed python
 -------------
 
