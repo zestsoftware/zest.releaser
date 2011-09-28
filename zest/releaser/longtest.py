@@ -31,8 +31,9 @@ def show_longdesc():
         logging.error(
             'Error generating html. Please install docutils (or zc.rst2).')
         sys.exit()
-    logging.info("Opening %s in your webbrowser.", filename2)
-    webbrowser.open(filename2)
+    url = 'file://' + filename2
+    logging.info("Opening %s in your webbrowser.", url)
+    webbrowser.open(url)
 
 
 def main():
