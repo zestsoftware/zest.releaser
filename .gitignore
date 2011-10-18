@@ -1,0 +1,15 @@
+*.pyc
+*.pyo
+.Python
+.installed.cfg
+bin
+coverage
+develop-eggs
+dist
+eggs
+include
+lib
+parts
+zest.releaser.egg-info
+.coverage
+htmlcov
