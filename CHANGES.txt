@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.24 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Made compatible with subversion 1.7 (the only relevant change is in
+  the code that checks if a tags or tag directory already exists).
+  Earlier subversion are of course still supported.
+  [maurits]
 
 
 3.23 (2011-09-28)

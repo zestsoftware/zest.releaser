@@ -51,15 +51,20 @@ class Subversion(BaseVersionControl):
         """
         default_plural = 'tags'
         fallback_singular = 'tag'
-        failure_message = "non-existent in that revision"
+        # svn 1.7 introduced a slightly different message and a warning code.
+        failure_messages = ["non-existent in that revision", "W160013"]
         base = self._base_from_svn()
         tag_info = system('svn list %s%s' % (base, default_plural))
-        if not failure_message in tag_info:
+        # Look for one of the failure messages:
+        found = [1 for mess in failure_messages if mess in tag_info]
+        if not found:
             return default_plural
         logger.debug("tags dir does not exist at %s%s", base, default_plural)
 
         tag_info = system('svn list %s%s' % (base, fallback_singular))
-        if not failure_message in tag_info:
+        # Look for one of the failure messages:
+        found = [1 for mess in failure_messages if mess in tag_info]
+        if not found:
             return fallback_singular
         logger.debug("tags dir does not exist at %s%s, either", base,
                      fallback_singular)
