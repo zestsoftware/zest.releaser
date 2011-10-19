@@ -6,7 +6,7 @@ Changelog for zest.releaser
 
 - Made compatible with subversion 1.7 (the only relevant change is in
   the code that checks if a tags or tag directory already exists).
-  Earlier subversion are of course still supported.
+  Earlier versions of subversion are of course still supported.
   [maurits]
 
 
