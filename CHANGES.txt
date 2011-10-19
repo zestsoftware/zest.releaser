@@ -4,6 +4,13 @@ Changelog for zest.releaser
 3.24 (unreleased)
 -----------------
 
+- Note: you may need to install setuptools_subversion when you use
+  subversion 1.7.  If you suddenly start missing files in the sdists
+  you upload to PyPI you definitely need it.  Alternatively: set up a
+  proper MANIFEST.in as that method works with any version control
+  system.
+  [maurits]
+
 - Made compatible with subversion 1.7 (the only relevant change is in
   the code that checks if a tags or tag directory already exists).
   Earlier versions of subversion are of course still supported.

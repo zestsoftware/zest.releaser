@@ -91,6 +91,14 @@ packages installed:
 - collective.dist (when using python2.4, depending on your
   ``~/.pypirc`` file)
 
+- setuptools_subversion (Setuptools plugin for finding files under
+  Subversion version control.)  You probably need this when you
+  upgrade to the recent subversion 1.7.  If you suddenly start missing
+  files in the sdists you upload to PyPI you definitely need it.
+  Alternatively: set up a proper MANIFEST.in as that method works with
+  any version control system.
+
+
 The setuptools plugins are mostly so you do not miss files in the
 generated sdist that is uploaded to pypi.
 
