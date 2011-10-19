@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.24 (unreleased)
+3.24 (2011-10-19)
 -----------------
 
 - Note: you may need to install setuptools_subversion when you use
