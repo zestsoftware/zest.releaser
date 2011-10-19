@@ -190,10 +190,8 @@ fit :-)
 Development notes, bug tracker
 ------------------------------
 
-The svn source can be found at
-https://svn.plone.org/svn/collective/zest.releaser/trunk . If you have access
-to the collective, you can fix bugs right away.  Bigger changes on a branch
-please and mail reinout@vanrees.org and maurits@vanrees.org about it :-)
+The source code can be found on github:
+https://github.com/zestsoftware/zest.releaser
 
 If you are going to do a fix or want to run the tests, please see the
 ``DEVELOPERS.txt`` file in the root of the package.

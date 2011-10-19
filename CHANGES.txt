@@ -9,6 +9,10 @@ Changelog for zest.releaser
   Earlier versions of subversion are of course still supported.
   [maurits]
 
+- Code repository moved to github:
+  https://github.com/zestsoftware/zest.releaser
+  [maurits]
+
 
 3.23 (2011-09-28)
 -----------------
