@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.25 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed finding a history/changes file that is in a sub directory when
+  using subversion 1.7 or higher or bazaar.
+  [maurits]
 
 
 3.24 (2011-10-19)
