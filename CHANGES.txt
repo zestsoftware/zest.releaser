@@ -4,6 +4,13 @@ Changelog for zest.releaser
 3.25 (unreleased)
 -----------------
 
+- Removed special handling of subversion lower than 1.7 when searching
+  for the history/changes file.  In corner cases it may be that we
+  find a wrong HISTORY.txt or CHANGES.txt file when you have it buried
+  deep in your directory structure.  Please move it to the root then,
+  which is the proper place for it.
+  [maurits]
+
 - Fixed finding a history/changes file that is in a sub directory when
   using subversion 1.7 or higher or bazaar.
   [maurits]

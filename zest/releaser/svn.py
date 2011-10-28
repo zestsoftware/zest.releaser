@@ -14,20 +14,6 @@ class Subversion(BaseVersionControl):
     """Command proxy for Subversion"""
     internal_filename = '.svn'
 
-    @property
-    def spreaded_internal(self):
-        """Are the .svn directories spread all over the place?"""
-        version = system('svn --version --quiet')
-        try:
-            version = LooseVersion(version)
-        except ValueError:
-            # Can't interpret this version, fall back to True.
-            return True
-        if version >= LooseVersion('1.7'):
-            # svn 1.7 or higher only has a top-level .svn directory
-            return False
-        return True
-
     def _svn_info(self):
         """Return svn url"""
         our_info = system('svn info')
