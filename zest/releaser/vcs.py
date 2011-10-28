@@ -58,8 +58,7 @@ class BaseVersionControl(object):
             lower_names.append(name.lower())
         names = lower_names
         for dirpath, dirnames, filenames in os.walk('.'):
-            fname = self.internal_filename
-            if fname in dirpath:
+            if self.internal_filename in dirpath:
                 # We are inside a version controlled directory.
                 continue
             if 'docs' in dirnames:
