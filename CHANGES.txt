@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.25 (unreleased)
+3.25 (2011-10-28)
 -----------------
 
 - Removed special handling of subversion lower than 1.7 when searching
