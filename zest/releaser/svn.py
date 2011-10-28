@@ -12,6 +12,7 @@ logger = logging.getLogger('zest.releaser')
 class Subversion(BaseVersionControl):
     """Command proxy for Subversion"""
     internal_filename = '.svn'
+    spreaded_internal = True
 
     def _svn_info(self):
         """Return svn url"""

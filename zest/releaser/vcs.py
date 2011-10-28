@@ -11,8 +11,8 @@ logger = logging.getLogger('vcs')
 class BaseVersionControl(object):
     "Shared implementation between all version control systems"
 
-    internal_filename = '' # e.g. '.svn' or '.hg'
-    spreaded_internal = True # are the internal_filename in every folder.
+    internal_filename = ''  # e.g. '.svn' or '.hg'
+    spreaded_internal = False  # are the internal_filename in every folder.
 
     def __init__(self):
         self.workingdir = os.getcwd()

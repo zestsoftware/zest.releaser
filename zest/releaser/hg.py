@@ -11,7 +11,6 @@ logger = logging.getLogger('mercurial')
 class Hg(BaseVersionControl):
     """Command proxy for Mercurial"""
     internal_filename = '.hg'
-    spreaded_internal = False
     
     @property
     def name(self):
