@@ -68,13 +68,14 @@ class Git(BaseVersionControl):
             cur_branch = open('.git/HEAD').read().strip().split('/')[-1]
             print "You are on branch %s." % (cur_branch,)
             if cur_branch != 'master':
-                print "Only the master branch is supported for git-svn tagging."
+                print "Only the master branch is supported for " \
+                    "git-svn tagging."
                 print "Please tag yourself."
                 print "'git tag' needs to list tag named %s." % (version,)
                 sys.exit()
             cmd = [cmd]
             local_head = open('.git/refs/heads/master').read()
-            trunk = open('.git/refs/remotes/trunk').read() 
+            trunk = open('.git/refs/remotes/trunk').read()
             if local_head != trunk:
                 print "Your local master diverges from trunk.\n"
                 # dcommit before local tagging

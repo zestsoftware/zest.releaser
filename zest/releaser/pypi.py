@@ -8,6 +8,7 @@ from ConfigParser import NoOptionError
 
 try:
     from collective.dist import mupload
+    mupload  # pyflakes
 except ImportError:
     mupload = None
 
@@ -77,7 +78,7 @@ class PypiConfig(object):
         if not multiple_pypi_support():
             return False
         try:
-            new = self.config.get('distutils', 'index-servers')
+            self.config.get('distutils', 'index-servers')
         except (NoSectionError, NoOptionError):
             return False
         return True

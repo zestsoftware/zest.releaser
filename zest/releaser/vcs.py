@@ -21,7 +21,7 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            ignore = system(utils.setup_py('egg_info'))
+            system(utils.setup_py('egg_info'))
             version = system(utils.setup_py('--version'))
             return utils.strip_version(version)
 
@@ -30,7 +30,7 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            ignore = system(utils.setup_py('egg_info'))
+            system(utils.setup_py('egg_info'))
             return system(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
@@ -109,7 +109,6 @@ class BaseVersionControl(object):
         some version.txt that gets read by setup.py. The second is directly in
         setup.py.
         """
-        current = self._extract_version()
         versionfile = self.filefind('version.txt')
         if versionfile:
             # We have a version.txt file but does it match the setup.py
@@ -202,4 +201,3 @@ class BaseVersionControl(object):
     def is_clean_checkout(self):
         "Is this a clean checkout?"
         raise NotImplementedError()
-

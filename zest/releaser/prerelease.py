@@ -8,7 +8,6 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import system
-from zest.releaser import choose
 
 logger = logging.getLogger('prerelease')
 
@@ -106,7 +105,6 @@ class Prereleaser(baserelease.Basereleaser):
             logger.error("No detectable version heading in the history "
                          "file %s", history_file)
             sys.exit()
-        first = headings[0]
         good_heading = self.data['history_header'] % self.data
         # ^^^ history_header is a string with %(abc)s replacements.
         line = headings[0]['line']
@@ -149,7 +147,6 @@ class Prereleaser(baserelease.Basereleaser):
             commit_cmd = self.vcs.cmd_commit(msg)
             commit = system(commit_cmd)
             logger.info(commit)
-
 
 
 def datacheck(data):

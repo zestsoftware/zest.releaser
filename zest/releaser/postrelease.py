@@ -7,7 +7,6 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import system
-from zest.releaser import choose
 
 logger = logging.getLogger('postrelease')
 
