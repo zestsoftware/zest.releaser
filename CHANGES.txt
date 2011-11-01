@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.26 (unreleased)
+3.26 (2011-11-01)
 -----------------
 
 - Added sanity check before doing a prerelease so you are warned when
