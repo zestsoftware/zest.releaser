@@ -6,7 +6,7 @@ Changelog for zest.releaser
 
 - Added sanity check before doing a prerelease so you are warned when
   you are about to commit on a tag instead of a branch (or trunk or
-  master).  Only done in git and svn for now.
+  master).  Only done in git and svn and bzr for now.
   [maurits]
 
 
