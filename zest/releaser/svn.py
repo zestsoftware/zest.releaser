@@ -150,3 +150,10 @@ class Subversion(BaseVersionControl):
     def cmd_checkout_from_tag(self, version, checkout_dir):
         tag_url = self.tag_url(version)
         return 'svn co %s %s' % (tag_url, checkout_dir)
+
+    def is_tag_checkout(self):
+        """Is this a checkout from a tag?
+        """
+        if self._svn_info().startswith(self._base_from_svn() + 'tag'):
+            return True
+        return False
