@@ -50,6 +50,9 @@ class Prereleaser(baserelease.Basereleaser):
 
     def prepare(self):
         """Prepare self.data by asking about new version etc."""
+        if not self._sanity_check():
+            logger.critical("Sanity check failed.")
+            sys.exit(1)
         self._grab_version()
         self._grab_history()
 
@@ -58,6 +61,19 @@ class Prereleaser(baserelease.Basereleaser):
         self._write_version()
         self._write_history()
         self._diff_and_commit()
+
+    def _sanity_check(self):
+        """Do sanity check before making changes
+
+        Check that we are not on a tag.
+
+        Returns True when all is fine.
+        """
+        if self.vcs.is_tag_checkout():
+            q = ("You are in a tag checkout. Are you sure you want to continue?")
+            if not utils.ask(q, default=False):
+                return False
+        return True
 
     def _grab_version(self):
         """Set the version to a non-development version."""

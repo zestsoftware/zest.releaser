@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.26 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added sanity check before doing a prerelease so you are warned when
+  you are about to commit on a tag instead of a branch (or trunk or
+  master).  Only done in git for now.
+  [maurits]
 
 
 3.25 (2011-10-28)

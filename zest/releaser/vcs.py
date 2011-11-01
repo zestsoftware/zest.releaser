@@ -198,3 +198,8 @@ class BaseVersionControl(object):
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
         print system(cmd)
+
+    def is_tag_checkout(self):
+        "Is this a checkout from a tag?"
+        raise NotImplementedError()
+
