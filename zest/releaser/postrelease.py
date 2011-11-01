@@ -48,6 +48,9 @@ class Postreleaser(baserelease.Basereleaser):
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
+        if not utils.sanity_check(self.vcs):
+            logger.critical("Sanity check failed.")
+            sys.exit(1)
         self._ask_for_new_dev_version()
 
     def execute(self):
