@@ -320,3 +320,19 @@ def get_last_tag(vcs):
             logger.debug("Found possible lower match: %s", tag)
             found = tag
     return found
+
+
+def sanity_check(vcs):
+    """Do sanity check before making changes
+
+    Check that we are not on a tag and/or do not have local changes.
+
+    Returns True when all is fine.
+    """
+    if not vcs.is_clean_checkout():
+        q = ("This is NOT a clean checkout. You are on a tag or you have "
+             "local changes.\n"
+             "Are you sure you want to continue?")
+        if not ask(q, default=False):
+            return False
+    return True
