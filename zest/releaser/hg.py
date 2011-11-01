@@ -77,3 +77,11 @@ class Hg(BaseVersionControl):
         cmd = self.cmd_checkout_from_tag(version, tagdir)
         print system(cmd)
         os.chdir(tagdir)
+
+    def is_tag_checkout(self):
+        """Is this a checkout from a tag?
+
+        For mercurial this check is not important (at least not in the
+        way that zest.releaser uses it), so we always return False.
+        """
+        return False
