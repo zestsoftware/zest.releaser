@@ -1,7 +1,6 @@
 import tempfile
 import logging
 import sys
-from distutils.version import LooseVersion
 
 from zest.releaser import utils
 from zest.releaser.utils import system
@@ -151,9 +150,14 @@ class Subversion(BaseVersionControl):
         tag_url = self.tag_url(version)
         return 'svn co %s %s' % (tag_url, checkout_dir)
 
-    def is_tag_checkout(self):
-        """Is this a checkout from a tag?
+    def is_clean_checkout(self):
+        """Is this a clean checkout?
         """
         if self._svn_info().startswith(self._base_from_svn() + 'tag'):
-            return True
-        return False
+            # We should not commit on a tag.
+            return False
+        # We could do 'svn status --ignore-externals --quiet' and
+        # regard any output as a non-clean checkout, but when there
+        # are externals this still always prints some lines, which
+        # would give false negatives.  So we ignore it.
+        return True

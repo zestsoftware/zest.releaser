@@ -11,7 +11,7 @@ logger = logging.getLogger('mercurial')
 class Hg(BaseVersionControl):
     """Command proxy for Mercurial"""
     internal_filename = '.hg'
-    
+
     @property
     def name(self):
         package_name = self.get_setup_py_name()
@@ -26,7 +26,7 @@ class Hg(BaseVersionControl):
         tag_info = system('hg tags')
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
-        tags.remove('tip') # Not functional for us
+        tags.remove('tip')  # Not functional for us
         logger.debug("Available tags: %r", tags)
         return tags
 
@@ -78,10 +78,17 @@ class Hg(BaseVersionControl):
         print system(cmd)
         os.chdir(tagdir)
 
-    def is_tag_checkout(self):
-        """Is this a checkout from a tag?
+    def is_clean_checkout(self):
+        """Is this a clean checkout?
 
-        For mercurial this check is not important (at least not in the
-        way that zest.releaser uses it), so we always return False.
+        For mercurial a check to see if we are in a tag checkout is
+        not that important, because any change on a tag will end up in
+        the hg tip, so we always return False.  Also, it seems hard to
+        check reliably.
         """
-        return False
+        # The --quiet option ignores untracked (unknown and ignored)
+        # files, which seems reasonable.
+        if system('hg status --quiet'):
+            # Local changes.
+            return False
+        return True

@@ -69,8 +69,10 @@ class Prereleaser(baserelease.Basereleaser):
 
         Returns True when all is fine.
         """
-        if self.vcs.is_tag_checkout():
-            q = ("You are in a tag checkout. Are you sure you want to continue?")
+        if not self.vcs.is_clean_checkout():
+            q = ("This is NOT a clean checkout. You are on a tag or you have "
+                 "local changes.\n"
+                 "Are you sure you want to continue?")
             if not utils.ask(q, default=False):
                 return False
         return True

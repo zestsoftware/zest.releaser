@@ -92,28 +92,17 @@ class Git(BaseVersionControl):
             sys.exit(1)
         return 'git checkout %s' % version
 
-    def is_tag_checkout(self):
-        """Is this a checkout from a tag?
-
-        I do not know a proper way to do this with git.  This comes
-        close as it shows whether you currently are on a tag:
-
-        git describe --exact-match --tags HEAD 2> /dev/null
-
-        But when you have already committed on that tag this command
-        sees no difference with say a checkout from master.
-
-        Possibly just parse 'git status'.
-
-        Oh, this seems nice:
-
-        git symbolic-ref --quiet HEAD
-
+    def is_clean_checkout(self):
+        """Is this a clean checkout?
         """
         head = system('git symbolic-ref --quiet HEAD')
         # This returns something like 'refs/heads/maurits-warn-on-tag'
         # or nothing.  Nothing would be bad as that indicates a
-        # detached head.
+        # detached head: likely a tag checkout
         if not head:
-            return True
-        return False
+            # Greetings from Nearly Headless Nick.
+            return False
+        if system('git status --short'):
+            # Uncommitted changes.
+            return False
+        return True

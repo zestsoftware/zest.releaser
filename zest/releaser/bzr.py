@@ -58,8 +58,8 @@ class Bzr(BaseVersionControl):
         target = checkout_dir
         return 'bzr checkout -r tag:%s %s %s' % (version, source, target)
 
-    def is_tag_checkout(self):
-        """Is this a checkout from a tag?
+    def is_clean_checkout(self):
+        """Is this a clean checkout?
 
         When you try to do commits in bazaar but you are on a tag you
         will get this error:
@@ -69,6 +69,8 @@ class Bzr(BaseVersionControl):
         That should be clear enough already.  Well, we can run 'bzr
         status' and see what we get.
         """
-        if system('bzr status'):
-            return True
-        return False
+        # Check for changes to versioned files.
+        if system('bzr status --versioned'):
+            # Local changes.
+            return False
+        return True

@@ -199,7 +199,7 @@ class BaseVersionControl(object):
         cmd = self.cmd_checkout_from_tag(version, tagdir)
         print system(cmd)
 
-    def is_tag_checkout(self):
-        "Is this a checkout from a tag?"
+    def is_clean_checkout(self):
+        "Is this a clean checkout?"
         raise NotImplementedError()
 
