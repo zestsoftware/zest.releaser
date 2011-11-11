@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.27 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Postrelease now offers (=asks) to push your changes to the server if you're
+  using hg or git.
 
 
 3.26 (2011-11-01)
@@ -75,8 +76,8 @@ Changelog for zest.releaser
 
 - Added lasttaglog command that list the log since the last tag.
   [maurits]
- 
-- Fix Mercurial (hg) support. As spreaded_internal should be set 
+
+- Fix Mercurial (hg) support. As spreaded_internal should be set
   to False (as it happens with git)
   [erico_andrei]
 
