@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.27 (unreleased)
+3.27 (2011-11-12)
 -----------------
 
 - Postrelease now offers (=asks) to push your changes to the server if you're
