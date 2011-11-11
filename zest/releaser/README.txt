@@ -36,7 +36,7 @@ zest.releaser commands, and setting up your environment so you can
 upload releases to pypi (if you want that).
 
 Get the zest.releaser commands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Just a simple ``easy_install zest.releaser`` is enough.
 
@@ -129,7 +129,10 @@ are:
 
 - **postrelease**: asks you for a version number (gives a sane default), adds
   a development marker to it, updates the setup.py or version.txt and the
-  HISTORY.txt with this and offers to commit those changes to version control.
+  HISTORY.txt/CHANGES.txt with this and offers to commit those changes to
+  version control. Note that with git and hg, you'd also be asked to push your
+  changes (since 3.27). Otherwise the release and tag only live in your local
+  hg/git repository and not on the server.
 
 - **fullrelease**: all of the above in order.
 
