@@ -344,3 +344,58 @@ happens automatically:
 
     >>> checkout.push_commands()
     []
+
+
+Tags within a trunk
+--------------------
+
+Some legacy projects, often converted from CVS, have multiple subprojects
+under a single trunk.  This creates URLs that contain a regular svn layout
+within an top level trunk. For example::
+
+    trunk/
+        projectA/
+            trunk/
+            tags/
+            branches/
+
+        projectB
+            trunk/
+            tags/
+            branches/
+
+Create trunk/ for both projects:
+
+    >>> repo_url
+    'file://TESTREPO'
+    >>> cmd = 'svn mkdir --parents %s/trunk/projectA/trunk -m"mk projectA"' % repo_url
+    >>> dont_care = system(cmd)
+    >>> cmd = 'svn mkdir %s/trunk/projectB/trunk -m "mkdir projectB"' % repo_url
+    >>> dont_care = system(cmd)
+
+Make a checkout:
+
+    >>> os.chdir(tempdir)
+    >>> cmd = 'svn co %s/trunk' % repo_url
+    >>> dont_care = system(cmd)
+
+Now check that we try to create the proper trunk/projectA/tags directory
+
+    >>> os.chdir('trunk/projectA/trunk')
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+    >>> sample_checkout = svn.Subversion()
+    >>> utils.answers_for_testing = ['y']
+    >>> sample_checkout.available_tags()
+    tags dir does not exist at file://TESTREPO/trunk/projectA/tags
+    Question: Shall I create it (Y/n)?
+    Our reply: y
+    <BLANKLINE>
+    Committed revision 18.
+    []
+    >>> cmd = 'svn list -R %s/trunk' % repo_url
+    >>> print system(cmd)
+    projectA/
+    projectA/tags/
+    projectA/trunk/
+    <BLANKLINE>

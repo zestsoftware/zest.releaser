@@ -7,6 +7,10 @@ Changelog for zest.releaser
 - Postrelease now offers (=asks) to push your changes to the server if you're
   using hg or git.
 
+- Support for some legacy projects, often converted from CVS, have multiple
+  subprojects under a single trunk. The trunk part from the top level project
+  isn't erroneously stripped out anymore. Thanks to Marc Sibson for the fix.
+
 
 3.26 (2011-11-01)
 -----------------

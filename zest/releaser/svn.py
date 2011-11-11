@@ -28,7 +28,7 @@ class Subversion(BaseVersionControl):
         # Note: slashes are used to prevent problems with 'tha.tagfinder'-like
         # project names...
         for remove in ['/trunk', '/tags', '/branches', '/tag', '/branch']:
-            base = base.split(remove)[0]
+            base = base.rsplit(remove, 1)[0]
         if not base.endswith('/'):
             base += '/'
         logger.debug("Base url is %s", base)
