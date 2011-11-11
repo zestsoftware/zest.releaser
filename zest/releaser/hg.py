@@ -92,3 +92,7 @@ class Hg(BaseVersionControl):
             # Local changes.
             return False
         return True
+
+    def push_commands(self):
+        """Return commands to push changes to the server."""
+        return ['hg push']

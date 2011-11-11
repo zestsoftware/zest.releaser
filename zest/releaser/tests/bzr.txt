@@ -8,7 +8,7 @@ Detailed tests of bzr.py
 Some initial imports:
 
     >>> from zest.releaser import bzr
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> import os
 
 Project name
@@ -50,7 +50,7 @@ Make a change:
                ]},
            )
     +
-    +a = 2    
+    +a = 2
 
 Commit it:
 
@@ -129,3 +129,12 @@ newly created subdirectory of it:
     '.../tha.example-0.1-...'
     >>> sorted(os.listdir('.'))
     ['.bzr', '.bzrignore', 'CHANGES.txt', ...]
+
+Pushing changes
+---------------
+
+For bzr, committing is normally enough. We assume you've set it up that way,
+though you might not have done so. There's no handy way to find out, though.
+
+    >>> checkout.push_commands()
+    []

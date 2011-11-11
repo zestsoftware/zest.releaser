@@ -8,7 +8,7 @@ Detailed tests of git.py
 Some initial imports:
 
     >>> from zest.releaser import git
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> import os
 
 Project name
@@ -52,7 +52,7 @@ Make a change:
            )
     +
     +a = 2
-    
+
 Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
@@ -99,7 +99,7 @@ Make and commit a small change:
     >>> print 'dummy', system(cmd)
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
-    
+
 Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
@@ -168,3 +168,12 @@ The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
     from setuptools import setup, find_packages
     ...
     a = 2
+
+
+Pushing changes
+---------------
+
+For git, committing isn't enough. We need to push changes to the server:
+
+    >>> checkout.push_commands()
+    ['git push', 'git push --tags']

@@ -57,6 +57,7 @@ class Postreleaser(baserelease.Basereleaser):
         self._update_version()
         self._update_history()
         self._diff_and_commit()
+        self._push()
 
     def _ask_for_new_dev_version(self):
         """Ask for and store a new dev version string."""
@@ -156,6 +157,16 @@ class Postreleaser(baserelease.Basereleaser):
             commit_cmd = self.vcs.cmd_commit(msg)
             commit = system(commit_cmd)
             logger.info(commit)
+
+    def _push(self):
+        """Offer to push changes, if needed."""
+        push_cmds = self.vcs.push_commands()
+        if not push_cmds:
+            return
+        if utils.ask("OK to push commits to the server?"):
+            for push_cmd in push_cmds:
+                output = system(push_cmd)
+                logger.info(output)
 
 
 def datacheck(data):

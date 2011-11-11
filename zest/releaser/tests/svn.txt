@@ -334,3 +334,13 @@ the singular /tag and /branch is used:
     >>> singular_checkout = svn.Subversion()
     >>> singular_checkout._base_from_svn()
     'file://TESTREPO/singular/'
+
+
+Pushing changes
+---------------
+
+For svn, committing is enough, no need to push stuff to the server as that
+happens automatically:
+
+    >>> checkout.push_commands()
+    []

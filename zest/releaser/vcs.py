@@ -201,3 +201,11 @@ class BaseVersionControl(object):
     def is_clean_checkout(self):
         "Is this a clean checkout?"
         raise NotImplementedError()
+
+    def push_commands(self):
+        """Return commands to push changes to the server.
+
+        Needed if a commit isn't enough.
+
+        """
+        return []

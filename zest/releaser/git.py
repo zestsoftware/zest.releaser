@@ -107,3 +107,7 @@ class Git(BaseVersionControl):
             # Uncommitted changes.
             return False
         return True
+
+    def push_commands(self):
+        """Push changes to the server."""
+        return ['git push', 'git push --tags']

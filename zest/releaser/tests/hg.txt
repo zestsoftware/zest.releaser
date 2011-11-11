@@ -8,7 +8,7 @@ Detailed tests of hg.py
 Some initial imports:
 
     >>> from zest.releaser import hg
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> import os
 
 Project name
@@ -50,7 +50,7 @@ Make a change:
                ]},
            )
     +
-    +a = 2    
+    +a = 2
 
 Commit it:
 
@@ -129,7 +129,7 @@ The tag checkout command makes a checkout in a fresh dir:
     adding file changes
     added 2 changesets with ... changes to 14 files
     updating working directory
-    14 files updated, 0 files merged, 0 files removed, 0 files unresolved    
+    14 files updated, 0 files merged, 0 files removed, 0 files unresolved
 
 At the end of the command we are in the created directory.  The
 checkout is done directly in that temporary directory, so not in a
@@ -139,3 +139,12 @@ newly created subdirectory of it:
     '.../tha.example-0.1-...'
     >>> sorted(os.listdir('.'))
     ['.hg', '.hgignore', 'CHANGES.txt', ...]
+
+
+Pushing changes
+---------------
+
+For hg, committing isn't enough. We need to push changes to the server:
+
+    >>> checkout.push_commands()
+    ['hg push']

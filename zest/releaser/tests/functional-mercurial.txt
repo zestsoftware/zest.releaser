@@ -16,7 +16,7 @@ A mercurial directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> print system("hg tags")
     tip 1:234567890abc
 
@@ -96,7 +96,7 @@ The release script tags the release and uploads it:
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
     MOCK setup.py register sdist upload
-    
+
 There is now a tag:
 
     >>> print system("hg tags")
@@ -105,7 +105,7 @@ There is now a tag:
 
 And the postrelease script ups the version:
 
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.answers_for_testing = ['', '', 'n']
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is '0.1'
@@ -114,6 +114,8 @@ And the postrelease script ups the version:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
 
 The changelog and setup.py are at 0.2 and indicate dev mode:
 
