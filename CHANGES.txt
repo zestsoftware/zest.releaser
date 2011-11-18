@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.28 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Git: in pre/postrelease only check for uncommitted changes in files
+  that are already tracked.
+  [maurits]
 
 
 3.27 (2011-11-12)
