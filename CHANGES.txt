@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.28 (unreleased)
+3.28 (2011-11-18)
 -----------------
 
 - Git: in pre/postrelease only check for uncommitted changes in files
