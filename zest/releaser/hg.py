@@ -80,11 +80,6 @@ class Hg(BaseVersionControl):
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
-
-        For mercurial a check to see if we are in a tag checkout is
-        not that important, because any change on a tag will end up in
-        the hg tip, so we always return False.  Also, it seems hard to
-        check reliably.
         """
         # The --quiet option ignores untracked (unknown and ignored)
         # files, which seems reasonable.
