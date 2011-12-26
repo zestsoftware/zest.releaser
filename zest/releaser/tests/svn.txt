@@ -153,6 +153,7 @@ The tag checkout command makes a checkout in that tempdir:
     A    TMPDIR/somename.../src/tha/example/tests/test.py
     A    TMPDIR/somename.../src/tha/example/__init__.py
     A    TMPDIR/somename.../README.txt
+    A    TMPDIR/somename.../setup.cfg
     Checked out revision 7.
 
 The checkout is done directly in that temporary directory, so not in a newly

@@ -82,6 +82,17 @@ The release script tags the release and uploads it:
     ...
     HEAD is now at ...
     Preparing release 0.1
+    <BLANKLINE>
+    Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
+    Our reply: y
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+    <BLANKLINE>
+    <BLANKLINE>
+    [detached HEAD ...] Fixed setup.cfg for release
+     1 files changed, 3 insertions(+), 3 deletions(-)
+    <BLANKLINE>
     running sdist
     running egg_info
     ...

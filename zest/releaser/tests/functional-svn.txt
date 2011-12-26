@@ -97,6 +97,18 @@ The release script tags the release and uploads it:
     A    TMPDIR/tha.example-0.1-.../local-checkouts
     ...
     Checked out revision 6.
+    <BLANKLINE>
+    Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
+    Our reply: y
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+    <BLANKLINE>
+    <BLANKLINE>
+    Sending        setup.cfg
+    Transmitting file data .
+    Committed revision 7.
+    <BLANKLINE>
     running sdist
     running egg_info
     ...

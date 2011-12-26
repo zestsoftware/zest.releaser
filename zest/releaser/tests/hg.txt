@@ -127,9 +127,9 @@ The tag checkout command makes a checkout in a fresh dir:
     adding changesets
     adding manifests
     adding file changes
-    added 2 changesets with ... changes to 14 files
+    added 2 changesets with ... changes to 15 files
     updating working directory
-    14 files updated, 0 files merged, 0 files removed, 0 files unresolved
+    15 files updated, 0 files merged, 0 files removed, 0 files unresolved
 
 At the end of the command we are in the created directory.  The
 checkout is done directly in that temporary directory, so not in a
