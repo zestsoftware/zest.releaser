@@ -6,7 +6,7 @@ Changelog for zest.releaser
 
 - For convenience also print the tag checkout location when only doing
   a release (instead of a fullrelease).
-  [Maurits]
+  [maurits]
 
 
 3.28 (2011-11-18)
