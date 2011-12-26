@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.29 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- For convenience also print the tag checkout location when only doing
+  a release (instead of a fullrelease).
+  [Maurits]
 
 
 3.28 (2011-11-18)

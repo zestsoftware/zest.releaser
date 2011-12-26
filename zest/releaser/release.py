@@ -232,3 +232,7 @@ def main(return_tagdir=False):
     if return_tagdir:
         # At the end, for the benefit of fullrelease.
         return releaser.data.get('tagdir')
+    else:
+        tagdir = releaser.data.get('tagdir')
+        if tagdir:
+            logger.info("Reminder: tag checkout is in %s", tagdir)
