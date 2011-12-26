@@ -78,8 +78,14 @@ The release script tags the release and uploads it:
     Question: Check out the tag
         (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
-    requesting all changes
     ...
+    Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
+    Our reply: y
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+    <BLANKLINE>
+    <BLANKLINE>
     running sdist
     running egg_info
     creating src/tha.example.egg-info
@@ -87,7 +93,6 @@ The release script tags the release and uploads it:
     creating tha.example-0.1
     ...
     making hard links in tha.example-0.1...
-    hard linking README.txt -> tha.example-0.1
     ...
     creating dist
     tar -cf dist/tha.example-0.1.tar tha.example-0.1
