@@ -40,6 +40,67 @@ def multiple_pypi_support():
     return False
 
 
+class SetupConfig(object):
+    """Wrapper around the setup.cfg file if available.
+
+    Mostly, this is here to cleanup setup.cfg from these settings:
+
+    [egg_info]
+    tag_build = dev
+    tag_svn_revision = true
+    """
+
+    config_filename = 'setup.cfg'
+
+    def __init__(self):
+        """Grab the configuration (overridable for test purposes)"""
+        # If there is a setup.cfg in the package, parse it
+        if not os.path.exists(self.config_filename):
+            self.config = None
+            return
+        self.config = ConfigParser()
+        self.config.read(self.config_filename)
+
+    def has_bad_commands(self):
+        if self.config is None:
+            return False
+        if not self.config.has_section('egg_info'):
+            # bail out early as the main section is not there
+            return False
+        bad = False
+        # Check 1.
+        if self.config.has_option('egg_info', 'tag_build'):
+            # Might still be empty.
+            value = self.config.get('egg_info', 'tag_build')
+            if value:
+                logger.warn("%s has [egg_info] tag_build set to %r",
+                            self.config_filename, value)
+                bad = True
+        # Check 2.
+        if self.config.getboolean('egg_info', 'tag_svn_revision'):
+            value = self.config.get('egg_info', 'tag_svn_revision')
+            logger.warn("%s has [egg_info] tag_svn_revision set to %r",
+                        self.config_filename, value)
+            bad = True
+        return bad
+
+    def fix_config(self):
+        if not self.has_bad_commands():
+            logger.warn("Cannot fix already fine %s.", self.config_filename)
+            return
+        if self.config.has_option('egg_info', 'tag_build'):
+            self.config.set('egg_info', 'tag_build', '')
+        if self.config.getboolean('egg_info', 'tag_svn_revision'):
+            self.config.set('egg_info', 'tag_svn_revision', 'false')
+        new_setup = open(self.config_filename, 'w')
+        try:
+            self.config.write(new_setup)
+        finally:
+            new_setup.close()
+        logger.info("New setup.cfg contents:")
+        print ''.join(open(self.config_filename).readlines())
+
+
 class PypiConfig(object):
     """Wrapper around the pypi config file"""
 

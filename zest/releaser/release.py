@@ -203,6 +203,25 @@ class Releaser(baserelease.Basereleaser):
         self.vcs.checkout_from_tag(version)
         self.data['tagdir'] = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
+
+        # Possibly fix setup.cfg.
+        setup_config = pypi.SetupConfig()
+        if setup_config.has_bad_commands():
+            logger.info("This is not advisable for a release.")
+            if utils.ask("Fix %s (and commit to tag if possible)" %
+                         setup_config.config_filename, default=True):
+                setup_config.fix_config()
+                logger.info("Committing...")
+                # Note that this probably only really works for
+                # subversion, as for example in git you are in a
+                # detached HEAD state, which is a place where a commit
+                # will be lost.  But the setup.cfg in the current
+                # working directory is fixed, which is the most
+                # important part.
+                command = self.vcs.cmd_commit(
+                    "Fixed %s for release" % setup_config.config_filename)
+                print system(command)
+
         sdist_options = self._sdist_options()
         # Run extra entry point
         self._run_entry_points('after_checkout')

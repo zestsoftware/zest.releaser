@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.29 (unreleased)
 -----------------
 
+- Offer to cleanup setup.cfg on the tag when releasing.  You do not
+  want tag_build or tag_svn_revision options in a release usually.
+  [maurits]
+
 - For convenience also print the tag checkout location when only doing
   a release (instead of a fullrelease).
   [maurits]
