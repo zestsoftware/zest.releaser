@@ -210,17 +210,24 @@ class Releaser(baserelease.Basereleaser):
             logger.info("This is not advisable for a release.")
             if utils.ask("Fix %s (and commit to tag if possible)" %
                          setup_config.config_filename, default=True):
+                # Fix the setup.cfg in the current working directory
+                # so the current release works well.
                 setup_config.fix_config()
-                logger.info("Committing...")
-                # Note that this probably only really works for
-                # subversion, as for example in git you are in a
-                # detached HEAD state, which is a place where a commit
-                # will be lost.  But the setup.cfg in the current
-                # working directory is fixed, which is the most
-                # important part.
-                command = self.vcs.cmd_commit(
-                    "Fixed %s for release" % setup_config.config_filename)
-                print system(command)
+                # Now we may want to commit this.  Note that this is
+                # only really useful for subversion, as for example in
+                # git you are in a detached HEAD state, which is a
+                # place where a commit will be lost.
+                # 
+                # Ah, in the case of bazaar doing a commit is actually
+                # harmful, as the commit ends up on the tip, instead
+                # of only being done on a tag or branch.
+                if self.vcs.internal_filename == '.bzr':
+                    logger.info("Not committing in bzr repository, as that "
+                                "would change it on the tip as well.")
+                else:
+                    command = self.vcs.cmd_commit(
+                        "Fixed %s for release" % setup_config.config_filename)
+                    print system(command)
 
         sdist_options = self._sdist_options()
         # Run extra entry point
