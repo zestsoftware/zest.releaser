@@ -244,6 +244,87 @@ We can also specify to always do that checkout during a release:
     >>> pypiconfig.want_release()
     True
 
+
+Fixing setup.cfg
+----------------
+
+A setup.cfg file can be used to influence the release process.  This
+may contain options that are not advisable in the released package but
+should only be used during development.  We can clean that up.  First
+we prepare a directory.
+
+    >>> pypi.SETUP_CONFIG_FILE
+    'setup.cfg'
+    >>> import os
+    >>> import shutil
+    >>> import tempfile
+    >>> tempdir = tempfile.mkdtemp()
+    >>> os.chdir(tempdir)
+
+Without a setup.cfg there is no config:
+
+    >>> setup_config = pypi.SetupConfig()
+    >>> setup_config.config is None
+    True
+    >>> setup_config.has_bad_commands()
+    False
+    >>> setup_config.fix_config()
+    >>> os.path.exists(pypi.SETUP_CONFIG_FILE)
+    False
+
+Now we add a setup.cfg with some good and some bad commands:
+
+    >>> SETUP_CFG = """
+    ... [zest.releaser]
+    ... release = no
+    ... 
+    ... [egg_info]
+    ... tag_build = dev
+    ... tag_svn_revision = true"""
+    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
+    >>> setup_config = pypi.SetupConfig()
+    >>> setup_config.config
+    <ConfigParser.ConfigParser instance at ...>
+    >>> setup_config.has_bad_commands()
+    True
+
+Fixing the config also prints the new config:
+
+    >>> setup_config.fix_config()
+    [zest.releaser]
+    release = no
+    <BLANKLINE>
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+    >>> os.path.exists(pypi.SETUP_CONFIG_FILE)
+    True
+    >>> print ''.join(open(pypi.SETUP_CONFIG_FILE).readlines())
+    [zest.releaser]
+    release = no
+    <BLANKLINE>
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+
+We try that again with this fixed up config file as input:
+
+    >>> setup_config = pypi.SetupConfig()
+    >>> setup_config.config
+    <ConfigParser.ConfigParser instance at ...>
+    >>> setup_config.has_bad_commands()
+    False
+    >>> setup_config.fix_config()
+    >>> os.path.exists(pypi.SETUP_CONFIG_FILE)
+    True
+    >>> print ''.join(open(pypi.SETUP_CONFIG_FILE).readlines())
+    [zest.releaser]
+    release = no
+    <BLANKLINE>
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+
 We are done with testing so we restore the original version:
 
     >>> sys.version_info = orig_version

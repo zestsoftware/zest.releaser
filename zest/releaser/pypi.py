@@ -13,6 +13,7 @@ except ImportError:
     mupload = None
 
 DIST_CONFIG_FILE = '.pypirc'
+SETUP_CONFIG_FILE = 'setup.cfg'
 
 logger = logging.getLogger('pypi')
 
@@ -50,7 +51,7 @@ class SetupConfig(object):
     tag_svn_revision = true
     """
 
-    config_filename = 'setup.cfg'
+    config_filename = SETUP_CONFIG_FILE
 
     def __init__(self):
         """Grab the configuration (overridable for test purposes)"""
