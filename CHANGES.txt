@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.30 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Updated README.txt.  Added MANIFEST.in.
+  [maurits]
 
 
 3.29 (2011-12-27)
