@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.30 (unreleased)
 -----------------
 
+- Added some more PyPI classifiers.  Tested with Python 2.4, 2,4, 2.6,
+  and 2.7.
+  [maurits]
+
 - Moved changes of 3.15 and older to docs/HISTORY.txt.
   [maurits]
 
