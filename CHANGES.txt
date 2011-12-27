@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.29 (unreleased)
+3.29 (2011-12-27)
 -----------------
 
 - In postrelease create a version number like 1.0.dev0.
