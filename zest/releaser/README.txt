@@ -10,9 +10,9 @@ only needs a ``version.txt`` file to be used with zest.releaser.
 
 It will help you to automate:
 
-* Updating the version number. The version number can either be in setup.py
-  or version.txt. For example, 0.3 dev (current) to 0.3 (release) to 0.4 dev
-  (new development version).
+* Updating the version number. The version number can either be in
+  setup.py or version.txt. For example, 0.3.dev0 (current) to 0.3
+  (release) to 0.4.dev0 (new development version).
 
 * Updating the history/changes file. It logs the release date on release
   and adds a new section for the upcoming changes (new development version).
@@ -20,10 +20,11 @@ It will help you to automate:
 * Tagging the release. It creates a tag in your version control system
   named after the released version number.
 
-* Uploading a source release to PyPI. It will only do this if the package
-  is already registered there, the Zest Releaser is careful not to publish
-  your private projects! It can also check out the tag in a temporary
-  directory in case you need to modify it.
+* Uploading a source release to PyPI. It will only do this if the
+  package is already registered there (else it will ask, defaulting to
+  'no'); the Zest Releaser is careful not to publish your private
+  projects! It can also check out the tag in a temporary directory in
+  case you need to modify it.
 
 .. contents::
 
@@ -38,7 +39,8 @@ upload releases to pypi (if you want that).
 Get the zest.releaser commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Just a simple ``easy_install zest.releaser`` is enough.
+Just a simple ``pip zest.releaser`` or ``easy_install zest.releaser``
+is enough.
 
 Alternatively, buildout users can install zest.releaser as part of a
 specific project's buildout, by having a buildout configuration such as::
@@ -98,11 +100,16 @@ packages installed:
   Alternatively: set up a proper MANIFEST.in as that method works with
   any version control system.
 
-
 The setuptools plugins are mostly so you do not miss files in the
 generated sdist that is uploaded to pypi.
 
 For more info, see the section on `Uploading to pypi server(s)`_.
+
+In general, if you are missing files in the uploaded package, the best
+is to put a proper ``MANIFEST.in`` file next to your ``setup.py``.
+See `zest.pocompile`_ for an example.
+
+.. _`zest.pocompile`: http://pypi.python.org/pypi/zest.pocompile
 
 
 Running
@@ -279,8 +286,8 @@ someone who does not have index-servers listed, may still want to use
 an entry point like `gocept.zestreleaser.customupload`_ to do
 uploading, or do some manual steps first before uploading.
 
-Some people will hardly ever want to do a release on pypi but only
-want to create a tag in 99 out of 100 cases.  They won't like the
+Some people will hardly ever want to do a release on PyPI but in 99
+out of 100 cases only want to create a tag.  They won't like the
 default answer of 'yes' to that question of whether to create a
 checkout of the tag.  So since version 3.16 you can influence this
 default answer.  You can add some lines to the ``.pypirc`` file in
