@@ -62,6 +62,8 @@ class Postreleaser(baserelease.Basereleaser):
     def _ask_for_new_dev_version(self):
         """Ask for and store a new dev version string."""
         current = self.vcs.version
+        # Clean it up to a non-development version.
+        current = utils.cleanup_version(current)
         # Try to make sure that the suggestion for next version after
         # 1.1.19 is not 1.1.110, but 1.1.20.
         current_split = current.split('.')
