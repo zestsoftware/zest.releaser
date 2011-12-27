@@ -152,7 +152,7 @@ commit_msg
     Message template used when committing
 
 dev_version
-    New development version with dev marker (so 1.1dev)
+    New development version with dev marker (so 1.1.dev0)
 
 dev_version_template
     Template for dev version number
