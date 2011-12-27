@@ -39,6 +39,13 @@ checker = renormalizing.RENormalizing([
     # both fine:
     (re.compile('mregister sdist mupload -r [alpha]*$'),
      'register sdist upload'),
+    # Python 2.7 prints 'Creating tar archive' instead of
+    # 'tar -cf dist/tha.example-0.1.tar tha.example-0.1
+    #  ...':
+    (re.compile('tar -cf dist/tha.example-0.1.tar tha.example-0.1'),
+     'Creating tar archive'),
+    # Harmless line when using subversion 1.7:
+    (re.compile('unrecognized .svn/entries format in'), ''),
     ])
 
 
