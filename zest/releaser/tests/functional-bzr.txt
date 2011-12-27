@@ -19,7 +19,7 @@ There are no tags yet:
     >>> from zest.releaser.utils import system 
     >>> print system("bzr tags")
 
-The changelog is at 0.1 dev:
+The changelog is unreleased:
 
     >>> bzrhead('CHANGES.txt')
     Changelog of tha.example
@@ -27,6 +27,14 @@ The changelog is at 0.1 dev:
     <BLANKLINE>
     0.1 (unreleased)
     ----------------
+
+The version is at 0.1.dev0:
+
+    >>> bzrhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.1.dev0'
 
 Asking input on the prompt is not unittestable unless we use the prepared
 testing hack in utils.py:
@@ -132,4 +140,3 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     import os.path
     <BLANKLINE>
     version = '0.2.dev0'
-

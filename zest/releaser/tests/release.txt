@@ -51,7 +51,7 @@ Grab the version:
 
     >>> releaser._grab_version()
     >>> releaser.data['version']
-    '0.1dev'
+    '0.1.dev0'
 
 If, by some weird twist of fate, there's no release: we exit.
 
