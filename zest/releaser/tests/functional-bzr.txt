@@ -113,7 +113,7 @@ And the postrelease script ups the version:
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is '0.1'
-    Question: Enter new development version ('dev' will be appended) [0.2]:
+    Question: Enter new development version ('.dev0' will be appended) [0.2]:
     Our reply: <ENTER>
     Checking data dict
     Question: OK to commit this (Y/n)?
@@ -131,5 +131,5 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2dev'
+    version = '0.2.dev0'
 

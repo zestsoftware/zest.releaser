@@ -49,6 +49,10 @@ Remove development markers in various common forms:
     '1.0'
     >>> utils.cleanup_version('1.0 beta devel 13')
     '1.0 beta'
+    >>> utils.cleanup_version('1.0.dev0')
+    '1.0'
+    >>> utils.cleanup_version('1.0.dev42')
+    '1.0'
 
 
 Asking input

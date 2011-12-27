@@ -13,7 +13,7 @@ logger = logging.getLogger('postrelease')
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
 COMMIT_MSG = 'Back to development: %(new_version)s'
-DEV_VERSION_TEMPLATE = '%(new_version)sdev'
+DEV_VERSION_TEMPLATE = '%(new_version)s.dev0'
 
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
@@ -23,7 +23,7 @@ DATA = {
     'name': 'Name of the project being released',
     'nothing_changed_yet': 'First line in new changelog section',
     'new_version': 'New development version (so 1.1)',
-    'dev_version': 'New development version with dev marker (so 1.1dev)',
+    'dev_version': 'New development version with dev marker (so 1.1.dev0)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
     'dev_version_template': 'Template for dev version number',
@@ -85,7 +85,7 @@ class Postreleaser(baserelease.Basereleaser):
             suggestion_string = ' [%s]' % suggestion
         else:
             suggestion_string = ''
-        q = ("Enter new development version ('dev' will be appended)"
+        q = ("Enter new development version ('.dev0' will be appended)"
              "%s: " % suggestion_string)
         version = utils.get_input(q).strip()
         if not version:

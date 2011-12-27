@@ -35,6 +35,7 @@ def cleanup_version(version):
             logger.debug("Version indicates development: %s.", version)
             version = version[:version.find(w)].strip()
             logger.debug("Removing debug indicators: %r", version)
+        version = version.rstrip('.')  # 1.0.dev0 -> 1.0. -> 1.0
     return version
 
 

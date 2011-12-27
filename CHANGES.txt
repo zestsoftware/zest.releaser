@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.29 (unreleased)
 -----------------
 
+- In postrelease create a version number like 1.0.dev0.
+  See http://www.python.org/dev/peps/pep-0386
+  [maurits]
+
 - Offer to cleanup setup.cfg on the tag when releasing.  You do not
   want tag_build or tag_svn_revision options in a release usually.
   [maurits]
