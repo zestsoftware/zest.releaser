@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.30 (unreleased)
+3.30 (2011-12-27)
 -----------------
 
 - Added some more PyPI classifiers.  Tested with Python 2.4, 2,4, 2.6,
