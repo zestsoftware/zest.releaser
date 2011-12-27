@@ -1,0 +1,4 @@
+Old history for zest.releaser
+=============================
+
+For recent changes see CHANGES.txt.
