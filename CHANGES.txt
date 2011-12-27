@@ -183,4 +183,4 @@ Changelog for zest.releaser
   compatibility with earlier bzr versions (tested with 2.0.2).
   [maurits]
 
-For older changes see the ``HISTORY.txt`` in the ``docs`` directory.
+For older changes see ``HISTORY.txt`` in the ``docs`` directory.
