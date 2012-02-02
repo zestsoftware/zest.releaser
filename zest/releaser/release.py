@@ -105,10 +105,9 @@ class Releaser(baserelease.Basereleaser):
 
     def _sdist_options(self):
         options = []
-        if self._is_python24():
-            # Due to a bug in python24, tar files might get corrupted.
-            # We circumvent that by forcing zip files
-            options.append('--formats=zip')
+        # Due to a bug in python24, tar files might get corrupted on READ.
+        # We circumvent that by forcing zip files
+        options.append('--formats=zip')
         return " ".join(options)
 
     def _upload_distributions(self, package, sdist_options, pypiconfig):

@@ -4,7 +4,7 @@ Changelog for zest.releaser
 3.31 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fix python 2.4 issues with tarfile [kiorky]
 
 
 3.30 (2011-12-27)
