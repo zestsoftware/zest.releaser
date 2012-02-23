@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.31 (unreleased)
+3.31 (2012-02-23)
 -----------------
 
 - Fixed test for unadvised egg_info commands on tag, which could
