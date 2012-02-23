@@ -78,11 +78,12 @@ class SetupConfig(object):
                             self.config_filename, value)
                 bad = True
         # Check 2.
-        if self.config.getboolean('egg_info', 'tag_svn_revision'):
-            value = self.config.get('egg_info', 'tag_svn_revision')
-            logger.warn("%s has [egg_info] tag_svn_revision set to %r",
-                        self.config_filename, value)
-            bad = True
+        if self.config.has_option('egg_info', 'tag_svn_revision'):
+            if self.config.getboolean('egg_info', 'tag_svn_revision'):
+                value = self.config.get('egg_info', 'tag_svn_revision')
+                logger.warn("%s has [egg_info] tag_svn_revision set to %r",
+                            self.config_filename, value)
+                bad = True
         return bad
 
     def fix_config(self):
@@ -91,7 +92,7 @@ class SetupConfig(object):
             return
         if self.config.has_option('egg_info', 'tag_build'):
             self.config.set('egg_info', 'tag_build', '')
-        if self.config.getboolean('egg_info', 'tag_svn_revision'):
+        if self.config.has_option('egg_info', 'tag_svn_revision'):
             self.config.set('egg_info', 'tag_svn_revision', 'false')
         new_setup = open(self.config_filename, 'w')
         try:

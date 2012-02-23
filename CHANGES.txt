@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.31 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed test for unadvised egg_info commands on tag, which could
+  result in a ConfigParser error.
+  [maurits]
 
 
 3.30 (2011-12-27)
