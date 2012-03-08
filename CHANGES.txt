@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.32 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- In prerelease recommend the user to add a MANIFEST.in file.
+  See http://docs.python.org/distutils/sourcedist.html for
+  more info.
+  [maurits]
 
 
 3.31 (2012-02-23)

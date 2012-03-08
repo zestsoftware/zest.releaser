@@ -337,3 +337,29 @@ def sanity_check(vcs):
         if not ask(q, default=False):
             return False
     return True
+
+
+def check_recommended_files(data):
+    """Do check for recommended files.
+
+    Returns True when all is fine.
+    """
+    main_files = os.listdir(data['workingdir'])
+    if not 'setup.py' in main_files and not 'setup.cfg' in main_files:
+        # Not a python package.  We have no recommendations.
+        return True
+    if not 'MANIFEST.in'in main_files:
+        q = """This package is missing a MANIFEST.in file. This file is
+recommended. See http://docs.python.org/distutils/sourcedist.html for
+more info. Sample contents:
+
+recursive-include main_directory *
+recursive-include docs *
+include *
+global-exclude *.pyc
+
+Are you sure you want to continue without this file?"""
+
+        if not ask(q, default=True):
+            return False
+    return True
