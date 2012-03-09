@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.32 (unreleased)
+3.32 (2012-03-09)
 -----------------
 
 - In prerelease recommend the user to add a MANIFEST.in file.
