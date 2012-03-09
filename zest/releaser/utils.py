@@ -348,7 +348,7 @@ def check_recommended_files(data):
     if not 'setup.py' in main_files and not 'setup.cfg' in main_files:
         # Not a python package.  We have no recommendations.
         return True
-    if not 'MANIFEST.in'in main_files:
+    if not 'MANIFEST.in' in main_files:
         q = """This package is missing a MANIFEST.in file. This file is
 recommended. See http://docs.python.org/distutils/sourcedist.html for
 more info. Sample contents:
@@ -358,8 +358,12 @@ recursive-include docs *
 include *
 global-exclude *.pyc
 
-Are you sure you want to continue without this file?"""
+You may want to quit and fix this.
+We will continue with the prerelease.
 
-        if not ask(q, default=True):
-            return False
+"""
+        # We could ask, but simply printing it is nicer.
+        #if not ask(q, default=True):
+        #    return False
+        print q
     return True
