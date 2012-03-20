@@ -4,6 +4,88 @@ Old history for zest.releaser
 For recent changes see CHANGES.txt.
 
 
+3.22 (2011-05-05)
+-----------------
+
+- Allow specifying a tag on the command line when using lasttaglog or
+  lasttagdiff, to show the log or diff since that tag instead of the
+  latest.  Useful when you are on a branch and the last tag was from
+  trunk.
+  [maurits]
+
+
+3.21 (2011-04-20)
+-----------------
+
+- Added lasttaglog command that list the log since the last tag.
+  [maurits]
+
+- Fix Mercurial (hg) support. As spreaded_internal should be set
+  to False (as it happens with git)
+  [erico_andrei]
+
+- Accept a twiggle (or whatever '~' is called) when searching for
+  headers in a changelog; seen in some packages (at least
+  zopeskel.dexterity).
+  [maurits]
+
+
+3.20 (2011-01-25)
+-----------------
+
+- Also allowing CHANGES.rst and CHANGES.markdown in addition to
+  CHANGES.txt.
+
+
+3.19 (2011-01-24)
+-----------------
+
+- No longer refuse to register and upload a package on pypi if it is
+  not there yet, forcing people to do this manually the first time.
+  Instead, we ask the question and simply have 'No' as the default
+  answer.  If you specify an answer, we require exactly typing 'yes'
+  or 'no'.  The idea is still to avoid making it too easy to release
+  an internal package on pypi by accident.  [maurits]
+
+
+3.18 (2010-12-08)
+-----------------
+
+- Added ``--non-interactive--`` option to the ``svn diff`` command used in
+  lasttagdiff.  This makes it usable in cronjobs and post-commit hooks.
+  Fixes https://bugs.launchpad.net/zest.releaser/+bug/687530
+
+
+3.17 (2010-11-17)
+-----------------
+
+- When the package that is being released neither has a setup.py nor a
+  setup.cfg, use No as default answer for creating a checkout of the
+  tag.
+  [maurits]
+
+
+3.16 (2010-11-15)
+-----------------
+
+- For (pypi) output, also show the first few lines instead of only the
+  last few.
+  [maurits]
+
+- See if pypirc or setup.cfg has a [zest.releaser] section with option
+  release = yes/no.  During the release stage, this influences the
+  default answer when asked if you want to make a checkout of the tag.
+  The default when not set, is 'yes'.  You may want to set this to
+  'no' if most of the time you only make releaser of internal packages
+  for customers and only need the tag.
+  [maurits]
+
+- Specify bazaar (bzr) tag numbers using the 'tag' revision specifier
+  (like 'tag:0.1') instead of only the tag number (0.1) to add
+  compatibility with earlier bzr versions (tested with 2.0.2).
+  [maurits]
+
+
 3.15 (2010-09-10)
 -----------------
 
