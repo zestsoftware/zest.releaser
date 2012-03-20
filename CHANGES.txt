@@ -4,7 +4,11 @@ Changelog for zest.releaser
 3.33 (unreleased)
 -----------------
 
-- Fix python 2.4 issues with tarfile [kiorky]
+- Fix python 2.4 issues with tarfile by always creating a zip file.
+  Formerly we would only do this when using python2.4 for doing the
+  release, but a tarball sdist created by python2.6 could still break
+  when the end user is using python 2.4.
+  [kiorky]
 
 
 3.32 (2012-03-09)
