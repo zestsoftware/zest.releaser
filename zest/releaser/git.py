@@ -14,6 +14,15 @@ class Git(BaseVersionControl):
     internal_filename = '.git'
     setuptools_helper_package = 'setuptools-git'
 
+    def is_setuptools_helper_package_installed(self):
+        # The package is setuptools-git with a dash, the module is
+        # setuptools_git with an underscore.  Thanks.
+        try:
+            __import__('setuptools_git')
+        except ImportError:
+            return False
+        return True
+
     @property
     def name(self):
         package_name = self.get_setup_py_name()

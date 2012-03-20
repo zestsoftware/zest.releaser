@@ -17,6 +17,13 @@ class BaseVersionControl(object):
     def __init__(self):
         self.workingdir = os.getcwd()
 
+    def is_setuptools_helper_package_installed(self):
+        try:
+            __import__(self.setuptools_helper_package)
+        except ImportError:
+            return False
+        return True
+
     def get_setup_py_version(self):
         if os.path.exists('setup.py'):
             # First run egg_info, as that may get rid of some warnings

@@ -359,9 +359,11 @@ include *
 global-exclude *.pyc
 
 You may want to quit and fix this.
-Installing %(setuptools_helper_package)s may help too.
-We will continue with the prerelease.
-""" % dict(setuptools_helper_package=vcs.setuptools_helper_package)
+"""
+        if not vcs.is_setuptools_helper_package_installed():
+            q += "Installing %s may help too.\n" % \
+                vcs.setuptools_helper_package
+        q += "We will continue with the prerelease.\n"
         # We could ask, but simply printing it is nicer.
         #if not ask(q, default=True):
         #    return False
