@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.34 (unreleased)
+3.34 (2012-03-20)
 -----------------
 
 - In the warning about a missing MANIFEST.in file, also suggest to
