@@ -100,9 +100,6 @@ class Releaser(baserelease.Basereleaser):
             print "\nFailed to create tag %s!" % (self.data['version'],)
             sys.exit()
 
-    def _is_python24(self):
-        return sys.hexversion < 0x02050000
-
     def _sdist_options(self):
         options = []
         # Due to a bug in python24, tar files might get corrupted on READ.

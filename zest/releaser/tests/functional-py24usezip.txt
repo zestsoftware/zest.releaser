@@ -5,12 +5,9 @@ Integration test
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
-There is a bug in python 2.4. We build zip files when python 2.4 is being used
-The other tests deactivate this feature, we reactivate it here unconditionally
-for testing
-
-    >>> from zest.releaser.release import Releaser
-    >>> Releaser._is_python24 = lambda x: True
+There is a bug in python 2.4. We build zip files when python 2.4 is
+being used.  Actually, we should do that always, as the user may still
+have python 2.4 even when we release with python 2.6.
 
 Several items are prepared for us.
 
