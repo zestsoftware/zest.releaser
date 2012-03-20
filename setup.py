@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import codecs
 import os
 
-version = '3.33.dev0'
+version = '3.33'
 
 
 def read(filename):

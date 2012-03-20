@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.33 (unreleased)
+3.33 (2012-03-20)
 -----------------
 
 - Fix python 2.4 issues with tarfile by always creating a zip file.
