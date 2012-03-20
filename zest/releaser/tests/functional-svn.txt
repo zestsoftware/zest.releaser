@@ -115,13 +115,13 @@ The release script tags the release and uploads it:
     creating tha.example-0.1
     ...
     creating dist
-    Creating tar archive...
+    creating 'dist/tha.example-0.1.zip'...
     removing 'tha.example-0.1' (and everything under it)
     Question: Register and upload to PyPI (Y/n)?
     Our reply: y
-    MOCK setup.py register sdist upload...
+    MOCK setup.py register sdist --formats=zip upload...
 
-That last line might be something like "mregister sdist mupload -r
+That last line might be something like "mregister sdist --formats=zip mupload -r
 pypi" but we catch that with the test normalizer.
 
 If collective.dist is installed, the last dots above could be saying

@@ -71,7 +71,7 @@ Others could be added if there are volunteers.
 
 When the (full)release command tries to upload your package to a pypi
 server, zest.releaser basically just executes the command ``python
-setup.py register sdist upload``.  The ``python`` here is the same
+setup.py register sdist --formats=zip upload``.  The ``python`` here is the same
 python that was used to install zest.releaser.  If that command would
 fail when you try it manually (for example because you have not
 configured a .pypirc file yet), then zest.releaser does not magically
@@ -231,7 +231,7 @@ already registered there.  If this is not the case yet, you can go to
 the directory where zest.releaser put the checkout (or make a fresh
 checkout yourself.  Then with the python version of your choice do::
 
-  python setup.py register sdist upload
+  python setup.py register sdist --formats=zip upload
 
 For this to work you will need a ``.pypirc`` file in your home
 directory that has your pypi login credentials like this::

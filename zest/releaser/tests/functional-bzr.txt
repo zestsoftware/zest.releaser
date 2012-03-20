@@ -103,11 +103,11 @@ The release script tags the release and uploads it:
     hard linking README.txt -> tha.example-0.1
     ...
     creating dist
-    Creating tar archive...
+    creating 'dist/tha.example-0.1.zip'...
     removing 'tha.example-0.1' (and everything under it)
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
-    MOCK setup.py register sdist upload
+    MOCK setup.py register sdist --formats=zip upload
     
 There is now a tag:
 
