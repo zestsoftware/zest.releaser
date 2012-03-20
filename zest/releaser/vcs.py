@@ -12,6 +12,7 @@ class BaseVersionControl(object):
     "Shared implementation between all version control systems"
 
     internal_filename = ''  # e.g. '.svn' or '.hg'
+    setuptools_helper_package = ''
 
     def __init__(self):
         self.workingdir = os.getcwd()

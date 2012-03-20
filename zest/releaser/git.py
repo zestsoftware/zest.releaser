@@ -12,6 +12,7 @@ logger = logging.getLogger('git')
 class Git(BaseVersionControl):
     """Command proxy for Git"""
     internal_filename = '.git'
+    setuptools_helper_package = 'setuptools-git'
 
     @property
     def name(self):

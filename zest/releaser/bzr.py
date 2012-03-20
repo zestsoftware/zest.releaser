@@ -11,6 +11,7 @@ logger = logging.getLogger('bazaar')
 class Bzr(BaseVersionControl):
     """Command proxy for Bazaar"""
     internal_filename = '.bzr'
+    setuptools_helper_package = 'setuptools_bzr'
 
     @property
     def name(self):

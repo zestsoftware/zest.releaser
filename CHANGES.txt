@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.34 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- In the warning about a missing MANIFEST.in file, also suggest to
+  install setuptools_subversion/git, etc.
+  Fixes issue #4.
+  [maurits]
 
 
 3.33 (2012-03-20)

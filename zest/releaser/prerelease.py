@@ -52,7 +52,7 @@ class Prereleaser(baserelease.Basereleaser):
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
-        if not utils.check_recommended_files(self.data):
+        if not utils.check_recommended_files(self.data, self.vcs):
             logger.debug("Recommended files check failed.")
             sys.exit(1)
         self._grab_version()
