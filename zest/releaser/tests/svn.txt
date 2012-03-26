@@ -134,26 +134,26 @@ The tag checkout command makes a checkout in that tempdir:
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
     'svn co file://TESTREPO/tha.example/tags/0.1 TMPDIR/somename...'
-    >>> print system(cmd)
-    A    TMPDIR/somename.../local-checkouts
-    A    TMPDIR/somename.../grok-1.0a4.cfg
+    >>> print '\n'.join(sorted(system(cmd).splitlines()))
+    A    TMPDIR/somename.../CHANGES.txt
+    A    TMPDIR/somename.../README.txt
     A    TMPDIR/somename.../TODO.txt
     A    TMPDIR/somename.../bootstrap.py
     A    TMPDIR/somename.../buildout.cfg
-    A    TMPDIR/somename.../CHANGES.txt
+    A    TMPDIR/somename.../grok-1.0a4.cfg
+    A    TMPDIR/somename.../local-checkouts
+    A    TMPDIR/somename.../setup.cfg
     A    TMPDIR/somename.../setup.py
     A    TMPDIR/somename.../src
     A    TMPDIR/somename.../src/tha
     A    TMPDIR/somename.../src/tha/__init__.py
     A    TMPDIR/somename.../src/tha/example
     A    TMPDIR/somename.../src/tha/example/USAGE.txt
-    A    TMPDIR/somename.../src/tha/example/tests
-    A    TMPDIR/somename.../src/tha/example/tests/sample.txt
-    A    TMPDIR/somename.../src/tha/example/tests/__init__.py
-    A    TMPDIR/somename.../src/tha/example/tests/test.py
     A    TMPDIR/somename.../src/tha/example/__init__.py
-    A    TMPDIR/somename.../README.txt
-    A    TMPDIR/somename.../setup.cfg
+    A    TMPDIR/somename.../src/tha/example/tests
+    A    TMPDIR/somename.../src/tha/example/tests/__init__.py
+    A    TMPDIR/somename.../src/tha/example/tests/sample.txt
+    A    TMPDIR/somename.../src/tha/example/tests/test.py
     Checked out revision 7.
 
 The checkout is done directly in that temporary directory, so not in a newly
