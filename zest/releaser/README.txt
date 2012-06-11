@@ -214,7 +214,7 @@ https://github.com/zestsoftware/zest.releaser
 If you are going to do a fix or want to run the tests, please see the
 ``DEVELOPERS.txt`` file in the root of the package.
 
-Bugs can be added to https://bugs.launchpad.net/zest.releaser .
+Bugs can be added to https://github.com/zestsoftware/zest.releaser/issues
 
 Note that there are alternative release scripts available, for instance
 http://pypi.python.org/pypi/collective.releaser which installs itself as a
