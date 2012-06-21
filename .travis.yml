@@ -6,6 +6,7 @@ notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
     on_success: change
+env: HGUSER=temp
 install:
   - python bootstrap.py
   - bin/buildout
