@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.35 (unreleased)
+3.35 (2012-06-21)
 -----------------
 
 - When checking for recommended files, ask if the user wants to
