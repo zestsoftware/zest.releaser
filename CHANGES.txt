@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.35 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Preserve existing EOL in setup.py and history file (See 
+  http://docs.python.org/tutorial/inputoutput.html#reading-and-writing-files)
+  [tom_gross]
 
 
 3.34 (2012-03-20)

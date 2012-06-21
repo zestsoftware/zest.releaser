@@ -262,7 +262,7 @@ def prepare_documentation_entrypoint(data):
             result.append('    ' + datadict[key])
             result.append('')
 
-    open(target, 'w').write('\n'.join(result))
+    open(target, 'wb').write('\n'.join(result))
     print "Wrote entry point documentation to", target
 
 
