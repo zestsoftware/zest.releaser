@@ -348,7 +348,7 @@ def check_recommended_files(data, vcs):
     if not 'setup.py' in main_files and not 'setup.cfg' in main_files:
         # Not a python package.  We have no recommendations.
         return True
-    if not 'MANIFEST.in' in main_files:
+    if not 'MANIFEST.in' in main_files and not 'MANIFEST' in main_files:
         q = """This package is missing a MANIFEST.in file. This file is
 recommended. See http://docs.python.org/distutils/sourcedist.html for
 more info. Sample contents:
