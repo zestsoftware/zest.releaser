@@ -18,7 +18,7 @@ An svn checkout of a project:
     'TESTTEMP/tha.example-svn'
     >>> import os
     >>> os.chdir(svnsourcedir)
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> print system("svn info %s" % svnsourcedir)
     Path: TESTTEMP/tha.example-svn...
     URL: file://TESTREPO/tha.example/trunk
@@ -116,7 +116,7 @@ The release script tags the release and uploads it:
     ...
     creating dist
     creating 'dist/tha.example-0.1.zip'...
-    removing 'tha.example-0.1' (and everything under it)
+    removing 'tha.example-0.1' ...
     Question: Register and upload to PyPI (Y/n)?
     Our reply: y
     MOCK setup.py register sdist --formats=zip upload...
