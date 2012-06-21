@@ -81,7 +81,7 @@ def setup(test):
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')
     shutil.copytree(sourcedir, hgsourcedir)
     system("hg init %s" % hgsourcedir)
-    open(os.path.join(hgsourcedir, '.hgignore'), 'w').write(
+    open(os.path.join(hgsourcedir, '.hgignore'), 'wb').write(
         'tha.example.egg-info\n')
     system("hg add %s" % hgsourcedir)
     system("hg commit -m 'init' %s" % hgsourcedir)
@@ -90,7 +90,7 @@ def setup(test):
     bzrsourcedir = os.path.join(test.tempdir, 'tha.example-bzr')
     shutil.copytree(sourcedir, bzrsourcedir)
     system("bzr init %s" % bzrsourcedir)
-    open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
+    open(os.path.join(bzrsourcedir, '.bzrignore'), 'wb').write(
         'tha.example.egg-info\n')
     system("bzr add %s" % bzrsourcedir)
     system("bzr commit -m 'init' %s" % bzrsourcedir)
@@ -100,7 +100,7 @@ def setup(test):
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
     system("git init")
-    open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
+    open(os.path.join(gitsourcedir, '.gitignore'), 'wb').write(
         'tha.example.egg-info\n')
     system("git add .")
     system("git commit -a -m 'init'")

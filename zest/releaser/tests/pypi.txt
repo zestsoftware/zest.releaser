@@ -281,7 +281,7 @@ Now we add a setup.cfg with some good and some bad commands:
     ... [egg_info]
     ... tag_build = dev
     ... tag_svn_revision = true"""
-    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
+    >>> open(pypi.SETUP_CONFIG_FILE, 'wb').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.config
     <ConfigParser.ConfigParser instance at ...>

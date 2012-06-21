@@ -138,7 +138,7 @@ class Postreleaser(baserelease.Basereleaser):
                   '']
         history_lines[inject_location:inject_location] = inject
         contents = '\n'.join(history_lines)
-        open(history, 'w').write(contents)
+        open(history, 'wb').write(contents)
         logger.info("Injected new section into the history: %r", header)
 
     def _diff_and_commit(self):
