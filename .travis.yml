@@ -9,5 +9,8 @@ notifications:
 install:
   - python bootstrap.py
   - bin/buildout
+  - git config --global user.name "Temp user"
+  - git config --global user.email "temp@example.com"
+  - bzr whoami "Temp user <temp@example.com>"
 script:
   - bin/test
