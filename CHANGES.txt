@@ -6,6 +6,7 @@ Changelog for zest.releaser
 
 - When checking for recommended files, ask if the user wants to
   continue when we suspect the created PyPI release may be broken.
+  See issue #10.
   [maurits]
 
 - Preserve existing EOL in setup.py and history file (See 
