@@ -1,6 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
+3.36 (unreleased)
+-----------------
+
+- Nothing changed yet.
+
+
 3.35 (2012-06-21)
 -----------------
 
