@@ -26,6 +26,11 @@ It will help you to automate:
   projects! It can also check out the tag in a temporary directory in
   case you need to modify it.
 
+
+
+.. image:: https://secure.travis-ci.org/zestsoftware/zest.releaser.png?branch=master
+   :target: http://travis-ci.org/#!/zestsoftware/zest.releaser/
+
 .. contents::
 
 

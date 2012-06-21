@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.36 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Set up `travis CI <http://travis-ci.org/#!/zestsoftware/zest.releaser/>`_
+  integration. Our tests pass on python 2.5, 2.6 and 2.7.
 
 
 3.35 (2012-06-21)
@@ -15,7 +16,7 @@ Changelog for zest.releaser
   See issue #10.
   [maurits]
 
-- Preserve existing EOL in setup.py and history file (See 
+- Preserve existing EOL in setup.py and history file (See
   http://docs.python.org/tutorial/inputoutput.html#reading-and-writing-files)
   [tom_gross]
 
