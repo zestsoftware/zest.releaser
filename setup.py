@@ -1,24 +1,18 @@
 from setuptools import setup, find_packages
 import codecs
-import os
 
 version = '3.36.dev0'
 
 
 def read(filename):
-    filename = os.path.join('zest', 'releaser', filename)
     return unicode(codecs.open(filename, encoding='utf-8').read())
 
 
-def read_from_here(filename):
-    return unicode(codecs.open(filename, encoding='utf-8').read())
-
-
-long_description = '\n\n'.join([read('README.txt'),
-                                read('entrypoints.txt'),
-                                read('TODO.txt'),
-                                read('CREDITS.txt'),
-                                read_from_here('CHANGES.txt')])
+long_description = '\n\n'.join([read('README.rst'),
+                                # read('entrypoints.txt'),
+                                # ^^^ TODO: add to sphinx documentation.
+                                read('CREDITS.rst'),
+                                read('CHANGES.rst')])
 
 setup(name='zest.releaser',
       version=version,

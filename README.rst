@@ -279,11 +279,12 @@ upload to any server::
   [distutils]
   index-servers =
 
-Note that after creating the tag we still ask you if you want to
-checkout that tag for tweaks or pypi/distutils server upload.  We
-could add some extra checks to see if that is really needed, but
-someone who does not have index-servers listed, may still want to use
-an entry point like `gocept.zestreleaser.customupload`_ to do
+Note that after creating the tag we still ask you if you want to checkout that
+tag for tweaks or pypi/distutils server upload.  We could add some extra
+checks to see if that is really needed, but someone who does not have
+index-servers listed, may still want to use an entry point like
+`gocept.zestreleaser.customupload
+<http://pypi.python.org/pypi/gocept.zestreleaser.customupload>`_ to do
 uploading, or do some manual steps first before uploading.
 
 Some people will hardly ever want to do a release on PyPI but in 99
