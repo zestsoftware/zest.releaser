@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.35 (unreleased)
 -----------------
 
+- When checking for recommended files, ask if the user wants to
+  continue when we suspect the created PyPI release may be broken.
+  [maurits]
+
 - Preserve existing EOL in setup.py and history file (See 
   http://docs.python.org/tutorial/inputoutput.html#reading-and-writing-files)
   [tom_gross]

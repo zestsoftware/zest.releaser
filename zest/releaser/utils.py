@@ -364,8 +364,10 @@ You may want to quit and fix this.
             q += "Installing %s may help too.\n" % \
                 vcs.setuptools_helper_package
         q += "We will continue with the prerelease.\n"
-        # We could ask, but simply printing it is nicer.
-        #if not ask(q, default=True):
-        #    return False
+        # We could ask, but simply printing it is nicer.  Well, okay,
+        # let's avoid some broken eggs on PyPI, per
+        # https://github.com/zestsoftware/zest.releaser/issues/10
+        if not ask(q, default=False):
+            return False
         print q
     return True
