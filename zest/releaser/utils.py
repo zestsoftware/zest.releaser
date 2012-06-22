@@ -363,7 +363,6 @@ You may want to quit and fix this.
         if not vcs.is_setuptools_helper_package_installed():
             q += "Installing %s may help too.\n" % \
                 vcs.setuptools_helper_package
-        q += "We will continue with the prerelease.\n"
         # We could ask, but simply printing it is nicer.  Well, okay,
         # let's avoid some broken eggs on PyPI, per
         # https://github.com/zestsoftware/zest.releaser/issues/10
