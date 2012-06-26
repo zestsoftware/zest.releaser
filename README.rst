@@ -126,8 +126,9 @@ are:
 
 - **prerelease**: asks you for a version number (defaults to the current
   version minus a 'dev' or so), updates the setup.py or version.txt and the
-  HISTORY.txt/CHANGES.txt/CHANGES with this new version number and offers to
-  commit those changes to subversion (or bzr or hg or git)
+  CHANGES/HISTORY/CHANGELOG file (with either .rst/.txt/.markdown or no
+  extension) with this new version number and offers to commit those changes
+  to subversion (or bzr or hg or git)
 
 - **release**: copies the the trunk or branch of the current checkout and
   creates a version control tag of it.  Makes a checkout of the tag in a
@@ -141,10 +142,10 @@ are:
 
 - **postrelease**: asks you for a version number (gives a sane default), adds
   a development marker to it, updates the setup.py or version.txt and the
-  HISTORY.txt/CHANGES.txt with this and offers to commit those changes to
-  version control. Note that with git and hg, you'd also be asked to push your
-  changes (since 3.27). Otherwise the release and tag only live in your local
-  hg/git repository and not on the server.
+  CHANGES/HISTORY/CHANGELOG file with this and offers to commit those changes
+  to version control. Note that with git and hg, you'd also be asked to push
+  your changes (since 3.27). Otherwise the release and tag only live in your
+  local hg/git repository and not on the server.
 
 - **fullrelease**: all of the above in order.
 
@@ -156,7 +157,7 @@ There are two additional tools:
 
 - **lasttagdiff**: small tool that shows the diff of the currently committed
   trunk with the last released tag.  Handy for checking whether all the
-  changes are adequately described in the HISTORY.txt/CHANGES.txt.
+  changes are adequately described in the changes file.
 
 
 Details
@@ -185,10 +186,9 @@ fit :-)
   zest.releaser-friendly format near the top of the file. Reading (in
   Plone products) a version.txt into setup.py works great, too.
 
-- The history file (either HISTORY.txt, CHANGES.txt or CHANGES)
-  restriction is probably the most severe at the moment. zest.releaser
-  searches for a restructuredtext header with parenthesis. So
-  something like::
+- The history/changes file restriction is probably the most severe at the
+  moment. zest.releaser searches for a restructuredtext header with
+  parenthesis. So something like::
 
     Changelog for xyz
     =================

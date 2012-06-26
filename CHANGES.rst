@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.36 (unreleased)
 -----------------
 
+- Improved changes/history file detection and fixed the documentation at this
+  point. We now recognize CHANGES, HISTORY and CHANGELOG with .rst, .txt,
+  .markdown and with no extension.
+
 - Set up `travis CI <http://travis-ci.org/#!/zestsoftware/zest.releaser/>`_
   integration. Our tests pass on python 2.5, 2.6 and 2.7.
 

@@ -83,8 +83,12 @@ class BaseVersionControl(object):
     def history_file(self):
         """Return history file location.
         """
-        history = self.filefind(['HISTORY.txt', 'CHANGES.txt',
-                                 'CHANGES.rst', 'CHANGES.markdown', 'CHANGES'])
+        filenames = []
+        for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
+            filenames.append(base)
+            for extension in ['rst', 'txt', 'markdown']:
+                filenames.append('.'.join([base, extension]))
+        history = self.filefind(filenames)
         if history:
             return history
 
