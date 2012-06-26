@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.36 (unreleased)
+3.36 (2012-06-26)
 -----------------
 
 - Improved changes/history file detection and fixed the documentation at this
