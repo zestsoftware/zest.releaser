@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.37 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Actually ask if the user wants to continue with the release when
+  there is no MANIFEST.in.  We asked for a yes/no answer, but the
+  question was missing.
+  [maurits]
 
 
 3.36 (2012-06-26)

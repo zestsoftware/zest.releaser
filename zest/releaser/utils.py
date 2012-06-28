@@ -366,6 +366,7 @@ You may want to quit and fix this.
         # We could ask, but simply printing it is nicer.  Well, okay,
         # let's avoid some broken eggs on PyPI, per
         # https://github.com/zestsoftware/zest.releaser/issues/10
+        q += "Do you want to continue with the release?"
         if not ask(q, default=False):
             return False
         print q
