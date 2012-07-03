@@ -5,7 +5,7 @@ import re
 
 from zest.releaser import utils
 
-logger = logging.getLogger('vcs')
+logger = logging.getLogger(__name__)
 
 
 class BaseVersionControl(object):

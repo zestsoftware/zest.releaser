@@ -8,7 +8,7 @@ from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import system
 
-logger = logging.getLogger('postrelease')
+logger = logging.getLogger(__name__)
 
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 NOTHING_CHANGED_YET = '- Nothing changed yet.'

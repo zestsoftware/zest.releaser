@@ -6,7 +6,7 @@ from zest.releaser import hg
 from zest.releaser import bzr
 from zest.releaser import svn
 
-logger = logging.getLogger('chooser')
+logger = logging.getLogger(__name__)
 
 
 def version_control():

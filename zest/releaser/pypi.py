@@ -15,7 +15,7 @@ except ImportError:
 DIST_CONFIG_FILE = '.pypirc'
 SETUP_CONFIG_FILE = 'setup.cfg'
 
-logger = logging.getLogger('pypi')
+logger = logging.getLogger(__name__)
 
 
 def collective_dist_available():

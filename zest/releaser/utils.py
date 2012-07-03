@@ -8,7 +8,7 @@ import sys
 
 import pkg_resources
 
-logger = logging.getLogger('utils')
+logger = logging.getLogger(__name__)
 
 WRONG_IN_VERSION = ['svn', 'dev', '(']
 # For zc.buildout's system() method:

@@ -6,7 +6,7 @@ from zest.releaser import utils
 from zest.releaser.utils import system
 from zest.releaser.vcs import BaseVersionControl
 
-logger = logging.getLogger('zest.releaser')
+logger = logging.getLogger(__name__)
 
 
 class Subversion(BaseVersionControl):

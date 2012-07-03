@@ -9,7 +9,7 @@ from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import system
 
-logger = logging.getLogger('prerelease')
+logger = logging.getLogger(__name__)
 
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 HISTORY_HEADER = '%(new_version)s (%(today)s)'

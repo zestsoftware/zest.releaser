@@ -5,7 +5,7 @@ import os
 from zest.releaser.utils import system
 from zest.releaser.vcs import BaseVersionControl
 
-logger = logging.getLogger('mercurial')
+logger = logging.getLogger(__name__)
 
 
 class Hg(BaseVersionControl):

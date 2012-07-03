@@ -22,7 +22,7 @@ DATA = {
     'tag_already_exists': "Internal detail, don't touch this :-)",
     }
 
-logger = logging.getLogger('release')
+logger = logging.getLogger(__name__)
 
 
 def package_in_pypi(package):

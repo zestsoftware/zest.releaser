@@ -6,9 +6,9 @@ import webbrowser
 import tempfile
 import os
 
-import utils
+from zest.releaser import utils
 
-logger = logging.getLogger('longtest')
+logger = logging.getLogger(__name__)
 
 
 def show_longdesc():

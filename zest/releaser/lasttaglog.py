@@ -9,7 +9,7 @@ import zest.releaser.choose
 from zest.releaser.utils import system
 from zest.releaser import utils
 
-logger = logging.getLogger('lasttaglog')
+logger = logging.getLogger(__name__)
 
 
 def main():

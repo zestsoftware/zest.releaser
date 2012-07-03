@@ -6,7 +6,7 @@ import sys
 from zest.releaser.utils import system
 from zest.releaser.vcs import BaseVersionControl
 
-logger = logging.getLogger('git')
+logger = logging.getLogger(__name__)
 
 
 class Git(BaseVersionControl):

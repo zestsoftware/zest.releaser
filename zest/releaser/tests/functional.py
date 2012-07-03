@@ -12,9 +12,8 @@ from zest.releaser.utils import system
 
 
 def setup(test):
-    partstestdir = os.getcwd() # Buildout's test run in parts/test
+    partstestdir = os.getcwd()  # Buildout's test run in parts/test
     test.orig_dir = partstestdir
-    buildoutbindir = os.path.join(partstestdir, '..', '..', 'bin')
     test.tempdir = tempfile.mkdtemp(prefix='testtemp')
 
     # Monkey patch sys.exit
@@ -55,13 +54,12 @@ def setup(test):
         for name in tf.getnames():
             tf.extract(name, test.tempdir)
 
-
     sourcedir = os.path.join(test.tempdir, 'tha.example')
 
     # Init svn repo.
     repodir = os.path.join(test.tempdir, 'svnrepo')
     system('svnadmin create %s' % repodir)
-    repo_url = 'file://' + repodir # TODO: urllib or so for windows
+    repo_url = 'file://' + repodir  # TODO: urllib or so for windows
     # Import example project
     system('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
     system('svn mkdir %s/tha.example/tags -m "mkdir"' % repo_url)
@@ -73,7 +71,7 @@ def setup(test):
     system(
         'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
     system(
-        'svn propset svn:ignore tha.example.egg-info %s/src '% svnsourcedir)
+        'svn propset svn:ignore tha.example.egg-info %s/src ' % svnsourcedir)
     system('svn up %s' % svnsourcedir)
     system('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
 
