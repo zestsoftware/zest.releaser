@@ -210,6 +210,99 @@ def is_data_documented(data, documentation={}):
         print 'Internal detail: key(s) %s are not documented' % undocumented
 
 
+def resolve_name(name):
+    """Resolve a name like ``module.object`` to an object and return it.
+
+    This functions supports packages and attributes without depth limitation:
+    ``package.package.module.class.class.function.attr`` is valid input.
+    However, looking up builtins is not directly supported: use
+    ``builtins.name``.
+
+    Raises ImportError if importing the module fails or if one requested
+    attribute is not found.
+    """
+    if '.' not in name:
+        # shortcut
+        __import__(name)
+        return sys.modules[name]
+
+    # FIXME clean up this code!
+    parts = name.split('.')
+    cursor = len(parts)
+    module_name = parts[:cursor]
+    ret = ''
+
+    while cursor > 0:
+        try:
+            ret = __import__('.'.join(module_name))
+            break
+        except ImportError:
+            cursor -= 1
+            module_name = parts[:cursor]
+
+    if ret == '':
+        raise ImportError(parts[0])
+
+    for part in parts[1:]:
+        try:
+            ret = getattr(ret, part)
+        except AttributeError as exc:
+            raise ImportError(exc)
+
+    return ret
+
+
+def run_hooks(setup_cfg, which_releaser, when, data):
+    """Run all release hooks for the given release step, including
+    project-specific hooks from setup.cfg, and globally installed entry-points.
+
+    which_releaser can be prereleaser, releaser, postreleaser.
+
+    when can be before, middle, after.
+
+    """
+    hook_group = '%s.%s' % (which_releaser, when)
+
+    if setup_cfg.config.has_option('zest.releaser', hook_group):
+        # Multiple hooks may be specified, each one separated by whitespace
+        # (including newlines)
+        hook_names = setup_cfg.config.get('zest.releaser', hook_group).split()
+        hooks = []
+
+        # The following code is adapted from the 'packaging' package being
+        # developed for Python's stdlib:
+
+        # add project directory to sys.path, to allow hooks to be
+        # distributed with the project
+        # an optional package_dir option adds support for source layouts where
+        # Python packages are not directly in the root of the source
+        config_dir = os.path.dirname(setup_cfg.config_filename)
+        sys.path.insert(0, os.path.dirname(setup_cfg.config_filename))
+
+        if setup_cfg.config.has_option('zest.releaser', 'package_dir'):
+            package_dir = setup_cfg.config.get('zest.releaser', 'package_dir')
+            package_dir = os.path.join(config_dir, package_dir)
+            sys.path.insert(0, package_dir)
+        else:
+            package_dir = None
+
+        try:
+            for hook_name in hook_names:
+                try:
+                    hooks.append(resolve_name(hook_name))
+                except ImportError, e:
+                    logger.warning('cannot find %s hook: %s; skipping...',
+                                   hook_name, e.args[0])
+            for hook in hooks:
+                hook(data)
+        finally:
+            sys.path.pop(0)
+            if package_dir is not None:
+                sys.path.pop(0)
+
+    run_entry_points(which_releaser, when, data)
+
+
 def run_entry_points(which_releaser, when, data):
     """Run the requested entry points.
 

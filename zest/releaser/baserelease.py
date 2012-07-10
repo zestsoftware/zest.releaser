@@ -11,18 +11,18 @@ class Basereleaser(object):
         self.vcs = choose.version_control()
         self.data = {'workingdir': self.vcs.workingdir,
                      'name': self.vcs.name}
-        self.setup_cfg = SetupConfig()
+        self.setup_cfg = pypi.SetupConfig()
 
-    def _run_entry_points(self, when):
+    def _run_hooks(self, when):
         which_releaser = self.__class__.__name__.lower()
-        utils.run_entry_points(which_releaser, when, self.data)
+        utils.run_hooks(self.setup_cfg, which_releaser, when, self.data)
 
     def run(self):
-        self._run_entry_points('before')
+        self._run_hooks('before')
         self.prepare()
-        self._run_entry_points('middle')
+        self._run_hooks('middle')
         self.execute()
-        self._run_entry_points('after')
+        self._run_hooks('after')
 
     def prepare(self):
         raise NotImplementedError()
