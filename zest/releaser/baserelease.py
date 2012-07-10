@@ -2,6 +2,7 @@
 
 from zest.releaser import utils
 from zest.releaser import choose
+from zest.releaser import pypi
 
 
 class Basereleaser(object):
@@ -10,6 +11,7 @@ class Basereleaser(object):
         self.vcs = choose.version_control()
         self.data = {'workingdir': self.vcs.workingdir,
                      'name': self.vcs.name}
+        self.setup_cfg = SetupConfig()
 
     def _run_entry_points(self, when):
         which_releaser = self.__class__.__name__.lower()

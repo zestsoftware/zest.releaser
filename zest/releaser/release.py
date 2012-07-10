@@ -201,14 +201,13 @@ class Releaser(baserelease.Basereleaser):
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
 
         # Possibly fix setup.cfg.
-        setup_config = pypi.SetupConfig()
-        if setup_config.has_bad_commands():
+        if self.setup_cfg.has_bad_commands():
             logger.info("This is not advisable for a release.")
             if utils.ask("Fix %s (and commit to tag if possible)" %
-                         setup_config.config_filename, default=True):
+                         self.setup_cfg.config_filename, default=True):
                 # Fix the setup.cfg in the current working directory
                 # so the current release works well.
-                setup_config.fix_config()
+                self.setup_cfg.fix_config()
                 # Now we may want to commit this.  Note that this is
                 # only really useful for subversion, as for example in
                 # git you are in a detached HEAD state, which is a
@@ -230,7 +229,7 @@ class Releaser(baserelease.Basereleaser):
                 if self.vcs.internal_filename == '.svn':
                     command = self.vcs.cmd_commit(
                         "Fixed %s on tag for release" %
-                        setup_config.config_filename)
+                        self.setup_cfg.config_filename)
                     print system(command)
                 else:
                     logger.debug("Not committing in non-svn repository as "
