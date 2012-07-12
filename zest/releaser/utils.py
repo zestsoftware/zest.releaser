@@ -262,11 +262,12 @@ def run_hooks(setup_cfg, which_releaser, when, data):
 
     """
     hook_group = '%s.%s' % (which_releaser, when)
+    config = setup_cfg.config
 
-    if setup_cfg.config.has_option('zest.releaser', hook_group):
+    if config.has_option('zest.releaser', hook_group):
         # Multiple hooks may be specified, each one separated by whitespace
         # (including newlines)
-        hook_names = setup_cfg.config.get('zest.releaser', hook_group).split()
+        hook_names = config.get('zest.releaser', hook_group).split()
         hooks = []
 
         # The following code is adapted from the 'packaging' package being
@@ -279,8 +280,8 @@ def run_hooks(setup_cfg, which_releaser, when, data):
         config_dir = os.path.dirname(setup_cfg.config_filename)
         sys.path.insert(0, os.path.dirname(setup_cfg.config_filename))
 
-        if setup_cfg.config.has_option('zest.releaser', 'package_dir'):
-            package_dir = setup_cfg.config.get('zest.releaser', 'package_dir')
+        if config.has_option('zest.releaser', 'hook_package_dir'):
+            package_dir = config.get('zest.releaser', 'hook_package_dir')
             package_dir = os.path.join(config_dir, package_dir)
             sys.path.insert(0, package_dir)
         else:
