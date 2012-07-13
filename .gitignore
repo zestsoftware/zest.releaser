@@ -13,3 +13,5 @@ parts
 zest.releaser.egg-info
 .coverage
 htmlcov
+doc/build/
+
