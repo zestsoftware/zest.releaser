@@ -8,7 +8,7 @@ date, tagging, optional uploading to pypi... all done for you.
 .. toctree::
    :maxdepth: 2
 
-   code
+   entrypoints
    project
 
 
