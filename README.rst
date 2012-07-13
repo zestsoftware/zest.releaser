@@ -29,7 +29,7 @@ It will help you to automate:
 
 
 .. image:: https://secure.travis-ci.org/zestsoftware/zest.releaser.png?branch=master
-   :target: http://travis-ci.org/#!/zestsoftware/zest.releaser/
+   :target: http://travis-ci.org/#!/zestsoftware/zest.releaser
 
 .. contents::
 
