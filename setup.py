@@ -9,8 +9,6 @@ def read(filename):
 
 
 long_description = '\n\n'.join([read('README.rst'),
-                                # read('entrypoints.txt'),
-                                # ^^^ TODO: add to sphinx documentation.
                                 read('CREDITS.rst'),
                                 read('CHANGES.rst')])
 
