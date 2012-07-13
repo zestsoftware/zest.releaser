@@ -1,11 +1,12 @@
 [report]
 omit =
-    /home/*/.buildout/eggs/*
-    local_checkouts/*
-    /var/lib/hudson/.buildout/*
+    /Library/*
+    *buildout/eggs/*
     /usr/*
-    parts/*
+    /var/lib/hudson/.buildout/*
+    /var/lib/jenkins/.buildout/*
     eggs/*
-    */test*
+    local_checkouts/*
+    parts/*
 
 ignore_errors = true
