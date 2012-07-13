@@ -168,7 +168,7 @@ too much in case there are not 'enough' lines:
     g
     <BLANKLINE>
     >>> import string
-    >>> output = '\n'.join(string.ascii_lowercase)   
+    >>> output = '\n'.join(string.ascii_lowercase)
     >>> utils.show_first_and_last_lines(output)
     Showing first few lines...
     a
@@ -343,9 +343,9 @@ Prepare a mock documentation file:
     >>> import shutil
     >>> import tempfile
     >>> tempdir = tempfile.mkdtemp()
-    >>> mock_zestreleaser = os.path.join(tempdir, 'zest', 'releaser')
-    >>> os.makedirs(mock_zestreleaser)
-    >>> docfile = os.path.join(mock_zestreleaser, 'entrypoints.txt')
+    >>> mock_docdir = os.path.join(tempdir, 'doc', 'source')
+    >>> os.makedirs(mock_docdir)
+    >>> docfile = os.path.join(mock_docdir, 'entrypoints.rst')
     >>> open(docfile, 'wb').write("""
     ... line1
     ... line2
@@ -358,7 +358,7 @@ When the name *is* zest.releaser, we generate documentation.
     >>> data = {'name': 'zest.releaser',
     ...         'workingdir': tempdir}
     >>> utils.prepare_documentation_entrypoint(data)
-    Wrote entry point documentation to ...zest/releaser/entrypoints.txt
+    Wrote entry point documentation to ...doc/source/entrypoints.rst
 
 The lines above the marker interface are still intact, the line below it has
 been replaced by the generated documentation:
