@@ -174,4 +174,4 @@ Changelog for zest.releaser
   Fixes https://bugs.launchpad.net/zest.releaser/+bug/858011
   [maurits]
 
-For older changes see ``older_changes.rst`` in the ``doc/sources/`` directory.
+.. # Note: for older changes see ``doc/sources/changelog.rst``.

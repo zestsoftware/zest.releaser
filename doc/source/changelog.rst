@@ -1,8 +1,6 @@
-Old history for zest.releaser
-=============================
+.. include:: ../../CHANGES.rst
 
-For recent changes see CHANGES.txt.
-
+.. # Note: CHANGES.rst is the current changelog, the older entries are in here.
 
 3.22 (2011-05-05)
 -----------------
