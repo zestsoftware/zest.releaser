@@ -1,10 +1,5 @@
-Entrypoints documentation
-=========================
-
-**Warning**: *entry points were added in 3.0, I'm reserving the right to make
-backwards-incompatible changes to the entry point mechanism in the next couple
-of releases.  It is a major new piece of functionality for zest.releaser and
-getting all the details right at the first attempt isn't guaranteed.*
+Entrypoints: extending/changing zest.releaser
+=============================================
 
 A zest.releaser entrypoint gets passed a data dictionary and that's about it.
 You can do tasks like generating documentation.  Or downloading external files
