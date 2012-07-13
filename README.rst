@@ -217,7 +217,7 @@ The source code can be found on github:
 https://github.com/zestsoftware/zest.releaser
 
 If you are going to do a fix or want to run the tests, please see the
-``DEVELOPERS.txt`` file in the root of the package.
+``DEVELOPERS.rst`` file in the root of the package.
 
 Bugs can be added to https://github.com/zestsoftware/zest.releaser/issues
 
