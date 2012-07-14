@@ -4,6 +4,11 @@ Changelog for zest.releaser
 3.37 (unreleased)
 -----------------
 
+- Documentation update! Started sphinx documentation at
+  `zestreleaser.readthedocs.org
+  <http://zestreleaser.readthedocs.org>`_. Removed documentation from the
+  README and put it into sphinx.
+
 - Actually ask if the user wants to continue with the release when
   there is no MANIFEST.in.  We asked for a yes/no answer, but the
   question was missing.
