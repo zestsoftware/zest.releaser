@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.37 (unreleased)
+3.37 (2012-07-14)
 -----------------
 
 - Documentation update! Started sphinx documentation at
