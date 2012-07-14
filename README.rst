@@ -1,5 +1,5 @@
-Package releasing made easy: zest.releaser overview
-===================================================
+Package releasing made easy: zest.releaser overview and installation
+====================================================================
 
 zest.releaser is collection of command-line programs to help you automate the
 task of releasing a Python project.
@@ -36,6 +36,8 @@ First the three most important links:
 
 - The code is at `github.com/zestsoftware/zest.releaser
   <https://github.com/zestsoftware/zest.releaser>`_.
+
+And... we're automatically being tested by Travis:
 
 .. image:: https://secure.travis-ci.org/zestsoftware/zest.releaser.png?branch=master
    :target: http://travis-ci.org/#!/zestsoftware/zest.releaser

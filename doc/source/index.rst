@@ -6,14 +6,13 @@ the version number, add a new heading in your changelog, record the release
 date, svn/git/bzr/hg tag your project, perhaps upload it to
 pypi... *zest.releaser* takes care of the boring bits for you.
 
-Here's an overview of the documentation we have for you; after that you get a
-quick intro on what zest.releaser does.
-
-Documentation on *using* zest.releaser:
+Here's an overview of the documentation we have for you. First the
+documentation on *using* zest.releaser:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
+   overview
    uploading
    assumptions
 
@@ -27,6 +26,3 @@ bugs and fixing the code:
    developing
    entrypoints
    changelog
-
-
-.. include:: ../../README.rst
