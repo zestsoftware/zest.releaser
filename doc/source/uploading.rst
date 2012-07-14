@@ -1,23 +1,36 @@
 Uploading to pypi (or custom servers)
-#####################################
+=======================================
 
-Like noted earlier, for safety reasons zest.releaser will only offer to upload
-your package to http://pypi.python.org when the package is already registered
-there.  If this is not the case yet, you can go to the directory where
-zest.releaser put the checkout (or make a fresh checkout yourself.  Then with
-the python version of your choice do::
+When the (full)release command tries to upload your package to a pypi server,
+zest.releaser basically just executes the command ``python setup.py register
+sdist --formats=zip upload``.
 
-  python setup.py register sdist --formats=zip upload
+For safety reasons zest.releaser will *only* offer to upload your package to
+http://pypi.python.org when the package is already registered there.  If this
+is not the case yet, you get a confirmation question whether you want to
+create a new package.
 
-For this to work you will need a ``.pypirc`` file in your home directory that
-has your pypi login credentials like this::
+If the ``setup.py register ...`` command fails, you probably need to configure
+your PyPI configuration file. And of course you need to have
+setuptools/distribute installed.
+
+
+PyPI configuration file (``~/.pypirc``)
+---------------------------------------
+
+For uploads to PyPI to work you will need a ``.pypirc`` file in your home directory that
+has your pypi login credentials, like this::
 
   [server-login]
   username:maurits
   password:secret
 
-Since python 2.6, or in earlier python versions with collective.dist, you can
-specify multiple indexes for uploading your package in ``.pypirc``::
+
+Uploading to other servers
+--------------------------
+
+Since python 2.6 (or in earlier python versions, with collective.dist) you can
+specify multiple indexes for uploading your package in your ``.pypirc``::
 
   [distutils]
   index-servers =
@@ -39,7 +52,7 @@ specify multiple indexes for uploading your package in ``.pypirc``::
 
 See http://pypi.python.org/pypi/collective.dist for more info.
 
-When all this is configured correctly, zest.releaser will first reregister and
+When all this is configured correctly, zest.releaser will first register and
 upload at the official pypi (if the package is registered there already).
 Then it will offer to upload to the other index servers that you have
 specified in ``.pypirc``.
@@ -74,3 +87,50 @@ The lines are this::
 
 You can use no/false/off/0 or yes/true/on/1 as answers; upper, lower or mixed
 case are all fine.
+
+
+Including all files in your release
+-----------------------------------
+
+By default, only the Python files and a ``README.txt`` are included (by
+setuptools) when you make a release. So you miss out on your changelog, json
+files, stylesheets and so on. There are two strategies to include those other
+files:
+
+- Add a ``MANIFEST.in`` file in the same directory as your ``setup.py`` that
+  lists the files you want to include. Don't worry, wildcards are
+  allowed. Actually, zest.releaser will suggest a sample ``MANIFEST.in`` for
+  you if you don't already have it. The default is often good enough.
+
+- Setuptools *can* detect which files are included in your version control
+  system (svn, git, etc.) which it'll then automatically include.
+
+The last approch has a problem: not every version control system is supported
+out of the box. So you might need to install extra packages to get it to
+work. So: use a ``MANIFEST.in`` file to spare you the trouble. If not, here
+are some extra packages:
+
+- setuptools-git (Setuptools plugin for finding files under Git
+  version control)
+
+- setuptools_hg (Setuptools plugin for finding files under Mercurial
+  version control)
+
+- setuptools_bzr (Setuptools plugin for finding files under Bazaar
+  version control)
+
+- collective.dist (when using python2.4, depending on your
+  ``~/.pypirc`` file)
+
+- setuptools_subversion (Setuptools plugin for finding files under
+  Subversion version control.)  You probably need this when you
+  upgrade to the recent subversion 1.7.  If you suddenly start missing
+  files in the sdists you upload to PyPI you definitely need it.
+  Alternatively: set up a proper MANIFEST.in as that method works with
+  any version control system.
+
+In general, if you are missing files in the uploaded package, the best
+is to put a proper ``MANIFEST.in`` file next to your ``setup.py``.
+See `zest.pocompile`_ for an example.
+
+.. _`zest.pocompile`: http://pypi.python.org/pypi/zest.pocompile
