@@ -22,7 +22,6 @@ for you:
   package is already registered there (else it will ask, defaulting to 'no');
   zest releaser is careful not to publish your private projects!
 
-.. contents::
 
 Most important URLs
 -------------------

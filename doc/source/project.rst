@@ -1,5 +1,5 @@
 Improving zest.releaser: report bugs, fork on github or email us
-################################################################
+================================================================
 
 Did you find a bug? Do you have an improvement? Do you have questions? We run
 zest.releaser as a proper open source project on github at
