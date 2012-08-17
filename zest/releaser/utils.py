@@ -250,9 +250,9 @@ def prepare_documentation_entrypoint(data):
     from zest.releaser import postrelease
 
     for name, datadict in (
-        ('prerelease', prerelease.DATA),
-        ('release', release.DATA),
-        ('postrelease', postrelease.DATA)):
+            ('prerelease', prerelease.DATA),
+            ('release', release.DATA),
+            ('postrelease', postrelease.DATA)):
         heading = '%s data dict items' % name.capitalize()
         result.append(heading)
         result.append('-' * len(heading))
@@ -317,7 +317,7 @@ def get_last_tag(vcs):
             logger.debug("Found exact match: %s", found)
             break
         if (parsed_tag >= parsed_found and
-            parsed_tag < parsed_version):
+                parsed_tag < parsed_version):
             logger.debug("Found possible lower match: %s", tag)
             found = tag
     return found

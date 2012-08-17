@@ -124,12 +124,12 @@ class PypiConfig(object):
         self.config = ConfigParser()
         self.config.read(files)
         if (not self.is_old_pypi_config() and
-            not self.is_new_pypi_config()):
+                not self.is_new_pypi_config()):
             # Safety valve
             self.config = None
 
     def is_old_pypi_config(self):
-        if self.config == None:
+        if self.config is None:
             return False
         try:
             self.config.get('server-login', 'username')
@@ -196,7 +196,7 @@ class PypiConfig(object):
         and 1, on, true or yes for boolean True.
         """
         default = True
-        if self.config == None:
+        if self.config is None:
             return default
         try:
             result = self.config.getboolean('zest.releaser', 'release')

@@ -82,7 +82,7 @@ class Subversion(BaseVersionControl):
     def available_tags(self):
         base = self._base_from_svn()
         tags_name = self._tags_name
-        if tags_name == None:
+        if tags_name is None:
             # Suggest to create a tags dir with the default plural /tags name.
             print "tags dir does not exist at %s" % base + 'tags'
             if utils.ask("Shall I create it"):

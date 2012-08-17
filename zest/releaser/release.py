@@ -94,7 +94,7 @@ class Releaser(baserelease.Basereleaser):
             else:
                 # all commands are needed in order to proceed normally
                 print "Please create a tag for %s yourself and rerun." % \
-                        (self.data['version'],)
+                    (self.data['version'],)
                 sys.exit()
         if not self.vcs.tag_exists(self.data['version']):
             print "\nFailed to create tag %s!" % (self.data['version'],)
