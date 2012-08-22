@@ -1,0 +1,128 @@
+Integration test
+================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+This test is based on the functional tests using a git repository, but enables
+releaser hooks on the test package and ensures that they run.
+
+Several items are prepared for us.
+
+A git directory (repository and checkout in one):
+
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
+    >>> import os
+    >>> os.chdir(gitsourcedir)
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Append the [zest.releaser] section to the setup.cfg file, enabling the
+releaser hooks:
+
+    >>> open('setup.cfg', 'a').write("""
+    ... [zest.releaser]
+    ... hook_package_dir = src
+    ... prereleaser.before = tha.example.hooks.prereleaser_before
+    ... prereleaser.middle = tha.example.hooks.prereleaser_middle
+    ... prereleaser.after = tha.example.hooks.prereleaser_after
+    ... releaser.before = tha.example.hooks.releaser_before
+    ... releaser.middle = tha.example.hooks.releaser_middle
+    ... releaser.after_checkout = tha.example.hooks.releaser_after_checkout
+    ... releaser.after = tha.example.hooks.releaser_after
+    ... postreleaser.before = tha.example.hooks.postreleaser_before
+    ... postreleaser.middle = tha.example.hooks.postreleaser_middle
+    ... postreleaser.after = tha.example.hooks.postreleaser_after""")
+
+Commit the change to setup.cfg so that we have a clean checkout:
+
+    >>> from zest.releaser import git
+    >>> checkout = git.Git()
+    >>> cmd = checkout.cmd_commit("tweak setup.cfg to enable hooks")
+    >>> print 'dummy', utils.system(cmd)
+    dummy...tweak setup.cfg to enable hooks
+      1 file changed, 13 insertions(+)
+
+Run the prerelease script:
+
+    >>> from zest.releaser import prerelease
+    >>> utils.answers_for_testing = ['', '']
+    >>> prerelease.main()
+    prereleaser_before
+    Question: Enter version [0.1]:
+    Our reply: <ENTER>
+    prereleaser_middle
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    prereleaser_after
+
+The release script tags the release and uploads it:
+
+    >>> utils.answers_for_testing = ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']
+    >>> mock_pypi_available.append('tha.example')
+    >>> from zest.releaser import release
+    >>> release.main()
+    releaser_before
+    releaser_middle
+    Checking data dict
+    Tag needed to proceed, you can use the following command:
+    git tag 0.1 -m "Tagging 0.1"
+    Question: Run this command (Y/n)?
+    Our reply: y
+    <BLANKLINE>
+    Question: Check out the tag
+        (for tweaks or pypi/distutils server upload) (Y/n)?
+    Our reply: y
+    Note: ...0.1...
+    ...
+    HEAD is now at ...
+    Preparing release 0.1
+    <BLANKLINE>
+    Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
+    Our reply: y
+    [egg_info]
+    tag_build =
+    tag_svn_revision = false
+    <BLANKLINE>
+    [zest.releaser]
+    ...
+    releaser_after_checkout
+    running sdist
+    running egg_info
+    ...
+    creating tha.example-0.1
+    ...
+    hard linking README.txt -> tha.example-0.1
+    ...
+    creating dist
+    creating 'dist/tha.example-0.1.zip'...
+    removing 'tha.example-0.1' ...
+    Question: Register and upload to pypi (Y/n)?
+    Our reply: y
+    MOCK setup.py register sdist --formats=zip upload
+    releaser_after
+
+
+And the postrelease script ups the version:
+
+    >>> utils.answers_for_testing = ['', '', 'n']
+    >>> from zest.releaser import postrelease
+    >>> postrelease.main()
+    postreleaser_before
+    Current version is '0.1'
+    Question: Enter new development version ('.dev0' will be appended) [0.2]:
+    Our reply: <ENTER>
+    postreleaser_middle
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
+    postreleaser_after
