@@ -237,7 +237,7 @@ class Releaser(baserelease.Basereleaser):
 
         sdist_options = self._sdist_options()
         # Run extra entry point
-        self._run_entry_points('after_checkout')
+        self._run_hooks('after_checkout')
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
             if not pypiconfig.config:
