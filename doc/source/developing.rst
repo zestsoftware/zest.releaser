@@ -4,43 +4,47 @@ Information for developers of zest.releaser
 Running tests
 -------------
 
-We like to use zc.buildout to get a test environment with any versions
-of needed python packages pinned.  When you are in the root folder of
-a subversion checkout of zest.releaser, do this::
+We like to use zc.buildout to get a test environment with any versions of
+needed python packages pinned.  When you are in the root folder of your
+zest.releaser checkout, do this::
 
-  python2.6 bootstrap.py  # or a different python
-  bin/buildout
-  bin/test
+  $ python bootstrap.py  # Or a different python version.
+  $ bin/buildout
+  $ bin/test
 
 
-Needed python
+Python versiosn
 -------------
 
-The tests currently pass on python 2.4.5, 2.5.4 and 2.6.3.  Using
-2.6.2 specifically will give test failures.
+The tests currently pass on python 2.4 (probably), 2.5 and 2.6 and 2.7.  Using
+2.6.2 specifically will give test failures. Travis continuous integration
+tests 2.5, 2.6 and 2.7 for us automatically.
 
 
-Needed programs
----------------
+Necessary programs
+------------------
 
 To run the tests, you need to have the supported versioning systems
-installed: svn, hg (mercurial), git and git-svn.  There may be test
-failures when you have different versions of these programs.  In that
-case, please investigate as these may be genuine errors.
+installed: svn, hg (mercurial), git and git-svn. On ubuntu::
+
+  $ sudo apt-get install subversion git bzr mercurial git-svn
+
+There may be test failures when you have different versions of these programs.
+In that case, please investigate as these may be genuine errors.
 
 
-Needed setuptools
------------------
-
-You also need setuptools or distribute in your system path.  This is
-because we basically call 'sys.executable setup.py egg_info' directly
-(in the tests and in the actual code), which will give an import error
-on setuptools otherwise.  There is a branch with a hack that solves
-this but it sounds too hacky.
-
-
-Needed configuration
+Setuptools is needed
 --------------------
+
+You also need distribute (or setuptools) in your system path.  This is because
+we basically call 'sys.executable setup.py egg_info' directly (in the tests
+and in the actual code), which will give an import error on setuptools
+otherwise.  There is a branch with a hack that solves this but it sounds too
+hacky.
+
+
+Configuration for mercurial, bzr and git
+----------------------------------------
 
 For mercurial you may get test failures because of extra output like
 this::
@@ -57,14 +61,14 @@ If you keep having problems, `Ubuntu explains it
 
 There is a similar problem with bazaar.  Since bzr version 2.2, it
 refuses to guess what your username and email is, so you have to
-set it once, like this, otherwise you get test failures:
+set it once, like this, otherwise you get test failures::
 
-  bzr whoami "Author Name <email@address.domain>"
+  $ bzr whoami "Author Name <email@address.domain>"
 
-And the same for git, so you should do:
+And the same for git, so you should do::
 
-  git config --global user.name "Your Name"
-  git config --global user.email you@example.com
+  $ git config --global user.name "Your Name"
+  $ git config --global user.email you@example.com
 
 For release testing we expected a functioning .pypirc file in your
 home dir, with an old-style configuration, but the tests now use an

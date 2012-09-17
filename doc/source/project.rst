@@ -24,9 +24,4 @@ options:
   <mailto:maurits@vanrees.org>`_. Please email us both at the same time, this
   way at least one of us can give you a quick reply.
 
-
-
-
-
-
 .. include:: ../../CREDITS.rst
