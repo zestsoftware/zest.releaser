@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.38 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Small fixes to the developers documentation and to the automatic `travis CI
+  <http://travis-ci.org/#!/zestsoftware/zest.releaser/>`_ tests configuration.
 
 
 3.37 (2012-07-14)
