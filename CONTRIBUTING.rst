@@ -1,8 +1,9 @@
 Hi!
 ===
 
-You're using zest.releaser and want to report a bug or problem or you want to
-fix something yourself? Feel free! Github is the place to do so.
+You're using `zest.releaser <http://zestreleaser.readthedocs.org>`_ and want
+to report a bug or problem or you want to fix something yourself? Feel free!
+Github is the place to do so.
 
 - Report bugs or problems at
   https://github.com/zestsoftware/zest.releaser/issues
