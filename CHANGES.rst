@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.38 (unreleased)
+3.38 (2012-09-25)
 -----------------
 
 - Fixed svn tag extraction on windows: a ``\r`` could end up at the
