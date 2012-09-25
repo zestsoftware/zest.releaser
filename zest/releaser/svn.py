@@ -99,7 +99,8 @@ class Subversion(BaseVersionControl):
                 'Repository moved' in tag_info:
             logger.error('Network problem: %s', tag_info)
             sys.exit()
-        tags = [line.replace('/', '') for line in tag_info.split('\n')]
+        tags = [line.replace('/', '').strip()
+                for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]  # filter empty ones
         logger.debug("Available tags: %r", tags)
         return tags

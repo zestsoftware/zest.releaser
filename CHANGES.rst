@@ -4,6 +4,9 @@ Changelog for zest.releaser
 3.38 (unreleased)
 -----------------
 
+- Fixed svn tag extraction on windows: a ``\r`` could end up at the
+  end of every tag name. Thanks Wouter Vanden Hove for reporting it!
+
 - Small fixes to the developers documentation and to the automatic `travis CI
   <http://travis-ci.org/#!/zestsoftware/zest.releaser/>`_ tests configuration.
 
