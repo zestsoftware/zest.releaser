@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import codecs
 
-version = '3.38'
+version = '3.39.dev0'
 
 
 def read(filename):
