@@ -75,3 +75,7 @@ class Bzr(BaseVersionControl):
             # Local changes.
             return False
         return True
+
+    def list_files(self):
+        """List files in version control."""
+        return system('bzr ls --recursive').splitlines()

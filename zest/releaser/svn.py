@@ -163,3 +163,7 @@ class Subversion(BaseVersionControl):
         # are externals this still always prints some lines, which
         # would give false negatives.  So we ignore it.
         return True
+
+    def list_files(self):
+        """List files in version control."""
+        return system('svn ls --recursive').splitlines()

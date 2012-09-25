@@ -92,3 +92,7 @@ class Hg(BaseVersionControl):
     def push_commands(self):
         """Return commands to push changes to the server."""
         return ['hg push']
+
+    def list_files(self):
+        """List files in version control."""
+        return system('hg manifest').splitlines()

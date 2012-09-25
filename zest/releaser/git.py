@@ -121,3 +121,7 @@ class Git(BaseVersionControl):
     def push_commands(self):
         """Push changes to the server."""
         return ['git push', 'git push --tags']
+
+    def list_files(self):
+        """List files in version control."""
+        return system('git ls-tree -r HEAD --name-only').splitlines()

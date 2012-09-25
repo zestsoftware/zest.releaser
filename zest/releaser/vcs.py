@@ -65,20 +65,18 @@ class BaseVersionControl(object):
         for name in names:
             lower_names.append(name.lower())
         names = lower_names
-        for dirpath, dirnames, filenames in os.walk('.'):
-            if self.internal_filename in dirpath:
-                # We are inside a version controlled directory.
-                continue
-            if 'docs' in dirnames:
-                # Walk through the docs directory last, so we find
-                # e.g. zest/releaser/HISTORY.txt before we find
-                # docs/HISTORY.txt.
-                dirnames.append(dirnames.pop(dirnames.index('docs')))
-            for filename in filenames:
-                if filename.lower() in names:
-                    fullpath = os.path.join(dirpath, filename)
-                    logger.debug("Found %s", fullpath)
-                    return fullpath
+        files = self.list_files()
+        for fullpath in files:
+            filename = os.path.basename(fullpath)
+            if filename.lower() in names:
+                logger.debug("Found %s", fullpath)
+                if not os.path.exists(fullpath):
+                    # Strange.  It at least happens in the tests when
+                    # we deliberately remove a CHANGES.txt file.
+                    logger.warn("Found file %s in version control but not on "
+                                "file system.", fullpath)
+                    continue
+                return fullpath
 
     def history_file(self):
         """Return history file location.
@@ -221,3 +219,15 @@ class BaseVersionControl(object):
 
         """
         return []
+
+    def list_files(self):
+        """List files in version control.
+
+        We could raise a NotImplementedError, but a basic method that
+        works is handy for the vcs.txt tests.
+        """
+        files = []
+        for dirpath, dirnames, filenames in os.walk('.'):
+            for filename in filenames:
+                files.append(os.path.join(dirpath, filename))
+        return files

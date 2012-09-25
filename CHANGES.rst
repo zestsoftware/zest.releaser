@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.39 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Only search for files in version control.  This is when finding a
+  history file or version.txt file.  We should not edit files that
+  are not in our package.  Fixes issue #22.
+  [maurits]
 
 
 3.38 (2012-09-25)
