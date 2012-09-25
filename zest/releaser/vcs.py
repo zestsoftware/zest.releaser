@@ -66,6 +66,7 @@ class BaseVersionControl(object):
             lower_names.append(name.lower())
         names = lower_names
         files = self.list_files()
+        found = []
         for fullpath in files:
             filename = os.path.basename(fullpath)
             if filename.lower() in names:
@@ -76,7 +77,13 @@ class BaseVersionControl(object):
                     logger.warn("Found file %s in version control but not on "
                                 "file system.", fullpath)
                     continue
-                return fullpath
+                found.append(fullpath)
+        if not found:
+            return
+        if len(found) > 1:
+            logger.warn("Found more than one file, picked the first one to "
+                        "change: %s", ', '.join(found))
+        return found[0]
 
     def history_file(self):
         """Return history file location.
