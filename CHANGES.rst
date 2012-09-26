@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.39 (unreleased)
+3.39 (2012-09-26)
 -----------------
 
 - Only search for files in version control.  This is when finding a
