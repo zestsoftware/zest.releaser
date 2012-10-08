@@ -5,6 +5,8 @@ python:
   - 2.7
 before_install:
   - sudo apt-get update
+# apt-get update is needed as there's a faulty PPA in use inside travis
+# itself, which means we cannot install git-svn. The update fixes it.
   - sudo apt-get install git-svn
 # In the line above, really only git-svn is needed as the rest
 # is automatically installed. But then again, git-svn used to be
