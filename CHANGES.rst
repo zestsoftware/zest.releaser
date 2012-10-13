@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.40 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Support svn (1.7+) checkouts that are not directly in the root. Only applies
+  when someone checks out a whole tree and wants to release one of the items
+  in a subdirectory. Fixes #27.
 
 
 3.39 (2012-09-26)
