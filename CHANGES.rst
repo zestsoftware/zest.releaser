@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.40 (unreleased)
+3.40 (2012-10-13)
 -----------------
 
 - Support svn (1.7+) checkouts that are not directly in the root. Only applies
