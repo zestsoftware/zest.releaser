@@ -152,4 +152,4 @@ And there are no uncommitted changes:
 
     >>> print system("git status")
     # On branch master
-    nothing to commit (working directory clean)
+    nothing to commit, working directory clean

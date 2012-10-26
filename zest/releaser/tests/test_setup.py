@@ -50,6 +50,9 @@ checker = renormalizing.RENormalizing([
     (re.compile(', 0 deletions\(-\)'), ''),
     # Change in git 1.7.9.2: '1 files changed':
     (re.compile(' 1 files changed'), ' 1 file changed'),
+    # Change in git 1.8.0:
+    (re.compile('nothing to commit \(working directory clean\)'),
+     'nothing to commit, working directory clean'),
     ])
 
 
