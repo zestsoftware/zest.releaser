@@ -40,7 +40,7 @@ First the three most important links:
 And... we're automatically being tested by Travis:
 
 .. image:: https://secure.travis-ci.org/zestsoftware/zest.releaser.png?branch=master
-   :target: http://travis-ci.org/#!/zestsoftware/zest.releaser
+   :target: https://travis-ci.org/#!/zestsoftware/zest.releaser
 
 
 Installation
