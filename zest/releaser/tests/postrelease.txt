@@ -188,10 +188,10 @@ created:
     Question: ...
     >>> os.remove('CHANGES.txt')
     >>> utils.answers_for_testing = ['8.2', '']
-    >>> postrelease.main() # The setup complains, but that's ok for the test
-    Current version is 'Traceback...
-    Our reply: 8.2
+    >>> postrelease.main() # The setup.py complains and quits. Our test setup catches this.
+    Traceback (most recent call last):
     ...
+    RuntimeError: SYSTEM EXIT (code=1)
     >>> open('CHANGES.txt') # Nope, doesn't exist.
     Traceback (most recent call last):
     ...

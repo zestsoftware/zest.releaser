@@ -4,7 +4,11 @@ Changelog for zest.releaser
 3.41 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Getting the version from setup.py can give a traceback if the
+  setup.py has an error.  During prerelease this would result in a
+  proposed version of 'Traceback'.  Now we print the traceback and
+  quit.
+  [maurits]
 
 
 3.40 (2012-10-13)

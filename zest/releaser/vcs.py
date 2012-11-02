@@ -2,6 +2,7 @@ from zest.releaser.utils import system
 import logging
 import os
 import re
+import sys
 
 from zest.releaser import utils
 
@@ -31,6 +32,13 @@ class BaseVersionControl(object):
             # UserWarnings.
             system(utils.setup_py('egg_info'))
             version = system(utils.setup_py('--version'))
+            if version.startswith('Traceback'):
+                # Likely cause is for example forgetting to 'import
+                # os' when using 'os' in setup.py.
+                logger.critical('The setup.py of this package has an error:')
+                print version
+                logger.critical('No version found.')
+                sys.exit(1)
             return utils.strip_version(version)
 
     def get_setup_py_name(self):
