@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.41 (unreleased)
+3.41 (2012-11-02)
 -----------------
 
 - Getting the version from setup.py can give a traceback if the
