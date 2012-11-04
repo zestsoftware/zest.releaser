@@ -246,8 +246,8 @@ def resolve_name(name):
     for part in parts[1:]:
         try:
             ret = getattr(ret, part)
-        except AttributeError as exc:
-            raise ImportError(exc)
+        except AttributeError:
+            raise ImportError(part)
 
     return ret
 
