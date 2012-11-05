@@ -91,7 +91,7 @@ The release script tags the release and uploads it:
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Committed revision 6.
+    Committed revision 6...
     Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
     A    TMPDIR/tha.example-0.1-.../local-checkouts
