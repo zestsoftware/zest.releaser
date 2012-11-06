@@ -8,6 +8,9 @@ Changelog for zest.releaser
   one with the shortest path.
   [maurits]
 
+- Support project-specific hooks listed in setup.cfg.
+  [iguananaut]
+
 
 3.41 (2012-11-02)
 -----------------
