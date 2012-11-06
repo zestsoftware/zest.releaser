@@ -89,7 +89,8 @@ class BaseVersionControl(object):
         if not found:
             return
         if len(found) > 1:
-            logger.warn("Found more than one file, picked the first one to "
+            found.sort(key=len)
+            logger.warn("Found more than one file, picked the shortest one to "
                         "change: %s", ', '.join(found))
         return found[0]
 

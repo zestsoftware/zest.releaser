@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.42 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- When finding multiple version, changes or history files, pick the
+  one with the shortest path.
+  [maurits]
 
 
 3.41 (2012-11-02)
