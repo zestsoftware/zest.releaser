@@ -264,7 +264,7 @@ def run_hooks(setup_cfg, which_releaser, when, data):
     hook_group = '%s.%s' % (which_releaser, when)
     config = setup_cfg.config
 
-    if config.has_option('zest.releaser', hook_group):
+    if config is not None and config.has_option('zest.releaser', hook_group):
         # Multiple hooks may be specified, each one separated by whitespace
         # (including newlines)
         hook_names = config.get('zest.releaser', hook_group).split()
