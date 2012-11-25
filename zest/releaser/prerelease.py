@@ -94,7 +94,11 @@ class Prereleaser(baserelease.Basereleaser):
         check if the first one matches the version and whether it has a the
         current date.
         """
-        history_file = self.vcs.history_file()
+        default_location = None
+        if self.setup_cfg.config.has_option('zest.releaser', 'history_file'):
+            default_location = self.setup_cfg.config.get('zest.releaser',
+                                                         'history_file')
+        history_file = self.vcs.history_file(location=default_location)
         if not history_file:
             logger.warn("No history file found")
             self.data['history_lines'] = None
