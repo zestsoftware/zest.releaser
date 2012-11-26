@@ -20,8 +20,8 @@ An svn checkout of a project:
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import system
     >>> print system("svn info %s" % svnsourcedir)
-    Path: TESTTEMP/tha.example-svn...
-    URL: file://TESTREPO/tha.example/trunk
+    Path: ...tha.example-svn...
+    file://TESTREPO/tha.example/trunk
     ...
 
 There are no tags yet:
@@ -94,8 +94,7 @@ The release script tags the release and uploads it:
     Committed revision 6...
     Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
-    A    TMPDIR/tha.example-0.1-.../local-checkouts
-    ...
+    ...CHANGES.txt...
     Checked out revision 6.
     <BLANKLINE>
     Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
