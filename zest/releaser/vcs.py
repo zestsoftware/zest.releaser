@@ -98,11 +98,12 @@ class BaseVersionControl(object):
         """Return history file location.
         """
         if location:
-            if os.path.exists(location) is False:
+            # Hardcoded location passed from the config file.
+            if os.path.exists(location):
+                return location
+            else:
                 logger.warn("The specified history file %s doesn't exist",
                             location)
-            else:
-                return location
         filenames = []
         for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
             filenames.append(base)
