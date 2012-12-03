@@ -95,9 +95,9 @@ class Prereleaser(baserelease.Basereleaser):
         current date.
         """
         default_location = None
-        if self.setup_cfg.config.has_option('zest.releaser', 'history_file'):
-            default_location = self.setup_cfg.config.get('zest.releaser',
-                                                         'history_file')
+        config = self.setup_cfg.config
+        if config and config.has_option('zest.releaser', 'history_file'):
+            default_location = config.get('zest.releaser', 'history_file')
         history_file = self.vcs.history_file(location=default_location)
         if not history_file:
             logger.warn("No history file found")
