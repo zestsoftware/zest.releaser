@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.43 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Allow options in parameters instead of raw input for jenkins integration.
+  [j-san]
 
 
 3.42 (2013-01-07)
