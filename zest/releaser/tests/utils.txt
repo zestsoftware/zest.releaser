@@ -18,9 +18,11 @@ A ``-v`` on the commandline turns on debug level logging:
     >>> import logging
     >>> orig_argv = sys.argv[1:]
     >>> sys.argv[1:] = []
+    >>> utils.parse_options()
     >>> utils.loglevel() == logging.INFO
     True
     >>> sys.argv[1:] = ['-v']
+    >>> utils.parse_options()
     >>> utils.loglevel() == logging.DEBUG
     True
 

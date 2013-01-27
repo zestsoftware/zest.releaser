@@ -5,6 +5,7 @@ from pkg_resources import parse_version
 import re
 import subprocess
 import sys
+from optparse import OptionParser
 
 import pkg_resources
 
@@ -14,12 +15,15 @@ WRONG_IN_VERSION = ['svn', 'dev', '(']
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
+AUTO_RESPONSE = False
+VERBOSE = False
+ANSWERS = []
+
 
 def loglevel():
     """Return DEBUG when -v is specified, INFO otherwise"""
-    if len(sys.argv) > 1:
-        if '-v' in sys.argv:
-            return logging.DEBUG
+    if VERBOSE:
+        return logging.DEBUG
     return logging.INFO
 
 
@@ -39,13 +43,37 @@ def cleanup_version(version):
     return version
 
 
+def parse_options():
+    global AUTO_RESPONSE
+    global VERBOSE
+    global ANSWERS
+    parser = OptionParser()
+    parser.add_option("--no-input",
+                      action="store_true", dest="auto_response", default=False,
+                      help="Don't ask questions mode")
+    parser.add_option("-v", "--verbose",
+                      action="store_true", dest="verbose", default=False,
+                      help="Verbose mode")
+
+    (options, args) = parser.parse_args()
+    AUTO_RESPONSE = options.auto_response
+    VERBOSE = options.verbose
+    ANSWERS = args
+
+
+
 # Hack for testing, see get_input()
 TESTMODE = False
 answers_for_testing = []
 
-
 def get_input(question):
     if not TESTMODE:
+        if len(ANSWERS) > 0:
+            answer = ANSWERS.pop()
+            logger.info(question)
+            logger.info(answer)
+            return answer
+
         # Normal operation.
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
@@ -68,6 +96,10 @@ def ask(question, default=True, exact=False):
     when it does not match the default.
 
     """
+    if AUTO_RESPONSE:
+        logger.debug(question)
+        logger.debug(default and "yes" or "no")
+        return default
     while True:
         yn = 'y/n'
         if default is True:
