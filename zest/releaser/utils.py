@@ -1,11 +1,11 @@
 # Small utility methods.
+from optparse import OptionParser
+from pkg_resources import parse_version
 import logging
 import os
-from pkg_resources import parse_version
 import re
 import subprocess
 import sys
-from optparse import OptionParser
 
 import pkg_resources
 
@@ -17,7 +17,6 @@ MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
 VERBOSE = False
-ANSWERS = []
 
 
 def loglevel():
@@ -46,11 +45,12 @@ def cleanup_version(version):
 def parse_options():
     global AUTO_RESPONSE
     global VERBOSE
-    global ANSWERS
     parser = OptionParser()
     parser.add_option("--no-input",
-                      action="store_true", dest="auto_response", default=False,
-                      help="Don't ask questions mode")
+                      action="store_true",
+                      dest="auto_response",
+                      default=False,
+                      help="Don't ask questions, just use the default values")
     parser.add_option("-v", "--verbose",
                       action="store_true", dest="verbose", default=False,
                       help="Verbose mode")
@@ -58,8 +58,6 @@ def parse_options():
     (options, args) = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
-    ANSWERS = args
-
 
 
 # Hack for testing, see get_input()
@@ -68,12 +66,6 @@ answers_for_testing = []
 
 def get_input(question):
     if not TESTMODE:
-        if len(ANSWERS) > 0:
-            answer = ANSWERS.pop()
-            logger.info(question)
-            logger.info(answer)
-            return answer
-
         # Normal operation.
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
@@ -97,8 +89,9 @@ def ask(question, default=True, exact=False):
 
     """
     if AUTO_RESPONSE:
+        logger.debug("Auto-responding '%s' to the question below." % (
+                default and "yes" or "no"))
         logger.debug(question)
-        logger.debug(default and "yes" or "no")
         return default
     while True:
         yn = 'y/n'
