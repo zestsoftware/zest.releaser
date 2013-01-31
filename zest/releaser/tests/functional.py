@@ -153,7 +153,7 @@ def teardown(test):
     sys.exit = test.orig_exit
     urllib2.urlopen = test.orig_urlopen
     os.chdir(test.orig_dir)
-    #print "Left over tempdir:", test.tempdir
+    # print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
 
 
