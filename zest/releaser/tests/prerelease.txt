@@ -18,9 +18,9 @@ An svn checkout of a project:
     'TESTTEMP/tha.example-svn'
     >>> import os
     >>> os.chdir(svnsourcedir)
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> print system("svn info %s" % svnsourcedir)
-    Path: TESTTEMP/tha.example-svn...
+    Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...
 
