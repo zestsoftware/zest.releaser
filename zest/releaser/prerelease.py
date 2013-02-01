@@ -72,8 +72,15 @@ class Prereleaser(baserelease.Basereleaser):
             logger.critical('No version found.')
             sys.exit(1)
         suggestion = utils.cleanup_version(original_version)
-        q = ("Enter version [%s]: " % suggestion)
-        new_version = utils.get_input(q).strip()
+
+        if utils.NEW_VERSION:
+            new_version = utils.NEW_VERSION
+        elif utils.AUTO_RESPONSE:
+            new_version = suggestion
+        else:
+            q = ("Enter version [%s]: " % suggestion)
+            new_version = utils.get_input(q).strip()
+
         if not new_version:
             new_version = suggestion
         self.data['original_version'] = original_version

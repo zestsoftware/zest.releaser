@@ -87,9 +87,16 @@ class Postreleaser(baserelease.Basereleaser):
             suggestion_string = ' [%s]' % suggestion
         else:
             suggestion_string = ''
-        q = ("Enter new development version ('.dev0' will be appended)"
-             "%s: " % suggestion_string)
-        version = utils.get_input(q).strip()
+
+        if utils.DEV_VERSION:
+            version = utils.DEV_VERSION
+        elif utils.AUTO_RESPONSE:
+            version = suggestion
+        else:
+            q = ("Enter new development version ('.dev0' will be appended)"
+                 "%s: " % suggestion_string)
+            version = utils.get_input(q).strip()
+
         if not version:
             version = suggestion
         if not version:

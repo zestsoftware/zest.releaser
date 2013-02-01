@@ -17,6 +17,8 @@ MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
 VERBOSE = False
+NEW_VERSION = None
+DEV_VERSION = None
 
 
 def loglevel():
@@ -45,6 +47,8 @@ def cleanup_version(version):
 def parse_options():
     global AUTO_RESPONSE
     global VERBOSE
+    global NEW_VERSION
+    global DEV_VERSION
     parser = OptionParser()
     parser.add_option("--no-input",
                       action="store_true",
@@ -54,10 +58,15 @@ def parse_options():
     parser.add_option("-v", "--verbose",
                       action="store_true", dest="verbose", default=False,
                       help="Verbose mode")
-
+    parser.add_option("-n", "--new-version", dest="new_version",
+                      help="The new version")
+    parser.add_option("-d", "--dev-version", dest="dev_version",
+                      help="The dev version")
     (options, args) = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
+    NEW_VERSION = options.new_version
+    DEV_VERSION = options.dev_version
 
 
 # Hack for testing, see get_input()
