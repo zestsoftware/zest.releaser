@@ -142,4 +142,3 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     import os.path
     <BLANKLINE>
     version = '0.2.dev0'
-

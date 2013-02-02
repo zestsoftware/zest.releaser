@@ -15,7 +15,8 @@ def setup(test):
     partstestdir = os.getcwd()  # Buildout's test run in parts/test
     test.orig_dir = partstestdir
     test.tempdir = tempfile.mkdtemp(prefix='testtemp')
-
+    test.orig_argv = sys.argv[1:]
+    sys.argv[1:] = []
     # Monkey patch sys.exit
     test.orig_exit = sys.exit
 
@@ -153,6 +154,7 @@ def teardown(test):
     sys.exit = test.orig_exit
     urllib2.urlopen = test.orig_urlopen
     os.chdir(test.orig_dir)
+    sys.argv[1:] = test.orig_argv
     # print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
 

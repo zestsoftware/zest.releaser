@@ -1,5 +1,5 @@
-Detailed tests of prerelease.py
-===============================
+Fullrelease process with --no-input
+===================================
 
 .. :doctest:
 .. :setup: zest.releaser.tests.functional.setup
@@ -32,33 +32,32 @@ The version is at 0.1.dev0:
     <BLANKLINE>
     version = '0.1.dev0'
 
-Asking input on the prompt is not unittestable unless we use the prepared
-testing hack in utils.py:
+Run the whole process without asking for input. For that we pass the
+``--no-input`` option:
 
+    >>> import sys
+    >>> sys.argv[1:] = ['--no-input']
     >>> from zest.releaser import utils
-    >>> utils.TESTMODE = True
+    >>> utils.parse_options()
+    >>> utils.AUTO_RESPONSE
+    True
 
-Run the prerelease script:
+Now run the fullrelease:
 
-    >>> utils.answers_for_testing = ['', '']
-    >>> from zest.releaser import prerelease
-    >>> prerelease.main()
-    Question: Enter version [0.1]:
-    Our reply: <ENTER>
-    Checking data dict
-    Question: OK to commit this (Y/n)?
-    Our reply: <ENTER>
+    >>> from zest.releaser import fullrelease
+    >>> fullrelease.main()
+    Tag needed ...
 
-The changelog and setup.py are at 0.1 and indicate a release date:
+The changelog and setup.py are at 0.2.dev0:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
     =====================
     <BLANKLINE>
-    0.1 (...-...-...)
+    0.2 (unreleased)
     ----------------
     >>> svnhead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.1'
+    version = '0.2.dev0'

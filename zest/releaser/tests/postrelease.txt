@@ -124,7 +124,7 @@ but 0.2.20:
     Our reply: <ENTER>
 
 Releases without numbers at the end should not fluster us even when we
-cannot suggest a reasonable number:
+cannot suggest a reasonable number. We'll ask for a version until we get one:
 
     >>> utils.answers_for_testing = ['0.3beta', '']
     >>> prerelease.main()
@@ -133,14 +133,13 @@ cannot suggest a reasonable number:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.answers_for_testing = ['', '']
-    >>> postrelease.main()
-    Traceback (most recent call last):
-    ...
-    RuntimeError: SYSTEM EXIT (code=None)
-    >>> utils.answers_for_testing = ['0.3rc', '']
+    >>> utils.answers_for_testing = ['', '', '0.3rc', '']
     >>> postrelease.main()
     Current version is '0.3beta'
+    Question: Enter new development version ('.dev0' will be appended):
+    Our reply: <ENTER>
+    Question: Enter new development version ('.dev0' will be appended):
+    Our reply: <ENTER>
     Question: Enter new development version ('.dev0' will be appended):
     Our reply: 0.3rc
     Checking data dict

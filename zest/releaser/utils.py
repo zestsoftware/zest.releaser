@@ -54,7 +54,6 @@ def parse_options():
     parser.add_option("-v", "--verbose",
                       action="store_true", dest="verbose", default=False,
                       help="Verbose mode")
-
     (options, args) = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
@@ -78,6 +77,29 @@ def get_input(question):
     return answer
 
 
+def ask_version(question, default=None):
+    if AUTO_RESPONSE:
+        if default is None:
+            msg = ("We cannot determine a default version, but "
+                   "we're running in --no-input mode. The original "
+                   "question: %s")
+            msg = msg % question
+            raise RuntimeError(msg)
+        logger.debug("Auto-responding '%s' to the question below.", default)
+        logger.debug(question)
+        return default
+    if default:
+        question += " [%s]: " % default
+    else:
+        question += ": "
+    while True:
+        input = get_input(question)
+        if input:
+            return input
+        if default:
+            return default
+
+
 def ask(question, default=True, exact=False):
     """Ask the question in y/n form and return True/False.
 
@@ -89,6 +111,11 @@ def ask(question, default=True, exact=False):
 
     """
     if AUTO_RESPONSE:
+        if default is None:
+            msg = ("The question '%s' requires a manual answer, but " +
+                   "we're running in --no-input mode.")
+            msg = msg % question
+            raise RuntimeError(msg)
         logger.debug("Auto-responding '%s' to the question below." % (
                 default and "yes" or "no"))
         logger.debug(question)
