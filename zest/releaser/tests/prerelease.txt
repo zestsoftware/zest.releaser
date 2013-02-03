@@ -18,9 +18,9 @@ An svn checkout of a project:
     'TESTTEMP/tha.example-svn'
     >>> import os
     >>> os.chdir(svnsourcedir)
-    >>> from zest.releaser.utils import system 
+    >>> from zest.releaser.utils import system
     >>> print system("svn info %s" % svnsourcedir)
-    Path: TESTTEMP/tha.example-svn...
+    Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...
 
@@ -38,7 +38,7 @@ testing hack in utils.py:
     >>> from zest.releaser import utils
     >>> utils.TESTMODE = True
 
-Run the postrelease script:
+Run the prerelease script:
 
     >>> utils.answers_for_testing = ['', '']
     >>> from zest.releaser import prerelease

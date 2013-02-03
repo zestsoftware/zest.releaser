@@ -1,0 +1,101 @@
+Fullrelease process with --no-input
+===================================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Several items are prepared for us.
+
+An svn repository:
+
+    >>> repo_url
+    'file://TESTREPO'
+
+An svn checkout of a project:
+
+    >>> svnsourcedir
+    'TESTTEMP/tha.example-svn'
+    >>> import os
+    >>> os.chdir(svnsourcedir)
+    >>> from zest.releaser.utils import system
+    >>> print system("svn info %s" % svnsourcedir)
+    Path: ...
+    URL: file://TESTREPO/tha.example/trunk
+    ...
+
+The version is at 0.1.dev0:
+
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.1.dev0'
+
+Run the whole process without asking for input. For that we pass the
+``--no-input`` option:
+
+    >>> import sys
+    >>> sys.argv[1:] = ['--no-input']
+    >>> from zest.releaser import utils
+    >>> utils.parse_options()
+    >>> utils.AUTO_RESPONSE
+    True
+
+Now run the fullrelease:
+
+    >>> from zest.releaser import fullrelease
+    >>> fullrelease.main()
+    Tag needed ...
+
+The changelog and setup.py are at 0.2.dev0:
+
+    >>> svnhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.2 (unreleased)
+    ----------------
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.2.dev0'
+
+An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
+
+    >>> sys.argv[1:] = []
+    >>> from zest.releaser import utils
+    >>> utils.parse_options()
+    >>> utils.AUTO_RESPONSE
+    False
+    >>> cfg = """
+    ... [zest.releaser]
+    ... no-input = true
+    ... """
+    >>> open('setup.cfg', 'w').write(cfg)
+
+Now run the fullrelease:
+
+    >>> from zest.releaser import fullrelease
+    >>> fullrelease.main()
+    Tag needed ...
+
+Yes, the no-input was detected:
+
+    >>> utils.AUTO_RESPONSE
+    True
+
+The changelog and setup.py are at 0.3.dev0 now:
+
+    >>> svnhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.3 (unreleased)
+    ----------------
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.3.dev0'

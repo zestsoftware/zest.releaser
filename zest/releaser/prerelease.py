@@ -72,8 +72,7 @@ class Prereleaser(baserelease.Basereleaser):
             logger.critical('No version found.')
             sys.exit(1)
         suggestion = utils.cleanup_version(original_version)
-        q = ("Enter version [%s]: " % suggestion)
-        new_version = utils.get_input(q).strip()
+        new_version = utils.ask_version("Enter version", default=suggestion)
         if not new_version:
             new_version = suggestion
         self.data['original_version'] = original_version
@@ -162,6 +161,7 @@ def datacheck(data):
 
 
 def main():
+    utils.parse_options()
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
     prereleaser = Prereleaser()

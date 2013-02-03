@@ -1,7 +1,8 @@
 # Small utility methods.
+from optparse import OptionParser
+from pkg_resources import parse_version
 import logging
 import os
-from pkg_resources import parse_version
 import re
 import subprocess
 import sys
@@ -14,12 +15,14 @@ WRONG_IN_VERSION = ['svn', 'dev', '(']
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
+AUTO_RESPONSE = False
+VERBOSE = False
+
 
 def loglevel():
     """Return DEBUG when -v is specified, INFO otherwise"""
-    if len(sys.argv) > 1:
-        if '-v' in sys.argv:
-            return logging.DEBUG
+    if VERBOSE:
+        return logging.DEBUG
     return logging.INFO
 
 
@@ -39,10 +42,26 @@ def cleanup_version(version):
     return version
 
 
+def parse_options():
+    global AUTO_RESPONSE
+    global VERBOSE
+    parser = OptionParser()
+    parser.add_option("--no-input",
+                      action="store_true",
+                      dest="auto_response",
+                      default=False,
+                      help="Don't ask questions, just use the default values")
+    parser.add_option("-v", "--verbose",
+                      action="store_true", dest="verbose", default=False,
+                      help="Verbose mode")
+    (options, args) = parser.parse_args()
+    AUTO_RESPONSE = options.auto_response
+    VERBOSE = options.verbose
+
+
 # Hack for testing, see get_input()
 TESTMODE = False
 answers_for_testing = []
-
 
 def get_input(question):
     if not TESTMODE:
@@ -58,6 +77,29 @@ def get_input(question):
     return answer
 
 
+def ask_version(question, default=None):
+    if AUTO_RESPONSE:
+        if default is None:
+            msg = ("We cannot determine a default version, but "
+                   "we're running in --no-input mode. The original "
+                   "question: %s")
+            msg = msg % question
+            raise RuntimeError(msg)
+        logger.debug("Auto-responding '%s' to the question below.", default)
+        logger.debug(question)
+        return default
+    if default:
+        question += " [%s]: " % default
+    else:
+        question += ": "
+    while True:
+        input = get_input(question)
+        if input:
+            return input
+        if default:
+            return default
+
+
 def ask(question, default=True, exact=False):
     """Ask the question in y/n form and return True/False.
 
@@ -68,6 +110,16 @@ def ask(question, default=True, exact=False):
     when it does not match the default.
 
     """
+    if AUTO_RESPONSE:
+        if default is None:
+            msg = ("The question '%s' requires a manual answer, but " +
+                   "we're running in --no-input mode.")
+            msg = msg % question
+            raise RuntimeError(msg)
+        logger.debug("Auto-responding '%s' to the question below." % (
+                default and "yes" or "no"))
+        logger.debug(question)
+        return default
     while True:
         yn = 'y/n'
         if default is True:

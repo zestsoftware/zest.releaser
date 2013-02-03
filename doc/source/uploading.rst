@@ -134,3 +134,33 @@ is to put a proper ``MANIFEST.in`` file next to your ``setup.py``.
 See `zest.pocompile`_ for an example.
 
 .. _`zest.pocompile`: http://pypi.python.org/pypi/zest.pocompile
+
+
+Running automatically without input
+-----------------------------------
+
+Sometimes you want to run zest.releaser without hitting ``<enter>`` all the
+time. You might want to run zest.releaser from your automatic test
+environment, for instance. For that, there's the ``--no-input`` commandline
+option. Pass that and all defaults will be accepted automatically.
+
+This means your version number and so must be OK. If you want to have a
+different version number from the one in your ``setup.py``, you'll need to
+change it yourself by hand. And the next version number will be chosen
+automatically, too. So ``1.2`` will become ``1.3``. This won't detect that you
+might want to do a ``1.3`` after a ``1.2.1`` bugfix release, but we cannot
+perform feats of magic in zest.releaser :-)
+
+In case you always want to accept the defaults, a setting in your
+``setup.cfg`` is available::
+
+    [zest.releaser]
+    no-input = true
+
+An important reminder: if you want to make sure you never upload anything
+automatically to the python package index, include the ``release = no``
+setting in ``setup.cfg``::
+
+    [zest.releaser]
+    no-input = true
+    release = no

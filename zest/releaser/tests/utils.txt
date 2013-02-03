@@ -16,13 +16,19 @@ A ``-v`` on the commandline turns on debug level logging:
 
     >>> import sys
     >>> import logging
-    >>> orig_argv = sys.argv[1:]
     >>> sys.argv[1:] = []
+    >>> utils.parse_options()
+    >>> utils.VERBOSE
+    False
     >>> utils.loglevel() == logging.INFO
     True
     >>> sys.argv[1:] = ['-v']
+    >>> utils.parse_options()
+    >>> utils.VERBOSE
+    True
     >>> utils.loglevel() == logging.DEBUG
     True
+    >>> sys.argv[1:] = []
 
 
 Version numbers
@@ -138,6 +144,65 @@ from causing mishaps:
     Question: Does mocking work? (y/n)?
     Our reply: n
     False
+
+You can also ask for a version number. Pass it as the default value:
+
+    >>> utils.answers_for_testing = ['']
+    >>> utils.ask_version('New version', default='72.0')
+    Question: New version [72.0]:
+    Our reply: <ENTER>
+    '72.0'
+    >>> utils.answers_for_testing = ['1.0', '', '']
+    >>> utils.ask_version('New version', default='72.0')
+    Question: New version [72.0]:
+    Our reply: 1.0
+    '1.0'
+
+
+Not asking input
+----------------
+
+For running automatically, the ``--no-input`` option is available. By default
+it is off:
+
+    >>> utils.AUTO_RESPONSE
+    False
+
+We can switch it on:
+
+    >>> utils.TESTMODE = False
+    >>> utils.answers_for_testing = []
+    >>> import sys
+    >>> sys.argv[1:] = ['--no-input']
+    >>> utils.parse_options()
+    >>> utils.AUTO_RESPONSE
+    True
+
+This way, answers aren't even asked. With a default of yes:
+
+    >>> utils.answers_for_testing = ['']
+    >>> utils.ask('Does mocking work?')
+    True
+
+A default of False:
+
+    >>> utils.answers_for_testing = ['']
+    >>> utils.ask('Does mocking work?', default=False)
+    False
+
+A default of None requires an answer, which means we cannot run in
+``--no-input`` mode. Return an error in this case:
+
+    >>> utils.ask('Does mocking work?', default=None)
+    Traceback (most recent call last):
+    ...
+    RuntimeError: The question 'Does...' requires a manual answer...
+
+The default for versions is accepted, too:
+
+    >>> utils.answers_for_testing = []
+    >>> utils.ask('What mocking version, my liege?', default='72')
+    '72'
 
 
 Output filtering
@@ -379,4 +444,3 @@ been replaced by the generated documentation:
 Clean up
 
     >>> shutil.rmtree(tempdir)
-
