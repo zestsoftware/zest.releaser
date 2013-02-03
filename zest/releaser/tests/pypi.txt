@@ -277,7 +277,7 @@ Now we add a setup.cfg with some good and some bad commands:
     >>> SETUP_CFG = """
     ... [zest.releaser]
     ... release = no
-    ... 
+    ...
     ... [egg_info]
     ... tag_build = dev
     ... tag_svn_revision = true"""
@@ -328,3 +328,28 @@ We try that again with this fixed up config file as input:
 We are done with testing so we restore the original version:
 
     >>> sys.version_info = orig_version
+
+
+No-input mode
+-------------
+
+In some cases you want no questions asked. Zest.releaser should just do its
+job without asking for versions or confirmations. You can enable this
+behaviour with a ``--no-input`` commandline option, but also by adding
+``no-input = yes`` to the ``[zest.releaser]`` section in ``setup.cfg``.
+
+The default is False:
+
+    >>> setup_config.no_input()
+    False
+
+Enable the option:
+
+    >>> SETUP_CFG = """
+    ... [zest.releaser]
+    ... no-input = yes
+    ... """
+    >>> open(pypi.SETUP_CONFIG_FILE, 'wb').write(SETUP_CFG)
+    >>> setup_config = pypi.SetupConfig()
+    >>> setup_config.no_input()
+    True

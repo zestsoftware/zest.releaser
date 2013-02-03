@@ -61,3 +61,41 @@ The changelog and setup.py are at 0.2.dev0:
     import os.path
     <BLANKLINE>
     version = '0.2.dev0'
+
+An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
+
+    >>> sys.argv[1:] = []
+    >>> from zest.releaser import utils
+    >>> utils.parse_options()
+    >>> utils.AUTO_RESPONSE
+    False
+    >>> cfg = """
+    ... [zest.releaser]
+    ... no-input = true
+    ... """
+    >>> open('setup.cfg', 'w').write(cfg)
+
+Now run the fullrelease:
+
+    >>> from zest.releaser import fullrelease
+    >>> fullrelease.main()
+    Tag needed ...
+
+Yes, the no-input was detected:
+
+    >>> utils.AUTO_RESPONSE
+    True
+
+The changelog and setup.py are at 0.3.dev0 now:
+
+    >>> svnhead('CHANGES.txt')
+    Changelog of tha.example
+    =====================
+    <BLANKLINE>
+    0.3 (unreleased)
+    ----------------
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '0.3.dev0'

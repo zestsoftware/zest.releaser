@@ -12,6 +12,8 @@ class Basereleaser(object):
         self.data = {'workingdir': self.vcs.workingdir,
                      'name': self.vcs.name}
         self.setup_cfg = pypi.SetupConfig()
+        if self.setup_cfg.no_input():
+            utils.AUTO_RESPONSE = True
 
     def _run_hooks(self, when):
         which_releaser = self.__class__.__name__.lower()
