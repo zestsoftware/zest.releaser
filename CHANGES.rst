@@ -4,7 +4,11 @@ Changelog for zest.releaser
 3.43 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added ``--no-input`` commandline option for running automatically without
+  asking for input. Useful when started from some build tool. See the
+  documentation at the end of
+  http://zestreleaser.readthedocs.org/en/latest/uploading.html .
+  [reinout, based upon a patch by j-san]
 
 
 3.42 (2013-01-07)

@@ -83,13 +83,8 @@ class Postreleaser(baserelease.Basereleaser):
                             "calculate a suggestion for a next version.")
                 suggestion = None
         print "Current version is %r" % current
-        if suggestion:
-            suggestion_string = ' [%s]' % suggestion
-        else:
-            suggestion_string = ''
-        q = ("Enter new development version ('.dev0' will be appended)"
-             "%s: " % suggestion_string)
-        version = utils.get_input(q).strip()
+        q = "Enter new development version ('.dev0' will be appended)"
+        version = utils.ask_version(q, default=suggestion)
         if not version:
             version = suggestion
         if not version:
@@ -177,6 +172,7 @@ def datacheck(data):
 
 
 def main():
+    utils.parse_options()
     logging.basicConfig(level=utils.loglevel(),
                         format="%(levelname)s: %(message)s")
     postreleaser = Postreleaser()
