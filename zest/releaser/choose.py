@@ -27,5 +27,11 @@ def version_control():
         last_try = utils.system("svn info")
         if 'Repository' in last_try:
             return svn.Subversion()
+        # true means that we are in the work tree, false that we are in the
+        # .git tree. If we are not in a git repository, the answer will looks
+        # like 'Not a git repository' or even 'git: not found'
+        last_try = utils.system("git  rev-parse --is-inside-work-tree")
+        if last_try == 'true\n':
+            return git.Git()
         logger.critical('No version control system detected.')
         sys.exit(1)
