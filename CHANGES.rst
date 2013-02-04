@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.43 (unreleased)
+3.43 (2013-02-04)
 -----------------
 
 - Added ``--no-input`` commandline option for running automatically without
