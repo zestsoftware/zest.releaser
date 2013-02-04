@@ -31,7 +31,7 @@ def version_control():
         # .git tree. If we are not in a git repository, the answer will looks
         # like 'Not a git repository' or even 'git: not found'
         last_try = utils.system("git  rev-parse --is-inside-work-tree")
-        if last_try in ['true\n', 'false\n']:
+        if last_try == 'true\n':
             return git.Git()
         logger.critical('No version control system detected.')
         sys.exit(1)

@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.43 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Allow use of Git repository containing multiple directory, implicitely,
+  subdirectories must contain a setup.py and a CHANGES.txt to be released.
 
 
 3.42 (2013-01-07)
