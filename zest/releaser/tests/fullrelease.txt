@@ -32,12 +32,17 @@ The version is at 0.1.dev0:
     <BLANKLINE>
     version = '0.1.dev0'
 
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
 Run the whole process without asking for input. For that we pass the
 ``--no-input`` option:
 
     >>> import sys
     >>> sys.argv[1:] = ['--no-input']
-    >>> from zest.releaser import utils
     >>> utils.parse_options()
     >>> utils.AUTO_RESPONSE
     True
@@ -46,6 +51,8 @@ Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
+    Checking data dict
+    Checking data dict
     Tag needed ...
 
 The changelog and setup.py are at 0.2.dev0:
@@ -79,6 +86,8 @@ Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
+    Checking data dict
+    Checking data dict
     Tag needed ...
 
 Yes, the no-input was detected:
