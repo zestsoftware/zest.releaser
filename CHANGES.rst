@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.44 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Noting in our pypi classifiers that we support python 2.6+, not python
+  2.4/2.5. Slowly things will creep into zest.releaser's code that break
+  compatibility with those old versions. And we want to get it to work on
+  python 3 and that's easier with just 2.6/2.7 support.
 
 
 3.43 (2013-02-04)
