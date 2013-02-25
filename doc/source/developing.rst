@@ -16,9 +16,9 @@ zest.releaser checkout, do this::
 Python versions
 ---------------
 
-The tests currently pass on python 2.4 (probably), 2.5 and 2.6 and 2.7.  Using
+The tests currently pass on python 2.6 and 2.7. Using
 2.6.2 specifically will give test failures. Travis continuous integration
-tests 2.5, 2.6 and 2.7 for us automatically.
+tests 2.6 and 2.7 for us automatically.
 
 
 Necessary programs
