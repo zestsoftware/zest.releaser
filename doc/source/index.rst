@@ -15,6 +15,7 @@ documentation on *using* zest.releaser:
    overview
    uploading
    assumptions
+   further_reading
 
 And documentation on zest.releaser as a project; for instance for reporting
 bugs and fixing the code:
