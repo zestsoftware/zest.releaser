@@ -5,11 +5,12 @@
 # serve to show the default.
 
 import datetime
+import pkg_resources
 
 project = "zest.releaser"
-author = ""
-version = ""
-release = ""
+author = "Reinout and Maurits van Rees"
+version = pkg_resources.get_distribution("zest.releaser").version
+release = version
 this_year = datetime.date.today().year
 copyright = '%s, %s' % (this_year, author)
 
