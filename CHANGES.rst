@@ -4,6 +4,8 @@ Changelog for zest.releaser
 3.44 (unreleased)
 -----------------
 
+- Added link to other documentation sources in the sphinx docs.
+
 - Noting in our pypi classifiers that we support python 2.6+, not python
   2.4/2.5. Slowly things will creep into zest.releaser's code that break
   compatibility with those old versions. And we want to get it to work on
