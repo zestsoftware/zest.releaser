@@ -44,11 +44,18 @@ def multiple_pypi_support():
 class SetupConfig(object):
     """Wrapper around the setup.cfg file if available.
 
-    Mostly, this is here to cleanup setup.cfg from these settings:
+    One reason is to cleanup setup.cfg from these settings::
 
-    [egg_info]
-    tag_build = dev
-    tag_svn_revision = true
+        [egg_info]
+        tag_build = dev
+        tag_svn_revision = true
+
+    Another is for optional zest.releaser-specific settings::
+
+        [zest.releaser]
+        no-input = yes
+
+
     """
 
     config_filename = SETUP_CONFIG_FILE
@@ -121,6 +128,26 @@ class SetupConfig(object):
             return default
         try:
             result = self.config.getboolean('zest.releaser', 'no-input')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
+    def python_file_with_version(self):
+        """Return Python filename with ``__version__`` marker, if configured.
+
+        Enable this by adding a ``python-file-with-version`` option::
+
+            [zest.releaser]
+            python-file-with-version = reinout/maurits.py
+
+        Return None when nothing has been configured.
+
+        """
+        default = None
+        if self.config is None:
+            return default
+        try:
+            result = self.config.get('zest.releaser', 'python-file-with-version')
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
