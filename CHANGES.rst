@@ -4,6 +4,11 @@ Changelog for zest.releaser
 3.44 (unreleased)
 -----------------
 
+- Added optional ``python-file-with-version`` setting for the
+  ``[zest.releaser]`` section in ``setup.cfg``. If set, zest.releaser extracts
+  the version from that file's ``__version__`` attribute. (See `PEP 396
+  <http://www.python.org/dev/peps/pep-0396/>`_).
+
 - Added link to other documentation sources in the sphinx docs.
 
 - Noting in our pypi classifiers that we support python 2.6+, not python
