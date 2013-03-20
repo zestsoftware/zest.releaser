@@ -4,7 +4,18 @@ import os
 import re
 import sys
 
+from zest.releaser import pypi
 from zest.releaser import utils
+
+VERSION_PATTERN = re.compile(r"""
+version\W*=\W*   # 'version =  ' with possible whitespace
+\d               # Some digit, start of version.
+""", re.VERBOSE)
+
+UNDERSCORED_VERSION_PATTERN = re.compile(r"""
+__version__\W*=\W*   # '__version__ =  ' with possible whitespace
+\d                   # Some digit, start of version.
+""", re.VERBOSE)
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +66,20 @@ class BaseVersionControl(object):
             f = open(version_file, 'r')
             version = f.read()
             return utils.strip_version(version)
+
+    def get_python_file_version(self):
+        setup_cfg = pypi.SetupConfig()
+        if not setup_cfg.python_file_with_version():
+            return
+        lines = open(setup_cfg.python_file_with_version()).read().split('\n')
+        for line in lines:
+            match = UNDERSCORED_VERSION_PATTERN.search(line)
+            if match:
+                logger.debug("Matching __version__ line found: %r", line)
+                line = line.lstrip('__version__').strip()
+                line = line.lstrip('=').strip()
+                line = line.replace('"', '').replace("'", "")
+                return utils.strip_version(line)
 
     def filefind(self, names):
         """Return first found file matching name (case-insensitive).
@@ -132,16 +157,35 @@ class BaseVersionControl(object):
         the package itself.
 
         So when in doubt: use setup.py.
+
+        But if there's an explicitly configured Python file that has to be
+        searched for a ``__version__`` attribute, use that one.
         """
-        return self.get_setup_py_version() or self.get_version_txt_version()
+        return (self.get_python_file_version() or
+                self.get_setup_py_version() or
+                self.get_version_txt_version())
 
     def _update_version(self, version):
         """Find out where to change the version and change it.
 
-        There are two places where the version can be defined. The first one is
-        some version.txt that gets read by setup.py. The second is directly in
-        setup.py.
+        There are three places where the version can be defined. The first one
+        is an explicitly defined Python file with a ``__version__``
+        attribute. The second one is some version.txt that gets read by
+        setup.py. The third is directly in setup.py.
         """
+        if self.get_python_file_version():
+            setup_cfg = pypi.SetupConfig()
+            filename = setup_cfg.python_file_with_version()
+            lines = open(filename).read().split('\n')
+            for index, line in enumerate(lines):
+                match = UNDERSCORED_VERSION_PATTERN.search(line)
+                if match:
+                    lines[index] = "__version__ = '%s'" % version
+            contents = '\n'.join(lines)
+            open(filename, 'wb').write(contents)
+            logger.info("Set __version__ in %s to %r", filename, version)
+            return
+
         versionfile = self.filefind('version.txt')
         if versionfile:
             # We have a version.txt file but does it match the setup.py
@@ -152,15 +196,12 @@ class BaseVersionControl(object):
                 open(versionfile, 'wb').write(version + '\n')
                 logger.info("Changed %s to %r", versionfile, version)
                 return
+
         good_version = "version = '%s'" % version
-        pattern = re.compile(r"""
-        version\W*=\W*   # 'version =  ' with possible whitespace
-        \d               # Some digit, start of version.
-        """, re.VERBOSE)
         line_number = 0
         setup_lines = open('setup.py').read().split('\n')
         for line in setup_lines:
-            match = pattern.search(line)
+            match = VERSION_PATTERN.search(line)
             if match:
                 logger.debug("Matching version line found: %r", line)
                 if line.startswith(' '):
