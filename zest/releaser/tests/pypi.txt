@@ -353,3 +353,25 @@ Enable the option:
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.no_input()
     True
+
+
+Python version file pointer
+---------------------------
+
+In some cases you want to point at a Python file with a ``__version__`` marker
+in it. For that, there's the ``python-file-with-version`` option.
+
+The default is None:
+
+    >>> setup_config.python_file_with_version()
+
+Enable the option:
+
+    >>> SETUP_CFG = """
+    ... [zest.releaser]
+    ... python-file-with-version = reinout/maurits.py
+    ... """
+    >>> open(pypi.SETUP_CONFIG_FILE, 'wb').write(SETUP_CFG)
+    >>> setup_config = pypi.SetupConfig()
+    >>> setup_config.python_file_with_version()
+    'reinout/maurits.py'
