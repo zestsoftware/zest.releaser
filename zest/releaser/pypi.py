@@ -101,7 +101,7 @@ class SetupConfig(object):
             self.config.set('egg_info', 'tag_build', '')
         if self.config.has_option('egg_info', 'tag_svn_revision'):
             self.config.set('egg_info', 'tag_svn_revision', 'false')
-        new_setup = open(self.config_filename, 'wb')
+        new_setup = open(self.config_filename, 'w')
         try:
             self.config.write(new_setup)
         finally:

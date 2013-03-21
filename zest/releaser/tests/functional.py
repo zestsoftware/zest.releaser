@@ -89,7 +89,7 @@ def setup(test):
     bzrsourcedir = os.path.join(test.tempdir, 'tha.example-bzr')
     shutil.copytree(sourcedir, bzrsourcedir)
     system("bzr init %s" % bzrsourcedir)
-    open(os.path.join(bzrsourcedir, '.bzrignore'), 'wb').write(
+    open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
         'tha.example.egg-info\n')
     system("bzr add %s" % bzrsourcedir)
     system("bzr commit -m 'init' %s" % bzrsourcedir)
@@ -99,7 +99,7 @@ def setup(test):
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
     system("git init")
-    open(os.path.join(gitsourcedir, '.gitignore'), 'wb').write(
+    open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
         'tha.example.egg-info\n')
     system("git add .")
     system("git commit -a -m 'init'")

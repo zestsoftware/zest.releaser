@@ -9,6 +9,10 @@ Changelog for zest.releaser
   the version from that file's ``__version__`` attribute. (See `PEP 396
   <http://www.python.org/dev/peps/pep-0396/>`_).
 
+- File writes now use the platform's default line endings instead of always
+  writing ``\n`` unix style line endings. (Technically, we write using ``w``
+  instead of ``wb`` mode).
+
 - Added link to other documentation sources in the sphinx docs.
 
 - Noting in our pypi classifiers that we support python 2.6+, not python

@@ -182,7 +182,7 @@ class BaseVersionControl(object):
                 if match:
                     lines[index] = "__version__ = '%s'" % version
             contents = '\n'.join(lines)
-            open(filename, 'wb').write(contents)
+            open(filename, 'w').write(contents)
             logger.info("Set __version__ in %s to %r", filename, version)
             return
 
@@ -193,7 +193,7 @@ class BaseVersionControl(object):
             setup_version = self.get_setup_py_version()
             if not setup_version or (setup_version ==
                                      self.get_version_txt_version()):
-                open(versionfile, 'wb').write(version + '\n')
+                open(versionfile, 'w').write(version + '\n')
                 logger.info("Changed %s to %r", versionfile, version)
                 return
 
@@ -213,7 +213,7 @@ class BaseVersionControl(object):
                 break
             line_number += 1
         contents = '\n'.join(setup_lines)
-        open('setup.py', 'wb').write(contents)
+        open('setup.py', 'w').write(contents)
         logger.info("Set setup.py's version to %r", version)
 
     version = property(_extract_version, _update_version)
