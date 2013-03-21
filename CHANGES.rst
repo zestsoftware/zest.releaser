@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.44 (unreleased)
+3.44 (2013-03-21)
 -----------------
 
 - Added optional ``python-file-with-version`` setting for the
