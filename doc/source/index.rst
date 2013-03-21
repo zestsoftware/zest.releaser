@@ -13,6 +13,7 @@ documentation on *using* zest.releaser:
    :maxdepth: 2
 
    overview
+   versions
    uploading
    assumptions
    further_reading

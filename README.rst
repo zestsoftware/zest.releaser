@@ -8,9 +8,10 @@ It does away with all the boring bits. This is what zest.releaser automates
 for you:
 
 * It updates the version number. The version number can either be in
-  ``setup.py`` or ``version.txt``. For example, it switches you from
-  ``0.3.dev0`` (current development version) to ``0.3`` (release) to
-  ``0.4.dev0`` (new development version).
+  ``setup.py`` or ``version.txt`` (or in a ``__versions__`` attribute in a
+  Python file). For example, it switches you from ``0.3.dev0`` (current
+  development version) to ``0.3`` (release) to ``0.4.dev0`` (new development
+  version).
 
 * It updates the history/changes file. It logs the release date on release and
   adds a new heading for the upcoming changes (new development version).
@@ -78,7 +79,6 @@ currently supports:
 Others could be added if there are volunteers! Git and mercurial support
 have been contributed years ago when we were working with bzr and subversion,
 for instance.
-
 
 
 Available commands

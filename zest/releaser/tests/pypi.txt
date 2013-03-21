@@ -281,7 +281,7 @@ Now we add a setup.cfg with some good and some bad commands:
     ... [egg_info]
     ... tag_build = dev
     ... tag_svn_revision = true"""
-    >>> open(pypi.SETUP_CONFIG_FILE, 'wb').write(SETUP_CFG)
+    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.config
     <ConfigParser.ConfigParser instance at ...>
@@ -349,7 +349,29 @@ Enable the option:
     ... [zest.releaser]
     ... no-input = yes
     ... """
-    >>> open(pypi.SETUP_CONFIG_FILE, 'wb').write(SETUP_CFG)
+    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.no_input()
     True
+
+
+Python version file pointer
+---------------------------
+
+In some cases you want to point at a Python file with a ``__version__`` marker
+in it. For that, there's the ``python-file-with-version`` option.
+
+The default is None:
+
+    >>> setup_config.python_file_with_version()
+
+Enable the option:
+
+    >>> SETUP_CFG = """
+    ... [zest.releaser]
+    ... python-file-with-version = reinout/maurits.py
+    ... """
+    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
+    >>> setup_config = pypi.SetupConfig()
+    >>> setup_config.python_file_with_version()
+    'reinout/maurits.py'
