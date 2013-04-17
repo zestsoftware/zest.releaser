@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.45 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Supporting ``VERSION`` (without extension) in addition to the
+  old-zope-products-``VERSION.txt`` files.
 
 
 3.44 (2013-03-21)

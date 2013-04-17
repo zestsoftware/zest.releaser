@@ -179,3 +179,34 @@ Setting it sets it in the correct Python file:
     import something
     __version__ = '2.1'
     print(something.else)
+
+
+Version corner cases
+--------------------
+
+Version files can also be called ``VERSION`` instead of ``version.txt`` (or
+``VERSION.TXT``):
+
+    >>> versiontxtproject = os.path.join(tempdir, 'vp2')
+    >>> os.mkdir(versiontxtproject)
+    >>> os.chdir(versiontxtproject)
+    >>> open('VERSION', 'w').write('1.0 dev')
+
+We need some version control marker (like an ``.svn`` dir):
+
+    >>> os.mkdir('.marker')
+    >>> checkout = vcs.BaseVersionControl()
+    >>> checkout.internal_filename = '.marker'
+
+Open the project with the BaseVersionControl and it finds the version file and
+returns the cleaned-up version:
+
+    >>> checkout.get_version_txt_version()
+    '1.0dev'
+
+Same with a ``VERSION.txt``:
+
+    >>> os.remove('VERSION')
+    >>> open('VERSION.txt', 'w').write('22.3')
+    >>> checkout.get_version_txt_version()
+    '22.3'
