@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.45 (unreleased)
+3.45 (2013-04-17)
 -----------------
 
 - Supporting ``VERSION`` (without extension) in addition to the
