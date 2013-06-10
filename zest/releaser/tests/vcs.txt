@@ -204,9 +204,18 @@ returns the cleaned-up version:
     >>> checkout.get_version_txt_version()
     '1.0dev'
 
+Setting the version works also with ``VERSION`` files:
+
+    >>> checkout.version = '1.1'
+    >>> print open('VERSION').read()
+    1.1
+
 Same with a ``VERSION.txt``:
 
     >>> os.remove('VERSION')
     >>> open('VERSION.txt', 'w').write('22.3')
     >>> checkout.get_version_txt_version()
     '22.3'
+    >>> checkout.version = '22.4'
+    >>> print open('VERSION.txt').read()
+    22.4
