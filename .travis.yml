@@ -22,5 +22,9 @@ install:
   - git config --global user.name "Temp user"
   - git config --global user.email "temp@example.com"
   - bzr whoami "Temp user <temp@example.com>"
+  - bzr --version
+  - git --version
+  - hg --version
+  - svn --version
 script:
   - bin/test
