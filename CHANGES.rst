@@ -10,7 +10,8 @@ Changelog for zest.releaser
 3.46 (2013-06-28)
 -----------------
 
-- Nothing changed yet.
+- Support actually updating ``VERSION`` as well.
+  Issue #43.
 
 
 3.45 (2013-04-17)
