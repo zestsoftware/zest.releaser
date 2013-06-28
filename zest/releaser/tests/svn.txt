@@ -223,6 +223,12 @@ none:
 Answer 'no' the first time we get asked to create the directory.  This means
 zest.releaser has no business with this project, so exit.
 
+There is a test failure on the travis server for Python2.6 and not for
+Python2.7, which does not make sense.  So let's have some feedback.
+
+    >>> sys.version
+    >>> print system("svn --version")
+    >>> sample_checkout._tags_name
     >>> utils.answers_for_testing = ['n']
     >>> sample_checkout.available_tags()
     Traceback (most recent call last):
