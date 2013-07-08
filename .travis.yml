@@ -11,6 +11,7 @@ before_install:
 # is automatically installed. But then again, git-svn used to be
 # installed by default, too. So for later reference, you need
 # "git bzr mercurial subversion", too.
+  - pip install --upgrade distribute
 notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
