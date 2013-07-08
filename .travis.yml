@@ -11,7 +11,19 @@ before_install:
 # is automatically installed. But then again, git-svn used to be
 # installed by default, too. So for later reference, you need
 # "git bzr mercurial subversion", too.
+# Now, we need to upgrade the system distribute, otherwise the
+# bootstrap will fail:
   - pip install --upgrade distribute
+# Configure git and bazaar:
+  - git config --global user.name "Temp user"
+  - git config --global user.email "temp@example.com"
+  - bzr whoami "Temp user <temp@example.com>"
+# Get the versions of the vcs programs, so we have this information in
+# case something goes wrong:
+  - bzr --version
+  - git --version
+  - hg --version
+  - svn --version
 notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
@@ -20,12 +32,5 @@ env: HGUSER=temp
 install:
   - python bootstrap.py
   - bin/buildout
-  - git config --global user.name "Temp user"
-  - git config --global user.email "temp@example.com"
-  - bzr whoami "Temp user <temp@example.com>"
-  - bzr --version
-  - git --version
-  - hg --version
-  - svn --version
 script:
   - bin/test
