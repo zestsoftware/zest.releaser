@@ -47,7 +47,7 @@ And... we're automatically being tested by Travis:
 Installation
 ------------
 
-Just a simple ``pip zest.releaser`` or ``easy_install zest.releaser`` is
+Just a simple ``pip install zest.releaser`` or ``easy_install zest.releaser`` is
 enough.
 
 Alternatively, buildout users can install zest.releaser as part of a specific
