@@ -96,7 +96,7 @@ class Subversion(BaseVersionControl):
 
         tag_info = system('svn list %s%s' % (base, tags_name))
         if 'Could not resolve hostname' in tag_info or \
-                'Repository moved' in tag_info:
+                'Repository moved' in tag_info or 'E670008' in tag_info:
             logger.error('Network problem: %s', tag_info)
             sys.exit()
         tags = [line.replace('/', '').strip()
