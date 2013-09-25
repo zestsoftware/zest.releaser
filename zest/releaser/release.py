@@ -108,9 +108,15 @@ class Releaser(baserelease.Basereleaser):
         return " ".join(options)
 
     def _upload_distributions(self, package, sdist_options, pypiconfig):
-        # See if creating an egg actually works.
+        # See if creating an sdist actually works.  Also, this makes
+        # the sdist available for plugins.
         logger.info("Making an egg of a fresh tag checkout.")
         print system(utils.setup_py('sdist ' + sdist_options))
+        if not pypiconfig.is_pypi_configured():
+            logger.warn("You must have a properly configured %s file in "
+                        "your home dir to upload an egg.",
+                        pypi.DIST_CONFIG_FILE)
+            return
 
         # First ask if we want to upload to pypi, which should always
         # work, also without collective.dist.
@@ -240,12 +246,7 @@ class Releaser(baserelease.Basereleaser):
         self._run_hooks('after_checkout')
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
-            if not pypiconfig.config:
-                logger.warn("You must have a properly configured %s file in "
-                            "your home dir to upload an egg.",
-                            pypi.DIST_CONFIG_FILE)
-            else:
-                self._upload_distributions(package, sdist_options, pypiconfig)
+            self._upload_distributions(package, sdist_options, pypiconfig)
 
         # Make sure we are in the expected directory again.
         os.chdir(self.vcs.workingdir)

@@ -178,6 +178,17 @@ class PypiConfig(object):
             # Safety valve
             self.config = None
 
+    def is_pypi_configured(self):
+        # Do we have configuration for releasing to at least one
+        # pypi-compatible server?
+        if self.config is None:
+            return False
+        if self.is_old_pypi_config():
+            return True
+        if self.is_new_pypi_config() and len(self.distutils_servers()) > 0:
+            return True
+        return False
+
     def is_old_pypi_config(self):
         if self.config is None:
             return False

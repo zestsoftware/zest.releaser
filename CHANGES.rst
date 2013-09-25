@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.47 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Always create an egg (``sdist``), even when there is no proper pypi
+  configuration file.  This helps plugins that use our entry points.
+  Fixes https://github.com/zestsoftware/zest.releaser/issues/45
+  [maurits]
 
 
 3.46 (2013-06-28)
