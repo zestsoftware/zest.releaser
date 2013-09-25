@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.47 (unreleased)
+3.47 (2013-09-25)
 -----------------
 
 - Always create an egg (``sdist``), even when there is no proper pypi
