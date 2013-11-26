@@ -65,7 +65,6 @@ answers_for_testing = []
 
 def get_input(question):
     if not TESTMODE:
-        print "Temporary test message. TESTMODE is false."
         # Normal operation.
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
