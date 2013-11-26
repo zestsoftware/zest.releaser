@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.48 (unreleased)
+3.48 (2013-11-26)
 -----------------
 
 - When using git, checkout submodules.
