@@ -85,6 +85,7 @@ class Subversion(BaseVersionControl):
         if tags_name is None:
             # Suggest to create a tags dir with the default plural /tags name.
             print "tags dir does not exist at %s" % base + 'tags'
+            print "Debugging answers for testing: %r" % utils.answers_for_testing
             if utils.ask("Shall I create it"):
                 cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
                 logger.info("Running %r", cmd)
