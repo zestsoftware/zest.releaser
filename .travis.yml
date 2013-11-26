@@ -24,8 +24,6 @@ before_install:
   - git --version
   - hg --version
   - svn --version
-  - svn list http://svn.plone.org/svn/collective/zest.releaser/notags || echo "no tags"
-  - echo $LANG
 notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
