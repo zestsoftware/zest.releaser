@@ -47,8 +47,12 @@ class Git(BaseVersionControl):
         os.chdir(temp)
         cmd = 'git clone %s %s' % (self.workingdir, 'gitclone')
         logger.debug(system(cmd))
+        clonedir = os.path.join(temp, 'gitclone')
+        os.chdir(clonedir)
+        cmd = 'git submodule update --init --recursive'
+        logger.debug(system(cmd))
         os.chdir(cwd)
-        return os.path.join(temp, 'gitclone')
+        return clonedir
 
     def tag_url(self, version):
         # this doesn't apply to Git, so we just return the
@@ -101,7 +105,8 @@ class Git(BaseVersionControl):
             # to work.
             logger.warn("We haven't been chdir'ed to %s", checkout_dir)
             sys.exit(1)
-        return 'git checkout %s' % version
+        return 'git checkout %s && git submodule update --init --recursive' % \
+            version
 
     def is_clean_checkout(self):
         """Is this a clean checkout?

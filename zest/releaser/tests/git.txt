@@ -157,7 +157,7 @@ Chdir and make a tag checkout:
     >>> os.chdir(temp)
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'git checkout 0.1'
+    'git checkout 0.1 && git submodule update --init --recursive'
     >>> print system(cmd)
     Note: ...0.1...
     HEAD is now at ... small tweak
