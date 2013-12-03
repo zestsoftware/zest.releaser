@@ -37,6 +37,7 @@ setup(name='zest.releaser',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
+          'nextversion',
       ],
       extras_require={
           'test': ['z3c.testsetup']},
