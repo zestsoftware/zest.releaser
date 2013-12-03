@@ -75,14 +75,13 @@ is not recognized as development version:
     >>> vcs.version
     '0.1b'
 
-Run the postrelease script.  Since the version number does not end
-with a number, the script cannot make a suggestion:
+Run the postrelease script:
 
     >>> utils.answers_for_testing = ['0.2', '']
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is '0.1b'
-    Question: Enter new development version ('.dev0' will be appended):
+    Question: Enter new development version ('.dev0' will be appended) [0.1b1]:
     Our reply: 0.2
     Checking data dict
     Question: OK to commit this (Y/n)?
@@ -133,14 +132,10 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.answers_for_testing = ['', '', '0.3rc', '']
+    >>> utils.answers_for_testing = ['0.3rc', '']
     >>> postrelease.main()
     Current version is '0.3beta'
-    Question: Enter new development version ('.dev0' will be appended):
-    Our reply: <ENTER>
-    Question: Enter new development version ('.dev0' will be appended):
-    Our reply: <ENTER>
-    Question: Enter new development version ('.dev0' will be appended):
+    Question: Enter new development version ('.dev0' will be appended) [0.3b1]:
     Our reply: 0.3rc
     Checking data dict
     Question: OK to commit this (Y/n)?
