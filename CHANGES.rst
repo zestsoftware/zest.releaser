@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.49 (unreleased)
+3.49 (2013-12-06)
 -----------------
 
 - Support git-svn checkouts with the default "origin/" prefix.
