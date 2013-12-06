@@ -147,5 +147,5 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 And there are no uncommitted changes:
 
     >>> print system("git status")
-    # On branch master
+    On branch master
     nothing to commit, working directory clean
