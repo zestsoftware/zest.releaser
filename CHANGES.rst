@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.49 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Support git-svn checkouts with the default "origin/" prefix.
+  [kuno]
 
 
 3.48 (2013-11-26)
