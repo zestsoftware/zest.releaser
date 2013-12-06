@@ -1,6 +1,7 @@
 import logging
 import tempfile
 import os
+import os.path
 import sys
 
 from zest.releaser.utils import system
@@ -88,8 +89,20 @@ class Git(BaseVersionControl):
                 print "'git tag' needs to list tag named %s." % (version,)
                 sys.exit()
             cmd = [cmd]
+
+            trunk = None
+            # In Git v2.0, the default prefix will change from "" (no prefix) to "origin/",
+            # try both here.
+            for t in [ '.git/refs/remotes/trunk', '.git/refs/remotes/origin/trunk' ]:
+                if os.path.isfile (t):
+                    trunk = open(t).read()
+
+            if not trunk:
+                print ('No SVN remote found (only the default svn ' +
+                       'prefixes ("" or "origin/") are supported).')
+                sys.exit()
+
             local_head = open('.git/refs/heads/master').read()
-            trunk = open('.git/refs/remotes/trunk').read()
             if local_head != trunk:
                 print "Your local master diverges from trunk.\n"
                 # dcommit before local tagging
