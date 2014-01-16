@@ -95,4 +95,4 @@ class Hg(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return system('hg manifest').splitlines()
+        return system('hg locate').splitlines()
