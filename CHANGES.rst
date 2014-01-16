@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.50 (unreleased)
+3.50 (2014-01-16)
 -----------------
 
 - Changed command "hg manifest" to "hg locate" to list files in Mercurial.
