@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.50 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Changed command "hg manifest" to "hg locate" to list files in Mercurial.
+  The former prints out file permissions along with the file name, causing a bug.
+  [rafaelbco]
 
 
 3.49 (2013-12-06)
