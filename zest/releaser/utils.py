@@ -242,6 +242,8 @@ def show_last_lines(result):
 def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
     executable = sys.executable
+    executable = 'PYTHONPATH=%s %s' % (':'.join(sys.path) , sys.executable)
+
     if TESTMODE:
         # Hack for testing
         for unsafe in ['upload', 'register', 'mregister']:
