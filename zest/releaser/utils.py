@@ -422,13 +422,18 @@ def prepare_documentation_entrypoint(data):
 
 def system(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
-    #print "CMD: %r" % command
+    # print "CMD: %r" % command
+    if command.startswith(sys.executable):
+        env = {'PYTHONPATH': os.pathsep.join(sys.path)}
+    else:
+        env = None
     p = subprocess.Popen(command,
                          shell=True,
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
-                         close_fds=MUST_CLOSE_FDS)
+                         close_fds=MUST_CLOSE_FDS,
+                         env=env)
     i, o, e = (p.stdin, p.stdout, p.stderr)
     if input:
         i.write(input)
