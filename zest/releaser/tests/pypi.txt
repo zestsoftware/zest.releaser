@@ -86,7 +86,7 @@ name yourself.  We'll do that in the rest of these tests.
 A missing file doesn't lead to an error:
 
     >>> pypiconfig = pypi.PypiConfig(config_filename='non/existing')
-    >>> pypiconfig.config == None
+    >>> pypiconfig.config is None
     True
 
 There are two styles of ``.pypirc`` files.  The old one just for pypi:
@@ -173,7 +173,7 @@ recognized as the new format as it cannot possibly function:
     >>> pypi.mupload = None
     >>> sys.version_info = (2, 5)
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
-    >>> pypiconfig.config == None # Format isn't right, so no config.
+    >>> pypiconfig.config is None # Format isn't right, so no config.
     True
     >>> pypiconfig.is_old_pypi_config()
     False

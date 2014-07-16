@@ -399,7 +399,7 @@ name isn't zest.releaser.  Otherwise we would generate our documentation every
 time we used zest.releaser...
 
     >>> data = {'name': 'vanrees.worlddomination'}
-    >>> utils.prepare_documentation_entrypoint(data) == None
+    >>> utils.prepare_documentation_entrypoint(data) is None
     True
 
 Prepare a mock documentation file:

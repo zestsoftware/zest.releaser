@@ -217,7 +217,7 @@ answering, set up the answer test mode:
 There is no tags dir yet, so the tags name detection (/tag or /tags) returns
 none:
 
-    >>> sample_checkout._tags_name == None
+    >>> sample_checkout._tags_name is None
     True
 
 Answer 'no' the first time we get asked to create the directory.  This means
