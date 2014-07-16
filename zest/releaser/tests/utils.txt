@@ -349,11 +349,16 @@ Safe setup.py running
 ---------------------
 
 ``setup_py()`` returns the ``python setup.py xyz`` command line by using
-sys.executable, with ``PYTHONPATH`` prepended.
+sys.executable.  We prepend this with ``PYTHONPATH`` on posix-like
+platforms, which is better in corner cases.
 
     >>> cmd = utils.setup_py('cook a cow')
     >>> cmd = cmd.replace(sys.executable, 'python') # test normalization
-    >>> pythonpath = 'PYTHONPATH=%s ' % ':'.join(sys.path)
+    >>> import os
+    >>> if os.name == 'posix':
+    ...     pythonpath = 'PYTHONPATH=%s ' % os.pathsep.join(sys.path)
+    ... else:
+    ...     pythonpath = ''
     >>> cmd.startswith(pythonpath)
     True
     >>> print cmd[len(pythonpath):]
