@@ -242,14 +242,6 @@ def show_last_lines(result):
 def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
     executable = sys.executable
-    if os.name == 'posix':
-        # Set PYTHONPATH explicitly to be the same as for
-        # zest.releaser.  This helps for cases where the standard
-        # python for example does not have setuptools installed.  But
-        # this does not work on Windows and maybe other platforms.
-        executable = 'PYTHONPATH=%s %s' % (
-            os.pathsep.join(sys.path), sys.executable)
-
     if TESTMODE:
         # Hack for testing
         for unsafe in ['upload', 'register', 'mregister']:
