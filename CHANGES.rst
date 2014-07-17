@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.52 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed "longtest" command when run with a python without setuptools
+  installed. Similar fix to the one in 3.51.
+  See https://github.com/zestsoftware/zest.releaser/issues/57
+  [reinout]
 
 
 3.51 (2014-07-17)
