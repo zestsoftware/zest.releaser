@@ -4,7 +4,10 @@ Changelog for zest.releaser
 3.51 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- When calling ``python setup.py`` use the same PYTHONPATH environment
+  as the script has.
+  https://github.com/zestsoftware/zest.releaser/issues/24
+  [maurits]
 
 
 3.50 (2014-01-16)
