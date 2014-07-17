@@ -215,15 +215,19 @@ answering, set up the answer test mode:
     >>> sample_checkout = svn.Subversion()
 
 There is no tags dir yet, so the tags name detection (/tag or /tags) returns
-None.  We call this a few times to see if we can flush out a
-flickering test failure:
+None:
 
-    >>> sample_checkout._tags_name is None
-    True
-    >>> sample_checkout._tags_name is None
-    True
-    >>> sample_checkout._tags_name is None
-    True
+    >>> print sample_checkout._tags_name
+    None
+
+Test that the answers_for_testing still work, because we have some
+strange test failures:
+
+    >>> utils.answers_for_testing = ['n']
+    >>> utils.ask("Shall I create it")
+    Question: Shall I create it (Y/n)?
+    Our reply: n
+    False
 
 Answer 'no' the first time we get asked to create the directory.  This means
 zest.releaser has no business with this project, so exit.
@@ -237,6 +241,8 @@ zest.releaser has no business with this project, so exit.
 Answer 'yes' and the tags dir gets created.  The available tags result is
 obviously an empty list:
 
+    >>> print sample_checkout._tags_name
+    None
     >>> utils.answers_for_testing = ['y']
     >>> sample_checkout.available_tags()
     tags dir does not exist at file://TESTREPO/sample/tags
@@ -245,6 +251,8 @@ obviously an empty list:
     <BLANKLINE>
     Committed revision 10.
     []
+    >>> print sample_checkout._tags_name
+    tags
     >>> cmd = 'svn list %s/sample' % repo_url
     >>> print system(cmd)
     tags/
