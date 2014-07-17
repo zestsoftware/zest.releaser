@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.51 (unreleased)
+3.51 (2014-07-17)
 -----------------
 
 - When calling ``python setup.py`` use the same PYTHONPATH environment
