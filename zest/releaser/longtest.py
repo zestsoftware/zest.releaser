@@ -1,12 +1,13 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
 import logging
-import sys
-import webbrowser
-import tempfile
 import os
+import sys
+import tempfile
+import webbrowser
 
 from zest.releaser import utils
+from zest.releaser.utils import system
 
 logger = logging.getLogger(__name__)
 
@@ -15,11 +16,12 @@ def show_longdesc():
     filename1 = tempfile.mktemp()
     filename2 = tempfile.mktemp()
     filename2 = filename2 + '.html'
-    error = os.system(utils.setup_py('--long-description > %s' %
-                                     filename1))
-    if error:
-        logging.error('Error generating long description.')
-        sys.exit()
+    # Note: for the setup.py call we use system() from our utils module. This
+    # makes sure the python path is set up right.
+    # For the other calls we use os.system(), because that returns an error
+    # code which we need.
+    system(utils.setup_py('--long-description > %s' %
+                          filename1))
     error = os.system('rst2html.py %s > %s' % (filename1, filename2))
     if error:
         # On Linux it needs to be 'rst2html', without the '.py'
