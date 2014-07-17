@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.52 (unreleased)
+3.52 (2014-07-17)
 -----------------
 
 - Fixed "longtest" command when run with a python without setuptools
