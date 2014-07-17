@@ -69,7 +69,10 @@ def get_input(question):
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
     print "Question:", question
-    answer = answers_for_testing.pop(0)
+    # Import utils fresh, so we are sure to get the latest list.
+    # There are some mysterious test failures.
+    import utils
+    answer = utils.answers_for_testing.pop(0)
     if answer == '':
         print "Our reply: <ENTER>"
     else:
