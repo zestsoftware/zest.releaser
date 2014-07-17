@@ -40,7 +40,7 @@ testing hack in utils.py:
 
 Run the postrelease script:
 
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is '0.1'
@@ -78,7 +78,7 @@ is not recognized as development version:
 Run the postrelease script.  Since the version number does not end
 with a number, the script cannot make a suggestion:
 
-    >>> utils.answers_for_testing = ['0.2', '']
+    >>> utils.test_answer_book.set_answers(['0.2', ''])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is '0.1b'
@@ -107,14 +107,14 @@ and postrelease.  The next version after 0.2.19 should not be 0.2.110
 but 0.2.20:
 
     >>> from zest.releaser import prerelease
-    >>> utils.answers_for_testing = ['0.2.19', '']
+    >>> utils.test_answer_book.set_answers(['0.2.19', ''])
     >>> prerelease.main()
     Question: Enter version [0.2]:
     Our reply: 0.2.19
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
     Current version is '0.2.19'
     Question: Enter new development version ('.dev0' will be appended) [0.2.20]:
@@ -126,14 +126,14 @@ but 0.2.20:
 Releases without numbers at the end should not fluster us even when we
 cannot suggest a reasonable number. We'll ask for a version until we get one:
 
-    >>> utils.answers_for_testing = ['0.3beta', '']
+    >>> utils.test_answer_book.set_answers(['0.3beta', ''])
     >>> prerelease.main()
     Question: Enter version [0.2.20]:
     Our reply: 0.3beta
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.answers_for_testing = ['', '', '0.3rc', '']
+    >>> utils.test_answer_book.set_answers(['', '', '0.3rc', ''])
     >>> postrelease.main()
     Current version is '0.3beta'
     Question: Enter new development version ('.dev0' will be appended):
@@ -148,14 +148,14 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
 
 Numbers and characters can be combined:
 
-    >>> utils.answers_for_testing = ['1.0a1', '']
+    >>> utils.test_answer_book.set_answers(['1.0a1', ''])
     >>> prerelease.main()
     Question: Enter version [0.3rc]:
     Our reply: 1.0a1
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
     Current version is '1.0a1'
     Question: Enter new development version ('.dev0' will be appended) [1.0a2]:
@@ -166,11 +166,11 @@ Numbers and characters can be combined:
 
 If there's an empty history file, it gets a fresh header.
 
-    >>> utils.answers_for_testing = ['1.0', '']
+    >>> utils.test_answer_book.set_answers(['1.0', ''])
     >>> prerelease.main()
     Question: ...
     >>> open('CHANGES.txt', 'w').write('')
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
     Current ...
     >>> print open('CHANGES.txt', 'r').read()
@@ -182,11 +182,11 @@ If there's an empty history file, it gets a fresh header.
 If there is no history file, we get no errors and a new history file is not
 created:
 
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> prerelease.main()
     Question: ...
     >>> os.remove('CHANGES.txt')
-    >>> utils.answers_for_testing = ['8.2', '']
+    >>> utils.test_answer_book.set_answers(['8.2', ''])
     >>> postrelease.main() # The setup.py complains and quits. Our test setup catches this.
     Traceback (most recent call last):
     ...
@@ -199,10 +199,10 @@ created:
 Re-instate the history file again, but omit the restructuredtext header line:
 
     >>> open('CHANGES.txt', 'w').write('1.0 (1972-12-25)\n\n- hello\n')
-    >>> utils.answers_for_testing = ['1.3', '']
+    >>> utils.test_answer_book.set_answers(['1.3', ''])
     >>> prerelease.main()
     Question: ...
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
     Current ...
 

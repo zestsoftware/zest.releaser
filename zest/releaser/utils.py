@@ -61,7 +61,23 @@ def parse_options():
 
 # Hack for testing, see get_input()
 TESTMODE = False
-answers_for_testing = []
+
+
+class AnswerBook(object):
+
+    def __init__(self):
+        self.answers = []
+
+    def set_answers(self, answers=None):
+        if answers is None:
+            answers = []
+        self.answers = answers
+
+    def get_next_answer(self):
+        return self.answers.pop(0)
+
+test_answer_book = AnswerBook()
+
 
 def get_input(question):
     if not TESTMODE:
@@ -69,10 +85,7 @@ def get_input(question):
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
     print "Question:", question
-    # Import utils fresh, so we are sure to get the latest list.
-    # There are some mysterious test failures.
-    import utils
-    answer = utils.answers_for_testing.pop(0)
+    answer = test_answer_book.get_next_answer()
     if answer == '':
         print "Our reply: <ENTER>"
     else:

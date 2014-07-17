@@ -54,7 +54,7 @@ testing hack in utils.py:
 Run the prerelease script:
 
     >>> from zest.releaser import prerelease
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> prerelease.main()
     Question: Enter version [0.1]:
     Our reply: <ENTER>
@@ -81,7 +81,7 @@ And the version number is just 0.1 and has lost its dev marker:
 
 The release script tags the release and uploads it:
 
-    >>> utils.answers_for_testing = ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']
+    >>> utils.test_answer_book.set_answers(['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y'])
     >>> mock_pypi_available.append('tha.example')
     >>> from zest.releaser import release
     >>> release.main()
@@ -133,7 +133,7 @@ There is now a tag:
 
 And the postrelease script ups the version:
 
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is '0.1'

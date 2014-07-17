@@ -220,19 +220,10 @@ None:
     >>> print sample_checkout._tags_name
     None
 
-Test that the answers_for_testing still work, because we have some
-strange test failures:
-
-    >>> utils.answers_for_testing = ['n']
-    >>> utils.ask("Shall I create it")
-    Question: Shall I create it (Y/n)?
-    Our reply: n
-    False
-
 Answer 'no' the first time we get asked to create the directory.  This means
 zest.releaser has no business with this project, so exit.
 
-    >>> utils.answers_for_testing = ['n']
+    >>> utils.test_answer_book.set_answers(['n'])
     >>> sample_checkout.available_tags()
     Traceback (most recent call last):
     ...
@@ -243,7 +234,7 @@ obviously an empty list:
 
     >>> print sample_checkout._tags_name
     None
-    >>> utils.answers_for_testing = ['y']
+    >>> utils.test_answer_book.set_answers(['y'])
     >>> sample_checkout.available_tags()
     tags dir does not exist at file://TESTREPO/sample/tags
     Question: Shall I create it (Y/n)?
@@ -399,7 +390,7 @@ Now check that we try to create the proper trunk/projectA/tags directory
     >>> from zest.releaser import utils
     >>> utils.TESTMODE = True
     >>> sample_checkout = svn.Subversion()
-    >>> utils.answers_for_testing = ['y']
+    >>> utils.test_answer_book.set_answers(['y'])
     >>> sample_checkout.available_tags()
     tags dir does not exist at file://TESTREPO/trunk/projectA/tags
     Question: Shall I create it (Y/n)?

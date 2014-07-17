@@ -78,13 +78,13 @@ Mock that the tag exists and check again:
 
     >>> orig = releaser.vcs.tag_exists
     >>> releaser.vcs.tag_exists = lambda x: True
-    >>> utils.answers_for_testing = ['n']
+    >>> utils.test_answer_book.set_answers(['n'])
     >>> releaser._check_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: n
     >>> releaser.data['tag_already_exists']
     True
-    >>> utils.answers_for_testing = ['y']
+    >>> utils.test_answer_book.set_answers(['y'])
     >>> releaser._check_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: y
@@ -106,7 +106,7 @@ tag command:
     >>> releaser = release.Releaser()
     >>> releaser.data['tag_already_exists'] = False
     >>> releaser.data['version'] = '0.1'
-    >>> utils.answers_for_testing = ['n']
+    >>> utils.test_answer_book.set_answers(['n'])
     >>> releaser._make_tag()
     Traceback (most recent call last):
     ...

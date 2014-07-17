@@ -40,7 +40,7 @@ testing hack in utils.py:
 
 Run the prerelease script:
 
-    >>> utils.answers_for_testing = ['', '']
+    >>> utils.test_answer_book.set_answers(['', ''])
     >>> from zest.releaser import prerelease
     >>> prerelease.main()
     Question: Enter version [0.1]:

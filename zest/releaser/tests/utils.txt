@@ -68,11 +68,11 @@ Asking input on the prompt is not unittestable unless we use the prepared
 testing hack in utils.py:
 
     >>> utils.TESTMODE = True
-    >>> utils.answers_for_testing = []
+    >>> utils.test_answer_book.set_answers([])
 
 The default is True, so hitting enter (which means no input) returns True
 
-    >>> utils.answers_for_testing = ['']
+    >>> utils.test_answer_book.set_answers([''])
     >>> utils.ask('Does mocking work?')
     Question: Does mocking work? (Y/n)?
     Our reply: <ENTER>
@@ -80,7 +80,7 @@ The default is True, so hitting enter (which means no input) returns True
 
 A default of False also changes the Y/n to y/N:
 
-    >>> utils.answers_for_testing = ['']
+    >>> utils.test_answer_book.set_answers([''])
     >>> utils.ask('Does mocking work?', default=False)
     Question: Does mocking work? (y/N)?
     Our reply: <ENTER>
@@ -88,7 +88,7 @@ A default of False also changes the Y/n to y/N:
 
 A default of None requires an answer:
 
-    >>> utils.answers_for_testing = ['', 'y']
+    >>> utils.test_answer_book.set_answers(['', 'y'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: <ENTER>
@@ -99,22 +99,22 @@ A default of None requires an answer:
 
 Y and n can be upper or lower case:
 
-    >>> utils.answers_for_testing = ['y']
+    >>> utils.test_answer_book.set_answers(['y'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: y
     True
-    >>> utils.answers_for_testing = ['Y']
+    >>> utils.test_answer_book.set_answers(['Y'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: Y
     True
-    >>> utils.answers_for_testing = ['n']
+    >>> utils.test_answer_book.set_answers(['n'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: n
     False
-    >>> utils.answers_for_testing = ['N']
+    >>> utils.test_answer_book.set_answers(['N'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: N
@@ -122,12 +122,12 @@ Y and n can be upper or lower case:
 
 Yes and no are fine:
 
-    >>> utils.answers_for_testing = ['yes']
+    >>> utils.test_answer_book.set_answers(['yes'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: yes
     True
-    >>> utils.answers_for_testing = ['no']
+    >>> utils.test_answer_book.set_answers(['no'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: no
@@ -136,7 +136,7 @@ Yes and no are fine:
 The y or n must be the first character, however, to prevent accidental input
 from causing mishaps:
 
-    >>> utils.answers_for_testing = ['I reallY do not want it', 'n']
+    >>> utils.test_answer_book.set_answers(['I reallY do not want it', 'n'])
     >>> utils.ask('Does mocking work?', default=None)
     Question: Does mocking work? (y/n)?
     Our reply: I reallY do not want it
@@ -147,12 +147,12 @@ from causing mishaps:
 
 You can also ask for a version number. Pass it as the default value:
 
-    >>> utils.answers_for_testing = ['']
+    >>> utils.test_answer_book.set_answers([''])
     >>> utils.ask_version('New version', default='72.0')
     Question: New version [72.0]:
     Our reply: <ENTER>
     '72.0'
-    >>> utils.answers_for_testing = ['1.0', '', '']
+    >>> utils.test_answer_book.set_answers(['1.0', '', ''])
     >>> utils.ask_version('New version', default='72.0')
     Question: New version [72.0]:
     Our reply: 1.0
@@ -171,7 +171,7 @@ it is off:
 We can switch it on:
 
     >>> utils.TESTMODE = False
-    >>> utils.answers_for_testing = []
+    >>> utils.test_answer_book.set_answers([])
     >>> import sys
     >>> sys.argv[1:] = ['--no-input']
     >>> utils.parse_options()
@@ -180,13 +180,13 @@ We can switch it on:
 
 This way, answers aren't even asked. With a default of yes:
 
-    >>> utils.answers_for_testing = ['']
+    >>> utils.test_answer_book.set_answers([''])
     >>> utils.ask('Does mocking work?')
     True
 
 A default of False:
 
-    >>> utils.answers_for_testing = ['']
+    >>> utils.test_answer_book.set_answers([''])
     >>> utils.ask('Does mocking work?', default=False)
     False
 
@@ -200,7 +200,7 @@ A default of None requires an answer, which means we cannot run in
 
 The default for versions is accepted, too:
 
-    >>> utils.answers_for_testing = []
+    >>> utils.test_answer_book.set_answers([])
     >>> utils.ask('What mocking version, my liege?', default='72')
     '72'
 
