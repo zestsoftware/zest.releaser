@@ -446,7 +446,7 @@ def system(command, input=''):
     if input:
         i.write(input)
     i.close()
-    result = o.read() + e.read()
+    result = (o.read(), e.read())
     o.close()
     e.close()
     return result

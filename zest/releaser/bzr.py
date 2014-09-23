@@ -24,7 +24,7 @@ class Bzr(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = system('bzr tags')
+        tag_info = system('bzr tags')[0]
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         logger.debug("Available tags: %r", tags)
@@ -71,11 +71,11 @@ class Bzr(BaseVersionControl):
         status' and see what we get.
         """
         # Check for changes to versioned files.
-        if system('bzr status --versioned'):
+        if system('bzr status --versioned')[0]:
             # Local changes.
             return False
         return True
 
     def list_files(self):
         """List files in version control."""
-        return system('bzr ls --recursive').splitlines()
+        return system('bzr ls --recursive')[0].splitlines()

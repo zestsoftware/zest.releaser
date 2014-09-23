@@ -42,7 +42,7 @@ class BaseVersionControl(object):
             # that otherwise end up in the extracted version, like
             # UserWarnings.
             system(utils.setup_py('egg_info'))
-            version = system(utils.setup_py('--version'))
+            version = system(utils.setup_py('--version'))[0]
             if version.startswith('Traceback'):
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
@@ -58,7 +58,7 @@ class BaseVersionControl(object):
             # that otherwise end up in the extracted name, like
             # UserWarnings.
             system(utils.setup_py('egg_info'))
-            return system(utils.setup_py('--name')).strip()
+            return system(utils.setup_py('--name')[0]).strip()
 
     def get_version_txt_version(self):
         version_file = self.filefind(['version.txt', 'version'])
@@ -270,7 +270,7 @@ class BaseVersionControl(object):
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print system(cmd)
+        print ''.join(system(cmd))
 
     def is_clean_checkout(self):
         "Is this a clean checkout?"
