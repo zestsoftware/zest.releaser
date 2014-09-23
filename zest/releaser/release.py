@@ -75,7 +75,7 @@ class Releaser(baserelease.Basereleaser):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(
                     version)
                 print diff_command
-                print ''.join(system(diff_command))
+                print system(diff_command)
         else:
             self.data['tag_already_exists'] = False
 
@@ -90,7 +90,7 @@ class Releaser(baserelease.Basereleaser):
         for cmd in cmds:
             print cmd
             if utils.ask("Run this command"):
-                print ''.join(system(cmd))
+                print system(cmd)
             else:
                 # all commands are needed in order to proceed normally
                 print "Please create a tag for %s yourself and rerun." % \
@@ -111,7 +111,7 @@ class Releaser(baserelease.Basereleaser):
         # See if creating an sdist actually works.  Also, this makes
         # the sdist available for plugins.
         logger.info("Making an egg of a fresh tag checkout.")
-        print ''.join(system(utils.setup_py('sdist ' + sdist_options)))
+        print system(utils.setup_py('sdist ' + sdist_options))
         if not pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload an egg.",
@@ -140,7 +140,7 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask("Register and upload to PyPI", default=default,
                          exact=exact):
                 logger.info("Running: %s", shell_command)
-                result = ''.join(system(shell_command))
+                result = system(shell_command)
                 utils.show_first_and_last_lines(result)
 
         # If collective.dist is installed (or we are using
@@ -170,7 +170,7 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask("Register and upload to %s" % server,
                          default=default, exact=exact):
                 logger.info("Running: %s", shell_command)
-                result = ''.join(system(shell_command))
+                result = system(shell_command)
                 utils.show_first_and_last_lines(result)
 
     def _release(self):
@@ -236,7 +236,7 @@ class Releaser(baserelease.Basereleaser):
                     command = self.vcs.cmd_commit(
                         "Fixed %s on tag for release" %
                         self.setup_cfg.config_filename)
-                    print ''.join(system(command))
+                    print system(command)
                 else:
                     logger.debug("Not committing in non-svn repository as "
                                  "this is not needed or may be harmful.")

@@ -35,7 +35,7 @@ class Git(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = system('git tag')[0]
+        tag_info = system('git tag', stderr=False)
         tags = [line for line in tag_info.split('\n') if line]
         logger.debug("Available tags: %r", tags)
         return tags
@@ -47,11 +47,11 @@ class Git(BaseVersionControl):
         cwd = os.getcwd()
         os.chdir(temp)
         cmd = 'git clone %s %s' % (self.workingdir, 'gitclone')
-        logger.debug(''.join(system(cmd)))
+        logger.debug(system(cmd))
         clonedir = os.path.join(temp, 'gitclone')
         os.chdir(clonedir)
         cmd = 'git submodule update --init --recursive'
-        logger.debug(''.join(system(cmd)))
+        logger.debug(system(cmd))
         os.chdir(cwd)
         return clonedir
 
@@ -124,14 +124,14 @@ class Git(BaseVersionControl):
     def is_clean_checkout(self):
         """Is this a clean checkout?
         """
-        head = system('git symbolic-ref --quiet HEAD')[0]
+        head = system('git symbolic-ref --quiet HEAD', stderr=False)
         # This returns something like 'refs/heads/maurits-warn-on-tag'
         # or nothing.  Nothing would be bad as that indicates a
         # detached head: likely a tag checkout
         if not head:
             # Greetings from Nearly Headless Nick.
             return False
-        if system('git status --short --untracked-files=no')[0]:
+        if system('git status --short --untracked-files=no', stderr=False):
             # Uncommitted changes in files that are tracked.
             return False
         return True
@@ -142,4 +142,4 @@ class Git(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return system('git ls-tree -r HEAD --name-only')[0].splitlines()
+        return system('git ls-tree -r HEAD --name-only', stderr=False).splitlines()

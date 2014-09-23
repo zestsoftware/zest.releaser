@@ -28,4 +28,4 @@ def main():
                 full_tag)
     log_command = vcs.cmd_log_since_tag(found)
     print log_command
-    print ''.join(system(log_command))
+    print system(log_command)
