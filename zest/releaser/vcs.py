@@ -42,7 +42,7 @@ class BaseVersionControl(object):
             # that otherwise end up in the extracted version, like
             # UserWarnings.
             system(utils.setup_py('egg_info'))
-            version = system(utils.setup_py('--version'), stderr=False)
+            version = system(utils.setup_py('--version'), emit_stderr=False)
             if version.startswith('Traceback'):
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
@@ -58,7 +58,7 @@ class BaseVersionControl(object):
             # that otherwise end up in the extracted name, like
             # UserWarnings.
             system(utils.setup_py('egg_info'))
-            return system(utils.setup_py('--name'), stderr=False).strip()
+            return system(utils.setup_py('--name'), emit_stderr=False).strip()
 
     def get_version_txt_version(self):
         version_file = self.filefind(['version.txt', 'version'])
