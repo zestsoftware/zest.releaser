@@ -6,6 +6,11 @@ Changelog for zest.releaser
 
 - Also allowing .md extension in addition to .rst/.txt/.markdown for
   ``CHANGES.txt``.
+  [reinout]
+
+- Similarly, ``version.txt`` (if you use that for non-setup.py-projects) can
+  now be ``version.rst`` or .md/.markdown, too.
+  [reinout]
 
 
 3.52 (2014-07-17)
