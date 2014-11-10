@@ -61,7 +61,10 @@ class BaseVersionControl(object):
             return system(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
-        version_file = self.filefind(['version.txt', 'version'])
+        filenames = ['version']
+        for extension in ['rst', 'txt', 'markdown', 'md']:
+            filenames.append('.'.join(['version', extension]))
+        version_file = self.filefind(filenames)
         if version_file:
             f = open(version_file, 'r')
             version = f.read()
