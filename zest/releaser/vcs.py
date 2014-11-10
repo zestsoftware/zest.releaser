@@ -132,7 +132,7 @@ class BaseVersionControl(object):
         filenames = []
         for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
             filenames.append(base)
-            for extension in ['rst', 'txt', 'markdown']:
+            for extension in ['rst', 'txt', 'markdown', 'md']:
                 filenames.append('.'.join([base, extension]))
         history = self.filefind(filenames)
         if history:
