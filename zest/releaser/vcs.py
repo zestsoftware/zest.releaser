@@ -17,6 +17,8 @@ __version__\W*=\W*   # '__version__ =  ' with possible whitespace
 \d                   # Some digit, start of version.
 """, re.VERBOSE)
 
+TXT_EXTENSIONS = ['rst', 'txt', 'markdown', 'md']
+
 logger = logging.getLogger(__name__)
 
 
@@ -62,7 +64,7 @@ class BaseVersionControl(object):
 
     def get_version_txt_version(self):
         filenames = ['version']
-        for extension in ['rst', 'txt', 'markdown', 'md']:
+        for extension in TXT_EXTENSIONS:
             filenames.append('.'.join(['version', extension]))
         version_file = self.filefind(filenames)
         if version_file:
@@ -135,7 +137,7 @@ class BaseVersionControl(object):
         filenames = []
         for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
             filenames.append(base)
-            for extension in ['rst', 'txt', 'markdown', 'md']:
+            for extension in TXT_EXTENSIONS:
                 filenames.append('.'.join([base, extension]))
         history = self.filefind(filenames)
         if history:
