@@ -219,3 +219,10 @@ Same with a ``VERSION.txt``:
     >>> checkout.version = '22.4'
     >>> print open('VERSION.txt').read()
     22.4
+
+Version files can also be called ``version.rst`` (or .md or so) instead of ``version.txt``:
+
+    >>> os.remove('VERSION.txt')
+    >>> open('version.rst', 'w').write('25.0')
+    >>> checkout.get_version_txt_version()
+    '25.0'
