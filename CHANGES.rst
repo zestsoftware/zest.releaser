@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.53 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Also allowing .md extension in addition to .rst/.txt/.markdown for
+  ``CHANGES.txt``.
 
 
 3.52 (2014-07-17)
