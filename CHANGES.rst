@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-3.54 (unreleased)
------------------
+3.53.2 (2014-11-21)
+-------------------
 
 - .rst syntax fixes. Pypi seemed to complain about something in our changelog.
 
