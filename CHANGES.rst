@@ -10,12 +10,6 @@ Changelog for zest.releaser
 3.53.2 (2014-11-21)
 -------------------
 
-- .rst syntax fixes. Pypi seemed to complain about something in our changelog.
-
-
-3.53.1 (2014-11-21)
--------------------
-
 - Additional fix to 3.53: ``version.rst`` (and .md) also needed to be looked
   up in a second spot.
 
