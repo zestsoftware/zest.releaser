@@ -163,17 +163,17 @@ Changelog for zest.releaser
 - Fixed svn tag extraction on windows: a ``\r`` could end up at the
   end of every tag name. Thanks Wouter Vanden Hove for reporting it!
 
-- Small fixes to the developers documentation and to the automatic `travis CI
-  <http://travis-ci.org/#!/zestsoftware/zest.releaser/>`_ tests configuration.
+- Small fixes to the developers documentation and to the automatic
+  `travis CI <http://travis-ci.org/#!/zestsoftware/zest.releaser/>`_
+  tests configuration.
 
 
 3.37 (2012-07-14)
 -----------------
 
 - Documentation update! Started sphinx documentation at
-  `zestreleaser.readthedocs.org
-  <http://zestreleaser.readthedocs.org>`_. Removed documentation from the
-  README and put it into sphinx.
+  `zestreleaser.readthedocs.org <http://zestreleaser.readthedocs.org>`_.
+  Removed documentation from the README and put it into sphinx.
 
 - Actually ask if the user wants to continue with the release when
   there is no MANIFEST.in.  We asked for a yes/no answer, but the
