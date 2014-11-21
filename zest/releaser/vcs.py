@@ -191,7 +191,10 @@ class BaseVersionControl(object):
             logger.info("Set __version__ in %s to %r", filename, version)
             return
 
-        versionfile = self.filefind(['version.txt', 'version'])
+        version_filenames = ['version']
+        for extension in TXT_EXTENSIONS:
+            version_filenames.append('.'.join(['version', extension]))
+        versionfile = self.filefind(version_filenames)
         if versionfile:
             # We have a version.txt file but does it match the setup.py
             # version (if any)?
