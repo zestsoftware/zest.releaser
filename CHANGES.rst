@@ -4,7 +4,8 @@ Changelog for zest.releaser
 3.54 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Additional fix to 3.53: ``version.rst`` (and .md) also needed to be looked
+  up in a second spot.
 
 
 3.53 (2014-11-10)
