@@ -16,7 +16,7 @@ class Subversion(BaseVersionControl):
 
     def _svn_info(self):
         """Return svn url"""
-        our_info = system('svn info')
+        our_info = system('svn info', emit_stderr=False)
         if not hasattr(self, '_cached_url'):
             url = [line for line in our_info.split('\n')
                    if line.startswith('URL')][0]
@@ -130,7 +130,7 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = system('svn info %s' % tag_url)
+        tag_info = system('svn info %s' % tag_url, emit_stderr=False)
         # Search for: Last Changed Rev: 42761
         revision = None
         for line in tag_info.split('\n'):
@@ -166,4 +166,4 @@ class Subversion(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return system('svn ls --recursive').splitlines()
+        return system('svn ls --recursive', emit_stderr=False).splitlines()

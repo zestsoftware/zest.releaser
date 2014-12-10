@@ -138,7 +138,7 @@ class Prereleaser(baserelease.Basereleaser):
 
     def _diff_and_commit(self):
         diff_cmd = self.vcs.cmd_diff()
-        diff = system(diff_cmd)
+        diff = system(diff_cmd, emit_stderr=False)
         if sys.version.startswith('2.6.2'):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can

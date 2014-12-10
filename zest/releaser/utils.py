@@ -428,7 +428,7 @@ def prepare_documentation_entrypoint(data):
     print "Wrote entry point documentation to", target
 
 
-def system(command, input=''):
+def system(command, input='', emit_stderr=True):
     """commands.getoutput() replacement that also works on windows"""
     # print "CMD: %r" % command
     if command.startswith(sys.executable):
@@ -446,7 +446,12 @@ def system(command, input=''):
     if input:
         i.write(input)
     i.close()
-    result = o.read() + e.read()
+
+    if emit_stderr:
+        result = o.read() + e.read()
+    else:
+        result = o.read()
+
     o.close()
     e.close()
     return result
