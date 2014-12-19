@@ -65,7 +65,8 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     version = '0.2.dev0'
 
 Now we set the version to something that does not end in a number and
-is not recognized as development version:
+is not recognized as development version (with setuptools 8 or higher
+the version is actually reported with a zero at the end):
 
     >>> from zest.releaser.svn import Subversion
     >>> vcs = Subversion()
@@ -73,16 +74,17 @@ is not recognized as development version:
     '0.2.dev0'
     >>> vcs.version = '0.1b'
     >>> vcs.version
-    '0.1b'
+    '0.1b0'
 
 Run the postrelease script.  Since the version number does not end
-with a number, the script cannot make a suggestion:
+with a number, the script cannot make a suggestion, except when the
+number is normalized by setuptools already:
 
     >>> utils.test_answer_book.set_answers(['0.2', ''])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
-    Current version is '0.1b'
-    Question: Enter new development version ('.dev0' will be appended):
+    Current version is '0.1b0'
+    Question: Enter new development version ('.dev0' will be appended) [0.1b1]:
     Our reply: 0.2
     Checking data dict
     Question: OK to commit this (Y/n)?
@@ -133,14 +135,10 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.test_answer_book.set_answers(['', '', '0.3rc', ''])
+    >>> utils.test_answer_book.set_answers(['0.3rc', ''])
     >>> postrelease.main()
-    Current version is '0.3beta'
-    Question: Enter new development version ('.dev0' will be appended):
-    Our reply: <ENTER>
-    Question: Enter new development version ('.dev0' will be appended):
-    Our reply: <ENTER>
-    Question: Enter new development version ('.dev0' will be appended):
+    Current version is '0.3b0'
+    Question: Enter new development version ('.dev0' will be appended) [0.3b1]:
     Our reply: 0.3rc
     Checking data dict
     Question: OK to commit this (Y/n)?
@@ -150,7 +148,7 @@ Numbers and characters can be combined:
 
     >>> utils.test_answer_book.set_answers(['1.0a1', ''])
     >>> prerelease.main()
-    Question: Enter version [0.3rc]:
+    Question: Enter version [0.3rc0]:
     Our reply: 1.0a1
     Checking data dict
     Question: OK to commit this (Y/n)?

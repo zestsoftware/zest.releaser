@@ -44,7 +44,7 @@ class BaseVersionControl(object):
             # that otherwise end up in the extracted version, like
             # UserWarnings.
             system(utils.setup_py('egg_info'))
-            version = system(utils.setup_py('--version'))
+            version = system(utils.setup_py('--version')).splitlines()[0]
             if version.startswith('Traceback'):
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
