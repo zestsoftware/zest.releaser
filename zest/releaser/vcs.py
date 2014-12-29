@@ -106,6 +106,11 @@ class BaseVersionControl(object):
         files = self.list_files()
         found = []
         for fullpath in files:
+            if fullpath.lower() == 'debian/changelog':
+                logger.debug(
+                    "Ignoring %s, unreadable (for us) debian changelog",
+                    fullpath)
+                continue
             filename = os.path.basename(fullpath)
             if filename.lower() in names:
                 logger.debug("Found %s", fullpath)
