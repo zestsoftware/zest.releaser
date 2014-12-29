@@ -99,10 +99,7 @@ class BaseVersionControl(object):
         """
         if isinstance(names, basestring):
             names = [names]
-        lower_names = []
-        for name in names:
-            lower_names.append(name.lower())
-        names = lower_names
+        names = [name.lower() for name in names]
         files = self.list_files()
         found = []
         for fullpath in files:
