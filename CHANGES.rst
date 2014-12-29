@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.54 (unreleased)
+3.54 (2014-12-29)
 -----------------
 
 - Blacklisting ``debian/changelog`` when searching for changelog-like
