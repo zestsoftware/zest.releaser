@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.54 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Blacklisting ``debian/changelog`` when searching for changelog-like
+  filenames as it gets picked in favour of ``docs/changelog.rst``. The
+  debian one is by definition unreadable for us.
 
 
 3.53.2 (2014-11-21)
