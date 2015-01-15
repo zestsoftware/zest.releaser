@@ -446,7 +446,18 @@ def system(command, input=''):
     if input:
         i.write(input)
     i.close()
-    result = o.read() + e.read()
+    if p.returncode:
+        # Some error occured
+        result = o.read() + e.read()
+    else:
+        # Only return the stdout. Stderr only contains possible
+        # weird/confusing warnings that might trip up extraction of version
+        # numbers and so.
+        result = o.read()
+        errors = e.read()
+        if errors:
+            logger.debug("Stderr of running command '%s': %s",
+                         command, errors)
     o.close()
     e.close()
     return result
