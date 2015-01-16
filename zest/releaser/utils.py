@@ -431,6 +431,11 @@ def prepare_documentation_entrypoint(data):
 def system(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
     # print "CMD: %r" % command
+    show_stderr = False
+    if command.startswith('bzr'):
+        # Bzr outputs handy info on stderr.
+        show_stderr = True
+
     if command.startswith(sys.executable):
         env = {'PYTHONPATH': os.pathsep.join(sys.path)}
     else:
@@ -446,7 +451,7 @@ def system(command, input=''):
     if input:
         i.write(input)
     i.close()
-    if p.returncode:
+    if p.returncode or show_stderr:
         # Some error occured
         result = o.read() + e.read()
     else:
