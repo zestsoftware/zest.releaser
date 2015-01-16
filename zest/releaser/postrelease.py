@@ -89,7 +89,7 @@ class Postreleaser(baserelease.Basereleaser):
             version = suggestion
         if not version:
             logger.error("No version entered.")
-            sys.exit()
+            sys.exit(1)
 
         self.data['new_version'] = version
         dev_version = self.data['dev_version_template'] % self.data

@@ -98,7 +98,7 @@ class Subversion(BaseVersionControl):
         if 'Could not resolve hostname' in tag_info or \
                 'Repository moved' in tag_info or 'E670008' in tag_info:
             logger.error('Network problem: %s', tag_info)
-            sys.exit()
+            sys.exit(1)
         tags = [line.replace('/', '').strip()
                 for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]  # filter empty ones
@@ -140,7 +140,7 @@ class Subversion(BaseVersionControl):
         if not revision:
             logger.error('Could not find revision when tag was made: %s',
                          tag_info)
-            sys.exit()
+            sys.exit(1)
         return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
 
     def cmd_create_tag(self, version):

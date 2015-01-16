@@ -59,7 +59,7 @@ If, by some weird twist of fate, there's no release: we exit.
     >>> releaser._grab_version()
     Traceback (most recent call last):
     ...
-    RuntimeError: SYSTEM EXIT (code=None)
+    RuntimeError: SYSTEM EXIT (code=1)
 
 
 Check tag existence
@@ -110,10 +110,9 @@ tag command:
     >>> releaser._make_tag()
     Traceback (most recent call last):
     ...
-    RuntimeError: SYSTEM EXIT (code=None)
+    RuntimeError: SYSTEM EXIT (code=1)
 
 If the the tag already exists, we just return without doing anything.
 
     >>> releaser.data['tag_already_exists'] = True
     >>> releaser._make_tag()
-

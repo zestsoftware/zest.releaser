@@ -472,11 +472,11 @@ def get_last_tag(vcs):
     version = vcs.version
     if not version:
         logger.critical("No version detected, so we can't do anything.")
-        sys.exit()
+        sys.exit(1)
     available_tags = vcs.available_tags()
     if not available_tags:
         logger.critical("No tags found, so we can't do anything.")
-        sys.exit()
+        sys.exit(1)
 
     # Mostly nicked from zest.stabilizer.
 
