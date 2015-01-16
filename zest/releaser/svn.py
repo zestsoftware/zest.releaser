@@ -53,7 +53,9 @@ class Subversion(BaseVersionControl):
         default_plural = 'tags'
         fallback_singular = 'tag'
         # svn 1.7 introduced a slightly different message and a warning code.
-        failure_messages = ["non-existent in that revision", "W160013"]
+        failure_messages = ["non-existent in that revision",
+                            "W160013",
+                            "E670008"]
         base = self._base_from_svn()
         tag_info = system('svn list %s%s' % (base, default_plural))
         # Look for one of the failure messages:
