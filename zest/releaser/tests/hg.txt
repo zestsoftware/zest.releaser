@@ -58,7 +58,7 @@ Commit it:
     >>> cmd
     'hg commit -v -m "small tweak"'
     >>> print system(cmd)
-    setup.py
+    setup.py...
     committed changeset 1:234567890abc
 
 
@@ -90,7 +90,7 @@ Make and commit a small change:
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print system(cmd)
-    setup.py
+    setup.py...
     committed changeset 1:234567890abc
 
 Now we can request the changes since a specific tag:
