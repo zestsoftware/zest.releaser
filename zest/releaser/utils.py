@@ -430,16 +430,13 @@ def prepare_documentation_entrypoint(data):
 
 def system(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
-    # print "CMD: %r" % command
-    show_stderr = False
-    if command.startswith('bzr'):
-        # Bzr outputs handy info on stderr.
-        show_stderr = True
-
+    logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
         env = {'PYTHONPATH': os.pathsep.join(sys.path)}
+        show_stderr = False
     else:
         env = None
+        show_stderr = True
     p = subprocess.Popen(command,
                          shell=True,
                          stdin=subprocess.PIPE,
@@ -461,7 +458,7 @@ def system(command, input=''):
         result = o.read()
         errors = e.read()
         if errors:
-            logger.debug("Stderr of running command '%s': %s",
+            logger.debug("Stderr of running command '%s':\n%s",
                          command, errors)
     o.close()
     e.close()
