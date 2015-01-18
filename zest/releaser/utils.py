@@ -448,18 +448,19 @@ def system(command, input=''):
     if input:
         i.write(input)
     i.close()
-    if p.returncode or show_stderr:
+    stdout_output = o.read()
+    stderr_output = e.read()
+    if p.returncode or show_stderr or 'Traceback' in stderr_output:
         # Some error occured
-        result = o.read() + e.read()
+        result = stdout_output + stderr_output
     else:
         # Only return the stdout. Stderr only contains possible
         # weird/confusing warnings that might trip up extraction of version
         # numbers and so.
-        result = o.read()
-        errors = e.read()
-        if errors:
+        result = stdout_output
+        if stderr_output:
             logger.debug("Stderr of running command '%s':\n%s",
-                         command, errors)
+                         command, stderr_output)
     o.close()
     e.close()
     return result
