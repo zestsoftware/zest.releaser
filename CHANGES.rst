@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.55 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Experimental work to ignore setuptools' stderr output. This might help with
+  some of the version warnings, which can break zest.releaser's output
+  parsing.
 
 
 3.54 (2014-12-29)
