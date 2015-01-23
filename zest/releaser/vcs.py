@@ -225,6 +225,8 @@ class BaseVersionControl(object):
                 logger.info("Set setup.py's version to %r", version)
                 return
 
+        raise Exception("Failed to locate assignment of version number for update.")
+
     version = property(_extract_version, _update_version)
 
     #
