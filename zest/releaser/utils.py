@@ -432,7 +432,7 @@ def system(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
     # print "CMD: %r" % command
     if command.startswith(sys.executable):
-        env = {'PYTHONPATH': os.pathsep.join(sys.path)}
+        env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
     else:
         env = None
     p = subprocess.Popen(command,
