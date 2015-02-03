@@ -97,11 +97,12 @@ class Subversion(BaseVersionControl):
                 sys.exit(0)
 
         tag_info = system('svn list %s%s' % (base, tags_name))
-        network_errors = ['E670008',
-                          'Unable to connect',
-                          'Could not resolve hostname',
-                          'Repository moved',
-                          'E670008']
+        network_errors = [
+            'Could not resolve hostname',
+            'E670008',
+            'Repository moved',
+            'Unable to connect',
+        ]
         found_errors = [1 for network_error in network_errors
                         if network_error in tag_info]
         if found_errors:
