@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-3.55 (unreleased)
+3.55 (2015-02-03)
 -----------------
 
 - Experimental work to ignore setuptools' stderr output. This might help with
