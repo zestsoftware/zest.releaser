@@ -210,7 +210,7 @@ class BaseVersionControl(object):
         good_version = "version = '%s'" % version
         line_number = 0
         setup_lines = open('setup.py').read().split('\n')
-        for line in setup_lines:
+        for line_number, line in enumerate(setup_lines):
             match = VERSION_PATTERN.search(line)
             if match:
                 logger.debug("Matching version line found: %r", line)
@@ -220,11 +220,12 @@ class BaseVersionControl(object):
                     # Note: no spaces around the '='.
                     good_version = indentation + "version='%s'," % version
                 setup_lines[line_number] = good_version
-                break
-            line_number += 1
-        contents = '\n'.join(setup_lines)
-        open('setup.py', 'w').write(contents)
-        logger.info("Set setup.py's version to %r", version)
+                contents = '\n'.join(setup_lines)
+                open('setup.py', 'w').write(contents)
+                logger.info("Set setup.py's version to %r", version)
+                return
+
+        raise Exception("Failed to locate assignment of version number for update.")
 
     version = property(_extract_version, _update_version)
 
