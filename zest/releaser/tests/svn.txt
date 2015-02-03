@@ -185,7 +185,7 @@ connection is needed.  When there's a network problem, it is reported:
     >>> checkout.available_tags()
     Traceback (most recent call last):
     ...
-    RuntimeError: SYSTEM EXIT (code=None)
+    RuntimeError: SYSTEM EXIT (code=1)
     >>> checkout._cached_url = orig
 
 Subversion stores tags in the /tags directory.  Just a convention.  Sometimes

@@ -53,7 +53,9 @@ class Subversion(BaseVersionControl):
         default_plural = 'tags'
         fallback_singular = 'tag'
         # svn 1.7 introduced a slightly different message and a warning code.
-        failure_messages = ["non-existent in that revision", "W160013"]
+        failure_messages = ["non-existent in that revision",
+                            "W160013",
+        ]
         base = self._base_from_svn()
         tag_info = system('svn list %s%s' % (base, default_plural))
         # Look for one of the failure messages:
@@ -95,10 +97,17 @@ class Subversion(BaseVersionControl):
                 sys.exit(0)
 
         tag_info = system('svn list %s%s' % (base, tags_name))
-        if 'Could not resolve hostname' in tag_info or \
-                'Repository moved' in tag_info or 'E670008' in tag_info:
+        network_errors = [
+            'Could not resolve hostname',
+            'E670008',
+            'Repository moved',
+            'Unable to connect',
+        ]
+        found_errors = [1 for network_error in network_errors
+                        if network_error in tag_info]
+        if found_errors:
             logger.error('Network problem: %s', tag_info)
-            sys.exit()
+            sys.exit(1)
         tags = [line.replace('/', '').strip()
                 for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]  # filter empty ones
@@ -140,7 +149,7 @@ class Subversion(BaseVersionControl):
         if not revision:
             logger.error('Could not find revision when tag was made: %s',
                          tag_info)
-            sys.exit()
+            sys.exit(1)
         return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
 
     def cmd_create_tag(self, version):

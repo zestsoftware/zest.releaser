@@ -430,11 +430,13 @@ def prepare_documentation_entrypoint(data):
 
 def system(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
-    # print "CMD: %r" % command
+    logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
+        show_stderr = False
     else:
         env = None
+        show_stderr = True
     p = subprocess.Popen(command,
                          shell=True,
                          stdin=subprocess.PIPE,
@@ -446,7 +448,19 @@ def system(command, input=''):
     if input:
         i.write(input)
     i.close()
-    result = o.read() + e.read()
+    stdout_output = o.read()
+    stderr_output = e.read()
+    if p.returncode or show_stderr or 'Traceback' in stderr_output:
+        # Some error occured
+        result = stdout_output + stderr_output
+    else:
+        # Only return the stdout. Stderr only contains possible
+        # weird/confusing warnings that might trip up extraction of version
+        # numbers and so.
+        result = stdout_output
+        if stderr_output:
+            logger.debug("Stderr of running command '%s':\n%s",
+                         command, stderr_output)
     o.close()
     e.close()
     return result
@@ -461,11 +475,11 @@ def get_last_tag(vcs):
     version = vcs.version
     if not version:
         logger.critical("No version detected, so we can't do anything.")
-        sys.exit()
+        sys.exit(1)
     available_tags = vcs.available_tags()
     if not available_tags:
         logger.critical("No tags found, so we can't do anything.")
-        sys.exit()
+        sys.exit(1)
 
     # Mostly nicked from zest.stabilizer.
 

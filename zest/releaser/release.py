@@ -61,7 +61,7 @@ class Releaser(baserelease.Basereleaser):
         version = self.vcs.version
         if not version:
             logger.critical("No version detected, so we can't do anything.")
-            sys.exit()
+            sys.exit(1)
         self.data['version'] = version
 
     def _check_if_tag_already_exists(self):
@@ -95,10 +95,10 @@ class Releaser(baserelease.Basereleaser):
                 # all commands are needed in order to proceed normally
                 print "Please create a tag for %s yourself and rerun." % \
                     (self.data['version'],)
-                sys.exit()
+                sys.exit(1)
         if not self.vcs.tag_exists(self.data['version']):
             print "\nFailed to create tag %s!" % (self.data['version'],)
-            sys.exit()
+            sys.exit(1)
 
     def _sdist_options(self):
         options = []

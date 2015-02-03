@@ -110,7 +110,7 @@ class Prereleaser(baserelease.Basereleaser):
         if not len(headings):
             logger.error("No detectable version heading in the history "
                          "file %s", history_file)
-            sys.exit()
+            sys.exit(1)
         good_heading = self.data['history_header'] % self.data
         # ^^^ history_header is a string with %(abc)s replacements.
         line = headings[0]['line']

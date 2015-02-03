@@ -87,7 +87,7 @@ class Git(BaseVersionControl):
                     "git-svn tagging."
                 print "Please tag yourself."
                 print "'git tag' needs to list tag named %s." % (version,)
-                sys.exit()
+                sys.exit(1)
             cmd = [cmd]
 
             trunk = None
@@ -100,7 +100,7 @@ class Git(BaseVersionControl):
             if not trunk:
                 print ('No SVN remote found (only the default svn ' +
                        'prefixes ("" or "origin/") are supported).')
-                sys.exit()
+                sys.exit(1)
 
             local_head = open('.git/refs/heads/master').read()
             if local_head != trunk:
