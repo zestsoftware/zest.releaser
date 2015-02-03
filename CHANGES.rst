@@ -6,7 +6,12 @@ Changelog for zest.releaser
 
 - Experimental work to ignore setuptools' stderr output. This might help with
   some of the version warnings, which can break zest.releaser's output
-  parsing.
+  parsing. [reinout]
+
+- Fix for #72. Grabbing the version from the ``setup.py`` on windows can fail
+  with an "Invalid Signature" error because setuptools cannot find the
+  crypto dll. Fixed by making sure setuptools gets the full ``os.environ``
+  including the ``SYSTEMROOT`` variable. [codewarrior0]
 
 
 3.54 (2014-12-29)
