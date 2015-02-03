@@ -225,7 +225,12 @@ class BaseVersionControl(object):
                 logger.info("Set setup.py's version to %r", version)
                 return
 
-        raise Exception("Failed to locate assignment of version number for update.")
+        logger.error(
+            "We could read a version from setup.py, but could not write it " +
+            "back. See " +
+            "http://zestreleaser.readthedocs.org/en/latest/versions.html " +
+            "for hints.")
+        raise RuntimeError("Cannot set version")
 
     version = property(_extract_version, _update_version)
 
