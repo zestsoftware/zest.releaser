@@ -56,6 +56,8 @@ checker = renormalizing.RENormalizing([
     # Change in git 1.8.5, the hash is removed:
     (re.compile('# On branch'),
      'On branch'),
+    # Hg 3.3 prints 'committing files' or 'committing <filename>'
+    (re.compile(r'^committing.*'), ''),
     ])
 
 
