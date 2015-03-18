@@ -100,18 +100,11 @@ class Releaser(baserelease.Basereleaser):
             print "\nFailed to create tag %s!" % (self.data['version'],)
             sys.exit(1)
 
-    def _sdist_options(self):
-        options = []
-        # Due to a bug in python24, tar files might get corrupted on READ.
-        # We circumvent that by forcing zip files
-        options.append('--formats=zip')
-        return " ".join(options)
-
-    def _upload_distributions(self, package, sdist_options, pypiconfig):
+    def _upload_distributions(self, package, pypiconfig):
         # See if creating an sdist actually works.  Also, this makes
         # the sdist available for plugins.
         logger.info("Making an egg of a fresh tag checkout.")
-        print system(utils.setup_py('sdist ' + sdist_options))
+        print system(utils.setup_py('sdist'))
         if not pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload an egg.",
@@ -126,7 +119,7 @@ class Releaser(baserelease.Basereleaser):
         else:
             logger.warn("This package is NOT registered on PyPI.")
         if pypiconfig.is_old_pypi_config():
-            pypi_command = 'register sdist %s upload' % sdist_options
+            pypi_command = 'register sdist upload'
             shell_command = utils.setup_py(pypi_command)
             if use_pypi:
                 default = True
@@ -149,15 +142,15 @@ class Releaser(baserelease.Basereleaser):
         for server in pypiconfig.distutils_servers():
             if pypi.new_distutils_available():
                 commands = ('register', '-r', server, 'sdist',
-                            sdist_options, 'upload', '-r', server)
+                            'upload', '-r', server)
             else:
                 ## This would be logical, given the lines above:
                 #commands = ('mregister', '-r', server, 'sdist',
-                #            sdist_options, 'mupload', '-r', server)
+                #            'mupload', '-r', server)
                 ## But according to the collective.dist documentation
                 ## it should be this (with just one '-r'):
                 commands = ('mregister', 'sdist',
-                            sdist_options, 'mupload', '-r', server)
+                            'mupload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))
             default = True
             exact = False
@@ -241,12 +234,11 @@ class Releaser(baserelease.Basereleaser):
                     logger.debug("Not committing in non-svn repository as "
                                  "this is not needed or may be harmful.")
 
-        sdist_options = self._sdist_options()
         # Run extra entry point
         self._run_hooks('after_checkout')
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
-            self._upload_distributions(package, sdist_options, pypiconfig)
+            self._upload_distributions(package, pypiconfig)
 
         # Make sure we are in the expected directory again.
         os.chdir(self.vcs.workingdir)
