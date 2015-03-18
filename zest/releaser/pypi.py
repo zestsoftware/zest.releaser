@@ -173,10 +173,6 @@ class PypiConfig(object):
             return
         self.config = ConfigParser()
         self.config.read(files)
-        if (not self.is_old_pypi_config() and
-                not self.is_new_pypi_config()):
-            # Safety valve
-            self.config = None
 
     def is_pypi_configured(self):
         # Do we have configuration for releasing to at least one

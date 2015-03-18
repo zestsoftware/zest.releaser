@@ -173,8 +173,8 @@ recognized as the new format as it cannot possibly function:
     >>> pypi.mupload = None
     >>> sys.version_info = (2, 5)
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
-    >>> pypiconfig.config is None # Format isn't right, so no config.
-    True
+    >>> pypiconfig.config is None # Config is always set.
+    False
     >>> pypiconfig.is_old_pypi_config()
     False
     >>> pypiconfig.is_new_pypi_config()
