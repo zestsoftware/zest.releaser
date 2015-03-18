@@ -35,10 +35,10 @@ checker = renormalizing.RENormalizing([
      'TESTTEMP'),
     (re.compile(re.escape(tempfile.gettempdir())),
      'TMPDIR'),
-    # 'register sdist --formats=zip upload' or
-    # 'mregister sdist --formats=zip mupload -r pypi' are both fine:
-    (re.compile('mregister sdist --formats=zip mupload -r [alpha]*$'),
-     'register sdist --formats=zip upload'),
+    # 'register sdist upload' or
+    # 'mregister sdist  mupload -r pypi' are both fine:
+    (re.compile('mregister sdist mupload -r [alpha]*$'),
+     'register sdist upload'),
     # Python 2.7 prints 'Creating tar archive' instead of
     # 'tar -cf dist/tha.example-0.1.tar tha.example-0.1
     #  ...':
