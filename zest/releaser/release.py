@@ -10,6 +10,13 @@ from zest.releaser import pypi
 from zest.releaser import utils
 from zest.releaser.utils import system
 
+try:
+    pkg_resources.get_distribution('wheel')
+except pkg_resources.DistributionNotFound:
+    USE_WHEEL = False
+else:
+    USE_WHEEL = True
+
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
@@ -101,10 +108,13 @@ class Releaser(baserelease.Basereleaser):
             sys.exit(1)
 
     def _upload_distributions(self, package, pypiconfig):
-        # See if creating an sdist actually works.  Also, this makes
-        # the sdist available for plugins.
+        # See if creating an sdist (and maybe a wheel) actually works.
+        # Also, this makes the sdist (and wheel) available for plugins.
         logger.info("Making an egg of a fresh tag checkout.")
-        print system(utils.setup_py('sdist'))
+        if USE_WHEEL:
+            print system(utils.setup_py('sdist bdist_wheel'))
+        else:
+            print system(utils.setup_py('sdist'))
         if not pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload an egg.",
@@ -141,8 +151,13 @@ class Releaser(baserelease.Basereleaser):
         # other servers to upload to.
         for server in pypiconfig.distutils_servers():
             if pypi.new_distutils_available():
-                commands = ('register', '-r', server, 'sdist',
-                            'upload', '-r', server)
+                if USE_WHEEL:
+                    commands = ('register', '-r', server, 'sdist',
+                                'bdist_wheel',
+                                'upload', '-r', server)
+                else:
+                    commands = ('register', '-r', server, 'sdist',
+                                'upload', '-r', server)
             else:
                 ## This would be logical, given the lines above:
                 #commands = ('mregister', '-r', server, 'sdist',

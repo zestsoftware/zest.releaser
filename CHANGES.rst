@@ -4,6 +4,15 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Add optional support for uploading Python wheels.  Use the new
+  ``zest.releaser[recommended]`` extra, or pip install ``wheel``
+  yourself next to ``zest.releaser``.  Create or edit ``setup.cfg`` in
+  your project (or globally in your ``~/.pypirc``) and create a section
+  ``[zest.releaser]`` with ``create_wheel = yes`` to create a wheel to
+  upload to PyPI.
+  Issue #55
+  [maurits]
+
 - Fix a random test failure on Travis CI, by resetting
   ``AUTO_RESPONSE``.
   [maurits]
