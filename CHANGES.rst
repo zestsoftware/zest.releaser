@@ -4,6 +4,11 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Remove code for support of collective.sdist.  That package was a
+  backport from distutils for Python 2.5 and earlier, which we do not
+  support.
+  [maurits]
+
 - Fix a random test failure on Travis CI, by resetting
   ``AUTO_RESPONSE``.
   [maurits]

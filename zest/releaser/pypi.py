@@ -6,39 +6,10 @@ from ConfigParser import ConfigParser
 from ConfigParser import NoSectionError
 from ConfigParser import NoOptionError
 
-try:
-    from collective.dist import mupload
-    mupload  # pyflakes
-except ImportError:
-    mupload = None
-
 DIST_CONFIG_FILE = '.pypirc'
 SETUP_CONFIG_FILE = 'setup.cfg'
 
 logger = logging.getLogger(__name__)
-
-
-def collective_dist_available():
-    """Return whether collective.dist is available"""
-    if mupload is not None:
-        return True
-    return False
-
-
-def new_distutils_available():
-    """Return whether a recent enough python is available for multiple pypi"""
-    if sys.version_info[:2] >= (2, 6):
-        # 2.6 (or higher) does not need collective.dist: distutils includes
-        # the needed functionality.
-        return True
-    return False
-
-
-def multiple_pypi_support():
-    """Return whether we can upload to multiple pypi servers"""
-    if collective_dist_available() or new_distutils_available():
-        return True
-    return False
 
 
 class SetupConfig(object):
@@ -197,8 +168,6 @@ class PypiConfig(object):
         return True
 
     def is_new_pypi_config(self):
-        if not multiple_pypi_support():
-            return False
         try:
             self.config.get('distutils', 'index-servers')
         except (NoSectionError, NoOptionError):
@@ -206,13 +175,11 @@ class PypiConfig(object):
         return True
 
     def distutils_servers(self):
-        """Return a list of known distutils servers for collective.dist.
+        """Return a list of known distutils servers.
 
         If the config has an old pypi config, remove the default pypi
         server from the list.
         """
-        if not multiple_pypi_support():
-            return []
         try:
             raw_index_servers = self.config.get('distutils', 'index-servers')
         except (NoSectionError, NoOptionError):
