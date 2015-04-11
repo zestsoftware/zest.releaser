@@ -53,13 +53,7 @@ def setup(test):
     example_tar = pkg_resources.resource_filename(
         'zest.releaser.tests', 'example.tar')
     tf = tarfile.TarFile(example_tar)
-    try:
-        tf.extractall(path=test.tempdir)
-    except AttributeError:
-        # BBB for python2.4
-        for name in tf.getnames():
-            tf.extract(name, test.tempdir)
-
+    tf.extractall(path=test.tempdir)
     sourcedir = os.path.join(test.tempdir, 'tha.example')
 
     # Init svn repo.
