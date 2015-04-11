@@ -4,6 +4,12 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Warn when between the last postrelease and a new prerelease no
+  changelog entry has been added.  '- Nothing changed yet' would still
+  be in there.
+  Issue #26.
+  [maurits]
+
 - Fix a random test failure on Travis CI, by resetting
   ``AUTO_RESPONSE``.
   [maurits]

@@ -82,6 +82,11 @@ An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
     ... """
     >>> open('setup.cfg', 'w').write(cfg)
 
+The prerelease part would complain when the changelog still contains
+'- Nothing changed yet.'  So change it.
+
+    >>> add_changelog_entry()
+
 Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
@@ -108,3 +113,12 @@ The changelog and setup.py are at 0.3.dev0 now:
     import os.path
     <BLANKLINE>
     version = '0.3.dev0'
+
+When you do some commits, but forget to update the changelog,
+prerelease (or fullrelease) will warn you, as indicated earlier:
+
+    >>> from zest.releaser import prerelease
+    >>> prerelease.main()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=0)

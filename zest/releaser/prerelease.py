@@ -8,6 +8,7 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import system
+from zest.releaser.postrelease import NOTHING_CHANGED_YET
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,9 @@ DATA = {
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
     'history_file': 'Filename of history/changelog file (when found)',
     'history_lines': 'List with all history file lines (when found)',
+    'nothing_changed_yet': (
+        'First line in new changelog section, '
+        'warn when this is still in there before releasing'),
     'original_version': 'Version before prereleasing (e.g. 1.0dev)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
@@ -45,6 +49,7 @@ class Prereleaser(baserelease.Basereleaser):
             today=datetime.datetime.today().strftime('%Y-%m-%d'),
             history_header=HISTORY_HEADER,
             commit_msg=PRERELEASE_COMMIT_MSG,
+            nothing_changed_yet=NOTHING_CHANGED_YET,
         ))
 
     def prepare(self):
@@ -126,6 +131,24 @@ class Prereleaser(baserelease.Basereleaser):
         self.data['history_file'] = history_file
         # TODO: add line number where an extra changelog entry can be
         # inserted.
+
+        # Look for 'Nothing changed yet' under the latest header.  Not
+        # nice if this text ends up in the changelog.  Did nothing happen?
+        start = headings[0]['line']
+        if len(headings) > 1:
+            end = headings[1]['line']
+        else:
+            end = -1
+        for line in history_lines[start:end]:
+            if self.data['nothing_changed_yet'] in line:
+                if not utils.ask(
+                        "WARNING: Changelog contains %r. Are you sure you "
+                        "want to release?" % self.data['nothing_changed_yet'],
+                        default=False):
+                    logger.info("You can use the 'lasttaglog' command to "
+                                "see the commits since the last tag.")
+                    sys.exit(0)
+                break
 
     def _write_history(self):
         """Write previously-calculated history lines back to the file"""
