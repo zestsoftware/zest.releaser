@@ -1,4 +1,3 @@
-#! /usr/bin/env python2.4
 # GPL, (c) Reinout van Rees
 #
 # Script to show the diff with the last relevant tag.

@@ -1,4 +1,3 @@
-#! /usr/bin/env python2.4
 # GPL, (c) Reinout van Rees
 #
 # Script to show the log from the last relevant tag till now.
