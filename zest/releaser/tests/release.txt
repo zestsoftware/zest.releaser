@@ -79,6 +79,8 @@ Mock that the tag exists and check again:
     >>> orig = releaser.vcs.tag_exists
     >>> releaser.vcs.tag_exists = lambda x: True
     >>> utils.test_answer_book.set_answers(['n'])
+    >>> utils.AUTO_RESPONSE
+    False
     >>> releaser._check_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: n

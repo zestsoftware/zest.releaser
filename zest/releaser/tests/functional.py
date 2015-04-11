@@ -8,10 +8,15 @@ import tempfile
 import urllib2
 import StringIO
 
+from zest.releaser import utils
 from zest.releaser.utils import system
 
 
 def setup(test):
+    # Reset constants to original settings:
+    utils.AUTO_RESPONSE = False
+    utils.TESTMODE = False
+
     partstestdir = os.getcwd()  # Buildout's test run in parts/test
     test.orig_dir = partstestdir
     test.tempdir = tempfile.mkdtemp(prefix='testtemp')
@@ -157,6 +162,9 @@ def teardown(test):
     sys.argv[1:] = test.orig_argv
     # print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
+    # Reset constants to original settings:
+    utils.AUTO_RESPONSE = False
+    utils.TESTMODE = False
 
 
 def restore_mupload(test):

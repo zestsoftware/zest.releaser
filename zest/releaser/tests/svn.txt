@@ -223,6 +223,8 @@ None:
 Answer 'no' the first time we get asked to create the directory.  This means
 zest.releaser has no business with this project, so exit.
 
+    >>> utils.AUTO_RESPONSE
+    False
     >>> utils.test_answer_book.set_answers(['n'])
     >>> sample_checkout.available_tags()
     Traceback (most recent call last):

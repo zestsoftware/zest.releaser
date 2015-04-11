@@ -4,7 +4,9 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fix a random test failure on Travis CI, by resetting
+  ``AUTO_RESPONSE``.
+  [maurits]
 
 
 3.56 (2015-03-18)
