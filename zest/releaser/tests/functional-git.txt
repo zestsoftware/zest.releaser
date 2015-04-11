@@ -130,6 +130,17 @@ And the postrelease script ups the version:
     Question: OK to push commits to the server? (Y/n)?
     Our reply: n
 
+The commit will contain a hint for Travis to skip the Continuous
+Integration build, because our pypirc has asked this with the ci-skip
+option::
+
+    >>> from zest.releaser import lasttaglog
+    >>> lasttaglog.main()
+    git log...
+        Back to development: 0.2
+    <BLANKLINE>
+        [ci skip]...
+
 The changelog and setup.py are at 0.2 and indicate dev mode:
 
     >>> githead('CHANGES.txt')

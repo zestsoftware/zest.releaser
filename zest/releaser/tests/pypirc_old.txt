@@ -1,3 +1,6 @@
 [server-login]
 username:pipo_de_clown
 password:asjemenou
+
+[zest.releaser]
+ci-skip = true

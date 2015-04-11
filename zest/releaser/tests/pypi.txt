@@ -97,6 +97,9 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     [server-login]
     username:pipo_de_clown
     password:asjemenou
+    <BLANKLINE>
+    [zest.releaser]
+    ci-skip = true
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
     >>> pypiconfig.config
     <ConfigParser.ConfigParser instance at ...>
@@ -129,6 +132,9 @@ And the new format that allows multiple uploads:
     repository:http://my.company/products
     username:user
     password:password
+    <BLANKLINE>
+    [zest.releaser]
+    ci-skip = true
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> pypiconfig.config
     <ConfigParser.ConfigParser instance at ...>
