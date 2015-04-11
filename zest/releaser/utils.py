@@ -133,7 +133,7 @@ def ask(question, default=True, exact=False):
             msg = msg % question
             raise RuntimeError(msg)
         logger.debug("Auto-responding '%s' to the question below." % (
-                default and "yes" or "no"))
+            default and "yes" or "no"))
         logger.debug(question)
         return default
     while True:

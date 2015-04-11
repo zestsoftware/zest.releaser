@@ -93,8 +93,8 @@ class Git(BaseVersionControl):
             trunk = None
             # In Git v2.0, the default prefix will change from "" (no prefix) to "origin/",
             # try both here.
-            for t in [ '.git/refs/remotes/trunk', '.git/refs/remotes/origin/trunk' ]:
-                if os.path.isfile (t):
+            for t in ['.git/refs/remotes/trunk', '.git/refs/remotes/origin/trunk']:
+                if os.path.isfile(t):
                     trunk = open(t).read()
 
             if not trunk:

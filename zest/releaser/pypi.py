@@ -147,7 +147,9 @@ class SetupConfig(object):
         if self.config is None:
             return default
         try:
-            result = self.config.get('zest.releaser', 'python-file-with-version')
+            result = self.config.get(
+                'zest.releaser',
+                'python-file-with-version')
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result

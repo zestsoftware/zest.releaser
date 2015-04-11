@@ -20,7 +20,7 @@ DATA = {
     checkout has been made)''',
     'version': "Version we're releasing",
     'tag_already_exists': "Internal detail, don't touch this :-)",
-    }
+}
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class Releaser(baserelease.Basereleaser):
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             # Nothing yet
-            ))
+        ))
 
     def prepare(self):
         """Collect some data needed for releasing"""
@@ -144,11 +144,11 @@ class Releaser(baserelease.Basereleaser):
                 commands = ('register', '-r', server, 'sdist',
                             'upload', '-r', server)
             else:
-                ## This would be logical, given the lines above:
-                #commands = ('mregister', '-r', server, 'sdist',
+                # This would be logical, given the lines above:
+                # commands = ('mregister', '-r', server, 'sdist',
                 #            'mupload', '-r', server)
-                ## But according to the collective.dist documentation
-                ## it should be this (with just one '-r'):
+                # But according to the collective.dist documentation
+                # it should be this (with just one '-r'):
                 commands = ('mregister', 'sdist',
                             'mupload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))

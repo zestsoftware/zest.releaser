@@ -58,7 +58,7 @@ checker = renormalizing.RENormalizing([
      'On branch'),
     # Hg 3.3 prints 'committing files' or 'committing <filename>'
     (re.compile(r'^committing.*'), ''),
-    ])
+])
 
 
 test_suite = z3c.testsetup.register_all_tests('zest.releaser', checker=checker)

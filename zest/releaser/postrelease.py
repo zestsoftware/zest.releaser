@@ -27,7 +27,7 @@ DATA = {
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
     'dev_version_template': 'Template for dev version number',
-    }
+}
 
 
 class Postreleaser(baserelease.Basereleaser):

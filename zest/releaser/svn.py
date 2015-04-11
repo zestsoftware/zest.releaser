@@ -55,7 +55,7 @@ class Subversion(BaseVersionControl):
         # svn 1.7 introduced a slightly different message and a warning code.
         failure_messages = ["non-existent in that revision",
                             "W160013",
-        ]
+                            ]
         base = self._base_from_svn()
         tag_info = system('svn list %s%s' % (base, default_plural))
         # Look for one of the failure messages:

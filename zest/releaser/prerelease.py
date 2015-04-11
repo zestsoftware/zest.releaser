@@ -28,7 +28,7 @@ DATA = {
     'original_version': 'Version before prereleasing (e.g. 1.0dev)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
-    }
+}
 
 
 class Prereleaser(baserelease.Basereleaser):
@@ -45,7 +45,7 @@ class Prereleaser(baserelease.Basereleaser):
             today=datetime.datetime.today().strftime('%Y-%m-%d'),
             history_header=HISTORY_HEADER,
             commit_msg=PRERELEASE_COMMIT_MSG,
-            ))
+        ))
 
     def prepare(self):
         """Prepare self.data by asking about new version etc."""
