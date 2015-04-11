@@ -1,8 +1,4 @@
 language: python
-cache:
-  directories:
-    - $HOME/build/zestsoftware/zest.releaser/downloads
-    - $HOME/build/zestsoftware/zest.releaser/eggs
 python:
   - 2.6
   - 2.7
