@@ -93,8 +93,8 @@ Uploading wheels
 ----------------
 
 First, you should install the ``zest.releaser[recommended]`` extra, or
-``pip install wheel`` yourself next to ``zest.releaser``.  Then create
-or edit ``setup.cfg`` in your project (or globally in your
+run ``pip install wheel`` yourself next to ``zest.releaser``.  Then
+create or edit ``setup.cfg`` in your project (or globally in your
 ``~/.pypirc``) and add this to create and upload a wheel to upload to
 PyPI::
 
