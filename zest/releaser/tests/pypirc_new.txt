@@ -17,3 +17,6 @@ password:password
 repository:http://my.company/products
 username:user
 password:password
+
+[zest.releaser]
+ci-skip = true

@@ -1,5 +1,6 @@
 """Provide a base for the three releasers"""
 
+import pkg_resources
 from zest.releaser import utils
 from zest.releaser import choose
 from zest.releaser import pypi
@@ -14,6 +15,12 @@ class Basereleaser(object):
         self.setup_cfg = pypi.SetupConfig()
         if self.setup_cfg.no_input():
             utils.AUTO_RESPONSE = True
+        if utils.TESTMODE:
+            pypirc_old = pkg_resources.resource_filename(
+                'zest.releaser.tests', 'pypirc_old.txt')
+            self.pypiconfig = pypi.PypiConfig(pypirc_old)
+        else:
+            self.pypiconfig = pypi.PypiConfig()
 
     def _run_hooks(self, when):
         which_releaser = self.__class__.__name__.lower()
@@ -31,3 +38,8 @@ class Basereleaser(object):
 
     def execute(self):
         raise NotImplementedError()
+
+    def update_commit_message(self, msg):
+        if self.pypiconfig.ci_skip():
+            msg += '\n\n[ci skip]'
+        return msg
