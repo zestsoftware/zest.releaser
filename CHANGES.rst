@@ -4,6 +4,12 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Warn when between the last postrelease and a new prerelease no
+  changelog entry has been added.  '- Nothing changed yet' would still
+  be in there.
+  Issue #26.
+  [maurits]
+
 - Remove code for support of collective.sdist.  That package was a backport
   from distutils for Python 2.5 and earlier, which we do not support.
   [maurits]
