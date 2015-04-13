@@ -100,13 +100,18 @@ class Releaser(baserelease.Basereleaser):
             sys.exit(1)
 
     def _upload_distributions(self, package):
-        # See if creating an sdist actually works.  Also, this makes
-        # the sdist available for plugins.
-        logger.info("Making an egg of a fresh tag checkout.")
-        print system(utils.setup_py('sdist'))
+        # See if creating an sdist (and maybe a wheel) actually works.
+        # Also, this makes the sdist (and wheel) available for plugins.
+        if self.pypiconfig.create_wheel():
+            logger.info("Making a source distibution and wheel of a fresh "
+                        "tag checkout.")
+            print system(utils.setup_py('sdist bdist_wheel'))
+        else:
+            logger.info("Making a source distibution of a fresh tag checkout.")
+            print system(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
-                        "your home dir to upload an egg.",
+                        "your home dir to upload to a package index.",
                         pypi.DIST_CONFIG_FILE)
             return
 
@@ -140,8 +145,13 @@ class Releaser(baserelease.Basereleaser):
         # other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
             if pypi.new_distutils_available():
-                commands = ('register', '-r', server, 'sdist',
-                            'upload', '-r', server)
+                if self.pypiconfig.create_wheel():
+                    commands = ('register', '-r', server, 'sdist',
+                                'bdist_wheel',
+                                'upload', '-r', server)
+                else:
+                    commands = ('register', '-r', server, 'sdist',
+                                'upload', '-r', server)
             else:
                 # This would be logical, given the lines above:
                 # commands = ('mregister', '-r', server, 'sdist',

@@ -89,6 +89,23 @@ You can use no/false/off/0 or yes/true/on/1 as answers; upper, lower or mixed
 case are all fine.
 
 
+Uploading wheels
+----------------
+
+First, you should install the ``zest.releaser[recommended]`` extra, or
+``pip install wheel`` yourself next to ``zest.releaser``.  Then create
+or edit ``setup.cfg`` in your project (or globally in your
+``~/.pypirc``) and add this to create and upload a wheel to upload to
+PyPI::
+
+ [zest.releaser]
+  create_wheel = yes
+
+See http://pythonwheels.com for deciding whether this is a good idea
+for your package.  Briefly, if it is a pure Python 2 *or* pure Python
+3 package: just do it.
+
+
 Including all files in your release
 -----------------------------------
 

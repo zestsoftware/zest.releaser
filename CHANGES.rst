@@ -4,6 +4,17 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Add optional support for uploading Python wheels.  Use the new
+  ``zest.releaser[recommended]`` extra, or run ``pip install wheel``
+  yourself next to ``zest.releaser``.  Create or edit ``setup.cfg`` in
+  your project (or globally in your ``~/.pypirc``) and create a section
+  ``[zest.releaser]`` with ``create_wheel = yes`` to create a wheel to
+  upload to PyPI.  See http://pythonwheels.com for deciding whether
+  this is a good idea for your package.  Briefly, if it is a pure
+  Python 2 *or* pure Python 3 package: just do it.
+  Issue #55
+  [maurits]
+
 - Add ``[ci skip]`` to commit messages to avoid running Travis
   Continuous Integration builds.  See
   http://docs.travis-ci.com/user/how-to-skip-a-build/
