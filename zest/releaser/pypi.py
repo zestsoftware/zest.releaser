@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 
 from ConfigParser import ConfigParser
 from ConfigParser import NoSectionError

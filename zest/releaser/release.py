@@ -135,7 +135,7 @@ class Releaser(baserelease.Basereleaser):
                 utils.show_first_and_last_lines(result)
 
         # The user may have defined other servers to upload to.
-        for server in pypiconfig.distutils_servers():
+        for server in self.pypiconfig.distutils_servers():
             commands = ('register', '-r', server, 'sdist',
                         'upload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))
