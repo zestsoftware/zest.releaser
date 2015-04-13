@@ -259,6 +259,12 @@ Python wheels, next to the standard old-style source distributions.
 This seems good, but not for every package.  So you have to explicitly
 turn it on.
 
+If the package is installed, we set a constant:
+
+    >>> from zest.releaser.pypi import USE_WHEEL
+    >>> USE_WHEEL
+    True
+
 We try to read a [zest.releaser] section, either in pypirc or
 setup.cfg and check for a ``create-wheel`` option.  We can
 ask for the result like this, which by default is False:
