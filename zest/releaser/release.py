@@ -3,7 +3,6 @@ import logging
 import os
 import urllib2
 import sys
-import pkg_resources
 
 from zest.releaser import baserelease
 from zest.releaser import pypi
@@ -100,12 +99,12 @@ class Releaser(baserelease.Basereleaser):
             print "\nFailed to create tag %s!" % (self.data['version'],)
             sys.exit(1)
 
-    def _upload_distributions(self, package, pypiconfig):
+    def _upload_distributions(self, package):
         # See if creating an sdist actually works.  Also, this makes
         # the sdist available for plugins.
         logger.info("Making an egg of a fresh tag checkout.")
         print system(utils.setup_py('sdist'))
-        if not pypiconfig.is_pypi_configured():
+        if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload an egg.",
                         pypi.DIST_CONFIG_FILE)
@@ -117,7 +116,7 @@ class Releaser(baserelease.Basereleaser):
             logger.info("This package is registered on PyPI.")
         else:
             logger.warn("This package is NOT registered on PyPI.")
-        if pypiconfig.is_old_pypi_config():
+        if self.pypiconfig.is_old_pypi_config():
             pypi_command = 'register sdist upload'
             shell_command = utils.setup_py(pypi_command)
             if use_pypi:
@@ -156,13 +155,6 @@ class Releaser(baserelease.Basereleaser):
 
     def _release(self):
         """Upload the release, when desired"""
-        if utils.TESTMODE:
-            pypirc_old = pkg_resources.resource_filename(
-                'zest.releaser.tests', 'pypirc_old.txt')
-            pypiconfig = pypi.PypiConfig(pypirc_old)
-        else:
-            pypiconfig = pypi.PypiConfig()
-
         # Does the user normally want a real release?  We are
         # interested in getting a sane default answer here, so you can
         # override it in the exceptional case but just hit Enter in
@@ -174,7 +166,7 @@ class Releaser(baserelease.Basereleaser):
             # Expected case: this is a buildout directory.
             default_answer = False
         else:
-            default_answer = pypiconfig.want_release()
+            default_answer = self.pypiconfig.want_release()
 
         if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
                          "server upload)", default=default_answer):
@@ -226,7 +218,7 @@ class Releaser(baserelease.Basereleaser):
         self._run_hooks('after_checkout')
 
         if 'setup.py' in os.listdir(self.data['tagdir']):
-            self._upload_distributions(package, pypiconfig)
+            self._upload_distributions(package)
 
         # Make sure we are in the expected directory again.
         os.chdir(self.vcs.workingdir)

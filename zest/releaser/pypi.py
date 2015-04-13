@@ -229,3 +229,24 @@ class PypiConfig(object):
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
+
+    def ci_skip(self):
+        """Return whether the user wants to skip ci builds.
+
+        This at least works for Travis.  See
+        http://docs.travis-ci.com/user/how-to-skip-a-build/
+
+        Enable this mode by adding a ``ci-skip`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            ci-skip = yes
+        """
+        default = False
+        if self.config is None:
+            return default
+        try:
+            result = self.config.getboolean('zest.releaser', 'ci-skip')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result

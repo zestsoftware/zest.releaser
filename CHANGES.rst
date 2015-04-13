@@ -4,13 +4,16 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
-- Remove code for support of collective.sdist.  That package was a
-  backport from distutils for Python 2.5 and earlier, which we do not
-  support.
+- Remove code for support of collective.sdist.  That package was a backport
+  from distutils for Python 2.5 and earlier, which we do not support.
   [maurits]
 
-- Fix a random test failure on Travis CI, by resetting
-  ``AUTO_RESPONSE``.
+- Add ``[ci skip]`` to commit messages to avoid running Travis Continuous
+  Integration builds.  See http://docs.travis-ci.com/user/how-to-skip-a-build/
+  To activate this, add ``[zest.releaser] ci-skip = yes`` to the ``setup.cfg``
+  of a package, or your global ``~/.pypirc``.  [maurits]
+
+- Fix a random test failure on Travis CI, by resetting ``AUTO_RESPONSE``.
   [maurits]
 
 
