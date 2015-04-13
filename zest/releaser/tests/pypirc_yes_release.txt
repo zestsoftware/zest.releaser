@@ -8,4 +8,4 @@ password:password
 
 [zest.releaser]
 release = yes
-create_wheel = yes
+create-wheel = yes

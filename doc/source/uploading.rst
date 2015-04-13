@@ -99,7 +99,7 @@ create or edit ``setup.cfg`` in your project (or globally in your
 PyPI::
 
  [zest.releaser]
-  create_wheel = yes
+  create-wheel = yes
 
 See http://pythonwheels.com for deciding whether this is a good idea
 for your package.  Briefly, if it is a pure Python 2 *or* pure Python

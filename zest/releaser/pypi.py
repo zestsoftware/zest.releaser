@@ -300,7 +300,7 @@ class PypiConfig(object):
         to a standard sdist:
 
         [zest.releaser]
-        create_wheel = yes
+        create-wheel = yes
 
         """
         if not USE_WHEEL:
@@ -311,7 +311,7 @@ class PypiConfig(object):
         if self.config is None:
             return default
         try:
-            result = self.config.getboolean('zest.releaser', 'create_wheel')
+            result = self.config.getboolean('zest.releaser', 'create-wheel')
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
