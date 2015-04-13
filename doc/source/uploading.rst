@@ -29,8 +29,8 @@ has your pypi login credentials, like this::
 Uploading to other servers
 --------------------------
 
-Since python 2.6 (or in earlier python versions, with collective.dist) you can
-specify multiple indexes for uploading your package in your ``.pypirc``::
+Since python 2.6 you can specify multiple indexes for uploading your
+package in your ``.pypirc``::
 
   [distutils]
   index-servers =
@@ -50,7 +50,9 @@ specify multiple indexes for uploading your package in your ``.pypirc``::
   # server sends back when you do a challenge:
   #realm:Zope
 
-See http://pypi.python.org/pypi/collective.dist for more info.
+See the `Python Packaging User Guide`_ for more info.
+
+.. _`Python Packaging User Guide`: https://packaging.python.org/en/latest/distributing.html#uploading-your-project-to-pypi for more info.
 
 When all this is configured correctly, zest.releaser will first register and
 upload at the official pypi (if the package is registered there already).
@@ -135,9 +137,6 @@ are some extra packages:
 
 - setuptools_bzr (Setuptools plugin for finding files under Bazaar
   version control)
-
-- collective.dist (when using python2.4, depending on your
-  ``~/.pypirc`` file)
 
 - setuptools_subversion (Setuptools plugin for finding files under
   Subversion version control.)  You probably need this when you
