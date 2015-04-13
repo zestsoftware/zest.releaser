@@ -115,8 +115,7 @@ class Releaser(baserelease.Basereleaser):
                         pypi.DIST_CONFIG_FILE)
             return
 
-        # First ask if we want to upload to pypi, which should always
-        # work, also without collective.dist.
+        # First ask if we want to upload to pypi.
         use_pypi = package_in_pypi(package)
         if use_pypi:
             logger.info("This package is registered on PyPI.")
@@ -140,26 +139,15 @@ class Releaser(baserelease.Basereleaser):
                 result = system(shell_command)
                 utils.show_first_and_last_lines(result)
 
-        # If collective.dist is installed (or we are using
-        # python2.6 or higher), the user may have defined
-        # other servers to upload to.
+        # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
-            if pypi.new_distutils_available():
-                if self.pypiconfig.create_wheel():
-                    commands = ('register', '-r', server, 'sdist',
-                                'bdist_wheel',
-                                'upload', '-r', server)
-                else:
-                    commands = ('register', '-r', server, 'sdist',
-                                'upload', '-r', server)
+            if self.pypiconfig.create_wheel():
+                commands = ('register', '-r', server, 'sdist',
+                            'bdist_wheel',
+                            'upload', '-r', server)
             else:
-                # This would be logical, given the lines above:
-                # commands = ('mregister', '-r', server, 'sdist',
-                #            'mupload', '-r', server)
-                # But according to the collective.dist documentation
-                # it should be this (with just one '-r'):
-                commands = ('mregister', 'sdist',
-                            'mupload', '-r', server)
+                commands = ('register', '-r', server, 'sdist',
+                            'upload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))
             default = True
             exact = False

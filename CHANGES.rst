@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Remove code for support of collective.sdist.  That package was a backport
+  from distutils for Python 2.5 and earlier, which we do not support.
+  [maurits]
+
 - Add optional support for uploading Python wheels.  Use the new
   ``zest.releaser[recommended]`` extra, or run ``pip install wheel``
   yourself next to ``zest.releaser``.  Create or edit ``setup.cfg`` in
@@ -22,8 +26,7 @@ Changelog for zest.releaser
   ``setup.cfg`` of a package, or your global ``~/.pypirc``.
   [maurits]
 
-- Fix a random test failure on Travis CI, by resetting
-  ``AUTO_RESPONSE``.
+- Fix a random test failure on Travis CI, by resetting ``AUTO_RESPONSE``.
   [maurits]
 
 

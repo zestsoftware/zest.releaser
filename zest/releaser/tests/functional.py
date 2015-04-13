@@ -159,13 +159,3 @@ def teardown(test):
     # Reset constants to original settings:
     utils.AUTO_RESPONSE = False
     utils.TESTMODE = False
-
-
-def restore_mupload(test):
-    from zest.releaser import pypi
-
-    try:
-        from collective.dist import mupload
-    except ImportError:
-        mupload = None
-    pypi.mupload = mupload
