@@ -102,11 +102,11 @@ class Releaser(baserelease.Basereleaser):
     def _upload_distributions(self, package):
         # See if creating an sdist actually works.  Also, this makes
         # the sdist available for plugins.
-        logger.info("Making an egg of a fresh tag checkout.")
+        logger.info("Making an sdist of a fresh tag checkout.")
         print system(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
-                        "your home dir to upload an egg.",
+                        "your home dir to upload an sdist.",
                         pypi.DIST_CONFIG_FILE)
             return
 
