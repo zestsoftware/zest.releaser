@@ -35,6 +35,10 @@ Changelog for zest.releaser
 - Fix a random test failure on Travis CI, by resetting ``AUTO_RESPONSE``.
   [maurits]
 
+- Added clarification to logging: making an sdist/wheel now says that it is
+  being created in a temp folder. Fixes #61.
+  [reinout]
+
 
 3.56 (2015-03-18)
 -----------------
