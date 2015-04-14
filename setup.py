@@ -42,7 +42,10 @@ setup(name='zest.releaser',
           'recommended': [
               'wheel',
               ],
-          'test': ['z3c.testsetup']},
+          'test': [
+              'z3c.testsetup',
+              'wheel',
+              ]},
       entry_points={
           'console_scripts': [
               'release = zest.releaser.release:main',
