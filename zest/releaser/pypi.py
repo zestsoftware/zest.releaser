@@ -135,18 +135,31 @@ class SetupConfig(object):
 class PypiConfig(object):
     """Wrapper around the pypi config file"""
 
-    def __init__(self, config_filename=DIST_CONFIG_FILE):
-        """Grab the configuration (overridable for test purposes)"""
-        self.config_filename = config_filename
-        self._read_configfile()
+    def __init__(self, config_filename=DIST_CONFIG_FILE, use_setup_cfg=True):
+        """Grab the PyPI configuration.
 
-    def _read_configfile(self):
-        """Read the config file and store it (when valid)"""
+        This is .pypirc in the home directory.  It is overridable for
+        test purposes.
+
+        If there is a setup.cfg file in the current directory, we read
+        it too.
+        """
+        self.config_filename = config_filename
+        self._read_configfile(use_setup_cfg=use_setup_cfg)
+
+    def _read_configfile(self, use_setup_cfg=True):
+        """Read the PyPI config file and store it (when valid).
+
+        Usually read the setup.cfg too.
+        """
         rc = self.config_filename
         if not os.path.isabs(rc):
             rc = os.path.join(os.path.expanduser('~'), self.config_filename)
-        # If there is a setup.cfg in the package, parse it
-        files = [f for f in [rc, 'setup.cfg'] if os.path.exists(f)]
+        filenames = [rc]
+        if use_setup_cfg:
+            # If there is a setup.cfg in the package, parse it
+            filenames.append('setup.cfg')
+        files = [f for f in filenames if os.path.exists(f)]
         if not files:
             self.config = None
             return

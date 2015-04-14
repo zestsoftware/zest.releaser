@@ -23,7 +23,7 @@ name yourself.  We'll do that in the rest of these tests.
 
 A missing file doesn't lead to an error:
 
-    >>> pypiconfig = pypi.PypiConfig(config_filename='non/existing')
+    >>> pypiconfig = pypi.PypiConfig(config_filename='non/existing', use_setup_cfg=False)
     >>> pypiconfig.config is None
     True
 
@@ -182,10 +182,14 @@ If the package is installed, we set a constant:
     True
 
 We try to read a [zest.releaser] section, either in pypirc or
-setup.cfg and check for a ``create-wheel`` option.  We can
-ask for the result like this, which by default is False:
+setup.cfg and check for a ``create-wheel`` option.  In this case we
+explicitly disable checking for a setup.cfg, because when running the
+tests with ``tox`` the current directory is the base directory of
+zest.releaser, which now contains a setup.cfg.
 
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
+We can ask for the result like this, which by default is False:
+
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both, use_setup_cfg=False)
     >>> pypiconfig.create_wheel()
     False
 
@@ -193,7 +197,7 @@ We have a pypirc for this where we implicitly set it to False:
 
     >>> pypirc_no_release = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_no_release.txt')
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_no_release)
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_no_release, use_setup_cfg=False)
     >>> pypiconfig.create_wheel()
     False
 
@@ -201,7 +205,7 @@ We can also specify to always create it:
 
     >>> pypirc_yes_release = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_yes_release.txt')
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release)
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release, use_setup_cfg=False)
     >>> pypiconfig.create_wheel()
     True
 
