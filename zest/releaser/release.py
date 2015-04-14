@@ -109,7 +109,7 @@ class Releaser(baserelease.Basereleaser):
             print system(utils.setup_py('sdist bdist_wheel'))
         else:
             logger.info(
-                "Making a source distibution of a fresh tag checkout. (in %s)",
+                "Making a source distibution of a fresh tag checkout (in %s).",
                 self.data['tagdir'])
             print system(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
