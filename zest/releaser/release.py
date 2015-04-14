@@ -104,10 +104,13 @@ class Releaser(baserelease.Basereleaser):
         # Also, this makes the sdist (and wheel) available for plugins.
         if self.pypiconfig.create_wheel():
             logger.info("Making a source distibution and wheel of a fresh "
-                        "tag checkout.")
+                        "tag checkout (in %s).",
+                        self.data['tagdir'])
             print system(utils.setup_py('sdist bdist_wheel'))
         else:
-            logger.info("Making a source distibution of a fresh tag checkout.")
+            logger.info(
+                "Making a source distibution of a fresh tag checkout (in %s).",
+                self.data['tagdir'])
             print system(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
@@ -186,6 +189,7 @@ class Releaser(baserelease.Basereleaser):
         version = self.data['version']
         logger.info("Doing a checkout...")
         self.vcs.checkout_from_tag(version)
+        # ^^^ This changes directory to a temp folder.
         self.data['tagdir'] = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
 
