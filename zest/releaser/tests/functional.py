@@ -9,6 +9,7 @@ import urllib2
 import StringIO
 
 from zest.releaser import utils
+from zest.releaser.postrelease import NOTHING_CHANGED_YET
 from zest.releaser.utils import system
 
 
@@ -134,6 +135,13 @@ def setup(test):
         for line in lines[:5]:
             print line,
 
+    def add_changelog_entry():
+        # Replace '- Nothing changed yet.'  by a different entry.
+        orig_changes = open('CHANGES.txt').read()
+        new_changes = orig_changes.replace(
+            NOTHING_CHANGED_YET, '- Brown bag release.')
+        open('CHANGES.txt', 'w').write(new_changes)
+
     test.globs.update({'tempdir': test.tempdir,
                        'repo_url': repo_url,
                        'svnsourcedir': svnsourcedir,
@@ -146,6 +154,7 @@ def setup(test):
                        'bzrhead': bzrhead,
                        'githead': githead,
                        'mock_pypi_available': test.mock_pypi_available,
+                       'add_changelog_entry': add_changelog_entry,
                        })
 
 

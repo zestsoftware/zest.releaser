@@ -39,6 +39,9 @@ setup(name='zest.releaser',
           # -*- Extra requirements: -*-
       ],
       extras_require={
+          'recommended': [
+              'wheel',
+              ],
           'test': ['z3c.testsetup']},
       entry_points={
           'console_scripts': [

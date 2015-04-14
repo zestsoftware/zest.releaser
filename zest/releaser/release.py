@@ -100,14 +100,21 @@ class Releaser(baserelease.Basereleaser):
             sys.exit(1)
 
     def _upload_distributions(self, package):
-        # See if creating an sdist actually works.  Also, this makes
-        # the sdist available for plugins.
-        logger.info("Making an sdist of a fresh tag checkout (in %s).",
-                    self.data['tagdir'])
-        print system(utils.setup_py('sdist'))
+        # See if creating an sdist (and maybe a wheel) actually works.
+        # Also, this makes the sdist (and wheel) available for plugins.
+        if self.pypiconfig.create_wheel():
+            logger.info("Making a source distibution and wheel of a fresh "
+                        "tag checkout (in %s).",
+                        self.data['tagdir'])
+            print system(utils.setup_py('sdist bdist_wheel'))
+        else:
+            logger.info(
+                "Making a source distibution of a fresh tag checkout. (in %s)",
+                self.data['tagdir'])
+            print system(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
-                        "your home dir to upload an sdist.",
+                        "your home dir to upload to a package index.",
                         pypi.DIST_CONFIG_FILE)
             return
 
@@ -136,9 +143,14 @@ class Releaser(baserelease.Basereleaser):
                 utils.show_first_and_last_lines(result)
 
         # The user may have defined other servers to upload to.
-        for server in pypiconfig.distutils_servers():
-            commands = ('register', '-r', server, 'sdist',
-                        'upload', '-r', server)
+        for server in self.pypiconfig.distutils_servers():
+            if self.pypiconfig.create_wheel():
+                commands = ('register', '-r', server, 'sdist',
+                            'bdist_wheel',
+                            'upload', '-r', server)
+            else:
+                commands = ('register', '-r', server, 'sdist',
+                            'upload', '-r', server)
             shell_command = utils.setup_py(' '.join(commands))
             default = True
             exact = False

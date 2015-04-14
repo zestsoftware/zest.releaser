@@ -1,11 +1,17 @@
 import logging
 import os
-import sys
+import pkg_resources
 
 from ConfigParser import ConfigParser
 from ConfigParser import NoSectionError
 from ConfigParser import NoOptionError
 
+try:
+    pkg_resources.get_distribution('wheel')
+except pkg_resources.DistributionNotFound:
+    USE_WHEEL = False
+else:
+    USE_WHEEL = True
 DIST_CONFIG_FILE = '.pypirc'
 SETUP_CONFIG_FILE = 'setup.cfg'
 
@@ -247,6 +253,30 @@ class PypiConfig(object):
             return default
         try:
             result = self.config.getboolean('zest.releaser', 'ci-skip')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
+    def create_wheel(self):
+        """Should we create a Python wheel for this package?
+
+        Either in your ~/.pypirc or in a setup.cfg in a specific
+        package, add this when you want to create a Python wheel, next
+        to a standard sdist:
+
+        [zest.releaser]
+        create-wheel = yes
+
+        """
+        if not USE_WHEEL:
+            # If the wheel package is not available, we obviously
+            # cannot create wheels.
+            return False
+        default = False
+        if self.config is None:
+            return default
+        try:
+            result = self.config.getboolean('zest.releaser', 'create-wheel')
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result

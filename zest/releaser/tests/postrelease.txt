@@ -104,6 +104,11 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     <BLANKLINE>
     version = '0.2.dev0'
 
+The prerelease part would complain when the changelog still contains
+'- Nothing changed yet.'  So change it.
+
+    >>> add_changelog_entry()
+
 To check some corner cases we switch back and forth between prerelease
 and postrelease.  The next version after 0.2.19 should not be 0.2.110
 but 0.2.20:
@@ -128,6 +133,7 @@ but 0.2.20:
 Releases without numbers at the end should not fluster us even when we
 cannot suggest a reasonable number. We'll ask for a version until we get one:
 
+    >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['0.3beta', ''])
     >>> prerelease.main()
     Question: Enter version [0.2.20]:
@@ -146,6 +152,7 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
 
 Numbers and characters can be combined:
 
+    >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['1.0a1', ''])
     >>> prerelease.main()
     Question: Enter version [0.3rc0]:
@@ -164,6 +171,7 @@ Numbers and characters can be combined:
 
 If there's an empty history file, it gets a fresh header.
 
+    >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['1.0', ''])
     >>> prerelease.main()
     Question: ...
@@ -180,6 +188,7 @@ If there's an empty history file, it gets a fresh header.
 If there is no history file, we get no errors and a new history file is not
 created:
 
+    >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> prerelease.main()
     Question: ...

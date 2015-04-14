@@ -4,14 +4,33 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Warn when between the last postrelease and a new prerelease no
+  changelog entry has been added.  '- Nothing changed yet' would still
+  be in there.
+  Issue #26.
+  [maurits]
+
 - Remove code for support of collective.sdist.  That package was a backport
   from distutils for Python 2.5 and earlier, which we do not support.
   [maurits]
 
-- Add ``[ci skip]`` to commit messages to avoid running Travis Continuous
-  Integration builds.  See http://docs.travis-ci.com/user/how-to-skip-a-build/
-  To activate this, add ``[zest.releaser] ci-skip = yes`` to the ``setup.cfg``
-  of a package, or your global ``~/.pypirc``.  [maurits]
+- Add optional support for uploading Python wheels.  Use the new
+  ``zest.releaser[recommended]`` extra, or run ``pip install wheel``
+  yourself next to ``zest.releaser``.  Create or edit ``setup.cfg`` in
+  your project (or globally in your ``~/.pypirc``) and create a section
+  ``[zest.releaser]`` with ``create-wheel = yes`` to create a wheel to
+  upload to PyPI.  See http://pythonwheels.com for deciding whether
+  this is a good idea for your package.  Briefly, if it is a pure
+  Python 2 *or* pure Python 3 package: just do it.
+  Issue #55
+  [maurits]
+
+- Add ``[ci skip]`` to commit messages to avoid running Travis
+  Continuous Integration builds.  See
+  http://docs.travis-ci.com/user/how-to-skip-a-build/
+  To activate this, add ``[zest.releaser] ci-skip = yes`` to the
+  ``setup.cfg`` of a package, or your global ``~/.pypirc``.
+  [maurits]
 
 - Fix a random test failure on Travis CI, by resetting ``AUTO_RESPONSE``.
   [maurits]
