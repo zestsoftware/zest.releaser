@@ -1,4 +1,5 @@
 recursive-include zest *
 recursive-include doc *
 include *
+exclude .installed.cfg
 global-exclude *.pyc
