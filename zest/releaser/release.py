@@ -102,7 +102,8 @@ class Releaser(baserelease.Basereleaser):
     def _upload_distributions(self, package):
         # See if creating an sdist actually works.  Also, this makes
         # the sdist available for plugins.
-        logger.info("Making an sdist of a fresh tag checkout.")
+        logger.info("Making an sdist of a fresh tag checkout (in %s).",
+                    self.data['tagdir'])
         print system(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
@@ -176,6 +177,7 @@ class Releaser(baserelease.Basereleaser):
         version = self.data['version']
         logger.info("Doing a checkout...")
         self.vcs.checkout_from_tag(version)
+        # ^^^ This changes directory to a temp folder.
         self.data['tagdir'] = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
 
