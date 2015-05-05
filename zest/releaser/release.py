@@ -4,6 +4,7 @@ import os
 import urllib2
 import sys
 
+from colorama import Fore
 from zest.releaser import baserelease
 from zest.releaser import pypi
 from zest.releaser import utils
@@ -140,7 +141,15 @@ class Releaser(baserelease.Basereleaser):
                          exact=exact):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
-                utils.show_first_and_last_lines(result)
+                if Fore.RED in result:
+                    # warnings/errors, print complete result.
+                    print(result)
+                    if not utils.ask(
+                            "There were errors or warnings. Are you sure "
+                            "you want to continue?", default=False):
+                        sys.exit(1)
+                else:
+                    utils.show_first_and_last_lines(result)
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
@@ -164,7 +173,15 @@ class Releaser(baserelease.Basereleaser):
                          default=default, exact=exact):
                 logger.info("Running: %s", shell_command)
                 result = system(shell_command)
-                utils.show_first_and_last_lines(result)
+                if Fore.RED in result:
+                    # warnings/errors, print complete result.
+                    print(result)
+                    if not utils.ask(
+                            "There were errors or warnings. Are you sure "
+                            "you want to continue?", default=False):
+                        sys.exit(1)
+                else:
+                    utils.show_first_and_last_lines(result)
 
     def _release(self):
         """Upload the release, when desired"""
