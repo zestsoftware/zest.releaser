@@ -4,6 +4,11 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Show errors when uploading to PyPI.  They were unintentionally
+  swallowed before, so you did not notice when an upload failed.
+  Issue #84.
+  [maurits]
+
 - Warn when between the last postrelease and a new prerelease no
   changelog entry has been added.  '- Nothing changed yet' would still
   be in there.

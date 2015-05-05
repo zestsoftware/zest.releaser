@@ -433,7 +433,12 @@ def system(command, input=''):
     logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        show_stderr = False
+        if ' upload ' in command or ' register ' in command:
+            # We really do want to see the stderr here, otherwise a
+            # failed upload does not even show up in the output.
+            show_stderr = True
+        else:
+            show_stderr = False
     else:
         env = None
         show_stderr = True
@@ -450,6 +455,9 @@ def system(command, input=''):
     i.close()
     stdout_output = o.read()
     stderr_output = e.read()
+    # TODO.  Note that the returncode is always None, also after
+    # running p.kill().  The shell=True may be tripping us up.  For
+    # some ideas, see http://stackoverflow.com/questions/4789837
     if p.returncode or show_stderr or 'Traceback' in stderr_output:
         # Some error occured
         result = stdout_output + stderr_output
