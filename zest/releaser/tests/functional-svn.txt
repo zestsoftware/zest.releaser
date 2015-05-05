@@ -19,14 +19,14 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import system
-    >>> print system("svn info %s" % svnsourcedir)
+    >>> print(system("svn info %s" % svnsourcedir))
     Path: ...tha.example-svn...
     file://TESTREPO/tha.example/trunk
     ...
 
 There are no tags yet:
 
-    >>> print system("svn list %s/tha.example/tags" % repo_url)
+    >>> print(system("svn list %s/tha.example/tags" % repo_url))
 
 The changelog is unreleased:
 
@@ -125,7 +125,7 @@ that we upload to alternative pypis as well.
 
 There is now a tag:
 
-    >>> print system("svn list %s/tha.example/tags" % repo_url)
+    >>> print(system("svn list %s/tha.example/tags" % repo_url))
     0.1/
 
 And the postrelease script ups the version:

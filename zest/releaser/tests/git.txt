@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'git diff'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
     --- a/setup.py
@@ -64,7 +64,7 @@ In some cases we get this output:
 and in other this:
 ``Created commit ...: small tweak``
 
-    >>> print 'dummy', system(cmd)
+    >>> print('dummy %s' % system(cmd))
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
@@ -96,7 +96,7 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print 'dummy', system(cmd)
+    >>> print('dummy %s' % system(cmd))
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
@@ -105,7 +105,7 @@ Now we can request the changes since a specific tag:
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
     'git diff 0.1'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
     --- a/setup.py
@@ -140,7 +140,7 @@ setup.py also contains our latest "b = 3" change:
 
     >>> sorted(os.listdir(temp))
     ['.git', '.gitignore', 'CHANGES.txt', ...]
-    >>> print open(os.path.join(temp, 'setup.py')).read()
+    >>> print(open(os.path.join(temp, 'setup.py')).read())
     from setuptools import setup, find_packages
     ...
     b = 3
@@ -158,13 +158,13 @@ Chdir and make a tag checkout:
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
     'git checkout 0.1 && git submodule update --init --recursive'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Note: ...0.1...
     HEAD is now at ... small tweak
 
 The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
 
-    >>> print open(os.path.join(temp, 'setup.py')).read()
+    >>> print(open(os.path.join(temp, 'setup.py')).read())
     from setuptools import setup, find_packages
     ...
     a = 2

@@ -102,7 +102,7 @@ Setting the version works also with version.txt files (the setup.py scenario
 is tested in the other tests).
 
     >>> checkout.version = '1.1'
-    >>> print open('version.txt').read()
+    >>> print(open('version.txt').read())
     1.1
 
 In old Plone products, the setup.py often reads the version.txt and uses that
@@ -114,9 +114,9 @@ version.txt and the setup.py must be left unmolested.
     ...     "setup(name='urgh', version=open('version.txt').read().strip())"]
     >>> open('setup.py', 'w').write('\n'.join(lines))
     >>> checkout.version = '1.2'
-    >>> print open('version.txt').read()
+    >>> print(open('version.txt').read())
     1.2
-    >>> print open('setup.py').read()
+    >>> print(open('setup.py').read())
     from setuptools import setup
     setup(name='urgh', version=open('version.txt').read().strip())
 
@@ -130,9 +130,9 @@ version.txt is the one left as-is.
     ...     "      )"]
     >>> open('setup.py', 'w').write('\n'.join(lines))
     >>> checkout.version = '1.4'
-    >>> print open('version.txt').read() # Still at 1.2
+    >>> print(open('version.txt').read())  # Still at 1.2
     1.2
-    >>> print open('setup.py').read() # Modified into 1.4
+    >>> print(open('setup.py').read()) # Modified into 1.4
     from setuptools import setup
     setup(name='urgh',
           version='1.4',
@@ -175,7 +175,7 @@ picked up:
 Setting it sets it in the correct Python file:
 
     >>> checkout.version = '2.1'
-    >>> print open('some_file.py').read()
+    >>> print(open('some_file.py').read())
     import something
     __version__ = '2.1'
     print(something.else)
@@ -207,7 +207,7 @@ returns the cleaned-up version:
 Setting the version works also with ``VERSION`` files:
 
     >>> checkout.version = '1.1'
-    >>> print open('VERSION').read()
+    >>> print(open('VERSION').read())
     1.1
 
 Same with a ``VERSION.txt``:
@@ -217,7 +217,7 @@ Same with a ``VERSION.txt``:
     >>> checkout.get_version_txt_version()
     '22.3'
     >>> checkout.version = '22.4'
-    >>> print open('VERSION.txt').read()
+    >>> print(open('VERSION.txt').read())
     22.4
 
 Version files can also be called ``version.rst`` (or .md or so) instead of ``version.txt``:

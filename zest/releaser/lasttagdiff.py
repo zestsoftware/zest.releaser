@@ -26,5 +26,5 @@ def main():
     logger.info("Showing differences from the last commit against tag %s",
                 full_tag)
     diff_command = vcs.cmd_diff_last_commit_against_tag(found)
-    print diff_command
-    print system(diff_command)
+    print(diff_command)
+    print(system(diff_command))

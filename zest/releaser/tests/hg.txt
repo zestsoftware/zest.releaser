@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'hg diff'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     diff -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
@@ -57,7 +57,7 @@ Commit it:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
     'hg commit -v -m "small tweak"'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     setup.py...
     committed changeset 1:234567890abc
 
@@ -89,7 +89,7 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print system(cmd)
+    >>> print(system(cmd))
     setup.py...
     committed changeset 1:234567890abc
 
@@ -98,7 +98,7 @@ Now we can request the changes since a specific tag:
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
     'hg diff -r 0.1 -r 234567890abc'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     diff -r 234567890abc -r 234567890abc .hgtags
     --- /dev/null     ...
     +++ b/.hgtags     ...

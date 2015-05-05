@@ -166,8 +166,8 @@ class Prereleaser(baserelease.Basereleaser):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can
             # contain every kind of character.  The rest is mostly ascii.
-            print "Diff results:"
-            print diff
+            print("Diff results:")
+            print(diff)
         else:
             # Common case
             logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))

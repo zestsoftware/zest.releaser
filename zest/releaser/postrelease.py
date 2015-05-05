@@ -82,7 +82,7 @@ class Postreleaser(baserelease.Basereleaser):
                 logger.warn("Version does not end with a number, so we can't "
                             "calculate a suggestion for a next version.")
                 suggestion = None
-        print "Current version is %r" % current
+        print("Current version is %r" % current)
         q = "Enter new development version ('.dev0' will be appended)"
         version = utils.ask_version(q, default=suggestion)
         if not version:
@@ -144,8 +144,8 @@ class Postreleaser(baserelease.Basereleaser):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can
             # contain every kind of character.  The rest is mostly ascii.
-            print "Diff results:"
-            print diff
+            print("Diff results:")
+            print(diff)
         else:
             # Common case
             logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))

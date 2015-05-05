@@ -84,12 +84,12 @@ def get_input(question):
         # Normal operation.
         return raw_input(question)
     # Testing means no interactive input. Get it from answers_for_testing.
-    print "Question:", question
+    print("Question: %s" % question)
     answer = test_answer_book.get_next_answer()
     if answer == '':
-        print "Our reply: <ENTER>"
+        print("Our reply: <ENTER>")
     else:
-        print "Our reply:", answer
+        print("Our reply: %s" % answer)
     return answer
 
 
@@ -151,8 +151,8 @@ def ask(question, default=True, exact=False):
         if not answer and default is not None:
             return default
         if exact and answer.lower() not in ('yes', 'no'):
-            print ("Please explicitly answer yes/no in full "
-                   "(or accept the default)")
+            print("Please explicitly answer yes/no in full "
+                  "(or accept the default)")
             continue
         if answer:
             answer = answer[0].lower()
@@ -161,7 +161,7 @@ def ask(question, default=True, exact=False):
             if answer == 'n':
                 return False
         # We really want an answer.
-        print 'Please explicitly answer y/n'
+        print('Please explicitly answer y/n')
         continue
 
 
@@ -236,23 +236,23 @@ def show_first_and_last_lines(result):
     lines = [line for line in result.split('\n')]
     if len(lines) < 11:
         for line in lines:
-            print line
+            print(line)
         return
-    print 'Showing first few lines...'
+    print('Showing first few lines...')
     for line in lines[:5]:
-        print line
-    print '...'
-    print 'Showing last few lines...'
+        print(line)
+    print('...')
+    print('Showing last few lines...')
     for line in lines[-5:]:
-        print line
+        print(line)
 
 
 def show_last_lines(result):
     """Just print the last five lines of (pypi) output"""
     lines = [line for line in result.split('\n')]
-    print 'Showing last few lines...'
+    print('Showing last few lines...')
     for line in lines[-5:]:
-        print line
+        print(line)
 
 
 def setup_py(rest_of_cmdline):
@@ -271,11 +271,11 @@ def is_data_documented(data, documentation={}):
     """check that the self.data dict is fully documented"""
     if TESTMODE:
         # Hack for testing to prove entry point is being called.
-        print "Checking data dict"
+        print("Checking data dict")
     undocumented = [key for key in data
                     if key not in documentation]
     if undocumented:
-        print 'Internal detail: key(s) %s are not documented' % undocumented
+        print('Internal detail: key(s) %s are not documented' % undocumented)
 
 
 def resolve_name(name):
@@ -425,7 +425,7 @@ def prepare_documentation_entrypoint(data):
             result.append('')
 
     open(target, 'wb').write('\n'.join(result))
-    print "Wrote entry point documentation to", target
+    print("Wrote entry point documentation to %s" % target)
 
 
 def system(command, input=''):
@@ -550,5 +550,5 @@ You may want to quit and fix this.
         q += "Do you want to continue with the release?"
         if not ask(q, default=False):
             return False
-        print q
+        print(q)
     return True

@@ -73,8 +73,8 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask(q):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(
                     version)
-                print diff_command
-                print system(diff_command)
+                print(diff_command)
+                print(system(diff_command))
         else:
             self.data['tag_already_exists'] = False
 
@@ -85,18 +85,18 @@ class Releaser(baserelease.Basereleaser):
         if not isinstance(cmds, list):
             cmds = [cmds]
         if len(cmds) == 1:
-            print "Tag needed to proceed, you can use the following command:"
+            print("Tag needed to proceed, you can use the following command:")
         for cmd in cmds:
-            print cmd
+            print(cmd)
             if utils.ask("Run this command"):
-                print system(cmd)
+                print(system(cmd))
             else:
                 # all commands are needed in order to proceed normally
-                print "Please create a tag for %s yourself and rerun." % \
-                    (self.data['version'],)
+                print("Please create a tag for %s yourself and rerun." %
+                      (self.data['version'],))
                 sys.exit(1)
         if not self.vcs.tag_exists(self.data['version']):
-            print "\nFailed to create tag %s!" % (self.data['version'],)
+            print("\nFailed to create tag %s!" % (self.data['version'],))
             sys.exit(1)
 
     def _upload_distributions(self, package):
@@ -106,12 +106,12 @@ class Releaser(baserelease.Basereleaser):
             logger.info("Making a source distibution and wheel of a fresh "
                         "tag checkout (in %s).",
                         self.data['tagdir'])
-            print system(utils.setup_py('sdist bdist_wheel'))
+            print(system(utils.setup_py('sdist bdist_wheel')))
         else:
             logger.info(
                 "Making a source distibution of a fresh tag checkout (in %s).",
                 self.data['tagdir'])
-            print system(utils.setup_py('sdist'))
+            print(system(utils.setup_py('sdist')))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload to a package index.",
@@ -223,7 +223,7 @@ class Releaser(baserelease.Basereleaser):
                     command = self.vcs.cmd_commit(
                         "Fixed %s on tag for release" %
                         self.setup_cfg.config_filename)
-                    print system(command)
+                    print(system(command))
                 else:
                     logger.debug("Not committing in non-svn repository as "
                                  "this is not needed or may be harmful.")

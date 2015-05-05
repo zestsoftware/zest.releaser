@@ -19,7 +19,7 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import system
-    >>> print system("svn info %s" % svnsourcedir)
+    >>> print(system("svn info %s" % svnsourcedir))
     Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...
@@ -179,7 +179,7 @@ If there's an empty history file, it gets a fresh header.
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
     Current ...
-    >>> print open('CHANGES.txt', 'r').read()
+    >>> print(open('CHANGES.txt', 'r').read())
     1.1 (unreleased)
     ----------------
     <BLANKLINE>
@@ -216,7 +216,7 @@ Re-instate the history file again, but omit the restructuredtext header line:
 No errors are raised and an ``----`` underline is assumed for the new header.
 The old one is left untouched:
 
-    >>> print open('CHANGES.txt').read()
+    >>> print(open('CHANGES.txt').read())
     1.4 (unreleased)
     ----------------
     <BLANKLINE>

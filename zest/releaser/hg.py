@@ -76,7 +76,7 @@ class Hg(BaseVersionControl):
         # just in the current directory.
         tagdir = tempfile.mktemp(prefix=prefix)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print system(cmd)
+        print(system(cmd))
         os.chdir(tagdir)
 
     def is_clean_checkout(self):

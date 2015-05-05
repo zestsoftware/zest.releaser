@@ -45,7 +45,7 @@ Commit the change to setup.cfg so that we have a clean checkout:
     >>> from zest.releaser import git
     >>> checkout = git.Git()
     >>> cmd = checkout.cmd_commit("tweak setup.cfg to enable hooks")
-    >>> print 'dummy', utils.system(cmd)
+    >>> print('dummy %s' % utils.system(cmd))
     dummy...tweak setup.cfg to enable hooks
       1 file changed, 13 insertions(+)
 

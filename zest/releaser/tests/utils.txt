@@ -352,7 +352,7 @@ Safe setup.py running
 sys.executable.
 
     >>> cmd = utils.setup_py('cook a cow')
-    >>> print cmd.replace(sys.executable, 'python') # test normalization
+    >>> print(cmd.replace(sys.executable, 'python'))  # test normalization
     python setup.py cook a cow
 
 When the setup.py arguments include arguments that indicate pypi interaction,
@@ -360,9 +360,9 @@ the python executable is replaced by ``echo`` for safety reasons.  This only
 happens when TESTMODE is on:
 
     >>> utils.TESTMODE = True
-    >>> print utils.setup_py('upload')
+    >>> print(utils.setup_py('upload'))
     echo MOCK setup.py upload
-    >>> print utils.setup_py('register')
+    >>> print(utils.setup_py('register'))
     echo MOCK setup.py register
 
 
@@ -424,7 +424,7 @@ When the name *is* zest.releaser, we generate documentation.
 The lines above the marker interface are still intact, the line below it has
 been replaced by the generated documentation:
 
-    >>> print open(docfile).read()
+    >>> print(open(docfile).read())
     <BLANKLINE>
     line1
     line2
