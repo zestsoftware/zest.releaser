@@ -48,11 +48,40 @@ Compatibility / Dependencies
 ----------------------------
 
 ``zest.releaser`` works on Python 2.7.  Python 2.6 is not officially
-supported anymore: it may still work, but we are no longer testing
-against it.  Python 3 is on the wishlist.
+supported anymore since version 4.0: it may still work, but we are no
+longer testing against it.  Python 3 is on the wishlist.
 
 To be sure: the packages that you release with ``zest.releaser`` may
-very well work on other Python versions.
+very well work on other Python versions: that totally depends on your
+package.
+
+Since version 4.0 there is a ``recommended`` extra that you can get by
+running ``pip install zest.releaser[recommended]``.  It contains a few
+trusted add-ons that we feel are useful for the great majority of
+``zest.releaser`` users:
+
+- wheel_ for creating a Python wheel that we upload to PyPI next to
+  the standard source distribution.  Wheels are the new Python package
+  format.  Create or edit ``setup.cfg`` in your project (or globally
+  in your ``~/.pypirc``) and create a section ``[zest.releaser]`` with
+  ``create-wheel = yes`` to create a wheel to upload to PyPI.  See
+  http://pythonwheels.com for deciding whether this is a good idea for
+  your package.  Briefly, if it is a pure Python 2 *or* pure Python 3
+  package: just do it.
+
+- `check-manifest`_ checks your ``MANIFEST.in`` file for completeness,
+  or tells you that you need such a file.  It basically checks if all
+  version controlled files are ending up the the distribution that we
+  will upload.  This may avoid 'brown bag' releases that are missing
+  files.
+
+- pyroma_ checks if the package follows best practices of Python
+  packaging.  Mostly it performs checks on the ``setup.py`` file, like
+  checking for Python version classifiers.
+
+.. _wheel: https://pypi.python.org/pypi/wheel
+.. _`check-manifest`: https://pypi.python.org/pypi/check-manifest
+.. _pyroma: https://pypi.python.org/pypi/pyroma
 
 
 Installation
