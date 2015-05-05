@@ -55,6 +55,12 @@ To be sure: the packages that you release with ``zest.releaser`` may
 very well work on other Python versions: that totally depends on your
 package.
 
+We depend on:
+
+- ``setuptools`` for the entrypoint hooks that we offer.
+
+- ``colorama`` for colorized output (some errors printed in red).
+
 Since version 4.0 there is a ``recommended`` extra that you can get by
 running ``pip install zest.releaser[recommended]``.  It contains a few
 trusted add-ons that we feel are useful for the great majority of
