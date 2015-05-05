@@ -208,21 +208,11 @@ The default for versions is accepted, too:
 Output filtering
 ----------------
 
-Uploading to pypi returns quite some lines of output.  Only show the last
-part:
+Uploading to pypi returns quite some lines of output.  Only show the
+first and last few lines, though we make sure we do not print too much
+in case there are not 'enough' lines:
 
     >>> output = "a\nb\nc\nd\ne\nf\ng\n"
-    >>> utils.show_last_lines(output)
-    Showing last few lines...
-    d
-    e
-    f
-    g
-    <BLANKLINE>
-
-Or the first and last few lines, though we make sure we do not print
-too much in case there are not 'enough' lines:
-
     >>> utils.show_interesting_lines(output)
     a
     b
@@ -252,9 +242,6 @@ too much in case there are not 'enough' lines:
 Just one line: no problem:
 
     >>> output = "just one line, no newlines"
-    >>> utils.show_last_lines(output)
-    Showing last few lines...
-    just one line, no newlines
     >>> utils.show_interesting_lines(output)
     just one line, no newlines
 

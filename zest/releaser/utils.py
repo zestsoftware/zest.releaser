@@ -263,14 +263,6 @@ def show_interesting_lines(result):
         print(line)
 
 
-def show_last_lines(result):
-    """Just print the last five lines of (pypi) output"""
-    lines = [line for line in result.split('\n')]
-    print('Showing last few lines...')
-    for line in lines[-5:]:
-        print(line)
-
-
 def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
     executable = sys.executable
