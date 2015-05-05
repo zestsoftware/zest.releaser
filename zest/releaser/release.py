@@ -107,12 +107,14 @@ class Releaser(baserelease.Basereleaser):
             logger.info("Making a source distibution and wheel of a fresh "
                         "tag checkout (in %s).",
                         self.data['tagdir'])
-            print(system(utils.setup_py('sdist bdist_wheel')))
+            result = system(utils.setup_py('sdist bdist_wheel'))
+            utils.show_interesting_lines(result)
         else:
             logger.info(
                 "Making a source distibution of a fresh tag checkout (in %s).",
                 self.data['tagdir'])
-            print(system(utils.setup_py('sdist')))
+            result = system(utils.setup_py('sdist'))
+            utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload to a package index.",
