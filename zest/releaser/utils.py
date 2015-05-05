@@ -1,4 +1,5 @@
 # Small utility methods.
+from colorama import Fore
 from optparse import OptionParser
 from pkg_resources import parse_version
 import logging
@@ -460,7 +461,15 @@ def system(command, input=''):
     # some ideas, see http://stackoverflow.com/questions/4789837
     if p.returncode or show_stderr or 'Traceback' in stderr_output:
         # Some error occured
-        result = stdout_output + stderr_output
+        # print(Fore.RED + stderr_output)
+        stderr_output = stderr_output.strip()
+        if stderr_output:
+            # Make sure every error line is marked red.
+            errors = [(Fore.RED + line) for line in stderr_output.split('\n')]
+            errors = '\n'.join(errors)
+        else:
+            errors = ''
+        result = stdout_output + errors
     else:
         # Only return the stdout. Stderr only contains possible
         # weird/confusing warnings that might trip up extraction of version

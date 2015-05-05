@@ -4,6 +4,10 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Use ``colorama`` to output errors in red.
+  Issue #86
+  [maurits]
+
 - Show errors when uploading to PyPI.  They were unintentionally
   swallowed before, so you did not notice when an upload failed.
   Issue #84.
