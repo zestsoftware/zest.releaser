@@ -233,7 +233,22 @@ def extract_headings_from_history(history_lines):
 
 
 def show_interesting_lines(result):
-    """Just print the first and last five lines of (pypi) output"""
+    """Just print the first and last five lines of (pypi) output.
+
+    But: when there are errors or warnings, print everything and ask
+    the user if she wants to continue.
+    """
+    if Fore.RED in result:
+        # warnings/errors, print complete result.
+        print(result)
+        if not utils.ask(
+                "There were errors or warnings. Are you sure "
+                "you want to continue?", default=False):
+            sys.exit(1)
+        # User has seen everything and wants to continue.
+        return
+
+    # No errors or warnings.  Show first and last lines.
     lines = [line for line in result.split('\n')]
     if len(lines) < 11:
         for line in lines:
