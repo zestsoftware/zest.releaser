@@ -1,8 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
-3.57 (unreleased)
------------------
+4.0 (unreleased)
+----------------
+
+- Python 2.6 not officially supported anymore.  It may still work, but
+  we are no longer testing against it.
+  [maurits]
 
 - Warn when between the last postrelease and a new prerelease no
   changelog entry has been added.  '- Nothing changed yet' would still

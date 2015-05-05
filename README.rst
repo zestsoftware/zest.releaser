@@ -44,6 +44,17 @@ And... we're automatically being tested by Travis:
    :target: https://travis-ci.org/#!/zestsoftware/zest.releaser
 
 
+Compatibility / Dependencies
+----------------------------
+
+``zest.releaser`` works on Python 2.7.  Python 2.6 is not officially
+supported anymore: it may still work, but we are no longer testing
+against it.  Python 3 is on the wishlist.
+
+To be sure: the packages that you release with ``zest.releaser`` may
+very well work on other Python versions.
+
+
 Installation
 ------------
 
