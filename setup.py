@@ -39,6 +39,8 @@ setup(name='zest.releaser',
       ],
       extras_require={
           'recommended': [
+              'check-manifest',
+              'pyroma',
               'wheel',
               ],
           'test': [
