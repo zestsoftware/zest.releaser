@@ -149,7 +149,7 @@ class Releaser(baserelease.Basereleaser):
                             "you want to continue?", default=False):
                         sys.exit(1)
                 else:
-                    utils.show_first_and_last_lines(result)
+                    utils.show_interesting_lines(result)
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
@@ -181,7 +181,7 @@ class Releaser(baserelease.Basereleaser):
                             "you want to continue?", default=False):
                         sys.exit(1)
                 else:
-                    utils.show_first_and_last_lines(result)
+                    utils.show_interesting_lines(result)
 
     def _release(self):
         """Upload the release, when desired"""

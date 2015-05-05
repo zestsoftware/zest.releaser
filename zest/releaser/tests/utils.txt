@@ -223,7 +223,7 @@ part:
 Or the first and last few lines, though we make sure we do not print
 too much in case there are not 'enough' lines:
 
-    >>> utils.show_first_and_last_lines(output)
+    >>> utils.show_interesting_lines(output)
     a
     b
     c
@@ -234,7 +234,7 @@ too much in case there are not 'enough' lines:
     <BLANKLINE>
     >>> import string
     >>> output = '\n'.join(string.ascii_lowercase)
-    >>> utils.show_first_and_last_lines(output)
+    >>> utils.show_interesting_lines(output)
     Showing first few lines...
     a
     b
@@ -255,7 +255,7 @@ Just one line: no problem:
     >>> utils.show_last_lines(output)
     Showing last few lines...
     just one line, no newlines
-    >>> utils.show_first_and_last_lines(output)
+    >>> utils.show_interesting_lines(output)
     just one line, no newlines
 
 

@@ -232,7 +232,7 @@ def extract_headings_from_history(history_lines):
     return headings
 
 
-def show_first_and_last_lines(result):
+def show_interesting_lines(result):
     """Just print the first and last five lines of (pypi) output"""
     lines = [line for line in result.split('\n')]
     if len(lines) < 11:
