@@ -126,9 +126,9 @@ And the postrelease script ups the version:
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
-The commit will contain a hint for Travis to skip the Continuous
-Integration build, because our pypirc has asked this with the ci-skip
-option::
+The commit will contain an extra message with in this case a hint for
+Travis to skip the Continuous Integration build, because our pypirc
+has asked this with the extra-message option::
 
     >>> from zest.releaser import lasttaglog
     >>> lasttaglog.main()

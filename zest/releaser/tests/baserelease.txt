@@ -36,3 +36,40 @@ Two methods are unimplemented:
     Traceback (most recent call last):
     ...
     NotImplementedError
+
+We can update commit messages based on what we find in ``setup.cfg``::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "extra-message = Aargh!"]
+    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> print base.update_commit_message('Ni!')
+    Ni!
+    <BLANKLINE>
+    Aargh!
+
+Check that this works with non-ascii too.
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     u"extra-message = \xec\xab".encode('utf-8')]
+    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> base.update_commit_message('Ni!')
+    'Ni!\n\n\xc3\xac\xc2\xab'
+
+And check with multiple lines.
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "extra-message =",
+    ...     "    Where is my towel?",
+    ...     "    Not again."]
+    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> print base.update_commit_message('Ni!')
+    Ni!
+    <BLANKLINE>
+    Where is my towel?
+    Not again.

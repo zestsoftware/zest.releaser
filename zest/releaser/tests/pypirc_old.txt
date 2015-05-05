@@ -3,4 +3,4 @@ username:pipo_de_clown
 password:asjemenou
 
 [zest.releaser]
-ci-skip = true
+extra-message = [ci skip]

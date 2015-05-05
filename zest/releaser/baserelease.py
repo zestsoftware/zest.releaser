@@ -40,6 +40,7 @@ class Basereleaser(object):
         raise NotImplementedError()
 
     def update_commit_message(self, msg):
-        if self.pypiconfig.ci_skip():
-            msg += '\n\n[ci skip]'
+        extra_message = self.pypiconfig.extra_message()
+        if extra_message:
+            msg += '\n\n%s' % extra_message
         return msg
