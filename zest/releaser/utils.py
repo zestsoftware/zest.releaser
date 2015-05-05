@@ -241,7 +241,7 @@ def show_interesting_lines(result):
     if Fore.RED in result:
         # warnings/errors, print complete result.
         print(result)
-        if not utils.ask(
+        if not ask(
                 "There were errors or warnings. Are you sure "
                 "you want to continue?", default=False):
             sys.exit(1)

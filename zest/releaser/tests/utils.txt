@@ -204,6 +204,11 @@ The default for versions is accepted, too:
     >>> utils.ask('What mocking version, my liege?', default='72')
     '72'
 
+Reset the defaults:
+
+    >>> utils.TESTMODE = True
+    >>> utils.AUTO_RESPONSE = False
+
 
 Output filtering
 ----------------
@@ -244,6 +249,50 @@ Just one line: no problem:
     >>> output = "just one line, no newlines"
     >>> utils.show_interesting_lines(output)
     just one line, no newlines
+
+In case of errors, shown in red, we show all and ask what the user
+wants to do.
+
+    >>> output = "a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn"
+    >>> utils.show_interesting_lines(output)
+    Showing first few lines...
+    a
+    b
+    c
+    d
+    e
+    ...
+    Showing last few lines...
+    j
+    k
+    l
+    m
+    n
+    >>> from colorama import Fore
+    >>> output = Fore.RED + output
+    >>> utils.test_answer_book.set_answers([''])
+    >>> utils.show_interesting_lines(output)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+    >>> utils.test_answer_book.set_answers(['y'])
+    >>> utils.show_interesting_lines(output)
+    a
+    b
+    c
+    d
+    e
+    f
+    g
+    h
+    i
+    j
+    k
+    l
+    m
+    n
+    Question: There were errors or warnings. Are you sure you want to continue? (y/N)?
+    Our reply: y
 
 
 Changelog header detection
