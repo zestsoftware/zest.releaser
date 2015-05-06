@@ -72,7 +72,7 @@ def setup(test):
     system(
         'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
     system(
-        'svn propset svn:ignore tha.example.egg-info %s/src ' % svnsourcedir)
+        'svn propset svn:ignore "tha.example.egg-info *.pyc" %s/src ' % svnsourcedir)
     system('svn up %s' % svnsourcedir)
     system('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
 
@@ -81,7 +81,7 @@ def setup(test):
     shutil.copytree(sourcedir, hgsourcedir)
     system("hg init %s" % hgsourcedir)
     open(os.path.join(hgsourcedir, '.hgignore'), 'wb').write(
-        'tha.example.egg-info\n')
+        'tha.example.egg-info\n\.pyc$\n')
     system("hg add %s" % hgsourcedir)
     system("hg commit -m 'init' %s" % hgsourcedir)
 
@@ -90,7 +90,7 @@ def setup(test):
     shutil.copytree(sourcedir, bzrsourcedir)
     system("bzr init %s" % bzrsourcedir)
     open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
-        'tha.example.egg-info\n')
+        'tha.example.egg-info\n*.pyc\n')
     system("bzr add %s" % bzrsourcedir)
     system("bzr commit -m 'init' %s" % bzrsourcedir)
 
@@ -100,7 +100,7 @@ def setup(test):
     os.chdir(gitsourcedir)
     system("git init")
     open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
-        'tha.example.egg-info\n')
+        'tha.example.egg-info\n*.pyc\n')
     system("git add .")
     system("git commit -a -m 'init'")
     os.chdir(test.orig_dir)
