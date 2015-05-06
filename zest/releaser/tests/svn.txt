@@ -141,7 +141,6 @@ The tag checkout command makes a checkout in that tempdir:
     A    TMPDIR/somename.../bootstrap.py
     A    TMPDIR/somename.../buildout.cfg
     A    TMPDIR/somename.../grok-1.0a4.cfg
-    A    TMPDIR/somename.../local-checkouts
     A    TMPDIR/somename.../setup.cfg
     A    TMPDIR/somename.../setup.py
     A    TMPDIR/somename.../src
