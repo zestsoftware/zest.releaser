@@ -51,6 +51,7 @@ Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
+    lists of files in version control and sdist match
     Checking data dict
     Checking data dict
     Tag needed ...
@@ -91,6 +92,7 @@ Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
+    lists of files in version control and sdist match
     Checking data dict
     Checking data dict
     Tag needed ...
