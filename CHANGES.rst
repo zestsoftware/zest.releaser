@@ -1,8 +1,16 @@
 Changelog for zest.releaser
 ===========================
 
-3.57 (unreleased)
------------------
+4.0 (unreleased)
+----------------
+
+- Added ``check-manifest`` and ``pyroma`` to the ``recommended``
+  extra.  Issue #49.
+  [maurits]
+
+- Python 2.6 not officially supported anymore.  It may still work, but
+  we are no longer testing against it.
+  [maurits]
 
 - Do not accept ``y`` or ``n`` as answer for a new version.
   [maurits]

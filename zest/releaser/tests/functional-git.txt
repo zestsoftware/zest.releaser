@@ -24,7 +24,7 @@ The changelog is unreleased:
 
     >>> githead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (unreleased)
     ----------------
@@ -46,8 +46,15 @@ testing hack in utils.py:
 Run the prerelease script:
 
     >>> from zest.releaser import prerelease
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
     >>> prerelease.main()
+    Question: Run pyroma on the package before tagging? (Y/n)?
+    Our reply: <ENTER>
+    Question: Continue? (Y/n)?
+    Our reply: <ENTER>
+    Question: Do you want to run check-manifest? (Y/n)?
+    Our reply: <ENTER>
+    lists of files in version control and sdist match
     Question: Enter version [0.1]:
     Our reply: <ENTER>
     Checking data dict
@@ -58,7 +65,7 @@ The changelog now has a release date instead of ``(unreleased)``:
 
     >>> githead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (2008-12-20)
     ----------------
@@ -145,7 +152,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 
     >>> githead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
