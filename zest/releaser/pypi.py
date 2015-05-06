@@ -250,7 +250,7 @@ class PypiConfig(object):
         return result
 
     def extra_message(self):
-        """Return an extra message to add to commits.
+        """Return extra text to be added to commit messages.
 
         This can for example be used to skip CI builds.  This at least
         works for Travis.  See

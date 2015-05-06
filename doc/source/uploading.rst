@@ -108,12 +108,12 @@ for your package.  Briefly, if it is a pure Python 2 *or* pure Python
 3 package: just do it.
 
 
-Adding extra text to a commit
------------------------------
+Adding extra text to a commit message
+-------------------------------------
 
 ``zest.releaser`` makes commits in the prerelease and postrelease
 phase.  Something like ``Preparing release 1.0`` and ``Back to
-development: 1.1``.  You can add extra text to this message by
+development: 1.1``.  You can add extra text to these messages by
 configuration in your ``setup.cfg`` or global ``~/.pypirc``.  One use
 case for this is telling Travis to skip Continuous Integration builds::
 

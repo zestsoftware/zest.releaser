@@ -28,9 +28,9 @@ Changelog for zest.releaser
 - Optionally add extra text to commit messages.  This can be used to
   avoid running Travis Continuous Integration builds.  See
   http://docs.travis-ci.com/user/how-to-skip-a-build/.  To activate
-  this, add ``[zest.releaser] extra-message = [ci skip]`` to the
-  ``setup.cfg`` of a package, or your global ``~/.pypirc``.  Or add
-  your favorite geeky quotes there.
+  this, add ``extra-message = [ci skip]`` to a ``[zest.releaser]``
+  section in the ``setup.cfg`` of your package, or your global
+  ``~/.pypirc``.  Or add your favorite geeky quotes there.
   [maurits]
 
 - Fix a random test failure on Travis CI, by resetting ``AUTO_RESPONSE``.
