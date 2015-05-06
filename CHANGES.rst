@@ -4,6 +4,9 @@ Changelog for zest.releaser
 3.57 (unreleased)
 -----------------
 
+- Do not accept ``y`` or ``n`` as answer for a new version.
+  [maurits]
+
 - Warn when between the last postrelease and a new prerelease no
   changelog entry has been added.  '- Nothing changed yet' would still
   be in there.
