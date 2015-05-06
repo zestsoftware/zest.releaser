@@ -14,8 +14,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     utils.parse_options()
-    logging.basicConfig(level=utils.loglevel(),
-                        format="%(levelname)s: %(message)s")
+    utils.configure_logging()
     logger.info('Starting prerelease.')
     original_dir = os.getcwd()
     prerelease.main()

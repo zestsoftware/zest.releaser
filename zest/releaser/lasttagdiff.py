@@ -12,8 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    logging.basicConfig(level=utils.loglevel(),
-                        format="%(levelname)s: %(message)s")
+    utils.configure_logging()
     vcs = zest.releaser.choose.version_control()
     if len(sys.argv) > 1:
         found = sys.argv[-1]

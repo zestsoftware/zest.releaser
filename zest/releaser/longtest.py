@@ -39,6 +39,5 @@ def show_longdesc():
 
 
 def main():
-    logging.basicConfig(level=utils.loglevel(),
-                        format="%(levelname)s: %(message)s")
+    utils.configure_logging()
     show_longdesc()

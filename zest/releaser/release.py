@@ -247,8 +247,7 @@ def datacheck(data):
 
 def main(return_tagdir=False):
     utils.parse_options()
-    logging.basicConfig(level=utils.loglevel(),
-                        format="%(levelname)s: %(message)s")
+    utils.configure_logging()
     releaser = Releaser()
     releaser.run()
     if return_tagdir:

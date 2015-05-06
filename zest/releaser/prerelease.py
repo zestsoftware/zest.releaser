@@ -186,7 +186,6 @@ def datacheck(data):
 
 def main():
     utils.parse_options()
-    logging.basicConfig(level=utils.loglevel(),
-                        format="%(levelname)s: %(message)s")
+    utils.configure_logging()
     prereleaser = Prereleaser()
     prereleaser.run()
