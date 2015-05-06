@@ -53,7 +53,7 @@ The changelog and setup.py are at 0.1 and indicate a release date:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (...-...-...)
     ----------------

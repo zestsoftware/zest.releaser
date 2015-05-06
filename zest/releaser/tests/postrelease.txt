@@ -54,7 +54,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
@@ -94,7 +94,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------

@@ -32,7 +32,7 @@ The changelog is unreleased:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (unreleased)
     ----------------
@@ -66,7 +66,7 @@ The changelog now has a release date instead of ``(unreleased)``:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (1996-08-24)
     ----------------
@@ -144,7 +144,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
