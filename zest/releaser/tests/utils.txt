@@ -158,6 +158,29 @@ You can also ask for a version number. Pass it as the default value:
     Our reply: 1.0
     '1.0'
 
+Note that ``y`` or ``n`` are not accepted as answer for a version
+number.  I see packages that get version ``y`` in postrelease because
+someone quickly types ``y`` everywhere without looking at the
+question.
+
+    >>> utils.test_answer_book.set_answers(['Y', 'y', 'N', 'n', ''])
+    >>> utils.ask_version('New version', default='72.0')
+    Question: New version [72.0]:
+    Our reply: Y
+    y/n not accepted as version.
+    Question: New version [72.0]:
+    Our reply: y
+    y/n not accepted as version.
+    Question: New version [72.0]:
+    Our reply: N
+    y/n not accepted as version.
+    Question: New version [72.0]:
+    Our reply: n
+    y/n not accepted as version.
+    Question: New version [72.0]:
+    Our reply: <ENTER>
+    '72.0'
+
 
 Not asking input
 ----------------

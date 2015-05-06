@@ -51,6 +51,7 @@ Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
+    lists of files in version control and sdist match
     Checking data dict
     Checking data dict
     Tag needed ...
@@ -59,7 +60,7 @@ The changelog and setup.py are at 0.2.dev0:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
@@ -91,6 +92,7 @@ Now run the fullrelease:
 
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
+    lists of files in version control and sdist match
     Checking data dict
     Checking data dict
     Tag needed ...
@@ -104,7 +106,7 @@ The changelog and setup.py are at 0.3.dev0 now:
 
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.3 (unreleased)
     ----------------

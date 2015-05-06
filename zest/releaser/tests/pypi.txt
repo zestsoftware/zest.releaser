@@ -1,5 +1,5 @@
 Detailed tests of pypi.py
-===========================
+=========================
 
 .. :doctest:
 
@@ -37,7 +37,7 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     password:asjemenou
     <BLANKLINE>
     [zest.releaser]
-    ci-skip = true
+    extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
     >>> pypiconfig.config
     <ConfigParser.ConfigParser instance at ...>
@@ -72,7 +72,7 @@ And the new format that allows multiple uploads:
     password:password
     <BLANKLINE>
     [zest.releaser]
-    ci-skip = true
+    extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> pypiconfig.config
     <ConfigParser.ConfigParser instance at ...>

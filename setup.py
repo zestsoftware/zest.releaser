@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import codecs
 
-version = '3.57.dev0'
+version = '4.0.dev0'
 
 
 def read(filename):
@@ -20,7 +20,6 @@ setup(name='zest.releaser',
           "Development Status :: 6 - Mature",
           "Intended Audience :: Developers",
           "License :: OSI Approved :: GNU General Public License (GPL)",
-          "Programming Language :: Python :: 2.6",
           "Programming Language :: Python :: 2.7",
           "Programming Language :: Python",
           "Topic :: Software Development :: Libraries :: Python Modules",
@@ -40,6 +39,8 @@ setup(name='zest.releaser',
       ],
       extras_require={
           'recommended': [
+              'check-manifest',
+              'pyroma',
               'wheel',
               ],
           'test': [

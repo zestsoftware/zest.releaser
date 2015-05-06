@@ -24,7 +24,7 @@ The changelog is unreleased:
 
     >>> githead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (unreleased)
     ----------------
@@ -46,8 +46,15 @@ testing hack in utils.py:
 Run the prerelease script:
 
     >>> from zest.releaser import prerelease
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
     >>> prerelease.main()
+    Question: Run pyroma on the package before tagging? (Y/n)?
+    Our reply: <ENTER>
+    Question: Continue? (Y/n)?
+    Our reply: <ENTER>
+    Question: Do you want to run check-manifest? (Y/n)?
+    Our reply: <ENTER>
+    lists of files in version control and sdist match
     Question: Enter version [0.1]:
     Our reply: <ENTER>
     Checking data dict
@@ -58,7 +65,7 @@ The changelog now has a release date instead of ``(unreleased)``:
 
     >>> githead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.1 (2008-12-20)
     ----------------
@@ -128,9 +135,9 @@ And the postrelease script ups the version:
     Question: OK to push commits to the server? (Y/n)?
     Our reply: n
 
-The commit will contain a hint for Travis to skip the Continuous
-Integration build, because our pypirc has asked this with the ci-skip
-option::
+The commit will contain an extra message with in this case a hint for
+Travis to skip the Continuous Integration build, because our pypirc
+has asked this with the extra-message option::
 
     >>> from zest.releaser import lasttaglog
     >>> lasttaglog.main()
@@ -143,7 +150,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
 
     >>> githead('CHANGES.txt')
     Changelog of tha.example
-    =====================
+    ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------

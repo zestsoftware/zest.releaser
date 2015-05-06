@@ -83,7 +83,7 @@ test_answer_book = AnswerBook()
 def get_input(question):
     if not TESTMODE:
         # Normal operation.
-        return raw_input(question)
+        return raw_input(question).strip()
     # Testing means no interactive input. Get it from answers_for_testing.
     print("Question: %s" % question)
     answer = test_answer_book.get_next_answer()
@@ -112,6 +112,10 @@ def ask_version(question, default=None):
     while True:
         input = get_input(question)
         if input:
+            if input.lower() in ('y', 'n'):
+                # Please read the question.
+                print "y/n not accepted as version."
+                continue
             return input
         if default:
             return default

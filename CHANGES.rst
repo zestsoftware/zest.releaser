@@ -1,8 +1,19 @@
 Changelog for zest.releaser
 ===========================
 
-3.57 (unreleased)
------------------
+4.0 (unreleased)
+----------------
+
+- Added ``check-manifest`` and ``pyroma`` to the ``recommended``
+  extra.  Issue #49.
+  [maurits]
+
+- Python 2.6 not officially supported anymore.  It may still work, but
+  we are no longer testing against it.
+  [maurits]
+
+- Do not accept ``y`` or ``n`` as answer for a new version.
+  [maurits]
 
 - Use ``colorama`` to output errors in red.
   Issue #86
@@ -34,11 +45,12 @@ Changelog for zest.releaser
   Issue #55
   [maurits]
 
-- Add ``[ci skip]`` to commit messages to avoid running Travis
-  Continuous Integration builds.  See
-  http://docs.travis-ci.com/user/how-to-skip-a-build/
-  To activate this, add ``[zest.releaser] ci-skip = yes`` to the
-  ``setup.cfg`` of a package, or your global ``~/.pypirc``.
+- Optionally add extra text to commit messages.  This can be used to
+  avoid running Travis Continuous Integration builds.  See
+  http://docs.travis-ci.com/user/how-to-skip-a-build/.  To activate
+  this, add ``extra-message = [ci skip]`` to a ``[zest.releaser]``
+  section in the ``setup.cfg`` of your package, or your global
+  ``~/.pypirc``.  Or add your favorite geeky quotes there.
   [maurits]
 
 - Fix a random test failure on Travis CI, by resetting ``AUTO_RESPONSE``.
