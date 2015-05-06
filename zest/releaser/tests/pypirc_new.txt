@@ -19,4 +19,4 @@ username:user
 password:password
 
 [zest.releaser]
-ci-skip = true
+extra-message = [ci skip]
