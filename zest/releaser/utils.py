@@ -133,7 +133,7 @@ def ask(question, default=True, exact=False):
     """
     if AUTO_RESPONSE:
         if default is None:
-            msg = ("The question '%s' requires a manual answer, but " +
+            msg = ("The question '%s' requires a manual answer, but "
                    "we're running in --no-input mode.")
             msg = msg % question
             raise RuntimeError(msg)
@@ -492,6 +492,47 @@ def system(command, input=''):
     o.close()
     e.close()
     return result
+
+
+def retry_command(command):
+    """Run the command and possibly retry it.
+
+    Print interesting lines.
+
+    When we discover errors, we give three options:
+    - Abort
+    - Retry
+    - Continue
+
+    There is an error is there is a red color in the output.
+
+    It might be a warning, but we cannot detect the distinction.
+    """
+    result = system(command)
+    if Fore.RED not in result:
+        show_interesting_lines(result)
+        return result
+    # There are warnings or errors. Print the complete result.
+    print(result)
+    question = ("There were errors or warnings. Are you sure "
+                "you want to continue? [Yes/No/Retry]")
+    if AUTO_RESPONSE:
+        msg = ("The question '%s' requires a manual answer, but "
+               "we're running in --no-input mode.")
+        msg = msg % question
+        raise RuntimeError(msg)
+    while True:
+        input = get_input(question)
+        if input:
+            input = input.lower()
+            if input == 'y':
+                # Accept the error, continue with the program.
+                return result
+            if input == 'n':
+                sys.exit(1)
+            if input == 'r':
+                logger.info("Retrying command: %r", command)
+                return retry_command(command)
 
 
 def get_last_tag(vcs):
