@@ -330,6 +330,9 @@ Note that in these tests, the error output might not appear, because
 the program is exited before the output is printed.  Or it may
 appear twice, once printed and once as return value.
 
+Also, the error output of the ``ls`` command we use here, can differ
+significantly on different systems, so we do not check the exact line.
+
 The user can choose not to continue:
 
     >>> utils.test_answer_book.set_answers(['n'])
@@ -342,7 +345,7 @@ The user can choose to continue:
 
     >>> utils.test_answer_book.set_answers(['y'])
     >>> result = utils.retry_command('ls some-non-existing-file')
-    ls: some-non-existing-file: No such file or directory
+    ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
@@ -352,17 +355,17 @@ And there is the retry.  In the end you do have to choose something:
 
     >>> utils.test_answer_book.set_answers(['r', 'r', 'y'])
     >>> result = utils.retry_command('ls some-non-existing-file')
-    ls: some-non-existing-file: No such file or directory
+    ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
-    ls: some-non-existing-file: No such file or directory
+    ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
-    ls: some-non-existing-file: No such file or directory
+    ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
-    ls: some-non-existing-file: No such file or directory
+    ls...
     >>> utils.test_answer_book.set_answers(['r', 'r', 'n'])
     >>> utils.retry_command('ls some-non-existing-file')
     Traceback (most recent call last):
