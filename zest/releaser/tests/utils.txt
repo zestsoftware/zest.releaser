@@ -349,7 +349,7 @@ The user can choose to continue:
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
-    ls: some-non-existing-file: No such file or directory
+    ls...
 
 And there is the retry.  In the end you do have to choose something:
 
