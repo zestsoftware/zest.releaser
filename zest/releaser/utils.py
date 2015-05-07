@@ -475,8 +475,25 @@ def system(command, input=''):
         # print(Fore.RED + stderr_output)
         stderr_output = stderr_output.strip()
         if stderr_output:
-            # Make sure every error line is marked red.
-            errors = [(Fore.RED + line) for line in stderr_output.split('\n')]
+            # Make sure every error line is marked red.  The stderr
+            # output also catches some warnings though.  It would be
+            # really irritating if we start treating a line like this
+            # as an error: warning: no previously-included files
+            # matching '*.pyc' found anywhere in distribution.  Same
+            # for empty lines.  So try to be smart about it.
+
+            # errors = [(Fore.RED + line) for line in
+            # stderr_output.split('\n')]
+            errors = []
+            for line in stderr_output.split('\n'):
+                line = line.strip()
+                if not line:
+                    errors.append(line)
+                elif line.lower().startswith('warn'):
+                    # Not a real error.
+                    errors.append(Fore.MAGENTA + line)
+                else:
+                    errors.append(Fore.RED + line)
             errors = '\n'.join(errors)
         else:
             errors = ''

@@ -318,6 +318,45 @@ wants to do.
     Our reply: y
 
 
+Running commands
+----------------
+
+We can run commands.
+
+    >>> print(utils.system('echo "E.T. phone home."'))
+    E.T. phone home.
+
+We want to discover errors and show them in red.
+
+    >>> Fore.RED
+    '\x1b[31m'
+    >>> Fore.MAGENTA
+    '\x1b[35m'
+    >>> utils.system('ls some-non-existing-file')
+    '\x1b[31mls...'
+
+Warnings may also end up in the error output.  That may be unwanted.
+
+    >>> warning = "warning: no previously-included files matching '*.pyc' found anywhere in distribution."
+    >>> result = utils.system('echo %s > /dev/stderr' % warning)
+    >>> result.startswith(Fore.RED)
+    False
+    >>> result.startswith(Fore.MAGENTA)
+    True
+    >>> result
+    '\x1b[35mwarning: no previously-included files matching *.pyc found anywhere in distribution.'
+
+Let's do a combination:
+
+    >>> message = """
+    ... Warn: What is the answer to life, the universe and everything?
+    ...
+    ... 41"""
+    >>> result = utils.system('echo "%s" > /dev/stderr' % message)
+    >>> result
+    '\x1b[35mWarn: What is the answer to life, the universe and everything?\n\n\x1b[31m41'
+
+
 Retrying commands
 -----------------
 

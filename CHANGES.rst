@@ -4,6 +4,9 @@ Changelog for zest.releaser
 4.0 (unreleased)
 ----------------
 
+- Try not to treat warnings as errors.
+  [maurits]
+
 - Allow retrying some commands when there is an error.  We ask the
   user if she wants to continue: Yes, No, Retry.
   [maurits]
