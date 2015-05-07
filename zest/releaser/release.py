@@ -102,6 +102,7 @@ class Releaser(baserelease.Basereleaser):
     def _upload_distributions(self, package):
         # See if creating an sdist (and maybe a wheel) actually works.
         # Also, this makes the sdist (and wheel) available for plugins.
+        # And for twine, who will just upload the created files.
         if self.pypiconfig.create_wheel():
             logger.info("Making a source distribution and wheel of a fresh "
                         "tag checkout (in %s).",
@@ -126,9 +127,19 @@ class Releaser(baserelease.Basereleaser):
             logger.info("This package is registered on PyPI.")
         else:
             logger.warn("This package is NOT registered on PyPI.")
+
+        # If twine is available, we prefer it for uploading.
+        use_twine = utils.has_twine()
         if self.pypiconfig.is_old_pypi_config():
-            pypi_command = 'register sdist upload'
-            shell_command = utils.setup_py(pypi_command)
+            if use_twine:
+                shell_command = utils.twine_command(
+                    'upload dist%s*' % os.path.sep)
+            else:
+                if self.pypiconfig.create_wheel():
+                    pypi_command = 'register sdist bdist_wheel upload'
+                else:
+                    pypi_command = 'register sdist upload'
+                shell_command = utils.setup_py(pypi_command)
             if use_pypi:
                 default = True
                 exact = False
@@ -146,14 +157,18 @@ class Releaser(baserelease.Basereleaser):
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
-            if self.pypiconfig.create_wheel():
-                commands = ('register', '-r', server, 'sdist',
-                            'bdist_wheel',
-                            'upload', '-r', server)
+            if use_twine:
+                shell_command = utils.twine_command('upload dist%s* -r %s' % (
+                    os.path.sep, server))
             else:
-                commands = ('register', '-r', server, 'sdist',
-                            'upload', '-r', server)
-            shell_command = utils.setup_py(' '.join(commands))
+                if self.pypiconfig.create_wheel():
+                    commands = ('register', '-r', server, 'sdist',
+                                'bdist_wheel',
+                                'upload', '-r', server)
+                else:
+                    commands = ('register', '-r', server, 'sdist',
+                                'upload', '-r', server)
+                shell_command = utils.setup_py(' '.join(commands))
             default = True
             exact = False
             if server == 'pypi' and not use_pypi:

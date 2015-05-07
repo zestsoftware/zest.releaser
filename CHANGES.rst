@@ -4,6 +4,11 @@ Changelog for zest.releaser
 4.0 (unreleased)
 ----------------
 
+- Added support for twine_.  When the ``twine`` command is available,
+  it is used for registering and uploading to PyPI.  It is added to
+  the ``recommended`` extra of ``zest.releaser``.  Issue #59.
+  [maurits]
+
 - Added ``check-manifest`` and ``pyroma`` to the ``recommended``
   extra.  Issue #49.
   [maurits]
@@ -427,3 +432,5 @@ Changelog for zest.releaser
   [maurits]
 
 .. # Note: for older changes see ``doc/sources/changelog.rst``.
+
+.. _twine: https://pypi.python.org/pypi/twine

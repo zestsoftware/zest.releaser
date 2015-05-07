@@ -279,6 +279,32 @@ def setup_py(rest_of_cmdline):
     return '%s setup.py %s' % (executable, rest_of_cmdline)
 
 
+def twine_command(rest_of_cmdline):
+    """Return 'twine' command (with hack for testing)"""
+    executable = 'twine'
+    if TESTMODE:
+        # Hack for testing
+        executable = 'echo MOCK twine'
+
+    return '%s %s' % (executable, rest_of_cmdline)
+
+
+def has_twine():
+    """Is the twine command available?
+
+    If twine is available, we prefer it for uploading.  We could try
+    to import it, but it might be importable and still not available
+    on the system path.
+
+    So check if the twine command gives an error.
+
+    Note that --version print to stderr, so it fails. --help prints to
+    stdout as it should.
+    """
+    result = system(twine_command('--help'))
+    return Fore.RED not in result
+
+
 def is_data_documented(data, documentation={}):
     """check that the self.data dict is fully documented"""
     if TESTMODE:
