@@ -4,6 +4,10 @@ Changelog for zest.releaser
 4.0 (unreleased)
 ----------------
 
+- Allow retrying some commands when there is an error.  We ask the
+  user if she wants to continue: Yes, No, Retry.
+  [maurits]
+
 - Added ``check-manifest`` and ``pyroma`` to the ``recommended``
   extra.  Issue #49.
   [maurits]
