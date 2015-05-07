@@ -116,13 +116,7 @@ but 0.2.20:
     >>> from zest.releaser import prerelease
     >>> utils.test_answer_book.set_answers(['', '', '', '0.2.19', ''])
     >>> prerelease.main()
-    Question: Run pyroma on the package before tagging? (Y/n)?
-    Our reply: <ENTER>
-    Question: Continue? (Y/n)?
-    Our reply: <ENTER>
-    Question: Do you want to run check-manifest? (Y/n)?
-    Our reply: <ENTER>
-    lists of files in version control and sdist match
+    Question...
     Question: Enter version [0.2]:
     Our reply: 0.2.19
     Checking data dict
@@ -143,13 +137,7 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['', '', '', '0.3beta', ''])
     >>> prerelease.main()
-    Question: Run pyroma on the package before tagging? (Y/n)?
-    Our reply: <ENTER>
-    Question: Continue? (Y/n)?
-    Our reply: <ENTER>
-    Question: Do you want to run check-manifest? (Y/n)?
-    Our reply: <ENTER>
-    lists of files in version control and sdist match
+    Question...
     Question: Enter version [0.2.20]:
     Our reply: 0.3beta
     Checking data dict
@@ -169,13 +157,7 @@ Numbers and characters can be combined:
     >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['', '', '', '1.0a1', ''])
     >>> prerelease.main()
-    Question: Run pyroma on the package before tagging? (Y/n)?
-    Our reply: <ENTER>
-    Question: Continue? (Y/n)?
-    Our reply: <ENTER>
-    Question: Do you want to run check-manifest? (Y/n)?
-    Our reply: <ENTER>
-    lists of files in version control and sdist match
+    Question...
     Question: Enter version [0.3rc0]:
     Our reply: 1.0a1
     Checking data dict
