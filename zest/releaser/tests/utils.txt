@@ -300,7 +300,7 @@ wants to do.
     SystemExit: 1
     >>> utils.test_answer_book.set_answers(['y'])
     >>> utils.show_interesting_lines(output)
-    a
+    RED a
     b
     c
     d
@@ -355,6 +355,10 @@ Let's do a combination:
     >>> result = utils.system('echo "%s" > /dev/stderr' % message)
     >>> result
     '\x1b[35mWarn: What is the answer to life, the universe and everything?\n\n\x1b[31m41'
+    >>> print(result)
+    MAGENTA Warn: What is the answer to life, the universe and everything?
+    <BLANKLINE>
+    RED 41
 
 
 Retrying commands
@@ -384,27 +388,27 @@ The user can choose to continue:
 
     >>> utils.test_answer_book.set_answers(['y'])
     >>> result = utils.retry_command('ls some-non-existing-file')
-    ls...
+    RED ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
-    ls...
+    RED ls...
 
 And there is the retry.  In the end you do have to choose something:
 
     >>> utils.test_answer_book.set_answers(['r', 'r', 'y'])
     >>> result = utils.retry_command('ls some-non-existing-file')
-    ls...
+    RED ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
-    ls...
+    RED ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
-    ls...
+    RED ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
-    ls...
+    RED ls...
     >>> utils.test_answer_book.set_answers(['r', 'r', 'n'])
     >>> utils.retry_command('ls some-non-existing-file')
     Traceback (most recent call last):

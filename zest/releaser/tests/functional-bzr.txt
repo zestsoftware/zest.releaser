@@ -82,7 +82,7 @@ The release script tags the release and uploads it:
     bzr tag 0.1
     Question: Run this command (Y/n)?
     Our reply: y
-    Created tag 0.1.
+    RED Created tag 0.1.
     <BLANKLINE>
     Question: Check out the tag
         (for tweaks or pypi/distutils server upload) (Y/n)?

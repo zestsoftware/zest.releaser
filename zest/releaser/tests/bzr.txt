@@ -58,9 +58,11 @@ Commit it:
     >>> cmd
     'bzr commit -v -m "small tweak"'
     >>> print(system(cmd))
-    Committing to: TESTTEMP/tha.example-bzr/
-    modified setup.py
-    Committed revision 2.
+    RED Committing to: TESTTEMP/tha.example-bzr/
+    RED modified setup.py
+    RED Committed revision 2.
+
+Note the red color: bzr prints everything to stderr...
 
 
 Tags
@@ -91,9 +93,9 @@ Make and commit a small change:
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print(system(cmd))
-    Committing to: TESTTEMP/tha.example-bzr/
-    modified setup.py
-    Committed revision 3.
+    RED Committing to: TESTTEMP/tha.example-bzr/
+    RED modified setup.py
+    RED Committed revision 3.
 
 Now we can request the changes since a specific tag:
 
