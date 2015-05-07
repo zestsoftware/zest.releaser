@@ -103,14 +103,14 @@ class Releaser(baserelease.Basereleaser):
         # See if creating an sdist (and maybe a wheel) actually works.
         # Also, this makes the sdist (and wheel) available for plugins.
         if self.pypiconfig.create_wheel():
-            logger.info("Making a source distibution and wheel of a fresh "
+            logger.info("Making a source distribution and wheel of a fresh "
                         "tag checkout (in %s).",
                         self.data['tagdir'])
             result = system(utils.setup_py('sdist bdist_wheel'))
             utils.show_interesting_lines(result)
         else:
             logger.info(
-                "Making a source distibution of a fresh tag checkout (in %s).",
+                "Making a source distribution of a fresh tag checkout (in %s).",
                 self.data['tagdir'])
             result = system(utils.setup_py('sdist'))
             utils.show_interesting_lines(result)
