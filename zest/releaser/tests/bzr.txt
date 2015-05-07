@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'bzr diff'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     === modified file 'setup.py'
     --- setup.py	...
     +++ setup.py	...
@@ -57,7 +57,7 @@ Commit it:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
     'bzr commit -v -m "small tweak"'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Committing to: TESTTEMP/tha.example-bzr/
     modified setup.py
     Committed revision 2.
@@ -90,7 +90,7 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Committing to: TESTTEMP/tha.example-bzr/
     modified setup.py
     Committed revision 3.
@@ -100,7 +100,7 @@ Now we can request the changes since a specific tag:
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
     'bzr diff -r tag:0.1..-1'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     === modified file 'setup.py'
     --- setup.py	...
     +++ setup.py	...

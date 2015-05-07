@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'svn diff'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Index: ...
     --- setup.py      (revision 3)
     +++ setup.py      (working copy)
@@ -57,7 +57,7 @@ Commit it:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
     'svn commit -m "small tweak"'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Sending        setup.py
     Transmitting file data...
     Committed revision 5.
@@ -93,7 +93,7 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Sending        setup.py
     Transmitting file data .
     Committed revision 7.
@@ -105,7 +105,7 @@ post-commit hooks:
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
     'svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     Index: setup.py
     ===================================================================
     --- setup.py      (.../tags/0.1)  (revision 7)
@@ -134,7 +134,7 @@ The tag checkout command makes a checkout in that tempdir:
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
     'svn co file://TESTREPO/tha.example/tags/0.1 TMPDIR/somename...'
-    >>> print '\n'.join(sorted(system(cmd).splitlines()))
+    >>> print('\n'.join(sorted(system(cmd).splitlines())))
     A    TMPDIR/somename.../CHANGES.txt
     A    TMPDIR/somename.../README.txt
     A    TMPDIR/somename.../TODO.txt
@@ -216,7 +216,7 @@ answering, set up the answer test mode:
 There is no tags dir yet, so the tags name detection (/tag or /tags) returns
 None:
 
-    >>> print sample_checkout._tags_name
+    >>> print(sample_checkout._tags_name)
     None
 
 Answer 'no' the first time we get asked to create the directory.  This means
@@ -233,7 +233,7 @@ zest.releaser has no business with this project, so exit.
 Answer 'yes' and the tags dir gets created.  The available tags result is
 obviously an empty list:
 
-    >>> print sample_checkout._tags_name
+    >>> print(sample_checkout._tags_name)
     None
     >>> utils.test_answer_book.set_answers(['y'])
     >>> sample_checkout.available_tags()
@@ -243,10 +243,10 @@ obviously an empty list:
     <BLANKLINE>
     Committed revision 10.
     []
-    >>> print sample_checkout._tags_name
+    >>> print(sample_checkout._tags_name)
     tags
     >>> cmd = 'svn list %s/sample' % repo_url
-    >>> print system(cmd)
+    >>> print(system(cmd))
     tags/
     trunk/
 
@@ -400,7 +400,7 @@ Now check that we try to create the proper trunk/projectA/tags directory
     Committed revision 18.
     []
     >>> cmd = 'svn list -R %s/trunk' % repo_url
-    >>> print system(cmd)
+    >>> print(system(cmd))
     projectA/
     projectA/tags/
     projectA/trunk/

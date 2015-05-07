@@ -17,7 +17,7 @@ A Bazaar directory (repository and checkout in one):
 There are no tags yet:
 
     >>> from zest.releaser.utils import system
-    >>> print system("bzr tags")
+    >>> print(system("bzr tags"))
 
 The changelog is unreleased:
 
@@ -47,13 +47,7 @@ Run the prerelease script:
     >>> from zest.releaser import prerelease
     >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
     >>> prerelease.main()
-    Question: Run pyroma on the package before tagging? (Y/n)?
-    Our reply: <ENTER>
-    Question: Continue? (Y/n)?
-    Our reply: <ENTER>
-    Question: Do you want to run check-manifest? (Y/n)?
-    Our reply: <ENTER>
-    lists of files in version control and sdist match
+    Question...
     Question: Enter version [0.1]:
     Our reply: <ENTER>
     Checking data dict
@@ -100,14 +94,11 @@ The release script tags the release and uploads it:
     tag_build =
     tag_svn_revision = false
     <BLANKLINE>
+    <BLANKLINE>
+    Showing first few lines...
     running sdist
     running egg_info
     creating src/tha.example.egg-info
-    ...
-    creating tha.example-0.1
-    ...
-    making hard links in tha.example-0.1...
-    hard linking README.txt -> tha.example-0.1
     ...
     creating dist
     Creating ...
@@ -118,7 +109,7 @@ The release script tags the release and uploads it:
 
 There is now a tag:
 
-    >>> print system("bzr tags")
+    >>> print(system("bzr tags"))
     0.1                  2
 
 And the postrelease script ups the version:

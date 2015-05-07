@@ -31,7 +31,7 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
 
     >>> pypirc_old = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_old.txt')
-    >>> print open(pypirc_old).read()
+    >>> print(open(pypirc_old).read())
     [server-login]
     username:pipo_de_clown
     password:asjemenou
@@ -50,7 +50,7 @@ And the new format that allows multiple uploads:
 
     >>> pypirc_new = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_new.txt')
-    >>> print open(pypirc_new).read()
+    >>> print(open(pypirc_new).read())
     [distutils]
     index-servers =
         pypi
@@ -85,7 +85,7 @@ A file with both is also possible:
 
     >>> pypirc_both = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_both.txt')
-    >>> print open(pypirc_both).read()
+    >>> print(open(pypirc_both).read())
     [server-login]
     username:bdfl
     password:secret
@@ -264,7 +264,7 @@ Fixing the config also prints the new config:
     tag_svn_revision = false
     >>> os.path.exists(pypi.SETUP_CONFIG_FILE)
     True
-    >>> print ''.join(open(pypi.SETUP_CONFIG_FILE).readlines())
+    >>> print(''.join(open(pypi.SETUP_CONFIG_FILE).readlines()))
     [zest.releaser]
     release = no
     <BLANKLINE>
@@ -282,7 +282,7 @@ We try that again with this fixed up config file as input:
     >>> setup_config.fix_config()
     >>> os.path.exists(pypi.SETUP_CONFIG_FILE)
     True
-    >>> print ''.join(open(pypi.SETUP_CONFIG_FILE).readlines())
+    >>> print(''.join(open(pypi.SETUP_CONFIG_FILE).readlines()))
     [zest.releaser]
     release = no
     <BLANKLINE>

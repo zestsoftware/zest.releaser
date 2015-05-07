@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'git diff'
-    >>> print system(cmd)
+    >>> print(system(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
     --- a/setup.py
@@ -64,7 +64,7 @@ In some cases we get this output:
 and in other this:
 ``Created commit ...: small tweak``
 
-    >>> print 'dummy', system(cmd)
+    >>> print('dummy %s' % system(cmd))
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 

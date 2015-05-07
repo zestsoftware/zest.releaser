@@ -84,7 +84,7 @@ class SetupConfig(object):
         finally:
             new_setup.close()
         logger.info("New setup.cfg contents:")
-        print ''.join(open(self.config_filename).readlines())
+        print(''.join(open(self.config_filename).readlines()))
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.

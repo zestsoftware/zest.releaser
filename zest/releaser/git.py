@@ -79,14 +79,14 @@ class Git(BaseVersionControl):
         msg = "Tagging %s" % (version,)
         cmd = 'git tag %s -m "%s"' % (version, msg)
         if os.path.isdir('.git/svn'):
-            print "\nEXPERIMENTAL support for git-svn tagging!\n"
+            print("\nEXPERIMENTAL support for git-svn tagging!\n")
             cur_branch = open('.git/HEAD').read().strip().split('/')[-1]
-            print "You are on branch %s." % (cur_branch,)
+            print("You are on branch %s." % (cur_branch,))
             if cur_branch != 'master':
-                print "Only the master branch is supported for " \
-                    "git-svn tagging."
-                print "Please tag yourself."
-                print "'git tag' needs to list tag named %s." % (version,)
+                print("Only the master branch is supported for "
+                      "git-svn tagging.")
+                print("Please tag yourself.")
+                print("'git tag' needs to list tag named %s." % (version,))
                 sys.exit(1)
             cmd = [cmd]
 
@@ -98,13 +98,13 @@ class Git(BaseVersionControl):
                     trunk = open(t).read()
 
             if not trunk:
-                print ('No SVN remote found (only the default svn ' +
-                       'prefixes ("" or "origin/") are supported).')
+                print('No SVN remote found (only the default svn ' +
+                      'prefixes ("" or "origin/") are supported).')
                 sys.exit(1)
 
             local_head = open('.git/refs/heads/master').read()
             if local_head != trunk:
-                print "Your local master diverges from trunk.\n"
+                print("Your local master diverges from trunk.\n")
                 # dcommit before local tagging
                 cmd.insert(0, 'git svn dcommit')
             # create tag in svn

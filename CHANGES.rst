@@ -15,6 +15,15 @@ Changelog for zest.releaser
 - Do not accept ``y`` or ``n`` as answer for a new version.
   [maurits]
 
+- Use ``colorama`` to output errors in red.
+  Issue #86
+  [maurits]
+
+- Show errors when uploading to PyPI.  They were unintentionally
+  swallowed before, so you did not notice when an upload failed.
+  Issue #84.
+  [maurits]
+
 - Warn when between the last postrelease and a new prerelease no
   changelog entry has been added.  '- Nothing changed yet' would still
   be in there.

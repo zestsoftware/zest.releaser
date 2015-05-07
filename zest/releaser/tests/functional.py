@@ -115,25 +115,25 @@ def setup(test):
         filename = os.path.join(svnsourcedir, *filename_parts)
         lines = open(filename).readlines()
         for line in lines[:5]:
-            print line,
+            print(line.strip())
 
     def hghead(*filename_parts):
         filename = os.path.join(hgsourcedir, *filename_parts)
         lines = open(filename).readlines()
         for line in lines[:5]:
-            print line,
+            print(line.strip())
 
     def bzrhead(*filename_parts):
         filename = os.path.join(bzrsourcedir, *filename_parts)
         lines = open(filename).readlines()
         for line in lines[:5]:
-            print line,
+            print(line.strip())
 
     def githead(*filename_parts):
         filename = os.path.join(gitsourcedir, *filename_parts)
         lines = open(filename).readlines()
         for line in lines[:5]:
-            print line,
+            print(line.strip())
 
     def add_changelog_entry():
         # Replace '- Nothing changed yet.'  by a different entry.
@@ -163,7 +163,6 @@ def teardown(test):
     urllib2.urlopen = test.orig_urlopen
     os.chdir(test.orig_dir)
     sys.argv[1:] = test.orig_argv
-    # print "Left over tempdir:", test.tempdir
     shutil.rmtree(test.tempdir)
     # Reset constants to original settings:
     utils.AUTO_RESPONSE = False

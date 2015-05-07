@@ -35,7 +35,7 @@ setup(name='zest.releaser',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'colorama',
       ],
       extras_require={
           'recommended': [

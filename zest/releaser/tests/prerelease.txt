@@ -19,7 +19,7 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import system
-    >>> print system("svn info %s" % svnsourcedir)
+    >>> print(system("svn info %s" % svnsourcedir))
     Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...
@@ -43,13 +43,7 @@ Run the prerelease script:
     >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
     >>> from zest.releaser import prerelease
     >>> prerelease.main()
-    Question: Run pyroma on the package before tagging? (Y/n)?
-    Our reply: <ENTER>
-    Question: Continue? (Y/n)?
-    Our reply: <ENTER>
-    Question: Do you want to run check-manifest? (Y/n)?
-    Our reply: <ENTER>
-    lists of files in version control and sdist match
+    Question...
     Question: Enter version [0.1]:
     Our reply: <ENTER>
     Checking data dict
