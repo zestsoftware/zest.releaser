@@ -35,6 +35,7 @@ releaser hooks:
     ... releaser.before = tha.example.hooks.releaser_before
     ... releaser.middle = tha.example.hooks.releaser_middle
     ... releaser.after_checkout = tha.example.hooks.releaser_after_checkout
+    ... releaser.before_upload = tha.example.hooks.releaser_before_upload
     ... releaser.after = tha.example.hooks.releaser_after
     ... postreleaser.before = tha.example.hooks.postreleaser_before
     ... postreleaser.middle = tha.example.hooks.postreleaser_middle
@@ -47,7 +48,7 @@ Commit the change to setup.cfg so that we have a clean checkout:
     >>> cmd = checkout.cmd_commit("tweak setup.cfg to enable hooks")
     >>> print('dummy %s' % utils.system(cmd))
     dummy...tweak setup.cfg to enable hooks
-      1 file changed, 13 insertions(+)
+      1 file changed, 14 insertions(+)
 
 Run the prerelease script.  Note that pyroma and check-manifest have
 hooks here so they are run too, but the order may differ.  With the
@@ -105,6 +106,7 @@ The release script tags the release and uploads it:
     creating dist
     Creating ...
     removing 'tha.example-0.1' ...
+    releaser_before_upload
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
     MOCK twine upload dist/tha.example-0.1.tar.gz

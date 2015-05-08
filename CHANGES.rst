@@ -6,7 +6,8 @@ Changelog for zest.releaser
 
 - Added support for twine_.  If the ``twine`` command is available, it
   is used for uploading to PyPI.  It is added to the ``recommended``
-  extra of ``zest.releaser``.  Issue #59.
+  extra of ``zest.releaser``.  Added ``releaser.before_upload`` entry
+  point.  Issue #59.
   [maurits]
 
 - Added ``check-manifest`` and ``pyroma`` to the ``recommended``

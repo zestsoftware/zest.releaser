@@ -136,6 +136,9 @@ class Releaser(baserelease.Basereleaser):
                 logger.warn("Please login and manually register this "
                             "package on PyPI first.")
 
+        # Run extra entry point
+        self._run_hooks('before_upload')
+
         if self.pypiconfig.is_old_pypi_config():
             if use_twine:
                 shell_command = utils.twine_command(
