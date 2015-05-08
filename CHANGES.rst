@@ -69,7 +69,13 @@ Changelog for zest.releaser
 3.56 (2015-03-18)
 -----------------
 
-- Nothing changed yet.
+- No need anymore to force .zip for sdist.
+  Issue #76
+  [reinout]
+
+- Still read ``setup.cfg`` even if ``~/.pypirc`` is wrong or missing.
+  Issue #74
+  [tomviner]
 
 
 3.55 (2015-02-03)
