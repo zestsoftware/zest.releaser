@@ -91,6 +91,24 @@ You can use no/false/off/0 or yes/true/on/1 as answers; upper, lower or mixed
 case are all fine.
 
 
+Uploading with twine
+--------------------
+
+Since version 4.0, we prefer twine_ for uploading to the Python
+Package Index, because it is safer.  If the ``twine`` command is
+available, it is used for uploading to PyPI.  It is added to the
+``recommended`` extra of ``zest.releaser``.
+
+Note that if your package is not yet on PyPI you must first register
+it manually_.  We could use the ``python setup.py register`` command,
+but that may use cleartext passwords, which defeats the purpose of
+``twine``.  That may have been fixed meanwhile in `twine issue 21`_.
+
+.. _twine: https://pypi.python.org/pypi/twine
+.. _manually: https://pypi.python.org/pypi?%3Aaction=submit_form
+.. _`twine issue 21`: https://github.com/pypa/twine/issues/21
+
+
 Uploading wheels
 ----------------
 
