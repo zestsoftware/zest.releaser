@@ -121,15 +121,21 @@ class Releaser(baserelease.Basereleaser):
                         pypi.DIST_CONFIG_FILE)
             return
 
+        # If twine is available, we prefer it for uploading.  But:
+        # currently, when a package is not yet registered, twine
+        # upload will fail.
+        use_twine = utils.has_twine()
+
         # First ask if we want to upload to pypi.
         use_pypi = package_in_pypi(package)
         if use_pypi:
             logger.info("This package is registered on PyPI.")
         else:
             logger.warn("This package is NOT registered on PyPI.")
+            if use_twine:
+                logger.warn("Please login and manually register this "
+                            "package on PyPI first.")
 
-        # If twine is available, we prefer it for uploading.
-        use_twine = utils.has_twine()
         if self.pypiconfig.is_old_pypi_config():
             if use_twine:
                 shell_command = utils.twine_command(
