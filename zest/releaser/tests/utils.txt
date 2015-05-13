@@ -346,6 +346,18 @@ Warnings may also end up in the error output.  That may be unwanted.
     >>> result
     '\x1b[35mwarning: no previously-included files matching *.pyc found anywhere in distribution.'
 
+One similar harmless warning by distutils does not get the 'warning:'
+prefixed, so we handle it explicitly:
+
+    >>> warning = "no previously-included directories found matching devsrc"
+    >>> result = utils.system('echo %s > /dev/stderr' % warning)
+    >>> result.startswith(Fore.RED)
+    False
+    >>> result.startswith(Fore.MAGENTA)
+    True
+    >>> result
+    '\x1b[35mno previously-included directories found matching devsrc'
+
 Let's do a combination:
 
     >>> message = """

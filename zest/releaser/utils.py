@@ -492,6 +492,13 @@ def system(command, input=''):
                 elif line.lower().startswith('warn'):
                     # Not a real error.
                     errors.append(Fore.MAGENTA + line)
+                elif line.lower().startswith("no previously-included"):
+                    # Specifically a warning from distutils like this:
+                    # no previously-included directories found matching...
+                    # distutils is basically warning that a previous
+                    # distutils run has done its job properly while
+                    # reading the package manifest.
+                    errors.append(Fore.MAGENTA + line)
                 else:
                     errors.append(Fore.RED + line)
             errors = '\n'.join(errors)
