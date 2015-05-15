@@ -466,7 +466,7 @@ def prepare_documentation_entrypoint(data):
     print("Wrote entry point documentation to %s" % target)
 
 
-def execute_command(command, input=''):
+def _execute_command(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
     logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
@@ -544,10 +544,17 @@ def execute_command(command, input=''):
     return result
 
 
-def retry_command(command):
+def execute_command(command, allow_retry=False):
     """Run the command and possibly retry it.
 
-    Print interesting lines.
+    When allow_retry is False, we simply call the base
+    _execute_command and return the result.
+
+    When allow_retry is True, a few things change.
+
+    We print interesting lines.  When all is right, this will be the
+    first and last few lines, otherwise the full standard output plus
+    error output.
 
     When we discover errors, we give three options:
     - Abort
@@ -558,7 +565,9 @@ def retry_command(command):
 
     It might be a warning, but we cannot detect the distinction.
     """
-    result = execute_command(command)
+    result = _execute_command(command)
+    if not allow_retry:
+        return result
     if Fore.RED not in result:
         show_interesting_lines(result)
         return result
@@ -582,7 +591,7 @@ def retry_command(command):
                 sys.exit(1)
             if input == 'r':
                 logger.info("Retrying command: %r", command)
-                return retry_command(command)
+                return execute_command(command, allow_retry=True)
 
 
 def get_last_tag(vcs):

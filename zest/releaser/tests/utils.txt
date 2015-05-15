@@ -391,7 +391,7 @@ significantly on different systems, so we do not check the exact line.
 The user can choose not to continue:
 
     >>> utils.test_answer_book.set_answers(['n'])
-    >>> utils.retry_command('ls some-non-existing-file')
+    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
     Traceback (most recent call last):
     ...
     SystemExit: 1
@@ -399,7 +399,7 @@ The user can choose not to continue:
 The user can choose to continue:
 
     >>> utils.test_answer_book.set_answers(['y'])
-    >>> result = utils.retry_command('ls some-non-existing-file')
+    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
     RED ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
@@ -409,7 +409,7 @@ The user can choose to continue:
 And there is the retry.  In the end you do have to choose something:
 
     >>> utils.test_answer_book.set_answers(['r', 'r', 'y'])
-    >>> result = utils.retry_command('ls some-non-existing-file')
+    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
     RED ls...
     Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
@@ -422,7 +422,7 @@ And there is the retry.  In the end you do have to choose something:
     >>> print(result)
     RED ls...
     >>> utils.test_answer_book.set_answers(['r', 'r', 'n'])
-    >>> utils.retry_command('ls some-non-existing-file')
+    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
     Traceback (most recent call last):
     ...
     SystemExit: 1

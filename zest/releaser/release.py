@@ -107,12 +107,14 @@ class Releaser(baserelease.Basereleaser):
             logger.info("Making a source distribution and wheel of a fresh "
                         "tag checkout (in %s).",
                         self.data['tagdir'])
-            result = utils.retry_command(utils.setup_py('sdist bdist_wheel'))
+            result = utils.execute_command(
+                utils.setup_py('sdist bdist_wheel'), allow_retry=True)
         else:
             logger.info(
                 "Making a source distribution of a fresh tag checkout (in %s).",
                 self.data['tagdir'])
-            result = utils.retry_command(utils.setup_py('sdist'))
+            result = utils.execute_command(
+                utils.setup_py('sdist'), allow_retry=True)
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload to a package index.",
@@ -159,7 +161,7 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask("Register and upload to PyPI", default=default,
                          exact=exact):
                 logger.info("Running: %s", shell_command)
-                result = utils.retry_command(shell_command)
+                result = utils.execute_command(shell_command, allow_retry=True)
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
@@ -186,7 +188,7 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask("Register and upload to %s" % server,
                          default=default, exact=exact):
                 logger.info("Running: %s", shell_command)
-                result = utils.retry_command(shell_command)
+                result = utils.execute_command(shell_command, allow_retry=True)
 
     def _release(self):
         """Upload the release, when desired"""
