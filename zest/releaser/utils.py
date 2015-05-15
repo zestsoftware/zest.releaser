@@ -548,7 +548,7 @@ def _execute_command(command, input=''):
     return result
 
 
-def execute_command(command, allow_retry=False):
+def execute_command(command, allow_retry=False, fail_message=""):
     """Run the command and possibly retry it.
 
     When allow_retry is False, we simply call the base
@@ -577,8 +577,10 @@ def execute_command(command, allow_retry=False):
         return result
     # There are warnings or errors. Print the complete result.
     print(result)
+    print(Fore.RED + "There were errors or warnings.")
+    if fail_message:
+        print(Fore.RED + fail_message)
     question = """
-    There were errors or warnings.
     You have these options for continuing (first character is enough):
     Yes:   continue with the rest of the program.
     No:    stop completely. Note that the postrelease step has not

@@ -105,7 +105,13 @@ class Releaser(baserelease.Basereleaser):
         We offer to retry the command if it fails.
         """
         try:
-            result = utils.execute_command(command, allow_retry=True)
+            # Note that if something goes wrong, it may just be
+            # because we detect a warning: the command may have
+            # succeeded after all.  So the fail message is a bit
+            # cautious.
+            result = utils.execute_command(
+                command, allow_retry=True,
+                fail_message="Package upload may have failed.")
         except utils.CommandException:
             logger.error("Command failed: %r", command)
             tagdir = self.data.get('tagdir')
