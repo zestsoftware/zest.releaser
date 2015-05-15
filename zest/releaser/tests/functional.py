@@ -38,7 +38,7 @@ def setup(test):
 
     def _mock_urlopen(url):
         # print "Mock opening", url
-        package = url.replace('http://pypi.python.org/simple/', '')
+        package = url.replace('https://pypi.python.org/simple/', '')
         if package not in test.mock_pypi_available:
             raise urllib2.HTTPError(
                 url, 404,
