@@ -581,15 +581,16 @@ def execute_command(command, allow_retry=False, fail_message=""):
     if fail_message:
         print(Fore.RED + fail_message)
     explanation = """
-    You have these options for continuing (first character is enough):
-    Yes:   continue with the rest of the program.
-    No:    stop completely. Note that the postrelease step has not
-           been run yet, you need to do that manually.
-    Retry: do this if it looks like a temporary Internet or PyPI outage.
+    You have these options for retrying (first character is enough):
+    Yes:   Retry. Do this if it looks like a temporary Internet or PyPI outage.
            You can also first edit $HOME/.pypirc and then retry in
-           case of a credentials problem."""
+           case of a credentials problem.
+    No:    Do not retry, but continue with the rest of the process.
+    Quit:  Stop completely. Note that the postrelease step has not
+           been run yet, you need to do that manually.
+    ?:     Show this help."""
     explanation = textwrap.dedent(explanation)
-    question = "Are you sure you want to continue? [Yes/No/Retry/?]"
+    question = "Retry this command? [Yes/no/quit/?]"
     if AUTO_RESPONSE:
         msg = ("The question '%s' requires a manual answer, but "
                "we're running in --no-input mode.")
@@ -597,18 +598,23 @@ def execute_command(command, allow_retry=False, fail_message=""):
         raise RuntimeError(msg)
     while True:
         input = get_input(question)
+        if not input:
+            # Default: yes, retry the command.
+            input = 'y'
         if input:
             input = input.lower()
-            if input == 'y':
-                # Accept the error, continue with the program.
-                return result
-            if input == 'n':
-                raise CommandException("Command failed: %r" % command)
-            if input == 'r':
+            if input == 'y' or input == 'yes':
                 logger.info("Retrying command: %r", command)
                 return execute_command(command, allow_retry=True)
-            if input == '?':
-                print(explanation)
+            if input == 'n' or input == 'no':
+                # Accept the error, continue with the program.
+                return result
+            if input == 'q' or input == 'quit':
+                raise CommandException("Command failed: %r" % command)
+            # We could print the help/explanation only if the input is
+            # '?', or maybe 'h', but if the user input has any other
+            # content, it makes sense to explain the options anyway.
+            print(explanation)
 
 
 def get_last_tag(vcs):
