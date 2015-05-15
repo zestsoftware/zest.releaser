@@ -580,16 +580,16 @@ def execute_command(command, allow_retry=False, fail_message=""):
     print(Fore.RED + "There were errors or warnings.")
     if fail_message:
         print(Fore.RED + fail_message)
-    question = """
+    explanation = """
     You have these options for continuing (first character is enough):
     Yes:   continue with the rest of the program.
     No:    stop completely. Note that the postrelease step has not
            been run yet, you need to do that manually.
     Retry: do this if it looks like a temporary Internet or PyPI outage.
            You can also first edit $HOME/.pypirc and then retry in
-           case of a credentials problem.
-    Are you sure you want to continue? [Yes/No/Retry]"""
-    question = textwrap.dedent(question)
+           case of a credentials problem."""
+    explanation = textwrap.dedent(explanation)
+    question = "Are you sure you want to continue? [Yes/No/Retry/?]"
     if AUTO_RESPONSE:
         msg = ("The question '%s' requires a manual answer, but "
                "we're running in --no-input mode.")
@@ -607,6 +607,8 @@ def execute_command(command, allow_retry=False, fail_message=""):
             if input == 'r':
                 logger.info("Retrying command: %r", command)
                 return execute_command(command, allow_retry=True)
+            if input == '?':
+                print(explanation)
 
 
 def get_last_tag(vcs):
