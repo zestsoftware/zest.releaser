@@ -99,6 +99,23 @@ class Releaser(baserelease.Basereleaser):
             print("\nFailed to create tag %s!" % (self.data['version'],))
             sys.exit(1)
 
+    def _pypi_command(self, command):
+        """Run a command that accesses PyPI or similar.
+
+        We offer to retry the command if it fails.
+        """
+        try:
+            result = utils.execute_command(command, allow_retry=True)
+        except utils.CommandException:
+            logger.error("Command failed: %r", command)
+            tagdir = self.data.get('tagdir')
+            if tagdir:
+                logger.info("Note: we have placed a fresh tag checkout "
+                            "in %s. You can retry uploading from there "
+                            "if needed.", tagdir)
+            sys.exit(1)
+        return result
+
     def _upload_distributions(self, package):
         # See if creating an sdist (and maybe a wheel) actually works.
         # Also, this makes the sdist (and wheel) available for plugins.
@@ -107,14 +124,12 @@ class Releaser(baserelease.Basereleaser):
             logger.info("Making a source distribution and wheel of a fresh "
                         "tag checkout (in %s).",
                         self.data['tagdir'])
-            result = utils.execute_command(
-                utils.setup_py('sdist bdist_wheel'), allow_retry=True)
+            self._pypi_command(utils.setup_py('sdist bdist_wheel'))
         else:
             logger.info(
                 "Making a source distribution of a fresh tag checkout (in %s).",
                 self.data['tagdir'])
-            result = utils.execute_command(
-                utils.setup_py('sdist'), allow_retry=True)
+            self._pypi_command(utils.setup_py('sdist'))
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload to a package index.",
@@ -161,7 +176,7 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask("Register and upload to PyPI", default=default,
                          exact=exact):
                 logger.info("Running: %s", shell_command)
-                result = utils.execute_command(shell_command, allow_retry=True)
+                self._pypi_command(shell_command)
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
@@ -188,7 +203,7 @@ class Releaser(baserelease.Basereleaser):
             if utils.ask("Register and upload to %s" % server,
                          default=default, exact=exact):
                 logger.info("Running: %s", shell_command)
-                result = utils.execute_command(shell_command, allow_retry=True)
+                self._pypi_command(shell_command)
 
     def _release(self):
         """Upload the release, when desired"""

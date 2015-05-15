@@ -20,6 +20,10 @@ AUTO_RESPONSE = False
 VERBOSE = False
 
 
+class CommandException(Exception):
+    """Exception for when a command fails."""
+
+
 def loglevel():
     """Return DEBUG when -v is specified, INFO otherwise"""
     if VERBOSE:
@@ -597,7 +601,7 @@ def execute_command(command, allow_retry=False):
                 # Accept the error, continue with the program.
                 return result
             if input == 'n':
-                sys.exit(1)
+                raise CommandException("Command failed: %r" % command)
             if input == 'r':
                 logger.info("Retrying command: %r", command)
                 return execute_command(command, allow_retry=True)

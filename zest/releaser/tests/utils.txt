@@ -394,7 +394,7 @@ The user can choose not to continue:
     >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
     Traceback (most recent call last):
     ...
-    SystemExit: 1
+    CommandException: Command failed: 'ls some-non-existing-file'
 
 The user can choose to continue:
 
@@ -439,7 +439,7 @@ And there is the retry.  In the end you do have to choose something:
     >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
     Traceback (most recent call last):
     ...
-    SystemExit: 1
+    CommandException: Command failed: 'ls some-non-existing-file'
 
 
 Changelog header detection
