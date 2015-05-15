@@ -301,7 +301,7 @@ def has_twine():
     Note that --version prints to stderr, so it fails.  --help prints
     to stdout as it should.
     """
-    result = system(twine_command('--help'))
+    result = execute_command(twine_command('--help'))
     return Fore.RED not in result
 
 
@@ -466,7 +466,7 @@ def prepare_documentation_entrypoint(data):
     print("Wrote entry point documentation to %s" % target)
 
 
-def system(command, input=''):
+def execute_command(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
     logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
@@ -558,7 +558,7 @@ def retry_command(command):
 
     It might be a warning, but we cannot detect the distinction.
     """
-    result = system(command)
+    result = execute_command(command)
     if Fore.RED not in result:
         show_interesting_lines(result)
         return result

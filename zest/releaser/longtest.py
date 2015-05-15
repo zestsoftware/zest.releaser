@@ -7,7 +7,7 @@ import tempfile
 import webbrowser
 
 from zest.releaser import utils
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,11 @@ def show_longdesc():
     filename1 = tempfile.mktemp()
     filename2 = tempfile.mktemp()
     filename2 = filename2 + '.html'
-    # Note: for the setup.py call we use system() from our utils module. This
-    # makes sure the python path is set up right.
-    # For the other calls we use os.system(), because that returns an error
-    # code which we need.
-    system(utils.setup_py('--long-description > %s' %
+    # Note: for the setup.py call we use execute_command() from our
+    # utils module. This makes sure the python path is set up right.
+    # For the other calls we use os.system(), because that returns an
+    # error code which we need.
+    execute_command(utils.setup_py('--long-description > %s' %
                           filename1))
     error = os.system('rst2html.py %s > %s' % (filename1, filename2))
     if error:

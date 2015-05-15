@@ -1,4 +1,4 @@
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 import logging
 import os
 import re
@@ -43,8 +43,9 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            system(utils.setup_py('egg_info'))
-            version = system(utils.setup_py('--version')).splitlines()[0]
+            execute_command(utils.setup_py('egg_info'))
+            version = execute_command(
+                utils.setup_py('--version')).splitlines()[0]
             if 'Traceback' in version:
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
@@ -59,8 +60,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            system(utils.setup_py('egg_info'))
-            return system(utils.setup_py('--name')).strip()
+            execute_command(utils.setup_py('egg_info'))
+            return execute_command(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
         filenames = ['version']
@@ -115,7 +116,7 @@ class BaseVersionControl(object):
                     # Strange.  It at least happens in the tests when
                     # we deliberately remove a CHANGES.txt file.
                     logger.warn("Found file %s in version control but not on "
-                                "file system.", fullpath)
+                                "file execute_command.", fullpath)
                     continue
                 found.append(fullpath)
         if not found:
@@ -286,7 +287,7 @@ class BaseVersionControl(object):
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print(system(cmd))
+        print(execute_command(cmd))
 
     def is_clean_checkout(self):
         "Is this a clean checkout?"

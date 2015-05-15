@@ -2,7 +2,7 @@ import logging
 import tempfile
 import os
 
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class Bzr(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = system('bzr tags')
+        tag_info = execute_command('bzr tags')
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         logger.debug("Available tags: %r", tags)
@@ -71,11 +71,11 @@ class Bzr(BaseVersionControl):
         status' and see what we get.
         """
         # Check for changes to versioned files.
-        if system('bzr status --versioned'):
+        if execute_command('bzr status --versioned'):
             # Local changes.
             return False
         return True
 
     def list_files(self):
         """List files in version control."""
-        return system('bzr ls --recursive').splitlines()
+        return execute_command('bzr ls --recursive').splitlines()

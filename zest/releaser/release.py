@@ -7,7 +7,7 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import pypi
 from zest.releaser import utils
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
@@ -74,7 +74,7 @@ class Releaser(baserelease.Basereleaser):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(
                     version)
                 print(diff_command)
-                print(system(diff_command))
+                print(execute_command(diff_command))
         else:
             self.data['tag_already_exists'] = False
 
@@ -89,7 +89,7 @@ class Releaser(baserelease.Basereleaser):
         for cmd in cmds:
             print(cmd)
             if utils.ask("Run this command"):
-                print(system(cmd))
+                print(execute_command(cmd))
             else:
                 # all commands are needed in order to proceed normally
                 print("Please create a tag for %s yourself and rerun." %
@@ -245,7 +245,7 @@ class Releaser(baserelease.Basereleaser):
                     command = self.vcs.cmd_commit(
                         "Fixed %s on tag for release" %
                         self.setup_cfg.config_filename)
-                    print(system(command))
+                    print(execute_command(command))
                 else:
                     logger.debug("Not committing in non-svn repository as "
                                  "this is not needed or may be harmful.")

@@ -16,8 +16,8 @@ A Bazaar directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from zest.releaser.utils import system
-    >>> print(system("bzr tags"))
+    >>> from zest.releaser.utils import execute_command
+    >>> print(execute_command("bzr tags"))
 
 The changelog is unreleased:
 
@@ -109,7 +109,7 @@ The release script tags the release and uploads it:
 
 There is now a tag:
 
-    >>> print(system("bzr tags"))
+    >>> print(execute_command("bzr tags"))
     0.1                  2
 
 And the postrelease script ups the version:
