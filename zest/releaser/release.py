@@ -120,16 +120,16 @@ class Releaser(baserelease.Basereleaser):
         # See if creating an sdist (and maybe a wheel) actually works.
         # Also, this makes the sdist (and wheel) available for plugins.
         # And for twine, who will just upload the created files.
+        logger.info(
+            "Making a source distribution of a fresh tag checkout (in %s).",
+            self.data['tagdir'])
+        result = utils.execute_command(utils.setup_py('sdist'))
+        utils.show_interesting_lines(result)
         if self.pypiconfig.create_wheel():
-            logger.info("Making a source distribution and wheel of a fresh "
-                        "tag checkout (in %s).",
+            logger.info("Making a wheel of a fresh tag checkout (in %s).",
                         self.data['tagdir'])
-            self._pypi_command(utils.setup_py('sdist bdist_wheel'))
-        else:
-            logger.info(
-                "Making a source distribution of a fresh tag checkout (in %s).",
-                self.data['tagdir'])
-            self._pypi_command(utils.setup_py('sdist'))
+            result = utils.execute_command(utils.setup_py('bdist_wheel'))
+        utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
                         "your home dir to upload to a package index.",
