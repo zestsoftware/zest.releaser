@@ -24,7 +24,7 @@ def version_control():
         return git.Git()
     else:
         # Try finding an svn checkout *not* in the root.
-        last_try = utils.system("svn info")
+        last_try = utils.execute_command("svn info")
         if 'Repository' in last_try:
             return svn.Subversion()
         logger.critical('No version control system detected.')

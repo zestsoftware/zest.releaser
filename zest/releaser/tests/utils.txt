@@ -300,7 +300,7 @@ wants to do.
     SystemExit: 1
     >>> utils.test_answer_book.set_answers(['y'])
     >>> utils.show_interesting_lines(output)
-    a
+    RED a
     b
     c
     d
@@ -316,6 +316,120 @@ wants to do.
     n
     Question: There were errors or warnings. Are you sure you want to continue? (y/N)?
     Our reply: y
+
+
+Running commands
+----------------
+
+We can run commands.
+
+    >>> print(utils.execute_command('echo "E.T. phone home."'))
+    E.T. phone home.
+
+We want to discover errors and show them in red.
+
+    >>> Fore.RED
+    '\x1b[31m'
+    >>> Fore.MAGENTA
+    '\x1b[35m'
+    >>> utils.execute_command('ls some-non-existing-file')
+    '\x1b[31mls...'
+
+Warnings may also end up in the error output.  That may be unwanted.
+
+    >>> warning = "warning: no previously-included files matching '*.pyc' found anywhere in distribution."
+    >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
+    >>> result.startswith(Fore.RED)
+    False
+    >>> result.startswith(Fore.MAGENTA)
+    True
+    >>> result
+    '\x1b[35mwarning: no previously-included files matching *.pyc found anywhere in distribution.'
+
+One similar harmless warning by distutils does not get the 'warning:'
+prefixed, so we handle it explicitly:
+
+    >>> warning = "no previously-included directories found matching devsrc"
+    >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
+    >>> result.startswith(Fore.RED)
+    False
+    >>> result.startswith(Fore.MAGENTA)
+    True
+    >>> result
+    '\x1b[35mno previously-included directories found matching devsrc'
+
+Let's do a combination:
+
+    >>> message = """
+    ... Warn: What is the answer to life, the universe and everything?
+    ...
+    ... 41"""
+    >>> result = utils.execute_command('echo "%s" > /dev/stderr' % message)
+    >>> result
+    '\x1b[35mWarn: What is the answer to life, the universe and everything?\n\n\x1b[31m41'
+    >>> print(result)
+    MAGENTA Warn: What is the answer to life, the universe and everything?
+    <BLANKLINE>
+    RED 41
+
+
+Retrying commands
+-----------------
+
+Some commands may be retried.  For example, upload to PyPI may
+temporarily fail.  Maybe the user has set a wrong password or username
+in his .pypirc.  He can see the error, edit it (outside of the control
+of zest.releaser) and retry the command.
+
+Note that in these tests, the error output might not appear, because
+the program is exited before the output is printed.  Or it may
+appear twice, once printed and once as return value.
+
+Also, the error output of the ``ls`` command we use here, can differ
+significantly on different systems, so we do not check the exact line.
+
+The user can choose to quit:
+
+    >>> utils.test_answer_book.set_answers(['q'])
+    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    Traceback (most recent call last):
+    ...
+    CommandException: Command failed: 'ls some-non-existing-file'
+
+The user can choose to not retry and just continue:
+
+    >>> utils.test_answer_book.set_answers(['n'])
+    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    RED ls...
+    RED There were errors or warnings.
+    Question: Retry this command? [Yes/no/quit/?]
+    Our reply: n
+    >>> print(result)
+    RED ls...
+
+And there is the retry.  In the end you do have to choose something:
+
+    >>> utils.test_answer_book.set_answers(['y', 'y', 'n'])
+    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    RED ls...
+    RED There were errors or warnings.
+    Question: Retry this command? [Yes/no/quit/?]
+    Our reply: y
+    RED ls...
+    RED There were errors or warnings.
+    Question: Retry this command? [Yes/no/quit/?]
+    Our reply: y
+    RED ls...
+    RED There were errors or warnings.
+    Question: Retry this command? [Yes/no/quit/?]
+    Our reply: n
+    >>> print(result)
+    RED ls...
+    >>> utils.test_answer_book.set_answers(['y', 'y', 'q'])
+    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    Traceback (most recent call last):
+    ...
+    CommandException: Command failed: 'ls some-non-existing-file'
 
 
 Changelog header detection

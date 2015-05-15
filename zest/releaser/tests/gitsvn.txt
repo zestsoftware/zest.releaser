@@ -8,7 +8,7 @@ Detailed tests of gitsvn aspects of git.py
 Some initial imports:
 
     >>> from zest.releaser import git
-    >>> from zest.releaser.utils import system
+    >>> from zest.releaser.utils import execute_command
     >>> import os
 
 Project name
@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'git diff'
-    >>> print(system(cmd))
+    >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
     --- a/setup.py
@@ -64,7 +64,7 @@ In some cases we get this output:
 and in other this:
 ``Created commit ...: small tweak``
 
-    >>> print('dummy %s' % system(cmd))
+    >>> print('dummy %s' % execute_command(cmd))
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
@@ -91,7 +91,7 @@ Create a tag and it will show up (master diverges from trunk):
      'git tag 0.1 -m "Tagging 0.1"',
      'git svn tag -m "Tagging 0.1" 0.1']
     >>> for cmd in cmds:
-    ...     dont_care = system(cmd)
+    ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1']
 
@@ -106,13 +106,13 @@ Create a tag and it will show up (master == trunk):
     ['git tag 0.2 -m "Tagging 0.2"',
      'git svn tag -m "Tagging 0.2" 0.2']
     >>> for cmd in cmds:
-    ...     dont_care = system(cmd)
+    ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1', '0.2']
 
 Work on a branch different from master (unsupported):
 
-    >>> dontcare = system('git checkout -b foo')
+    >>> dontcare = execute_command('git checkout -b foo')
     >>> cmds = checkout.cmd_create_tag('0.3')
     Traceback (most recent call last):
     ...

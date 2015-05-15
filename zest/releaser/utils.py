@@ -7,7 +7,7 @@ import os
 import re
 import subprocess
 import sys
-
+import textwrap
 import pkg_resources
 
 logger = logging.getLogger(__name__)
@@ -18,6 +18,10 @@ MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
 VERBOSE = False
+
+
+class CommandException(Exception):
+    """Exception for when a command fails."""
 
 
 def loglevel():
@@ -133,7 +137,7 @@ def ask(question, default=True, exact=False):
     """
     if AUTO_RESPONSE:
         if default is None:
-            msg = ("The question '%s' requires a manual answer, but " +
+            msg = ("The question '%s' requires a manual answer, but "
                    "we're running in --no-input mode.")
             msg = msg % question
             raise RuntimeError(msg)
@@ -301,7 +305,7 @@ def has_twine():
     Note that --version prints to stderr, so it fails.  --help prints
     to stdout as it should.
     """
-    result = system(twine_command('--help'))
+    result = execute_command(twine_command('--help'))
     return Fore.RED not in result
 
 
@@ -466,7 +470,7 @@ def prepare_documentation_entrypoint(data):
     print("Wrote entry point documentation to %s" % target)
 
 
-def system(command, input=''):
+def _execute_command(command, input=''):
     """commands.getoutput() replacement that also works on windows"""
     logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
@@ -501,8 +505,32 @@ def system(command, input=''):
         # print(Fore.RED + stderr_output)
         stderr_output = stderr_output.strip()
         if stderr_output:
-            # Make sure every error line is marked red.
-            errors = [(Fore.RED + line) for line in stderr_output.split('\n')]
+            # Make sure every error line is marked red.  The stderr
+            # output also catches some warnings though.  It would be
+            # really irritating if we start treating a line like this
+            # as an error: warning: no previously-included files
+            # matching '*.pyc' found anywhere in distribution.  Same
+            # for empty lines.  So try to be smart about it.
+
+            # errors = [(Fore.RED + line) for line in
+            # stderr_output.split('\n')]
+            errors = []
+            for line in stderr_output.split('\n'):
+                line = line.strip()
+                if not line:
+                    errors.append(line)
+                elif line.lower().startswith('warn'):
+                    # Not a real error.
+                    errors.append(Fore.MAGENTA + line)
+                elif line.lower().startswith("no previously-included"):
+                    # Specifically a warning from distutils like this:
+                    # no previously-included directories found matching...
+                    # distutils is basically warning that a previous
+                    # distutils run has done its job properly while
+                    # reading the package manifest.
+                    errors.append(Fore.MAGENTA + line)
+                else:
+                    errors.append(Fore.RED + line)
             errors = '\n'.join(errors)
         else:
             errors = ''
@@ -518,6 +546,75 @@ def system(command, input=''):
     o.close()
     e.close()
     return result
+
+
+def execute_command(command, allow_retry=False, fail_message=""):
+    """Run the command and possibly retry it.
+
+    When allow_retry is False, we simply call the base
+    _execute_command and return the result.
+
+    When allow_retry is True, a few things change.
+
+    We print interesting lines.  When all is right, this will be the
+    first and last few lines, otherwise the full standard output plus
+    error output.
+
+    When we discover errors, we give three options:
+    - Abort
+    - Retry
+    - Continue
+
+    There is an error is there is a red color in the output.
+
+    It might be a warning, but we cannot detect the distinction.
+    """
+    result = _execute_command(command)
+    if not allow_retry:
+        return result
+    if Fore.RED not in result:
+        show_interesting_lines(result)
+        return result
+    # There are warnings or errors. Print the complete result.
+    print(result)
+    print(Fore.RED + "There were errors or warnings.")
+    if fail_message:
+        print(Fore.RED + fail_message)
+    explanation = """
+    You have these options for retrying (first character is enough):
+    Yes:   Retry. Do this if it looks like a temporary Internet or PyPI outage.
+           You can also first edit $HOME/.pypirc and then retry in
+           case of a credentials problem.
+    No:    Do not retry, but continue with the rest of the process.
+    Quit:  Stop completely. Note that the postrelease step has not
+           been run yet, you need to do that manually.
+    ?:     Show this help."""
+    explanation = textwrap.dedent(explanation)
+    question = "Retry this command? [Yes/no/quit/?]"
+    if AUTO_RESPONSE:
+        msg = ("The question '%s' requires a manual answer, but "
+               "we're running in --no-input mode.")
+        msg = msg % question
+        raise RuntimeError(msg)
+    while True:
+        input = get_input(question)
+        if not input:
+            # Default: yes, retry the command.
+            input = 'y'
+        if input:
+            input = input.lower()
+            if input == 'y' or input == 'yes':
+                logger.info("Retrying command: %r", command)
+                return execute_command(command, allow_retry=True)
+            if input == 'n' or input == 'no':
+                # Accept the error, continue with the program.
+                return result
+            if input == 'q' or input == 'quit':
+                raise CommandException("Command failed: %r" % command)
+            # We could print the help/explanation only if the input is
+            # '?', or maybe 'h', but if the user input has any other
+            # content, it makes sense to explain the options anyway.
+            print(explanation)
 
 
 def get_last_tag(vcs):

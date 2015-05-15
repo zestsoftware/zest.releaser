@@ -2,7 +2,6 @@ import re
 import tempfile
 
 import z3c.testsetup
-from colorama import Fore
 from zope.testing import renormalizing
 
 
@@ -55,10 +54,12 @@ checker = renormalizing.RENormalizing([
      'On branch'),
     # Hg 3.3 prints 'committing files' or 'committing <filename>'
     (re.compile(r'^committing.*'), ''),
-    # We should ignore coloring by colorama.  This catches Fore.RED.
+    # We should ignore coloring by colorama.  Or actually print it
+    # clearly.  This catches Fore.RED and Fore.MAGENTA.
     # Note the extra backslash in front of the left bracket, otherwise
     # you get: "error: unexpected end of regular expression"
-    (re.compile(r'\x1b\[31m'), ''),
+    (re.compile(r'\x1b\[31m'), 'RED '),
+    (re.compile(r'\x1b\[35m'), 'MAGENTA '),
 ])
 
 

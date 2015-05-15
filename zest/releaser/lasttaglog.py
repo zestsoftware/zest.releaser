@@ -5,7 +5,7 @@ import logging
 import sys
 
 import zest.releaser.choose
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
@@ -26,4 +26,4 @@ def main():
                 full_tag)
     log_command = vcs.cmd_log_since_tag(found)
     print(log_command)
-    print(system(log_command))
+    print(execute_command(log_command))

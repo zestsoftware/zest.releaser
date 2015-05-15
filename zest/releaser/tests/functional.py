@@ -10,7 +10,7 @@ import StringIO
 
 from zest.releaser import utils
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 
 
 def setup(test):
@@ -59,55 +59,55 @@ def setup(test):
 
     # Init svn repo.
     repodir = os.path.join(test.tempdir, 'svnrepo')
-    system('svnadmin create %s' % repodir)
+    execute_command('svnadmin create %s' % repodir)
     repo_url = 'file://' + repodir  # TODO: urllib or so for windows
     # Import example project
-    system('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
-    system('svn mkdir %s/tha.example/tags -m "mkdir"' % repo_url)
-    system(
+    execute_command('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
+    execute_command('svn mkdir %s/tha.example/tags -m "mkdir"' % repo_url)
+    execute_command(
         'svn import %s %s/tha.example/trunk -m "import"' % (sourcedir,
                                                             repo_url))
     # Subversion checkout
     svnsourcedir = os.path.join(test.tempdir, 'tha.example-svn')
-    system(
+    execute_command(
         'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
-    system(
+    execute_command(
         'svn propset svn:ignore "tha.example.egg-info *.pyc" %s/src ' % svnsourcedir)
-    system('svn up %s' % svnsourcedir)
-    system('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
+    execute_command('svn up %s' % svnsourcedir)
+    execute_command('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
 
     # Mercurial initialization
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')
     shutil.copytree(sourcedir, hgsourcedir)
-    system("hg init %s" % hgsourcedir)
+    execute_command("hg init %s" % hgsourcedir)
     open(os.path.join(hgsourcedir, '.hgignore'), 'wb').write(
         'tha.example.egg-info\n\.pyc$\n')
-    system("hg add %s" % hgsourcedir)
-    system("hg commit -m 'init' %s" % hgsourcedir)
+    execute_command("hg add %s" % hgsourcedir)
+    execute_command("hg commit -m 'init' %s" % hgsourcedir)
 
     # Bazaar initialization
     bzrsourcedir = os.path.join(test.tempdir, 'tha.example-bzr')
     shutil.copytree(sourcedir, bzrsourcedir)
-    system("bzr init %s" % bzrsourcedir)
+    execute_command("bzr init %s" % bzrsourcedir)
     open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
         'tha.example.egg-info\n*.pyc\n')
-    system("bzr add %s" % bzrsourcedir)
-    system("bzr commit -m 'init' %s" % bzrsourcedir)
+    execute_command("bzr add %s" % bzrsourcedir)
+    execute_command("bzr commit -m 'init' %s" % bzrsourcedir)
 
     # Git initialization
     gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
-    system("git init")
+    execute_command("git init")
     open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
         'tha.example.egg-info\n*.pyc\n')
-    system("git add .")
-    system("git commit -a -m 'init'")
+    execute_command("git add .")
+    execute_command("git commit -a -m 'init'")
     os.chdir(test.orig_dir)
 
     # Git svn initialization
     gitsvnsourcedir = os.path.join(test.tempdir, 'tha.example-gitsvn')
-    system(
+    execute_command(
         'git svn clone -s %s/tha.example %s' % (repo_url, gitsvnsourcedir))
     os.chdir(test.orig_dir)
 

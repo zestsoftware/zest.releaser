@@ -8,7 +8,7 @@ Detailed tests of bzr.py
 Some initial imports:
 
     >>> from zest.releaser import bzr
-    >>> from zest.releaser.utils import system
+    >>> from zest.releaser.utils import execute_command
     >>> import os
 
 Project name
@@ -41,7 +41,7 @@ Make a change:
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'bzr diff'
-    >>> print(system(cmd))
+    >>> print(execute_command(cmd))
     === modified file 'setup.py'
     --- setup.py	...
     +++ setup.py	...
@@ -57,10 +57,12 @@ Commit it:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
     'bzr commit -v -m "small tweak"'
-    >>> print(system(cmd))
-    Committing to: TESTTEMP/tha.example-bzr/
-    modified setup.py
-    Committed revision 2.
+    >>> print(execute_command(cmd))
+    RED Committing to: TESTTEMP/tha.example-bzr/
+    RED modified setup.py
+    RED Committed revision 2.
+
+Note the red color: bzr prints everything to stderr...
 
 
 Tags
@@ -76,7 +78,7 @@ Create a tag and it will show up:
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
     'bzr tag 0.1'
-    >>> dont_care = system(cmd)
+    >>> dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1']
 
@@ -90,17 +92,17 @@ Make and commit a small change:
 
     >>> open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print(system(cmd))
-    Committing to: TESTTEMP/tha.example-bzr/
-    modified setup.py
-    Committed revision 3.
+    >>> print(execute_command(cmd))
+    RED Committing to: TESTTEMP/tha.example-bzr/
+    RED modified setup.py
+    RED Committed revision 3.
 
 Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
     'bzr diff -r tag:0.1..-1'
-    >>> print(system(cmd))
+    >>> print(execute_command(cmd))
     === modified file 'setup.py'
     --- setup.py	...
     +++ setup.py	...

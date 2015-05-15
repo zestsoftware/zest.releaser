@@ -5,7 +5,7 @@ import logging
 import sys
 
 import zest.releaser.choose
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
@@ -26,4 +26,4 @@ def main():
                 full_tag)
     diff_command = vcs.cmd_diff_last_commit_against_tag(found)
     print(diff_command)
-    print(system(diff_command))
+    print(execute_command(diff_command))

@@ -6,7 +6,7 @@ import sys
 
 from zest.releaser import baserelease
 from zest.releaser import utils
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 
 logger = logging.getLogger(__name__)
 
@@ -139,7 +139,7 @@ class Postreleaser(baserelease.Basereleaser):
     def _diff_and_commit(self):
         """Show diff and offer commit"""
         diff_cmd = self.vcs.cmd_diff()
-        diff = system(diff_cmd)
+        diff = execute_command(diff_cmd)
         if sys.version.startswith('2.6.2'):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can
@@ -153,7 +153,7 @@ class Postreleaser(baserelease.Basereleaser):
             msg = self.data['commit_msg'] % self.data
             msg = self.update_commit_message(msg)
             commit_cmd = self.vcs.cmd_commit(msg)
-            commit = system(commit_cmd)
+            commit = execute_command(commit_cmd)
             logger.info(commit)
 
     def _push(self):
@@ -163,7 +163,7 @@ class Postreleaser(baserelease.Basereleaser):
             return
         if utils.ask("OK to push commits to the server?"):
             for push_cmd in push_cmds:
-                output = system(push_cmd)
+                output = execute_command(push_cmd)
                 logger.info(output)
 
 

@@ -2,7 +2,7 @@ import logging
 import tempfile
 import os
 
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class Hg(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = system('hg tags')
+        tag_info = execute_command('hg tags')
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         tags.remove('tip')  # Not functional for us
@@ -47,14 +47,14 @@ class Hg(BaseVersionControl):
         return 'hg commit -v -m "%s"' % message
 
     def cmd_diff_last_commit_against_tag(self, version):
-        current_revision = system('hg identify')
+        current_revision = execute_command('hg identify')
         current_revision = current_revision.split(' ')[0]
         # + at the end of the revision denotes uncommitted changes
         current_revision = current_revision.rstrip('+')
         return "hg diff -r %s -r %s" % (version, current_revision)
 
     def cmd_log_since_tag(self, version):
-        current_revision = system('hg identify')
+        current_revision = execute_command('hg identify')
         current_revision = current_revision.split(' ')[0]
         # + at the end of the revision denotes uncommitted changes
         current_revision = current_revision.rstrip('+')
@@ -76,7 +76,7 @@ class Hg(BaseVersionControl):
         # just in the current directory.
         tagdir = tempfile.mktemp(prefix=prefix)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print(system(cmd))
+        print(execute_command(cmd))
         os.chdir(tagdir)
 
     def is_clean_checkout(self):
@@ -84,7 +84,7 @@ class Hg(BaseVersionControl):
         """
         # The --quiet option ignores untracked (unknown and ignored)
         # files, which seems reasonable.
-        if system('hg status --quiet'):
+        if execute_command('hg status --quiet'):
             # Local changes.
             return False
         return True
@@ -95,4 +95,4 @@ class Hg(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return system('hg locate').splitlines()
+        return execute_command('hg locate').splitlines()

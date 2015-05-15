@@ -3,7 +3,7 @@ import logging
 import sys
 
 from zest.releaser import utils
-from zest.releaser.utils import system
+from zest.releaser.utils import execute_command
 from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ class Subversion(BaseVersionControl):
 
     def _svn_info(self):
         """Return svn url"""
-        our_info = system('svn info')
+        our_info = execute_command('svn info')
         if not hasattr(self, '_cached_url'):
             url = [line for line in our_info.split('\n')
                    if line.startswith('URL')][0]
@@ -57,14 +57,14 @@ class Subversion(BaseVersionControl):
                             "W160013",
                             ]
         base = self._base_from_svn()
-        tag_info = system('svn list %s%s' % (base, default_plural))
+        tag_info = execute_command('svn list %s%s' % (base, default_plural))
         # Look for one of the failure messages:
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
             return default_plural
         logger.debug("tags dir does not exist at %s%s", base, default_plural)
 
-        tag_info = system('svn list %s%s' % (base, fallback_singular))
+        tag_info = execute_command('svn list %s%s' % (base, fallback_singular))
         # Look for one of the failure messages:
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
@@ -90,13 +90,13 @@ class Subversion(BaseVersionControl):
             if utils.ask("Shall I create it"):
                 cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
                 logger.info("Running %r", cmd)
-                print(system(cmd))
+                print(execute_command(cmd))
                 tags_name = self._tags_name
                 assert tags_name == 'tags'
             else:
                 sys.exit(0)
 
-        tag_info = system('svn list %s%s' % (base, tags_name))
+        tag_info = execute_command('svn list %s%s' % (base, tags_name))
         network_errors = [
             'Could not resolve hostname',
             'E670008',
@@ -139,7 +139,7 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = system('svn info %s' % tag_url)
+        tag_info = execute_command('svn info %s' % tag_url)
         # Search for: Last Changed Rev: 42761
         revision = None
         for line in tag_info.split('\n'):
@@ -175,4 +175,4 @@ class Subversion(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return system('svn ls --recursive').splitlines()
+        return execute_command('svn ls --recursive').splitlines()

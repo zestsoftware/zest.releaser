@@ -16,8 +16,8 @@ A Bazaar directory (repository and checkout in one):
 
 There are no tags yet:
 
-    >>> from zest.releaser.utils import system
-    >>> print(system("bzr tags"))
+    >>> from zest.releaser.utils import execute_command
+    >>> print(execute_command("bzr tags"))
 
 The changelog is unreleased:
 
@@ -82,7 +82,7 @@ The release script tags the release and uploads it:
     bzr tag 0.1
     Question: Run this command (Y/n)?
     Our reply: y
-    Created tag 0.1.
+    RED Created tag 0.1.
     <BLANKLINE>
     Question: Check out the tag
         (for tweaks or pypi/distutils server upload) (Y/n)?
@@ -109,7 +109,7 @@ The release script tags the release and uploads it:
 
 There is now a tag:
 
-    >>> print(system("bzr tags"))
+    >>> print(execute_command("bzr tags"))
     0.1                  2
 
 And the postrelease script ups the version:
