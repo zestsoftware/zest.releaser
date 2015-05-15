@@ -7,8 +7,9 @@ Changelog for zest.releaser
 - Try not to treat warnings as errors.
   [maurits]
 
-- Allow retrying some commands when there is an error.  We ask the
-  user if she wants to continue: Yes, No, Retry.
+- Allow retrying some commands when there is an error.  Currently only
+  for commands that talk to PyPI or another package index.  We ask the
+  user if she wants to retry: Yes, no, quit.
   [maurits]
 
 - Added support for twine_.  If the ``twine`` command is available, it
