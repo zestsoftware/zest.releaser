@@ -42,6 +42,7 @@ setup(name='zest.releaser',
               'check-manifest',
               'pyroma',
               'wheel',
+              'twine',
               ],
           'test': [
               'z3c.testsetup',

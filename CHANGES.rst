@@ -4,6 +4,15 @@ Changelog for zest.releaser
 4.0 (unreleased)
 ----------------
 
+- Added support for twine_.  If the ``twine`` command is available, it
+  is used for uploading to PyPI.  It is installed automatically if you
+  use the ``zest.releaser[recommended]`` extra.  Note that if the
+  ``twine`` command is not available, you may need to change your
+  system ``PATH`` or need to install ``twine`` explicitly.  This seems
+  more needed when using ``zc.buildout`` than when using ``pip``.
+  Added ``releaser.before_upload`` entry point.  Issue #59.
+  [maurits]
+
 - Added ``check-manifest`` and ``pyroma`` to the ``recommended``
   extra.  Issue #49.
   [maurits]
@@ -64,7 +73,13 @@ Changelog for zest.releaser
 3.56 (2015-03-18)
 -----------------
 
-- Nothing changed yet.
+- No need anymore to force .zip for sdist.
+  Issue #76
+  [reinout]
+
+- Still read ``setup.cfg`` even if ``~/.pypirc`` is wrong or missing.
+  Issue #74
+  [tomviner]
 
 
 3.55 (2015-02-03)
@@ -427,3 +442,5 @@ Changelog for zest.releaser
   [maurits]
 
 .. # Note: for older changes see ``doc/sources/changelog.rst``.
+
+.. _twine: https://pypi.python.org/pypi/twine

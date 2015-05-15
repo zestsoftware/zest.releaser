@@ -23,13 +23,19 @@ after
     to pypi or whatever.
 
 
-For the release step it made sense to create one extra entry point:
+For the release step it made sense to create extra entry points:
 
 after_checkout
     The middle entry point has been handled, the tag has been made, a
     checkout of that tag has been made and we are now in that checkout
     directory.  Of course, when the user chooses not to do a checkout,
     this entry point never triggers.
+
+before_upload
+    The source distribution and maybe the wheel have been made.  We
+    are about to upload to PyPI with ``python setup.py`` or ``twine
+    upload dist/*``.  You may want to use this hook to to sign a
+    distribution before twine uploads it.
 
 Note that an entry point can be specific for one package (usually the
 package that you are now releasing) or generic for all packages.  An
