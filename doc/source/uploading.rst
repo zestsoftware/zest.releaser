@@ -95,9 +95,13 @@ Uploading with twine
 --------------------
 
 Since version 4.0, we prefer twine_ for uploading to the Python
-Package Index, because it is safer.  If the ``twine`` command is
-available, it is used for uploading to PyPI.  It is added to the
-``recommended`` extra of ``zest.releaser``.
+Package Index, because it is safer: it uses ``https`` for uploading.
+If the ``twine`` command is available, it is used for uploading to
+PyPI.  It is installed automatically if you use the
+``zest.releaser[recommended]`` extra.  Note that if the ``twine``
+command is not available, you may need to change your system ``PATH``
+or need to install ``twine`` explicitly.  This seems more needed when
+using ``zc.buildout`` than when using ``pip``.
 
 Note that if your package is not yet on PyPI you must first register
 it manually_.  We could use the ``python setup.py register`` command,
