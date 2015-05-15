@@ -401,7 +401,15 @@ The user can choose to continue:
     >>> utils.test_answer_book.set_answers(['y'])
     >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
     RED ls...
-    Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
+    Question: There were errors or warnings.
+    You have these options for continuing (first character is enough):
+    Yes:   continue with the rest of the program.
+    No:    stop completely. Note that the postrelease step has not
+           been run yet, you need to do that manually.
+    Retry: do this if it looks like a temporary Internet or PyPI outage.
+           You can also first edit $HOME/.pypirc and then retry in
+           case of a credentials problem.
+    Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
     RED ls...
@@ -411,13 +419,19 @@ And there is the retry.  In the end you do have to choose something:
     >>> utils.test_answer_book.set_answers(['r', 'r', 'y'])
     >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
     RED ls...
-    Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
+    Question: There were errors or warnings.
+    ...
+    Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
     RED ls...
-    Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
+    Question: There were errors or warnings.
+    ...
+    Are you sure you want to continue? [Yes/No/Retry]
     Our reply: r
     RED ls...
-    Question: There were errors or warnings. Are you sure you want to continue? [Yes/No/Retry]
+    Question: There were errors or warnings.
+    ...
+    Are you sure you want to continue? [Yes/No/Retry]
     Our reply: y
     >>> print(result)
     RED ls...

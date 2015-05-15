@@ -7,7 +7,7 @@ import os
 import re
 import subprocess
 import sys
-
+import textwrap
 import pkg_resources
 
 logger = logging.getLogger(__name__)
@@ -573,8 +573,17 @@ def execute_command(command, allow_retry=False):
         return result
     # There are warnings or errors. Print the complete result.
     print(result)
-    question = ("There were errors or warnings. Are you sure "
-                "you want to continue? [Yes/No/Retry]")
+    question = """
+    There were errors or warnings.
+    You have these options for continuing (first character is enough):
+    Yes:   continue with the rest of the program.
+    No:    stop completely. Note that the postrelease step has not
+           been run yet, you need to do that manually.
+    Retry: do this if it looks like a temporary Internet or PyPI outage.
+           You can also first edit $HOME/.pypirc and then retry in
+           case of a credentials problem.
+    Are you sure you want to continue? [Yes/No/Retry]"""
+    question = textwrap.dedent(question)
     if AUTO_RESPONSE:
         msg = ("The question '%s' requires a manual answer, but "
                "we're running in --no-input mode.")
