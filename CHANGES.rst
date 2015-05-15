@@ -18,6 +18,7 @@ Changelog for zest.releaser
   system ``PATH`` or need to install ``twine`` explicitly.  This seems
   more needed when using ``zc.buildout`` than when using ``pip``.
   Added ``releaser.before_upload`` entry point.  Issue #59.
+  [maurits]
 
 - Added ``check-manifest`` and ``pyroma`` to the ``recommended``
   extra.  Issue #49.
