@@ -298,8 +298,8 @@ def has_twine():
 
     So check if the twine command gives an error.
 
-    Note that --version print to stderr, so it fails. --help prints to
-    stdout as it should.
+    Note that --version prints to stderr, so it fails.  --help prints
+    to stdout as it should.
     """
     result = system(twine_command('--help'))
     return Fore.RED not in result
