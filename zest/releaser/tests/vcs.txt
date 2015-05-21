@@ -34,7 +34,7 @@ Methods that must be implemented in subclasses
     Traceback (most recent call last):
     ...
     NotImplementedError
-    >>> checkout.prepare_checkout_dir()
+    >>> checkout.prepare_checkout_dir('prefix')
     Traceback (most recent call last):
     ...
     NotImplementedError
