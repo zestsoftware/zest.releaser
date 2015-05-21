@@ -38,10 +38,14 @@ First the three most important links:
 - The code is at `github.com/zestsoftware/zest.releaser
   <https://github.com/zestsoftware/zest.releaser>`_.
 
-And... we're automatically being tested by Travis:
+And... we're automatically being tested by Travis and Landscape:
 
 .. image:: https://secure.travis-ci.org/zestsoftware/zest.releaser.png?branch=master
    :target: https://travis-ci.org/#!/zestsoftware/zest.releaser
+
+.. image:: https://landscape.io/github/zestsoftware/zest.releaser/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/zestsoftware/zest.releaser/master
+   :alt: Code Health
 
 
 Compatibility / Dependencies

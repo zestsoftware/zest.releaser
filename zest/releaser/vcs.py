@@ -248,8 +248,8 @@ class BaseVersionControl(object):
         """Return available tags."""
         raise NotImplementedError()
 
-    def prepare_checkout_dir(self):
-        """Return a tempoary checkout location. Create this directory first
+    def prepare_checkout_dir(self, prefix):
+        """Return a temporary checkout location. Create this directory first
         if necessary."""
         raise NotImplementedError()
 
@@ -309,6 +309,7 @@ class BaseVersionControl(object):
         """
         files = []
         for dirpath, dirnames, filenames in os.walk('.'):
+            dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))
         return files
