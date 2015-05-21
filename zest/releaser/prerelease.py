@@ -170,7 +170,7 @@ class Prereleaser(baserelease.Basereleaser):
             print(diff)
         else:
             # Common case
-            logger.info("The '%s':\n\n%s\n" % (diff_cmd, diff))
+            logger.info("The '%s':\n\n%s\n", diff_cmd, diff)
         if utils.ask("OK to commit this"):
             msg = self.data['commit_msg'] % self.data
             msg = self.update_commit_message(msg)

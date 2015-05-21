@@ -309,6 +309,7 @@ class BaseVersionControl(object):
         """
         files = []
         for dirpath, dirnames, filenames in os.walk('.'):
+            dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))
         return files

@@ -60,6 +60,7 @@ def parse_options():
                       action="store_true", dest="verbose", default=False,
                       help="Verbose mode")
     (options, args) = parser.parse_args()
+    args  # noqa pylint
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
 
@@ -141,8 +142,8 @@ def ask(question, default=True, exact=False):
                    "we're running in --no-input mode.")
             msg = msg % question
             raise RuntimeError(msg)
-        logger.debug("Auto-responding '%s' to the question below." % (
-            default and "yes" or "no"))
+        logger.debug("Auto-responding '%s' to the question below.",
+                     default and "yes" or "no")
         logger.debug(question)
         return default
     while True:
