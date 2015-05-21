@@ -71,7 +71,8 @@ setup(name='zest.releaser',
               ],
           # Documentation generation
           'zest.releaser.prereleaser.before': [
-              'datacheck = zest.releaser.utils:prepare_documentation_entrypoint',
+              'preparedocs = ' +
+              'zest.releaser.preparedocs:prepare_entrypoint_documentation',
               ],
 
           },
