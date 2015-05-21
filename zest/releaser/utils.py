@@ -115,13 +115,13 @@ def ask_version(question, default=None):
     else:
         question += ": "
     while True:
-        input = get_input(question)
-        if input:
-            if input.lower() in ('y', 'n'):
+        input_value = get_input(question)
+        if input_value:
+            if input_value.lower() in ('y', 'n'):
                 # Please read the question.
                 print "y/n not accepted as version."
                 continue
-            return input
+            return input_value
         if default:
             return default
 
@@ -153,9 +153,9 @@ def ask(question, default=True, exact=False):
         if default is False:
             yn = 'y/N'
         q = question + " (%s)? " % yn
-        input = get_input(q)
-        if input:
-            answer = input
+        input_value = get_input(q)
+        if input_value:
+            answer = input_value
         else:
             answer = ''
         if not answer and default is not None:
@@ -433,7 +433,7 @@ def run_entry_points(which_releaser, when, data):
         plugin(data)
 
 
-def _execute_command(command, input=''):
+def _execute_command(command, input_value=''):
     """commands.getoutput() replacement that also works on windows"""
     logger.debug("Running command: %r", command)
     if command.startswith(sys.executable):
@@ -455,8 +455,8 @@ def _execute_command(command, input=''):
                          close_fds=MUST_CLOSE_FDS,
                          env=env)
     i, o, e = (p.stdin, p.stdout, p.stderr)
-    if input:
-        i.write(input)
+    if input_value:
+        i.write(input_value)
     i.close()
     stdout_output = o.read()
     stderr_output = e.read()
@@ -560,19 +560,19 @@ def execute_command(command, allow_retry=False, fail_message=""):
         msg = msg % question
         raise RuntimeError(msg)
     while True:
-        input = get_input(question)
-        if not input:
+        input_value = get_input(question)
+        if not input_value:
             # Default: yes, retry the command.
-            input = 'y'
-        if input:
-            input = input.lower()
-            if input == 'y' or input == 'yes':
+            input_value = 'y'
+        if input_value:
+            input_value = input_value.lower()
+            if input_value == 'y' or input_value == 'yes':
                 logger.info("Retrying command: %r", command)
                 return execute_command(command, allow_retry=True)
-            if input == 'n' or input == 'no':
+            if input_value == 'n' or input_value == 'no':
                 # Accept the error, continue with the program.
                 return result
-            if input == 'q' or input == 'quit':
+            if input_value == 'q' or input_value == 'quit':
                 raise CommandException("Command failed: %r" % command)
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
