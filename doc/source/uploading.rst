@@ -122,7 +122,7 @@ create or edit ``setup.cfg`` in your project (or globally in your
 ``~/.pypirc``) and add this to create and upload a wheel to upload to
 PyPI::
 
- [zest.releaser]
+  [zest.releaser]
   create-wheel = yes
 
 See http://pythonwheels.com for deciding whether this is a good idea
