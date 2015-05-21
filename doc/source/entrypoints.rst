@@ -118,6 +118,9 @@ name
 new_version
     New version (so 1.0 instead of 1.0dev)
 
+nothing_changed_yet
+    First line in new changelog section, warn when this is still in there before releasing
+
 original_version
     Version before prereleasing (e.g. 1.0dev)
 
