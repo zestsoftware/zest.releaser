@@ -309,8 +309,10 @@ def has_twine():
     return Fore.RED not in result
 
 
-def is_data_documented(data, documentation={}):
+def is_data_documented(data, documentation=None):
     """check that the self.data dict is fully documented"""
+    if documentation is None:
+        documentation = {}
     if TESTMODE:
         # Hack for testing to prove entry point is being called.
         print("Checking data dict")
