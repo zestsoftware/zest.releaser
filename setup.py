@@ -1,11 +1,18 @@
-from setuptools import setup, find_packages
+from __future__ import unicode_literals
 import codecs
+
+from setuptools import setup, find_packages
 
 version = '4.1.dev0'
 
 
 def read(filename):
-    return unicode(codecs.open(filename, encoding='utf-8').read())
+    try:
+        return unicode(codecs.open(filename, encoding='utf-8').read())
+    except NameError:
+        # python 3, perhaps six can handle this more elegantly.
+        return open(filename).read()
+
 
 
 long_description = '\n\n'.join([read('README.rst'),
