@@ -45,7 +45,7 @@ setup(name='zest.releaser',
               'twine',
               ],
           'test': [
-              'z3c.testsetup',
+              'z3c.testsetup >= 0.8.4',
               'wheel',
               ]},
       entry_points={
