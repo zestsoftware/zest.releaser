@@ -1,6 +1,5 @@
 import logging
 import tempfile
-import os
 import os.path
 import sys
 
