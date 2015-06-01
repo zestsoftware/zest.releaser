@@ -1,11 +1,19 @@
 Changelog for zest.releaser
 ===========================
 
-4.1 (unreleased)
+5.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Python 3 support.
+  [mitchellrj]
 
+- Commands no longer executed in a shell and called using proper shlex
+  escaping.
+  [mitchellrj]
+
+- Reading and modifying Python files now uses Python's AST rather than
+  regular expressions.
+  [mitchellrj]
 
 4.0 (2015-05-21)
 ----------------
