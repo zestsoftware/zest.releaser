@@ -19,7 +19,7 @@ The prepared bzr project has a setup.py, so the name in there is used:
     >>> os.chdir(bzrsourcedir)
     >>> checkout = bzr.Bzr()
     >>> checkout.name
-    'tha.example'
+    u'tha.example'
 
 When the setup.py doesn't exist or doesn't return a proper name, we fall back
 to the directory name.
@@ -54,7 +54,7 @@ Make a change:
 
 Commit it:
 
-    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd = checkout.cmd_commit(u'small tweak')
     >>> cmd
     [u'bzr', u'commit', u'-v', u'-m', u'small tweak']
     >>> print(execute_command(cmd))
@@ -75,7 +75,7 @@ Originally there are no tags (the default 'tip' tag is filtered out):
 
 Create a tag and it will show up:
 
-    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds = checkout.cmd_create_tag(u'0.1')
     >>> cmds
     [[u'bzr', u'tag', u'0.1']]
     >>> for cmd in cmds:
@@ -102,7 +102,7 @@ Make and commit a small change:
 
 Now we can request the changes since a specific tag:
 
-    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmd = checkout.cmd_diff_last_commit_against_tag(u'0.1')
     >>> cmd
     [u'bzr', u'diff', u'-r', u'tag:0.1..-1']
     >>> print(execute_command(cmd))

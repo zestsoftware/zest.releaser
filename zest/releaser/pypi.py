@@ -1,3 +1,4 @@
+import codecs
 import logging
 import os
 import pkg_resources
@@ -44,7 +45,8 @@ class SetupConfig(object):
             self.config = None
             return
         self.config = ConfigParser()
-        self.config.read(self.config_filename)
+        with codecs.open(self.config_filename, 'r', 'utf8') as fp:
+            self.config.readfp(fp)
 
     def has_bad_commands(self):
         if self.config is None:
@@ -164,7 +166,9 @@ class PypiConfig(object):
             self.config = None
             return
         self.config = ConfigParser()
-        self.config.read(files)
+        for file in files:
+            with codecs.open(file, 'r', 'utf8') as fp:
+                self.config.readfp(fp)
 
     def is_pypi_configured(self):
         # Do we have configuration for releasing to at least one

@@ -53,7 +53,7 @@ Grab the version:
 
     >>> releaser._grab_version()
     >>> releaser.data['version']
-    '0.1.dev0'
+    u'0.1.dev0'
 
 If, by some weird twist of fate, there's no release: we exit.
 
@@ -70,7 +70,7 @@ Check tag existence
 We check if a tag already exists.  First set the version to 0.1:
 
     >>> releaser = release.Releaser()
-    >>> releaser.vcs.version = '0.1'
+    >>> releaser.vcs.version = u'0.1'
     >>> releaser._grab_version()
     >>> releaser._check_if_tag_already_exists()
     >>> releaser.data['tag_already_exists']
@@ -109,7 +109,7 @@ tag command:
 
     >>> releaser = release.Releaser()
     >>> releaser.data['tag_already_exists'] = False
-    >>> releaser.data['version'] = '0.1'
+    >>> releaser.data['version'] = u'0.1'
     >>> utils.test_answer_book.set_answers(['n'])
     >>> releaser._make_tag()
     Traceback (most recent call last):

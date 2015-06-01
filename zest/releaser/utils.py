@@ -346,7 +346,7 @@ def setup_py(rest_of_cmdline):
             if unsafe in rest_of_cmdline:
                 executable = [u'echo', u'MOCK']
 
-    return executable + ['setup.py'] + rest_of_cmdline
+    return executable + [u'setup.py'] + rest_of_cmdline
 
 
 def twine_command(rest_of_cmdline):
