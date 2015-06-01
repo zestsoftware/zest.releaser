@@ -333,7 +333,7 @@ We want to discover errors and show them in red.
     >>> Fore.MAGENTA
     '\x1b[35m'
     >>> utils.execute_command([u'ls', u'some-non-existing-file'])
-    '\x1b[31mls...'
+    u'\x1b[31mls...'
 
 Warnings may also end up in the error output.  That may be unwanted.
 
@@ -394,7 +394,7 @@ The user can choose to quit:
     >>> utils.execute_command([u'ls', u'some-non-existing-file'], allow_retry=True)
     Traceback (most recent call last):
     ...
-    zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
+    zest.releaser.utils.CommandException: Command failed: u'ls some-non-existing-file'
 
 The user can choose to not retry and just continue:
 
@@ -429,7 +429,7 @@ And there is the retry.  In the end you do have to choose something:
     >>> utils.execute_command([u'ls', u'some-non-existing-file'], allow_retry=True)
     Traceback (most recent call last):
     ...
-    zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
+    zest.releaser.utils.CommandException: Command failed: u'ls some-non-existing-file'
 
 
 Changelog header detection

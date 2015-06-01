@@ -1,9 +1,16 @@
 from __future__ import unicode_literals
 import codecs
+import sys
 
 from setuptools import setup, find_packages
 
 version = '4.1.dev0'
+
+
+if sys.version_info >= (3,):
+    SETUPTOOLS = 'setuptools>=17.0'
+else:
+    SETUPTOOLS = 'setuptools<16.0'
 
 
 def read(filename):
@@ -11,8 +18,7 @@ def read(filename):
         return unicode(codecs.open(filename, encoding='utf-8').read())
     except NameError:
         # python 3, perhaps six can handle this more elegantly.
-        return open(filename).read()
-
+        return open(filename, 'r', encoding='utf-8').read()
 
 
 long_description = '\n\n'.join([read('README.rst'),
@@ -41,7 +47,7 @@ setup(name='zest.releaser',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
+          SETUPTOOLS,
           'colorama',
           'six',
       ],

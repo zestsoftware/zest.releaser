@@ -68,7 +68,7 @@ The changelog and setup.py are at 0.2.dev0:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2.dev0'
+    version = u'0.2.dev0'
 
 An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
 
@@ -114,7 +114,7 @@ The changelog and setup.py are at 0.3.dev0 now:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.3.dev0'
+    version = u'0.3.dev0'
 
 When you do some commits, but forget to update the changelog,
 prerelease (or fullrelease) will warn you, as indicated earlier:

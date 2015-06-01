@@ -2,6 +2,8 @@ import tempfile
 import logging
 import sys
 
+import six
+
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
 from zest.releaser.vcs import BaseVersionControl
@@ -124,7 +126,10 @@ class Subversion(BaseVersionControl):
 
     def prepare_checkout_dir(self, prefix):
         """Return directory where a tag checkout can be made"""
-        return tempfile.mkdtemp(prefix=prefix)
+        result = tempfile.mkdtemp(prefix=prefix)
+        if not isinstance(result, six.text_type):
+            result = result.decode(sys.getfilesystemencoding())
+        return result
 
     def tag_url(self, version):
         base = self._base_from_svn()

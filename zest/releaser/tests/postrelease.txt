@@ -62,7 +62,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2.dev0'
+    version = u'0.2.dev0'
 
 Now we set the version to something that does not end in a number and
 is not recognized as development version (with setuptools 8 or higher
@@ -71,10 +71,10 @@ the version is actually reported with a zero at the end):
     >>> from zest.releaser.svn import Subversion
     >>> vcs = Subversion()
     >>> vcs.version
-    '0.2.dev0'
-    >>> vcs.version = '0.1b'
+    u'0.2.dev0'
+    >>> vcs.version = u'0.1b'
     >>> vcs.version
-    '0.1b0'
+    u'0.1b0'
 
 Run the postrelease script.  Since the version number does not end
 with a number, the script cannot make a suggestion, except when the
@@ -102,7 +102,7 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2.dev0'
+    version = u'0.2.dev0'
 
 The prerelease part would complain when the changelog still contains
 '- Nothing changed yet.'  So change it.

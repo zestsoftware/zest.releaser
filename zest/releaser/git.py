@@ -3,6 +3,8 @@ import tempfile
 import os.path
 import sys
 
+import six
+
 from zest.releaser.utils import execute_command
 from zest.releaser.vcs import BaseVersionControl
 
@@ -31,6 +33,8 @@ class Git(BaseVersionControl):
         # No setup.py? With git we can probably only fall back to the directory
         # name as there's no svn-url with a usable name in it.
         dir_name = os.path.basename(os.getcwd())
+        if not isinstance(dir_name, six.text_type):
+            dir_name = dir_name.decode(sys.getfilesystemencoding())
         return dir_name
 
     def available_tags(self):

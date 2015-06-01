@@ -83,7 +83,7 @@ class Postreleaser(baserelease.Basereleaser):
                 logger.warn(u"Version does not end with a number, so we can't "
                             u"calculate a suggestion for a next version.")
                 suggestion = None
-        print(u"Current version is {0!r}".format(current))
+        print(u"Current version is '{0!s}'".format(current))
         q = u"Enter new development version ('.dev0' will be appended)"
         version = utils.ask_version(q, default=suggestion)
         if not version:

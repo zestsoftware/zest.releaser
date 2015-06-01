@@ -96,7 +96,7 @@ Open the project with the BaseVersionControl and it finds the version file and
 returns the cleaned-up version:
 
     >>> checkout.get_version_txt_version()
-    '1.0dev'
+    u'1.0dev'
 
 Setting the version works also with version.txt files (the setup.py scenario
 is tested in the other tests).
@@ -158,7 +158,7 @@ change a thing:
     ...     "print('something.else')"]
     >>> dont_care = open('some_file.py', 'w').write('\n'.join(lines))
     >>> checkout.version
-    '1.4'
+    u'1.4'
 
 Add a ``setup.cfg`` with a pointer at the Python file and its version gets
 picked up:
@@ -202,7 +202,7 @@ Open the project with the BaseVersionControl and it finds the version file and
 returns the cleaned-up version:
 
     >>> checkout.get_version_txt_version()
-    '1.0dev'
+    u'1.0dev'
 
 Setting the version works also with ``VERSION`` files:
 
@@ -215,7 +215,7 @@ Same with a ``VERSION.txt``:
     >>> os.remove('VERSION')
     >>> dont_care = open('VERSION.txt', 'w').write('22.3')
     >>> checkout.get_version_txt_version()
-    '22.3'
+    u'22.3'
     >>> checkout.version = '22.4'
     >>> print(open('VERSION.txt').read())
     22.4
@@ -225,4 +225,4 @@ Version files can also be called ``version.rst`` (or .md or so) instead of ``ver
     >>> os.remove('VERSION.txt')
     >>> dont_care = open('version.rst', 'w').write('25.0')
     >>> checkout.get_version_txt_version()
-    '25.0'
+    u'25.0'

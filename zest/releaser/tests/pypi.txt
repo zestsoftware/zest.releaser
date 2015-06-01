@@ -110,7 +110,7 @@ Parse the new format again and query a list of distutils servers:
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> from pprint import pprint
     >>> pprint(sorted(pypiconfig.distutils_servers()))
-    ['mycompany', 'plone.org', 'pypi']
+    [u'mycompany', u'plone.org', u'pypi']
 
 If we have an old config file, the distutils server list is empty:
 
@@ -124,7 +124,7 @@ part:
 
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
     >>> pprint(sorted(pypiconfig.distutils_servers()))
-    ['local']
+    [u'local']
 
 
 Asking for making a release or not
@@ -325,4 +325,4 @@ Enable the option:
     >>> dont_care = open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.python_file_with_version()
-    'reinout/maurits.py'
+    u'reinout/maurits.py'
