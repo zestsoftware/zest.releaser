@@ -1,7 +1,7 @@
 Integration test
 ================
 
-.. :doctest:
+.. :doctest: +NORMALIZE_WHITESPACE
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
@@ -84,8 +84,7 @@ The release script tags the release and uploads it:
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Question: Check out the tag
-        (for tweaks or pypi/distutils server upload) (Y/n)?
+    Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
     RED Note: ...0.1...
     ...
@@ -95,7 +94,7 @@ The release script tags the release and uploads it:
     Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
     Our reply: y
     [egg_info]
-    tag_build =
+    tag_build = 
     tag_svn_revision = false
     <BLANKLINE>
     <BLANKLINE>
@@ -108,7 +107,7 @@ The release script tags the release and uploads it:
     removing 'tha.example-0.1' ...
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
-    MOCK twine upload dist/tha.example-0.1.tar.gz
+    MOCK twine upload dist/*
 
 There is now a tag:
 
