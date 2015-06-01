@@ -1,7 +1,6 @@
-from zest.releaser.utils import execute_command
+import ast
 import logging
 import os
-import re
 import sys
 
 import six
@@ -11,23 +10,7 @@ from zest.releaser.utils import execute_command
 from zest.releaser.utils import read_text_file
 
 
-VERSION_PATTERN = re.compile(r"""
-^                # Start of line
-\s*              # Indentation
-version\s*=\s*   # 'version =  ' with possible whitespace
-['"]             # String literal begins
-\d               # Some digit, start of version.
-""", re.VERBOSE)
-
-UNDERSCORED_VERSION_PATTERN = re.compile(r"""
-^                    # Start of line
-__version__\s*=\s*   # '__version__ =  ' with possible whitespace
-['"]                 # String literal begins
-\d                   # Some digit, start of version.
-""", re.VERBOSE)
-
 TXT_EXTENSIONS = [u'rst', u'txt', u'markdown', u'md']
-
 logger = logging.getLogger(__name__)
 
 
@@ -46,6 +29,29 @@ class BaseVersionControl(object):
         except ImportError:
             return False
         return True
+
+    def _find_assignment(self, tree, varname):
+        assignment = None
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id == varname:
+                        # Found the assignment
+                        assignment = node
+                        break
+            elif isinstance(node, ast.keyword):
+                if node.arg == varname:
+                    assignment = node
+                    break
+            else:
+                continue
+            if assignment is not None:
+                break
+
+        if assignment is None or not isinstance(assignment.value, ast.Str):
+            return None
+
+        return assignment
 
     def get_setup_py_version(self):
         if os.path.exists(u'setup.py'):
@@ -85,15 +91,13 @@ class BaseVersionControl(object):
         setup_cfg = pypi.SetupConfig()
         if not setup_cfg.python_file_with_version():
             return
-        lines = read_text_file(setup_cfg.python_file_with_version()).split('\n')
-        for line in lines:
-            match = UNDERSCORED_VERSION_PATTERN.search(line)
-            if match:
-                logger.debug("Matching __version__ line found: %r", line)
-                line = line.lstrip('__version__').strip()
-                line = line.lstrip('=').strip()
-                line = line.replace('"', '').replace("'", "")
-                return utils.strip_version(line)
+        content = read_text_file(setup_cfg.python_file_with_version())
+        tree = ast.parse(content, setup_cfg.python_file_with_version())
+        assignment = self._find_assignment(tree, u'__version__')
+        if assignment is not None:
+            return utils.strip_version(assignment.value.s)
+
+        return None
 
     def filefind(self, names):
         """Return first found file matching name (case-insensitive).
@@ -198,15 +202,30 @@ class BaseVersionControl(object):
         if self.get_python_file_version():
             setup_cfg = pypi.SetupConfig()
             filename = setup_cfg.python_file_with_version()
-            lines = read_text_file(filename).split('\n')
-            for index, line in enumerate(lines):
-                match = UNDERSCORED_VERSION_PATTERN.search(line)
-                if match:
-                    lines[index] = "__version__ = '%s'" % version
-            contents = '\n'.join(lines)
-            open(filename, 'w').write(contents)
-            logger.info("Set __version__ in %s to %r", filename, version)
-            return
+            content = read_text_file(filename)
+            tree = ast.parse(content, filename)
+            assignment = self._find_assignment(tree, u'__version__')
+            if assignment is not None:
+                # This assumes that the version string does not span more than
+                # one line
+                position = (
+                    assignment.value.lineno - 1,
+                    assignment.value.col_offset,
+                    assignment.value.col_offset + len(repr(assignment.value.s))
+                    )
+                lines = content.splitlines()
+                lines[position[0]] = (
+                    lines[position[0]][:position[1]] +
+                    repr(version) +
+                    lines[position[0]][position[2]:]
+                    )
+                contents = u'\n'.join(lines)
+                open(filename, 'w').write(contents)
+                logger.info(u"Set __version__ in {0} to {1!r}".format(
+                    filename, version))
+                return
+        else:
+            filename = 'setup.py'
 
         version_filenames = [u'version']
         for extension in TXT_EXTENSIONS:
@@ -226,23 +245,29 @@ class BaseVersionControl(object):
                     )
                 return
 
-        good_version = "version = '%s'" % version
-        line_number = 0
-        setup_lines = open('setup.py').read().split('\n')
-        for line_number, line in enumerate(setup_lines):
-            match = VERSION_PATTERN.search(line)
-            if match:
-                logger.debug("Matching version line found: %r", line)
-                if line.startswith(' '):
-                    # oh, probably '    version = 1.0,' line.
-                    indentation = line.split('version')[0]
-                    # Note: no spaces around the '='.
-                    good_version = indentation + "version='%s'," % version
-                setup_lines[line_number] = good_version
-                contents = '\n'.join(setup_lines)
-                open('setup.py', 'w').write(contents)
-                logger.info("Set setup.py's version to %r", version)
-                return
+        content = read_text_file(filename)
+        tree = ast.parse(content, filename)
+        assignment = self._find_assignment(tree, u'version')
+        if assignment:
+            # This assumes that the version string does not span more than
+            # one line
+            position = (
+                assignment.value.lineno - 1,
+                assignment.value.col_offset,
+                assignment.value.col_offset + len(repr(assignment.value.s))
+                )
+            lines = content.splitlines()
+            logger.debug(u"Matching version line found: {0!r}".format(
+                lines[position[0]]))
+            lines[position[0]] = (
+                lines[position[0]][:position[1]] +
+                repr(version) +
+                lines[position[0]][position[2]:]
+                )
+            contents = u'\n'.join(lines)
+            open('setup.py', 'w').write(contents)
+            logger.info("Set setup.py's version to {0}".format(version))
+            return
 
         logger.error(
             u"We could read a version from setup.py, but could not write it "
