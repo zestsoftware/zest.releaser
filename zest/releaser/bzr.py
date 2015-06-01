@@ -24,7 +24,7 @@ class Bzr(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = execute_command('bzr tags')
+        tag_info = execute_command([u'bzr', u'tags'])
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         logger.debug("Available tags: %r", tags)
@@ -40,24 +40,25 @@ class Bzr(BaseVersionControl):
         return version
 
     def cmd_diff(self):
-        return 'bzr diff'
+        return [u'bzr', u'diff']
 
     def cmd_commit(self, message):
-        return 'bzr commit -v -m "%s"' % message
+        return [u'bzr', u'commit', u'-v', u'-m', message]
 
     def cmd_diff_last_commit_against_tag(self, version):
-        return "bzr diff -r tag:%s..-1" % version
+        return [u"bzr", u"diff", u"-r", u"tag:{0}..-1".format(version)]
 
     def cmd_log_since_tag(self, version):
-        return "bzr log -r tag:%s..-1" % version
+        return [u"bzr", u"log", u"-r", u"tag:{0}..-1".format(version)]
 
     def cmd_create_tag(self, version):
-        return 'bzr tag %s' % version
+        return [[u'bzr', u'tag', version]]
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         source = self.workingdir
         target = checkout_dir
-        return 'bzr checkout -r tag:%s %s %s' % (version, source, target)
+        return [[u'bzr', u'checkout', u'-r', u'tag:{0}'.format(version),
+                 source, target]]
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
@@ -71,11 +72,11 @@ class Bzr(BaseVersionControl):
         status' and see what we get.
         """
         # Check for changes to versioned files.
-        if execute_command('bzr status --versioned'):
+        if execute_command([u'bzr', u'status', u'--versioned']):
             # Local changes.
             return False
         return True
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('bzr ls --recursive').splitlines()
+        return execute_command([u'bzr', u'ls', u'--recursive']).splitlines()

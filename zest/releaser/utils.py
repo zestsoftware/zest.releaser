@@ -5,10 +5,13 @@ from pkg_resources import parse_version
 import logging
 import os
 import re
+import shlex
 import subprocess
 import sys
 import textwrap
 import pkg_resources
+from six.moves import shlex_quote
+
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +21,16 @@ MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
 VERBOSE = False
+INPUT_ENCODING = 'UTF-8'
+if getattr(sys.stdin, 'encoding', None):
+    INPUT_ENCODING = sys.stdin.encoding
+OUTPUT_ENCODING = INPUT_ENCODING
+if getattr(sys.stdout, 'encoding', None):
+    OUTPUT_ENCODING = sys.stdout.encoding
+
+
+def cmd_to_text(cmd):
+    return u' '.join(map(shlex_quote, cmd))
 
 
 class CommandException(Exception):
@@ -274,24 +287,30 @@ def show_interesting_lines(result):
 
 def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
-    executable = sys.executable
+    executable = [sys.executable]
+    if isinstance(rest_of_cmdline, six.string_types):
+        # BBB
+        rest_of_cmdline = shlex.split(rest_of_cmdline)
     if TESTMODE:
         # Hack for testing
         for unsafe in ['upload', 'register']:
             if unsafe in rest_of_cmdline:
-                executable = 'echo MOCK'
+                executable = [u'echo', u'MOCK']
 
-    return '%s setup.py %s' % (executable, rest_of_cmdline)
+    return executable + ['setup.py'] + rest_of_cmdline
 
 
 def twine_command(rest_of_cmdline):
     """Return 'twine' command (with hack for testing)"""
-    executable = 'twine'
+    executable = [u'twine']
+    if isinstance(rest_of_cmdline, six.string_types):
+        # BBB
+        rest_of_cmdline = shlex.split(rest_of_cmdline)
     if TESTMODE:
         # Hack for testing
-        executable = 'echo MOCK twine'
+        executable = [u'echo', u'MOCK', u'twine']
 
-    return '%s %s' % (executable, rest_of_cmdline)
+    return executable + rest_of_cmdline
 
 
 def has_twine():
@@ -306,7 +325,7 @@ def has_twine():
     Note that --version prints to stderr, so it fails.  --help prints
     to stdout as it should.
     """
-    result = execute_command(twine_command('--help'))
+    result = execute_command(twine_command(['--help']))
     return Fore.RED not in result
 
 
@@ -435,10 +454,14 @@ def run_entry_points(which_releaser, when, data):
 
 def _execute_command(command, input_value=''):
     """commands.getoutput() replacement that also works on windows"""
-    logger.debug("Running command: %r", command)
-    if command.startswith(sys.executable):
+    if isinstance(command, six.string_types):
+        # BBB
+        command = shlex.split(command)
+
+    logger.debug(u"Running command: {0}".format(cmd_to_text(command)))
+    if command[0] == sys.executable:
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        if ' upload ' in command or ' register ' in command:
+        if u'upload' in command or u'register' in command:
             # We really do want to see the stderr here, otherwise a
             # failed upload does not even show up in the output.
             show_stderr = True
@@ -448,7 +471,6 @@ def _execute_command(command, input_value=''):
         env = None
         show_stderr = True
     p = subprocess.Popen(command,
-                         shell=True,
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
@@ -456,10 +478,15 @@ def _execute_command(command, input_value=''):
                          env=env)
     i, o, e = (p.stdin, p.stdout, p.stderr)
     if input_value:
-        i.write(input_value)
+        i.write(input_value.encode(INPUT_ENCODING))
     i.close()
     stdout_output = o.read()
     stderr_output = e.read()
+    # We assume that the output from commands we're running is text.
+    if not isinstance(stdout_output, six.text_type):
+        stdout_output = stdout_output.decode(OUTPUT_ENCODING)
+    if not isinstance(stderr_output, six.text_type):
+        stderr_output = stderr_output.decode(OUTPUT_ENCODING)
     # TODO.  Note that the returncode is always None, also after
     # running p.kill().  The shell=True may be tripping us up.  For
     # some ideas, see http://stackoverflow.com/questions/4789837
@@ -504,8 +531,8 @@ def _execute_command(command, input_value=''):
         # numbers and so.
         result = stdout_output
         if stderr_output:
-            logger.debug("Stderr of running command '%s':\n%s",
-                         command, stderr_output)
+            logger.debug(u"Stderr of running command '{0}':\n{1}".format(
+                cmd_to_text(command), stderr_output))
     o.close()
     e.close()
     return result
@@ -532,6 +559,10 @@ def execute_command(command, allow_retry=False, fail_message=""):
 
     It might be a warning, but we cannot detect the distinction.
     """
+    if isinstance(command, six.string_types):
+        # BBB
+        command = shlex.split(command)
+
     result = _execute_command(command)
     if not allow_retry:
         return result

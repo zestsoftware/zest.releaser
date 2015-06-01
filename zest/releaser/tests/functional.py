@@ -59,56 +59,62 @@ def setup(test):
 
     # Init svn repo.
     repodir = os.path.join(test.tempdir, 'svnrepo')
-    execute_command('svnadmin create %s' % repodir)
+    execute_command([u'svnadmin', u'create', repodir])
     repo_url = 'file://' + repodir  # TODO: urllib or so for windows
     # Import example project
-    execute_command('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
-    execute_command('svn mkdir %s/tha.example/tags -m "mkdir"' % repo_url)
-    execute_command(
-        'svn import %s %s/tha.example/trunk -m "import"' % (sourcedir,
-                                                            repo_url))
+    execute_command([u'svn', u'mkdir', u'{0}/tha.example'.format(repo_url),
+                     u'-m', 'mkdir'])
+    execute_command([u'svn', u'mkdir',
+                     u'{0}/tha.example/tags'.format(repo_url),
+                     u'-m', u'mkdir'])
+    execute_command([u'svn', u'import', sourcedir,
+                     u'{0}/tha.example/trunk'.format(repo_url),
+                     u'-m', u'import'])
     # Subversion checkout
     svnsourcedir = os.path.join(test.tempdir, 'tha.example-svn')
-    execute_command(
-        'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
-    execute_command(
-        'svn propset svn:ignore "tha.example.egg-info *.pyc" %s/src ' % svnsourcedir)
-    execute_command('svn up %s' % svnsourcedir)
-    execute_command('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
+    execute_command([u'svn', u'co', u'{0}/tha.example/trunk'.format(repo_url),
+                     svnsourcedir])
+    execute_command([u'svn', u'propset', u'svn:ignore',
+                     u'tha.example.egg-info *.pyc',
+                     '{0}/src'.format(svnsourcedir)])
+    execute_command([u'svn', u'up', svnsourcedir])
+    execute_command([u'svn', u'commit', svnsourcedir,
+                     u'-m', 'ignoring egginfo'])
 
     # Mercurial initialization
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')
     shutil.copytree(sourcedir, hgsourcedir)
-    execute_command("hg init %s" % hgsourcedir)
+    execute_command([u"hg", u"init", hgsourcedir])
     open(os.path.join(hgsourcedir, '.hgignore'), 'wb').write(
-        'tha.example.egg-info\n\.pyc$\n')
-    execute_command("hg add %s" % hgsourcedir)
-    execute_command("hg commit -m 'init' %s" % hgsourcedir)
+        b'tha.example.egg-info\n\.pyc$\n')
+    execute_command([u"hg", u"add", hgsourcedir])
+    execute_command([u"hg", u"commit", u"-m", "init", hgsourcedir])
 
     # Bazaar initialization
     bzrsourcedir = os.path.join(test.tempdir, 'tha.example-bzr')
     shutil.copytree(sourcedir, bzrsourcedir)
-    execute_command("bzr init %s" % bzrsourcedir)
+    execute_command([u"bzr", u"init", bzrsourcedir])
     open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
         'tha.example.egg-info\n*.pyc\n')
-    execute_command("bzr add %s" % bzrsourcedir)
-    execute_command("bzr commit -m 'init' %s" % bzrsourcedir)
+    execute_command([u"bzr", u"add", bzrsourcedir])
+    execute_command([u"bzr", u"commit", u"-m", u"init", bzrsourcedir])
 
     # Git initialization
     gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
-    execute_command("git init")
+    execute_command([u"git", u"init"])
     open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
         'tha.example.egg-info\n*.pyc\n')
-    execute_command("git add .")
-    execute_command("git commit -a -m 'init'")
+    execute_command([u"git", u"add", u"."])
+    execute_command([u"git", u"commit", u"-a", u"-m", u'init'])
     os.chdir(test.orig_dir)
 
     # Git svn initialization
     gitsvnsourcedir = os.path.join(test.tempdir, 'tha.example-gitsvn')
-    execute_command(
-        'git svn clone -s %s/tha.example %s' % (repo_url, gitsvnsourcedir))
+    execute_command([u'git', u'svn', u'clone',
+                     u'-s', '{0}/tha.example'.format(repo_url),
+                     gitsvnsourcedir])
     os.chdir(test.orig_dir)
 
     def svnhead(*filename_parts):

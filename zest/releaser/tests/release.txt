@@ -90,7 +90,7 @@ Mock that the tag exists and check again:
     >>> releaser._check_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: y
-    svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk
+    [u'svn', u'--non-interactive', u'diff', u'file://TESTREPO/tha.example/tags/0.1', u'file://TESTREPO/tha.example/trunk']
     ...
     >>> # ^^^ The diff itself fails as we mocked its existence
     >>> releaser.data['tag_already_exists']
