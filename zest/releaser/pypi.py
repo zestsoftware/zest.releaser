@@ -2,9 +2,9 @@ import logging
 import os
 import pkg_resources
 
-from ConfigParser import ConfigParser
-from ConfigParser import NoSectionError
-from ConfigParser import NoOptionError
+from six.moves.configparser import ConfigParser
+from six.moves.configparser import NoSectionError
+from six.moves.configparser import NoOptionError
 
 try:
     pkg_resources.get_distribution('wheel')

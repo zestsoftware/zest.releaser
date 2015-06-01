@@ -1,7 +1,6 @@
 # Small utility methods.
-from colorama import Fore
-from optparse import OptionParser
-from pkg_resources import parse_version
+
+from argparse import ArgumentParser
 import logging
 import os
 import re
@@ -106,17 +105,20 @@ def cleanup_version(version):
 def parse_options():
     global AUTO_RESPONSE
     global VERBOSE
-    parser = OptionParser()
-    parser.add_option("--no-input",
-                      action="store_true",
-                      dest="auto_response",
-                      default=False,
-                      help="Don't ask questions, just use the default values")
-    parser.add_option("-v", "--verbose",
-                      action="store_true", dest="verbose", default=False,
-                      help="Verbose mode")
-    (options, args) = parser.parse_args()
-    args  # noqa pylint
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--no-input",
+        action="store_true",
+        dest="auto_response",
+        default=False,
+        help="Don't ask questions, just use the default values")
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        dest="verbose",
+        default=False,
+        help="Verbose mode")
+    options = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
 
@@ -753,7 +755,13 @@ You may want to quit and fix this.
 
 
 def configure_logging():
-    logging.addLevelName(logging.WARNING, Fore.MAGENTA + logging.getLevelName(logging.WARNING))
-    logging.addLevelName(logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
+    logging.addLevelName(
+        logging.WARNING,
+        Fore.MAGENTA + logging.getLevelName(logging.WARNING)
+        )
+    logging.addLevelName(
+        logging.ERROR,
+        Fore.RED + logging.getLevelName(logging.ERROR)
+        )
     logging.basicConfig(level=loglevel(),
                         format=u"%(levelname)s: %(message)s")

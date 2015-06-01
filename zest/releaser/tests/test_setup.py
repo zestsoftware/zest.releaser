@@ -1,6 +1,8 @@
 import re
 import tempfile
 
+from colorama import Fore
+import six
 import z3c.testsetup
 from zope.testing import renormalizing
 
@@ -13,8 +15,8 @@ checker = renormalizing.RENormalizing([
     # Hg bare hash formatting
     (re.compile(r'[0-9a-f]{12}'), '234567890abc'),
     # Hg has an updated comment
-    (re.compile('updating working directory'),
-     'updating to branch default'),
+    (re.compile(u'updating working directory'),
+     u'updating to branch default'),
     # Newer Hg no longer prints 'requesting all changes'
     (re.compile('requesting all changes'), ''),
     # Git diff hash formatting
@@ -25,13 +27,13 @@ checker = renormalizing.RENormalizing([
     # Normalize tempdirs.  For this to work reliably, we need to use a prefix
     # in all tempfile.mkdtemp() calls.
     (re.compile(
-        '%s/testtemp[^/]+/svnrepo' % re.escape(tempfile.gettempdir())),
+        '{0}/testtemp[^/]+/svnrepo'.format(re.escape(tempfile.gettempdir()))),
      'TESTREPO'),
     (re.compile(
-        '/private%s/testtemp[^/]+' % re.escape(tempfile.gettempdir())),
+        '/private{0}/testtemp[^/]+'.format(re.escape(tempfile.gettempdir()))),
      'TESTTEMP'),  # OSX madness
     (re.compile(
-        '%s/testtemp[^/]+' % re.escape(tempfile.gettempdir())),
+        '{0}/testtemp[^/]+'.format(re.escape(tempfile.gettempdir()))),
      'TESTTEMP'),
     (re.compile(re.escape(tempfile.gettempdir())),
      'TMPDIR'),
