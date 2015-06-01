@@ -43,16 +43,19 @@ setup(name='zest.releaser',
       install_requires=[
           'setuptools',
           'colorama',
+          'six',
       ],
       extras_require={
           'recommended': [
               'check-manifest',
+              'docutils',
               'pyroma',
               'wheel',
               'twine',
               ],
           'test': [
               'z3c.testsetup >= 0.8.4',
+              'zope.testrunner',
               'wheel',
               ]},
       entry_points={
