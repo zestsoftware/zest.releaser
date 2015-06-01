@@ -4,8 +4,12 @@ import os
 import re
 import sys
 
+import six
 from zest.releaser import pypi
 from zest.releaser import utils
+from zest.releaser.utils import execute_command
+from zest.releaser.utils import read_text_file
+
 
 VERSION_PATTERN = re.compile(r"""
 ^                # Start of line
@@ -102,7 +106,7 @@ class BaseVersionControl(object):
         a CHANGES.txt and a docs/HISTORY.txt, you want the top level
         CHANGES.txt to be found first.
         """
-        if isinstance(names, basestring):
+        if isinstance(names, six.string_types):
             names = [names]
         names = [name.lower() for name in names]
         files = self.list_files()

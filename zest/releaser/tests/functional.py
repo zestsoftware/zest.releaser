@@ -5,9 +5,10 @@ import shutil
 import sys
 import tarfile
 import tempfile
-import urllib2
-import StringIO
 
+from six import StringIO
+from six.moves.urllib.error import HTTPError
+from six.moves.urllib import request as urllib2
 from zest.releaser import utils
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
 from zest.releaser.utils import execute_command
@@ -40,13 +41,13 @@ def setup(test):
         # print "Mock opening", url
         package = url.replace('https://pypi.python.org/simple/', '')
         if package not in test.mock_pypi_available:
-            raise urllib2.HTTPError(
+            raise HTTPError(
                 url, 404,
                 'HTTP Error 404: Not Found (%s does not have any releases)'
                 % package, None, None)
         else:
             answer = ' '.join(test.mock_pypi_available)
-        return StringIO.StringIO(buf=answer)
+        return StringIO(buf=answer)
 
     urllib2.urlopen = _mock_urlopen
 

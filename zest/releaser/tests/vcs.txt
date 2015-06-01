@@ -178,7 +178,7 @@ Setting it sets it in the correct Python file:
     >>> print(open('some_file.py').read())
     import something
     __version__ = '2.1'
-    print(something.else)
+    print('something.else')
 
 
 Version corner cases
