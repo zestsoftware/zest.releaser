@@ -22,7 +22,7 @@ monkeypatching for us:
 
     >>> from six.moves.urllib import request as urllib2
     >>> urllib2.urlopen
-    <function _mock_urlopen at ...>
+    <function ..._mock_urlopen at ...>
 
 There's a mock list of packages that our mock pypi provides:
 
@@ -37,6 +37,8 @@ Search a non-existing package:
 Now search for an "existing" package:
 
     >>> mock_pypi_available.append('zest.releaser')
+    >>> 'zest.releaser' in mock_pypi_available
+    True
     >>> release.package_in_pypi('zest.releaser')
     True
 

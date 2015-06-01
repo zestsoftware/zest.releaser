@@ -42,7 +42,7 @@ We can update commit messages based on what we find in ``setup.cfg``::
     >>> lines = [
     ...     "[zest.releaser]",
     ...     "extra-message = Aargh!"]
-    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> dont_care = open('setup.cfg', 'w').write('\n'.join(lines))
     >>> base = baserelease.Basereleaser()
     >>> print(base.update_commit_message(u'Ni!'))
     Ni!

@@ -204,7 +204,7 @@ created:
     >>> open('CHANGES.txt') # Nope, doesn't exist.
     Traceback (most recent call last):
     ...
-    IOError: [Errno 2] No such file or directory: 'CHANGES.txt'
+    FileNotFoundError: [Errno 2] No such file or directory: 'CHANGES.txt'
 
 Re-instate the history file again, but omit the restructuredtext header line:
 
