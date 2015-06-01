@@ -20,10 +20,12 @@ def main():
         found = utils.get_last_tag(vcs)
     name = vcs.name
     full_tag = vcs.tag_url(found)
-    logger.debug("Picked tag %r for %s (currently at %r).",
-                 full_tag, name, vcs.version)
-    logger.info("Showing differences from the last commit against tag %s",
-                full_tag)
+    logger.debug(u"Picked tag {0!r} for {1} (currently at {2!r}).".format(
+                 full_tag, name, vcs.version))
+    logger.info(
+        u"Showing differences from the last commit against tag {0}".format(
+            full_tag
+        ))
     diff_command = vcs.cmd_diff_last_commit_against_tag(found)
     print(diff_command)
     print(execute_command(diff_command))

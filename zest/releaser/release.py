@@ -13,12 +13,12 @@ DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
-    'workingdir': 'Original working directory',
-    'name': 'Name of the project being released',
-    'tagdir': '''Directory where the tag checkout is placed (*if* a tag
+    'workingdir': u'Original working directory',
+    'name': u'Name of the project being released',
+    'tagdir': u'''Directory where the tag checkout is placed (*if* a tag
     checkout has been made)''',
-    'version': "Version we're releasing",
-    'tag_already_exists': "Internal detail, don't touch this :-)",
+    'version': u"Version we're releasing",
+    'tag_already_exists': u"Internal detail, don't touch this :-)",
 }
 
 logger = logging.getLogger(__name__)
@@ -26,12 +26,12 @@ logger = logging.getLogger(__name__)
 
 def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
-    url = 'https://pypi.python.org/simple/%s' % package
+    url = u'https://pypi.python.org/simple/{0!s}'.format(package)
     try:
         urllib2.urlopen(url)
         return True
     except urllib2.HTTPError, e:
-        logger.debug("Package not found on pypi: %s", e)
+        logger.debug(u"Package not found on pypi: {0!s}".format(e))
         return False
 
 
@@ -59,7 +59,7 @@ class Releaser(baserelease.Basereleaser):
         """Just grab the version"""
         version = self.vcs.version
         if not version:
-            logger.critical("No version detected, so we can't do anything.")
+            logger.critical(u"No version detected, so we can't do anything.")
             sys.exit(1)
         self.data['version'] = version
 
@@ -68,8 +68,8 @@ class Releaser(baserelease.Basereleaser):
         version = self.data['version']
         if self.vcs.tag_exists(version):
             self.data['tag_already_exists'] = True
-            q = ("There is already a tag %s, show "
-                 "if there are differences?" % version)
+            q = (u"There is already a tag {0}, show "
+                 u"if there are differences?").format(version)
             if utils.ask(q):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(
                     version)
@@ -82,21 +82,21 @@ class Releaser(baserelease.Basereleaser):
         if self.data['tag_already_exists']:
             return
         cmds = self.vcs.cmd_create_tag(self.data['version'])
-        if not isinstance(cmds, list):
-            cmds = [cmds]
         if len(cmds) == 1:
-            print("Tag needed to proceed, you can use the following command:")
+            print(u"Tag needed to proceed, you can use the following command:")
         for cmd in cmds:
-            print(cmd)
-            if utils.ask("Run this command"):
+            print(utils.cmd_to_text(cmd))
+            if utils.ask(u"Run this command"):
                 print(execute_command(cmd))
             else:
                 # all commands are needed in order to proceed normally
-                print("Please create a tag for %s yourself and rerun." %
-                      (self.data['version'],))
+                print(
+                    u"Please create a tag for {0} yourself and rerun.".format(
+                        self.data['version']
+                    ))
                 sys.exit(1)
         if not self.vcs.tag_exists(self.data['version']):
-            print("\nFailed to create tag %s!" % (self.data['version'],))
+            print(u"\nFailed to create tag {0}!".format(self.data['version']))
             sys.exit(1)
 
     def _pypi_command(self, command):
@@ -111,14 +111,15 @@ class Releaser(baserelease.Basereleaser):
             # cautious.
             result = utils.execute_command(
                 command, allow_retry=True,
-                fail_message="Package upload may have failed.")
+                fail_message=u"Package upload may have failed.")
         except utils.CommandException:
-            logger.error("Command failed: %r", command)
+            logger.error(u"Command failed: %r", command)
             tagdir = self.data.get('tagdir')
             if tagdir:
-                logger.info("Note: we have placed a fresh tag checkout "
-                            "in %s. You can retry uploading from there "
-                            "if needed.", tagdir)
+                logger.info((
+                    u"Note: we have placed a fresh tag checkout in {0}. You "
+                    u"can retry uploading from there if needed."
+                    ).format(tagdir))
             sys.exit(1)
         return result
 
@@ -126,20 +127,24 @@ class Releaser(baserelease.Basereleaser):
         # See if creating an sdist (and maybe a wheel) actually works.
         # Also, this makes the sdist (and wheel) available for plugins.
         # And for twine, who will just upload the created files.
-        logger.info(
-            "Making a source distribution of a fresh tag checkout (in %s).",
-            self.data['tagdir'])
-        result = utils.execute_command(utils.setup_py('sdist'))
+        logger.info((
+            u"Making a source distribution of a fresh tag checkout (in {0})."
+            ).format(self.data['tagdir']))
+        result = utils.execute_command(utils.setup_py([u'sdist']))
         utils.show_interesting_lines(result)
         if self.pypiconfig.create_wheel():
-            logger.info("Making a wheel of a fresh tag checkout (in %s).",
-                        self.data['tagdir'])
-            result = utils.execute_command(utils.setup_py('bdist_wheel'))
+            logger.info(
+                u"Making a wheel of a fresh tag checkout (in {0}).".format(
+                    self.data['tagdir']
+                ))
+            result = utils.execute_command(utils.setup_py([u'bdist_wheel']))
         utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
-            logger.warn("You must have a properly configured %s file in "
-                        "your home dir to upload to a package index.",
-                        pypi.DIST_CONFIG_FILE)
+            logger.warn((
+                u"You must have a properly configured %s file in your home "
+                u"dir to upload to a package index.").format(
+                    pypi.DIST_CONFIG_FILE
+                ))
             return
 
         # If twine is available, we prefer it for uploading.  But:
@@ -150,12 +155,12 @@ class Releaser(baserelease.Basereleaser):
         # First ask if we want to upload to pypi.
         use_pypi = package_in_pypi(package)
         if use_pypi:
-            logger.info("This package is registered on PyPI.")
+            logger.info(u"This package is registered on PyPI.")
         else:
-            logger.warn("This package is NOT registered on PyPI.")
+            logger.warn(u"This package is NOT registered on PyPI.")
             if use_twine:
-                logger.warn("Please login and manually register this "
-                            "package on PyPI first.")
+                logger.warn(u"Please login and manually register this "
+                            u"package on PyPI first.")
 
         # Run extra entry point
         self._run_hooks('before_upload')
@@ -182,9 +187,9 @@ class Releaser(baserelease.Basereleaser):
                 # package we default to False here.
                 default = False
                 exact = True
-            if utils.ask("Register and upload to PyPI", default=default,
+            if utils.ask(u"Register and upload to PyPI", default=default,
                          exact=exact):
-                logger.info("Running: %s", shell_command)
+                logger.info(u"Running: {0}".format(shell_command))
                 self._pypi_command(shell_command)
 
         # The user may have defined other servers to upload to.
@@ -210,9 +215,9 @@ class Releaser(baserelease.Basereleaser):
                 # package we default to False here.
                 default = False
                 exact = True
-            if utils.ask("Register and upload to %s" % server,
+            if utils.ask(u"Register and upload to {0}".format(server),
                          default=default, exact=exact):
-                logger.info("Running: %s", shell_command)
+                logger.info(u"Running: {0}".format(shell_command))
                 self._pypi_command(shell_command)
 
     def _release(self):
@@ -230,23 +235,26 @@ class Releaser(baserelease.Basereleaser):
         else:
             default_answer = self.pypiconfig.want_release()
 
-        if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
-                         "server upload)", default=default_answer):
+        if not utils.ask(u"Check out the tag (for tweaks or pypi/distutils "
+                         u"server upload)", default=default_answer):
             return
 
         package = self.vcs.name
         version = self.data['version']
-        logger.info("Doing a checkout...")
+        logger.info(u"Doing a checkout...")
         self.vcs.checkout_from_tag(version)
         # ^^^ This changes directory to a temp folder.
         self.data['tagdir'] = os.path.realpath(os.getcwd())
-        logger.info("Tag checkout placed in %s", self.data['tagdir'])
+        logger.info(u"Tag checkout placed in {0}".format(self.data['tagdir']))
 
         # Possibly fix setup.cfg.
         if self.setup_cfg.has_bad_commands():
-            logger.info("This is not advisable for a release.")
-            if utils.ask("Fix %s (and commit to tag if possible)" %
-                         self.setup_cfg.config_filename, default=True):
+            logger.info(u"This is not advisable for a release.")
+            if utils.ask(
+                    u"Fix {0} (and commit to tag if possible)".format(
+                        self.setup_cfg.config_filename
+                    ), default=True):
+
                 # Fix the setup.cfg in the current working directory
                 # so the current release works well.
                 self.setup_cfg.fix_config()
@@ -270,12 +278,13 @@ class Releaser(baserelease.Basereleaser):
                 # subversion.
                 if self.vcs.internal_filename == '.svn':
                     command = self.vcs.cmd_commit(
-                        "Fixed %s on tag for release" %
-                        self.setup_cfg.config_filename)
+                        u"Fixed {0} on tag for release".format(
+                            self.setup_cfg.config_filename
+                        ))
                     print(execute_command(command))
                 else:
-                    logger.debug("Not committing in non-svn repository as "
-                                 "this is not needed or may be harmful.")
+                    logger.debug(u"Not committing in non-svn repository as "
+                                 u"this is not needed or may be harmful.")
 
         # Run extra entry point
         self._run_hooks('after_checkout')
@@ -303,4 +312,4 @@ def main(return_tagdir=False):
     else:
         tagdir = releaser.data.get('tagdir')
         if tagdir:
-            logger.info("Reminder: tag checkout is in %s", tagdir)
+            logger.info(u"Reminder: tag checkout is in {0}".format(tagdir))

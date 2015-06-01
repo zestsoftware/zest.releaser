@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Hg(BaseVersionControl):
     """Command proxy for Mercurial"""
-    internal_filename = '.hg'
+    internal_filename = u'.hg'
     setuptools_helper_package = 'setuptools_hg'
 
     @property
@@ -25,10 +25,11 @@ class Hg(BaseVersionControl):
 
     def available_tags(self):
         tag_info = execute_command([u'hg', u'tags'])
-        tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
+        tags = [line[:line.find(u' ')] for line in tag_info.split(u'\n')]
         tags = [tag for tag in tags if tag]
-        tags.remove('tip')  # Not functional for us
-        logger.debug("Available tags: %r", tags)
+        while u'tip' in tags:
+            tags.remove(u'tip')  # Not functional for us
+        logger.debug(u"Available tags: {0}".format(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):
@@ -48,16 +49,16 @@ class Hg(BaseVersionControl):
 
     def cmd_diff_last_commit_against_tag(self, version):
         current_revision = execute_command([u'hg', u'identify'])
-        current_revision = current_revision.split(' ')[0]
+        current_revision = current_revision.split(u' ')[0]
         # + at the end of the revision denotes uncommitted changes
-        current_revision = current_revision.rstrip('+')
+        current_revision = current_revision.rstrip(u'+')
         return [u"hg", u"diff", u"-r", version, u"-r", current_revision]
 
     def cmd_log_since_tag(self, version):
         current_revision = execute_command([u'hg', u'identify'])
-        current_revision = current_revision.split(' ')[0]
+        current_revision = current_revision.split(u' ')[0]
         # + at the end of the revision denotes uncommitted changes
-        current_revision = current_revision.rstrip('+')
+        current_revision = current_revision.rstrip(u'+')
         return [u"hg", u"log", u"-r", version, "-r", current_revision]
 
     def cmd_create_tag(self, version):
@@ -71,7 +72,7 @@ class Hg(BaseVersionControl):
 
     def checkout_from_tag(self, version):
         package = self.name
-        prefix = '%s-%s-' % (package, version)
+        prefix = u'{0}-{1}-'.format(package, version)
         # Not all hg versions can do a checkout in an existing or even
         # just in the current directory.
         tagdir = tempfile.mktemp(prefix=prefix)

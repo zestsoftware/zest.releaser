@@ -37,7 +37,7 @@ Diff and commit
 Make a change:
 
     >>> setup_py = os.path.join(bzrsourcedir, 'setup.py')
-    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     [u'bzr', u'diff']
@@ -83,7 +83,7 @@ Create a tag and it will show up:
     ...
     RED Created tag 0.1.
     >>> checkout.available_tags()
-    ['0.1']
+    [u'0.1']
 
 A specific tag url is important for subversion, but nonsensical for
 bazaar.  We just return the version as-is:
@@ -93,7 +93,7 @@ bazaar.  We just return the version as-is:
 
 Make and commit a small change:
 
-    >>> open(setup_py, 'a').write('\nb = 3\n')
+    >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print(execute_command(cmd))
     RED Committing to: TESTTEMP/tha.example-bzr/

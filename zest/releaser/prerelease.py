@@ -8,30 +8,31 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import read_text_file
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
 
 logger = logging.getLogger(__name__)
 
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
-HISTORY_HEADER = '%(new_version)s (%(today)s)'
-PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
+HISTORY_HEADER = u'{new_version:s} ({today:s})'
+PRERELEASE_COMMIT_MSG = 'Preparing release {new_version:s}'
 
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
-    'workingdir': 'Original working directory',
-    'name': 'Name of the project being released',
-    'today': 'Date string used in history header',
-    'new_version': 'New version (so 1.0 instead of 1.0dev)',
-    'history_file': 'Filename of history/changelog file (when found)',
-    'history_lines': 'List with all history file lines (when found)',
+    'workingdir': u'Original working directory',
+    'name': u'Name of the project being released',
+    'today': u'Date string used in history header',
+    'new_version': u'New version (so 1.0 instead of 1.0dev)',
+    'history_file': u'Filename of history/changelog file (when found)',
+    'history_lines': u'List with all history file lines (when found)',
     'nothing_changed_yet': (
-        'First line in new changelog section, '
-        'warn when this is still in there before releasing'),
-    'original_version': 'Version before prereleasing (e.g. 1.0dev)',
-    'commit_msg': 'Message template used when committing',
-    'history_header': 'Header template used for 1st history header',
+        u'First line in new changelog section, '
+        u'warn when this is still in there before releasing'),
+    'original_version': u'Version before prereleasing (e.g. 1.0dev)',
+    'commit_msg': u'Message template used when committing',
+    'history_header': u'Header template used for 1st history header',
 }
 
 
@@ -55,10 +56,10 @@ class Prereleaser(baserelease.Basereleaser):
     def prepare(self):
         """Prepare self.data by asking about new version etc."""
         if not utils.sanity_check(self.vcs):
-            logger.critical("Sanity check failed.")
+            logger.critical(u"Sanity check failed.")
             sys.exit(1)
         if not utils.check_recommended_files(self.data, self.vcs):
-            logger.debug("Recommended files check failed.")
+            logger.debug(u"Recommended files check failed.")
             sys.exit(1)
         self._grab_version()
         self._grab_history()
@@ -72,7 +73,7 @@ class Prereleaser(baserelease.Basereleaser):
     def _grab_version(self):
         """Set the version to a non-development version."""
         original_version = self.vcs.version
-        logger.debug("Extracted version: %s", original_version)
+        logger.debug(u"Extracted version: {0}".format(original_version))
         if original_version is None:
             logger.critical('No version found.')
             sys.exit(1)
@@ -87,9 +88,9 @@ class Prereleaser(baserelease.Basereleaser):
         if self.data['new_version'] != self.data['original_version']:
             # self.vcs.version writes it to the file it got the version from.
             self.vcs.version = self.data['new_version']
-            logger.info("Changed version from %r to %r",
+            logger.info(u"Changed version from {0!r} to {1!r}".format(
                         self.data['original_version'],
-                        self.data['new_version'])
+                        self.data['new_version']))
 
     def _grab_history(self):
         """Calculate the needed history/changelog changes
@@ -104,29 +105,29 @@ class Prereleaser(baserelease.Basereleaser):
             default_location = config.get('zest.releaser', 'history_file')
         history_file = self.vcs.history_file(location=default_location)
         if not history_file:
-            logger.warn("No history file found")
+            logger.warn(u"No history file found")
             self.data['history_lines'] = None
             self.data['history_file'] = None
             return
-        logger.debug("Checking %s", history_file)
-        history_lines = open(history_file).read().split('\n')
-        # ^^^ TODO: .readlines()?
+        logger.debug(u"Checking {0}".format(history_file))
+        history_lines = read_text_file(history_file).split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
-            logger.error("No detectable version heading in the history "
-                         "file %s", history_file)
+            logger.error(u"No detectable version heading in the history "
+                         u"file {0}".format(history_file))
             sys.exit(1)
-        good_heading = self.data['history_header'] % self.data
+        good_heading = self.data['history_header'].format(**self.data)
         # ^^^ history_header is a string with %(abc)s replacements.
         line = headings[0]['line']
         previous = history_lines[line]
         history_lines[line] = good_heading
-        logger.debug("Set heading from %r to %r.", previous, good_heading)
+        logger.debug(u"Set heading from {0!r} to {1!r}.".format(
+            previous, good_heading))
         history_lines[line + 1] = utils.fix_rst_heading(
             heading=good_heading,
             below=history_lines[line + 1])
-        logger.debug("Set line below heading to %r",
-                     history_lines[line + 1])
+        logger.debug(u"Set line below heading to {0!r}".format(
+                     history_lines[line + 1]))
         self.data['history_lines'] = history_lines
         self.data['history_file'] = history_file
         # TODO: add line number where an extra changelog entry can be
@@ -141,12 +142,14 @@ class Prereleaser(baserelease.Basereleaser):
             end = -1
         for line in history_lines[start:end]:
             if self.data['nothing_changed_yet'] in line:
-                if not utils.ask(
-                        "WARNING: Changelog contains %r. Are you sure you "
-                        "want to release?" % self.data['nothing_changed_yet'],
+                if not utils.ask((
+                        u"WARNING: Changelog contains {0!r}. Are you sure you "
+                        u"want to release?"
+                        ).format(self.data['nothing_changed_yet']),
                         default=False):
-                    logger.info("You can use the 'lasttaglog' command to "
-                                "see the commits since the last tag.")
+
+                    logger.info(u"You can use the 'lasttaglog' command to "
+                                u"see the commits since the last tag.")
                     sys.exit(0)
                 break
 
@@ -154,10 +157,10 @@ class Prereleaser(baserelease.Basereleaser):
         """Write previously-calculated history lines back to the file"""
         if self.data['history_file'] is None:
             return
-        contents = '\n'.join(self.data['history_lines'])
+        contents = u'\n'.join(self.data['history_lines'])
         history = self.data['history_file']
         open(history, 'w').write(contents)
-        logger.info("History file %s updated.", history)
+        logger.info(u"History file {0} updated.".format(history))
 
     def _diff_and_commit(self):
         diff_cmd = self.vcs.cmd_diff()
@@ -166,13 +169,13 @@ class Prereleaser(baserelease.Basereleaser):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can
             # contain every kind of character.  The rest is mostly ascii.
-            print("Diff results:")
+            print(u"Diff results:")
             print(diff)
         else:
             # Common case
-            logger.info("The '%s':\n\n%s\n", diff_cmd, diff)
-        if utils.ask("OK to commit this"):
-            msg = self.data['commit_msg'] % self.data
+            logger.info(u"The '{0}':\n\n{1}\n".format(diff_cmd, diff))
+        if utils.ask(u"OK to commit this"):
+            msg = self.data['commit_msg'].format(**self.data)
             msg = self.update_commit_message(msg)
             commit_cmd = self.vcs.cmd_commit(msg)
             commit = execute_command(commit_cmd)

@@ -17,7 +17,7 @@ class Basereleaser(object):
             utils.AUTO_RESPONSE = True
         if utils.TESTMODE:
             pypirc_old = pkg_resources.resource_filename(
-                'zest.releaser.tests', 'pypirc_old.txt')
+                'zest.releaser.tests', u'pypirc_old.txt')
             self.pypiconfig = pypi.PypiConfig(pypirc_old)
         else:
             self.pypiconfig = pypi.PypiConfig()
@@ -42,5 +42,5 @@ class Basereleaser(object):
     def update_commit_message(self, msg):
         extra_message = self.pypiconfig.extra_message()
         if extra_message:
-            msg += '\n\n%s' % extra_message
+            msg += u'\n\n{0}'.format(extra_message)
         return msg

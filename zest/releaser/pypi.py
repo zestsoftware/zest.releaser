@@ -58,21 +58,21 @@ class SetupConfig(object):
             # Might still be empty.
             value = self.config.get('egg_info', 'tag_build')
             if value:
-                logger.warn("%s has [egg_info] tag_build set to %r",
+                logger.warn(u"%s has [egg_info] tag_build set to %r",
                             self.config_filename, value)
                 bad = True
         # Check 2.
         if self.config.has_option('egg_info', 'tag_svn_revision'):
             if self.config.getboolean('egg_info', 'tag_svn_revision'):
                 value = self.config.get('egg_info', 'tag_svn_revision')
-                logger.warn("%s has [egg_info] tag_svn_revision set to %r",
+                logger.warn(u"%s has [egg_info] tag_svn_revision set to %r",
                             self.config_filename, value)
                 bad = True
         return bad
 
     def fix_config(self):
         if not self.has_bad_commands():
-            logger.warn("Cannot fix already fine %s.", self.config_filename)
+            logger.warn(u"Cannot fix already fine %s.", self.config_filename)
             return
         if self.config.has_option('egg_info', 'tag_build'):
             self.config.set('egg_info', 'tag_build', '')
@@ -262,7 +262,7 @@ class PypiConfig(object):
             [zest.releaser]
             extra-message = [ci skip]
         """
-        default = ''
+        default = u''
         if self.config is None:
             return default
         try:
