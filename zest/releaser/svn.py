@@ -11,15 +11,15 @@ logger = logging.getLogger(__name__)
 
 class Subversion(BaseVersionControl):
     """Command proxy for Subversion"""
-    internal_filename = '.svn'
+    internal_filename = u'.svn'
     setuptools_helper_package = 'setuptools_subversion'
 
     def _svn_info(self):
         """Return svn url"""
         our_info = execute_command([u'svn', u'info'])
         if not hasattr(self, '_cached_url'):
-            url = [line for line in our_info.split('\n')
-                   if line.startswith('URL')][0]
+            url = [line for line in our_info.split(u'\n')
+                   if line.startswith(u'URL')][0]
             # In English, you have 'URL:', in French 'URL :'
             self._cached_url = url.split(':', 1)[1].strip()
         return self._cached_url
@@ -28,19 +28,19 @@ class Subversion(BaseVersionControl):
         base = self._svn_info()
         # Note: slashes are used to prevent problems with 'tha.tagfinder'-like
         # project names...
-        for remove in ['/trunk', '/tags', '/branches', '/tag', '/branch']:
+        for remove in [u'/trunk', u'/tags', u'/branches', u'/tag', u'/branch']:
             base = base.rsplit(remove, 1)[0]
-        if not base.endswith('/'):
-            base += '/'
-        logger.debug("Base url is %s", base)
+        if not base.endswith(u'/'):
+            base += u'/'
+        logger.debug(u"Base url is {0}".format(base))
         return base
 
     def _name_from_svn(self):
         base = self._base_from_svn()
-        parts = base.split('/')
+        parts = base.split(u'/')
         parts = [p for p in parts if p]
         name = parts[-1]
-        logger.debug("Name is %s", name)
+        logger.debug(u"Name is {0}".format(name))
         return name
 
     @property
@@ -50,11 +50,11 @@ class Subversion(BaseVersionControl):
         Normally the plural /tags, but some projects have the singular /tag.
 
         """
-        default_plural = 'tags'
-        fallback_singular = 'tag'
+        default_plural = u'tags'
+        fallback_singular = u'tag'
         # svn 1.7 introduced a slightly different message and a warning code.
-        failure_messages = ["non-existent in that revision",
-                            "W160013",
+        failure_messages = [u"non-existent in that revision",
+                            u"W160013",
                             ]
         base = self._base_from_svn()
         tag_info = execute_command([
@@ -64,7 +64,8 @@ class Subversion(BaseVersionControl):
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
             return default_plural
-        logger.debug("tags dir does not exist at %s%s", base, default_plural)
+        logger.debug(
+            u"tags dir does not exist at {0}{1}".format(base, default_plural))
 
         tag_info = execute_command([
             u'svn', u'list', u'{0}{1}'.format(base, fallback_singular)
@@ -73,8 +74,8 @@ class Subversion(BaseVersionControl):
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
             return fallback_singular
-        logger.debug("tags dir does not exist at %s%s, either", base,
-                     fallback_singular)
+        logger.debug(u"tags dir does not exist at {0}{1}, either".format(
+            base, fallback_singular))
         return None
 
     @property
@@ -90,35 +91,35 @@ class Subversion(BaseVersionControl):
         tags_name = self._tags_name
         if tags_name is None:
             # Suggest to create a tags dir with the default plural /tags name.
-            print("tags dir does not exist at %s" % base + 'tags')
-            if utils.ask("Shall I create it"):
+            print(u"tags dir does not exist at {0}tags".format(base))
+            if utils.ask(u"Shall I create it"):
                 cmd = [
                     u'svn', u'mkdir', u'{0}tags'.format(base),
                     u'-m', u'Creating tags directory.'
                     ]
-                logger.info("Running %r", cmd)
+                logger.info(u"Running {0!r}".format(cmd))
                 print(execute_command(cmd))
                 tags_name = self._tags_name
-                assert tags_name == 'tags'
+                assert tags_name == u'tags'
             else:
                 sys.exit(0)
 
         tag_info = execute_command([u'svn', u'list', u'{0}{1}'.format(base, tags_name)])
         network_errors = [
-            'Could not resolve hostname',
-            'E670008',
-            'Repository moved',
-            'Unable to connect',
+            u'Could not resolve hostname',
+            u'E670008',
+            u'Repository moved',
+            u'Unable to connect',
         ]
         found_errors = [1 for network_error in network_errors
                         if network_error in tag_info]
         if found_errors:
-            logger.error('Network problem: %s', tag_info)
+            logger.error(u'Network problem: {0}'.format(tag_info))
             sys.exit(1)
-        tags = [line.replace('/', '').strip()
-                for line in tag_info.split('\n')]
+        tags = [line.replace(u'/', u'').strip()
+                for line in tag_info.split(u'\n')]
         tags = [tag for tag in tags if tag]  # filter empty ones
-        logger.debug("Available tags: %r", tags)
+        logger.debug(u"Available tags: {0!r}".format(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):
@@ -146,32 +147,35 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = execute_command('svn info %s' % tag_url)
+        tag_info = execute_command([u'svn', u'info', tag_url])
         # Search for: Last Changed Rev: 42761
         revision = None
-        for line in tag_info.split('\n'):
+        for line in tag_info.split(u'\n'):
             line = line.lower()
-            if len(line.split(':')) == 2:
+            if len(line.split(u':')) == 2:
                 revision = line.split(':')[-1].strip()
         if not revision:
-            logger.error('Could not find revision when tag was made: %s',
-                         tag_info)
+            logger.error(
+                u'Could not find revision when tag was made: {0}'.format(
+                    tag_info
+                ))
             sys.exit(1)
-        return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
+        return [u"svn", u"--non-interactive", u"log"
+                u"-r{0}:HEAD".format(revision), url]
 
     def cmd_create_tag(self, version):
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        return 'svn cp %s %s -m "Tagging %s"' % (url, tag_url, version)
+        return [[u'svn', u'cp', url, tag_url, u'-m',
+                 u"Tagging {0}".format(version)]]
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         tag_url = self.tag_url(version)
-        return 'svn co %s %s' % (tag_url, checkout_dir)
+        return [[u'svn', u'co', tag_url, checkout_dir]]
 
     def is_clean_checkout(self):
-        """Is this a clean checkout?
-        """
-        if self._svn_info().startswith(self._base_from_svn() + 'tag'):
+        """Is this a clean checkout?"""
+        if self._svn_info().startswith(self._base_from_svn() + u'tag'):
             # We should not commit on a tag.
             return False
         # We could do 'svn status --ignore-externals --quiet' and

@@ -17,7 +17,7 @@ __version__\W*=\W*   # '__version__ =  ' with possible whitespace
 \d                   # Some digit, start of version.
 """, re.VERBOSE)
 
-TXT_EXTENSIONS = ['rst', 'txt', 'markdown', 'md']
+TXT_EXTENSIONS = [u'rst', u'txt', u'markdown', u'md']
 
 logger = logging.getLogger(__name__)
 
@@ -39,24 +39,24 @@ class BaseVersionControl(object):
         return True
 
     def get_setup_py_version(self):
-        if os.path.exists('setup.py'):
+        if os.path.exists(u'setup.py'):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
             execute_command(utils.setup_py([u'egg_info']))
             version = execute_command(
-                utils.setup_py('--version')).splitlines()[0]
-            if 'Traceback' in version:
+                utils.setup_py([u'--version'])).split(u'\n')[0]
+            if u'Traceback' in version:
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
-                logger.critical('The setup.py of this package has an error:')
+                logger.critical(u'The setup.py of this package has an error:')
                 print(version)
-                logger.critical('No version found.')
+                logger.critical(u'No version found.')
                 sys.exit(1)
             return utils.strip_version(version)
 
     def get_setup_py_name(self):
-        if os.path.exists('setup.py'):
+        if os.path.exists(u'setup.py'):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
@@ -64,20 +64,19 @@ class BaseVersionControl(object):
             return execute_command(utils.setup_py([u'--name'])).strip()
 
     def get_version_txt_version(self):
-        filenames = ['version']
+        filenames = [u'version']
         for extension in TXT_EXTENSIONS:
-            filenames.append('.'.join(['version', extension]))
+            filenames.append(os.path.extsep.join([u'version', extension]))
         version_file = self.filefind(filenames)
         if version_file:
-            f = open(version_file, 'r')
-            version = f.read()
+            version = read_text_file(version_file)
             return utils.strip_version(version)
 
     def get_python_file_version(self):
         setup_cfg = pypi.SetupConfig()
         if not setup_cfg.python_file_with_version():
             return
-        lines = open(setup_cfg.python_file_with_version()).read().split('\n')
+        lines = read_text_file(setup_cfg.python_file_with_version()).split('\n')
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
             if match:
@@ -104,27 +103,30 @@ class BaseVersionControl(object):
         files = self.list_files()
         found = []
         for fullpath in files:
-            if fullpath.lower() == 'debian/changelog':
-                logger.debug(
-                    "Ignoring %s, unreadable (for us) debian changelog",
-                    fullpath)
+            if fullpath.lower() == u'debian/changelog':
+                logger.debug((
+                    u"Ignoring {0}, unreadable (for us) debian "
+                    u"changelog"
+                    ).format(fullpath))
                 continue
             filename = os.path.basename(fullpath)
             if filename.lower() in names:
-                logger.debug("Found %s", fullpath)
+                logger.debug(u"Found {0}".format(fullpath))
                 if not os.path.exists(fullpath):
                     # Strange.  It at least happens in the tests when
                     # we deliberately remove a CHANGES.txt file.
-                    logger.warn("Found file %s in version control but not on "
-                                "file execute_command.", fullpath)
+                    logger.warn((
+                        u"Found file {0} in version control but not on "
+                        u"file execute_command.").format(fullpath))
                     continue
                 found.append(fullpath)
         if not found:
             return
         if len(found) > 1:
             found.sort(key=len)
-            logger.warn("Found more than one file, picked the shortest one to "
-                        "change: %s", ', '.join(found))
+            logger.warn((
+                u"Found more than one file, picked the shortest one to "
+                u"change: {0}").format(u', '.join(found)))
         return found[0]
 
     def history_file(self, location=None):
@@ -135,13 +137,15 @@ class BaseVersionControl(object):
             if os.path.exists(location):
                 return location
             else:
-                logger.warn("The specified history file %s doesn't exist",
-                            location)
+                logger.warn(
+                    u"The specified history file {0} doesn't exist".format(
+                        location
+                    ))
         filenames = []
-        for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
+        for base in [u'CHANGES', u'HISTORY', u'CHANGELOG']:
             filenames.append(base)
             for extension in TXT_EXTENSIONS:
-                filenames.append('.'.join([base, extension]))
+                filenames.append(u'.'.join([base, extension]))
         history = self.filefind(filenames)
         if history:
             return history
@@ -181,10 +185,11 @@ class BaseVersionControl(object):
         attribute. The second one is some version.txt that gets read by
         setup.py. The third is directly in setup.py.
         """
+
         if self.get_python_file_version():
             setup_cfg = pypi.SetupConfig()
             filename = setup_cfg.python_file_with_version()
-            lines = open(filename).read().split('\n')
+            lines = read_text_file(filename).split('\n')
             for index, line in enumerate(lines):
                 match = UNDERSCORED_VERSION_PATTERN.search(line)
                 if match:
@@ -194,9 +199,11 @@ class BaseVersionControl(object):
             logger.info("Set __version__ in %s to %r", filename, version)
             return
 
-        version_filenames = ['version']
+        version_filenames = [u'version']
         for extension in TXT_EXTENSIONS:
-            version_filenames.append('.'.join(['version', extension]))
+            version_filenames.append(
+                os.path.extsep.join([u'version', extension])
+                )
         versionfile = self.filefind(version_filenames)
         if versionfile:
             # We have a version.txt file but does it match the setup.py
@@ -204,8 +211,10 @@ class BaseVersionControl(object):
             setup_version = self.get_setup_py_version()
             if not setup_version or (setup_version ==
                                      self.get_version_txt_version()):
-                open(versionfile, 'w').write(version + '\n')
-                logger.info("Changed %s to %r", versionfile, version)
+                open(versionfile, 'w').write(version + u'\n')
+                logger.info(
+                    u"Changed {0} to {1!r}".format(versionfile, version)
+                    )
                 return
 
         good_version = "version = '%s'" % version
@@ -227,10 +236,10 @@ class BaseVersionControl(object):
                 return
 
         logger.error(
-            "We could read a version from setup.py, but could not write it " +
-            "back. See " +
-            "http://zestreleaser.readthedocs.org/en/latest/versions.html " +
-            "for hints.")
+            u"We could read a version from setup.py, but could not write it "
+            u"back. See "
+            u"http://zestreleaser.readthedocs.org/en/latest/versions.html "
+            u"for hints.")
         raise RuntimeError("Cannot set version")
 
     version = property(_extract_version, _update_version)
@@ -283,7 +292,7 @@ class BaseVersionControl(object):
 
     def checkout_from_tag(self, version):
         package = self.name
-        prefix = '%s-%s-' % (package, version)
+        prefix = u'{0}-{1}-'.format(package, version)
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmds = self.cmd_checkout_from_tag(version, tagdir)
@@ -309,7 +318,7 @@ class BaseVersionControl(object):
         works is handy for the vcs.txt tests.
         """
         files = []
-        for dirpath, dirnames, filenames in os.walk('.'):
+        for dirpath, dirnames, filenames in os.walk(u'.'):
             dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))

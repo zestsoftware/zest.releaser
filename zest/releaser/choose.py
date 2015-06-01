@@ -14,18 +14,18 @@ def version_control():
     """Return an object that provides the version control interface based
     on the detected version control system."""
     curdir_contents = os.listdir('.')
-    if '.svn' in curdir_contents:
+    if u'.svn' in curdir_contents:
         return svn.Subversion()
-    elif '.hg' in curdir_contents:
+    elif u'.hg' in curdir_contents:
         return hg.Hg()
-    elif '.bzr' in curdir_contents:
+    elif u'.bzr' in curdir_contents:
         return bzr.Bzr()
-    elif '.git' in curdir_contents:
+    elif u'.git' in curdir_contents:
         return git.Git()
     else:
         # Try finding an svn checkout *not* in the root.
         last_try = utils.execute_command([u"svn", u"info"])
-        if 'Repository' in last_try:
+        if u'Repository' in last_try:
             return svn.Subversion()
-        logger.critical('No version control system detected.')
+        logger.critical(u'No version control system detected.')
         sys.exit(1)

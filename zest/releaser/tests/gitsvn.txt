@@ -37,7 +37,7 @@ Diff and commit
 Make a change:
 
     >>> setup_py = os.path.join(gitsvnsourcedir, 'setup.py')
-    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     [u'git', u'diff']
@@ -93,7 +93,7 @@ Create a tag and it will show up (master diverges from trunk):
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
-    ['0.1']
+    [u'0.1']
 
 Create a tag and it will show up (master == trunk):
 

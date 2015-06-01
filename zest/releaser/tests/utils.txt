@@ -362,7 +362,7 @@ prefixed, so we handle it explicitly:
 
 Let's do a combination:
 
-    >>> message = """
+    >>> message = u"""
     ... Warn: What is the answer to life, the universe and everything?
     ...
     ... 41"""

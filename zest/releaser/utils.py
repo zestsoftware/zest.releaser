@@ -9,13 +9,18 @@ import shlex
 import subprocess
 import sys
 import textwrap
+
+from colorama import Fore
 import pkg_resources
+from pkg_resources import parse_version
+import six
+from six.moves import input
 from six.moves import shlex_quote
 
 
 logger = logging.getLogger(__name__)
 
-WRONG_IN_VERSION = ['svn', 'dev', '(']
+WRONG_IN_VERSION = [u'svn', u'dev', u'(']
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
@@ -27,6 +32,7 @@ if getattr(sys.stdin, 'encoding', None):
 OUTPUT_ENCODING = INPUT_ENCODING
 if getattr(sys.stdout, 'encoding', None):
     OUTPUT_ENCODING = sys.stdout.encoding
+ENCODING_HINTS = (b'# coding=', b'# -*- coding: ', b'# vim: set fileencoding=')
 
 
 def cmd_to_text(cmd):
@@ -44,6 +50,42 @@ def loglevel():
     return logging.INFO
 
 
+def read_text_file(filename, encoding=None):
+    # Unless specified manually, We have no way of knowing what text
+    # encoding this file may be in.
+    # The 'open' method uses the default system encoding to read text
+    # files in Python 3 or falls back to utf-8.
+    with open(filename, 'rb') as fh:
+        data = fh.read()
+
+    if encoding is not None:
+        return data.decode(encoding)
+
+    # Look for hints, PEP263-style
+    if data[:3] == b'\xef\xbb\xbf':
+        return data.decode('UTF-8')
+
+    data_len = len(data)
+    for canary in ENCODING_HINTS:
+        if canary in data:
+            pos = data.index(canary)
+            if pos > 1 and data[pos - 1] not in (b' ', b'\n', b'\r'):
+                continue
+            pos += len(canary)
+            coding = b''
+            while pos < data_len and data[pos] not in (b' ', b'\n'):
+                coding += data[pos]
+                pos += 1
+            encoding = coding.decode('ascii').strip()
+            try:
+                return data.decode(encoding)
+            except (LookupError, UnicodeError):
+                # Try the next one
+                pass
+
+    return data.decode('UTF-8')
+
+
 def strip_version(version):
     """Strip the version of all whitespace."""
     return version.strip().replace(' ', '')
@@ -53,9 +95,10 @@ def cleanup_version(version):
     """Check if the version looks like a development version."""
     for w in WRONG_IN_VERSION:
         if version.find(w) != -1:
-            logger.debug("Version indicates development: %s.", version)
+            logger.debug(
+                u"Version indicates development: {0}.".format(version))
             version = version[:version.find(w)].strip()
-            logger.debug("Removing debug indicators: %r", version)
+            logger.debug(u"Removing debug indicators: {0}".format(version))
         version = version.rstrip('.')  # 1.0.dev0 -> 1.0. -> 1.0
     return version
 
@@ -101,38 +144,42 @@ test_answer_book = AnswerBook()
 def get_input(question):
     if not TESTMODE:
         # Normal operation.
-        return raw_input(question).strip()
+        result = input(question)
+        if not isinstance(result, six.text_type):
+            result = result.decode(INPUT_ENCODING)
+        return result.strip()
     # Testing means no interactive input. Get it from answers_for_testing.
-    print("Question: %s" % question)
+    print(u"Question: {0}".format(question.strip()))
     answer = test_answer_book.get_next_answer()
-    if answer == '':
-        print("Our reply: <ENTER>")
+    if answer == u'':
+        print(u"Our reply: <ENTER>")
     else:
-        print("Our reply: %s" % answer)
+        print(u"Our reply: {0}".format(answer))
     return answer
 
 
 def ask_version(question, default=None):
     if AUTO_RESPONSE:
         if default is None:
-            msg = ("We cannot determine a default version, but "
-                   "we're running in --no-input mode. The original "
-                   "question: %s")
-            msg = msg % question
+            msg = (u"We cannot determine a default version, but "
+                   u"we're running in --no-input mode. The original "
+                   u"question: {0}")
+            msg = msg.format(question)
             raise RuntimeError(msg)
-        logger.debug("Auto-responding '%s' to the question below.", default)
+        logger.debug(
+            u"Auto-responding '{0}' to the question below.".format(default))
         logger.debug(question)
         return default
     if default:
-        question += " [%s]: " % default
+        question += u" [{0}]: ".format(default)
     else:
-        question += ": "
+        question += u": "
     while True:
         input_value = get_input(question)
         if input_value:
-            if input_value.lower() in ('y', 'n'):
+            if input_value.lower() in (u'y', u'n'):
                 # Please read the question.
-                print "y/n not accepted as version."
+                print(u"y/n not accepted as version.")
                 continue
             return input_value
         if default:
@@ -151,40 +198,40 @@ def ask(question, default=True, exact=False):
     """
     if AUTO_RESPONSE:
         if default is None:
-            msg = ("The question '%s' requires a manual answer, but "
-                   "we're running in --no-input mode.")
-            msg = msg % question
+            msg = (u"The question '{0}' requires a manual answer, but "
+                   u"we're running in --no-input mode.")
+            msg = msg.format(question)
             raise RuntimeError(msg)
-        logger.debug("Auto-responding '%s' to the question below.",
-                     default and "yes" or "no")
+        logger.debug(u"Auto-responding '{0}' to the question below.".format(
+            default and u"yes" or u"no"))
         logger.debug(question)
         return default
-    while True:
-        yn = 'y/n'
+    while 1:
+        yn = u'y/n'
         if default is True:
-            yn = 'Y/n'
+            yn = u'Y/n'
         if default is False:
-            yn = 'y/N'
-        q = question + " (%s)? " % yn
+            yn = u'y/N'
+        q = question + u" ({0})? ".format(yn)
         input_value = get_input(q)
         if input_value:
             answer = input_value
         else:
-            answer = ''
+            answer = u''
         if not answer and default is not None:
             return default
-        if exact and answer.lower() not in ('yes', 'no'):
-            print("Please explicitly answer yes/no in full "
-                  "(or accept the default)")
+        if exact and answer.lower() not in (u'yes', u'no'):
+            print(u"Please explicitly answer yes/no in full "
+                  u"(or accept the default)")
             continue
         if answer:
             answer = answer[0].lower()
-            if answer == 'y':
+            if answer == u'y':
                 return True
-            if answer == 'n':
+            if answer == u'n':
                 return False
         # We really want an answer.
-        print('Please explicitly answer y/n')
+        print(u'Please explicitly answer y/n')
         continue
 
 
@@ -196,7 +243,7 @@ def fix_rst_heading(heading, below):
     if len(below) == 0:
         return below
     first = below[0]
-    if first not in '-=`~':
+    if first not in u'-=`~':
         return below
     if not len(below) == len([char for char in below
                               if char == first]):
@@ -243,13 +290,13 @@ def extract_headings_from_history(history_lines):
                       'version': match.group('version').strip(),
                       'date': match.group('date'.strip())}
             headings.append(result)
-            logger.debug("Found heading: %r", result)
+            logger.debug(u"Found heading: {0!r}".format(result))
         if alt_match:
             result = {'line': line_number,
                       'version': alt_match.group('version').strip(),
                       'date': alt_match.group('date'.strip())}
             headings.append(result)
-            logger.debug("Found alternative heading: %r", result)
+            logger.debug(u"Found alternative heading: {0!r}".format(result))
         line_number += 1
     return headings
 
@@ -264,23 +311,23 @@ def show_interesting_lines(result):
         # warnings/errors, print complete result.
         print(result)
         if not ask(
-                "There were errors or warnings. Are you sure "
-                "you want to continue?", default=False):
+                u"There were errors or warnings. Are you sure "
+                u"you want to continue?", default=False):
             sys.exit(1)
         # User has seen everything and wants to continue.
         return
 
     # No errors or warnings.  Show first and last lines.
-    lines = [line for line in result.split('\n')]
+    lines = [line for line in result.split(u'\n')]
     if len(lines) < 11:
         for line in lines:
             print(line)
         return
-    print('Showing first few lines...')
+    print(u'Showing first few lines...')
     for line in lines[:5]:
         print(line)
-    print('...')
-    print('Showing last few lines...')
+    print(u'...')
+    print(u'Showing last few lines...')
     for line in lines[-5:]:
         print(line)
 
@@ -293,7 +340,7 @@ def setup_py(rest_of_cmdline):
         rest_of_cmdline = shlex.split(rest_of_cmdline)
     if TESTMODE:
         # Hack for testing
-        for unsafe in ['upload', 'register']:
+        for unsafe in [u'upload', u'register']:
             if unsafe in rest_of_cmdline:
                 executable = [u'echo', u'MOCK']
 
@@ -335,11 +382,12 @@ def is_data_documented(data, documentation=None):
         documentation = {}
     if TESTMODE:
         # Hack for testing to prove entry point is being called.
-        print("Checking data dict")
+        print(u"Checking data dict")
     undocumented = [key for key in data
                     if key not in documentation]
     if undocumented:
-        print('Internal detail: key(s) %s are not documented' % undocumented)
+        print(u'Internal detail: key(s) {0} are not documented'.format(
+            undocumented))
 
 
 def resolve_name(name):
@@ -423,9 +471,11 @@ def run_hooks(setup_cfg, which_releaser, when, data):
             for hook_name in hook_names:
                 try:
                     hooks.append(resolve_name(hook_name))
-                except ImportError, e:
-                    logger.warning('cannot find %s hook: %s; skipping...',
-                                   hook_name, e.args[0])
+                except ImportError as e:
+                    logger.warning(
+                        'cannot find {0} hook: {1}; skipping...'.format(
+                            hook_name, e.args[0]
+                        ))
             for hook in hooks:
                 hook(data)
         finally:
@@ -452,7 +502,7 @@ def run_entry_points(which_releaser, when, data):
         plugin(data)
 
 
-def _execute_command(command, input_value=''):
+def _execute_command(command, input_value=u''):
     """commands.getoutput() replacement that also works on windows"""
     if isinstance(command, six.string_types):
         # BBB
@@ -490,7 +540,7 @@ def _execute_command(command, input_value=''):
     # TODO.  Note that the returncode is always None, also after
     # running p.kill().  The shell=True may be tripping us up.  For
     # some ideas, see http://stackoverflow.com/questions/4789837
-    if p.returncode or show_stderr or 'Traceback' in stderr_output:
+    if p.returncode or show_stderr or u'Traceback' in stderr_output:
         # Some error occured
         # print(Fore.RED + stderr_output)
         stderr_output = stderr_output.strip()
@@ -505,14 +555,14 @@ def _execute_command(command, input_value=''):
             # errors = [(Fore.RED + line) for line in
             # stderr_output.split('\n')]
             errors = []
-            for line in stderr_output.split('\n'):
+            for line in stderr_output.split(u'\n'):
                 line = line.strip()
                 if not line:
                     errors.append(line)
-                elif line.lower().startswith('warn'):
+                elif line.lower().startswith(u'warn'):
                     # Not a real error.
                     errors.append(Fore.MAGENTA + line)
-                elif line.lower().startswith("no previously-included"):
+                elif line.lower().startswith(u"no previously-included"):
                     # Specifically a warning from distutils like this:
                     # no previously-included directories found matching...
                     # distutils is basically warning that a previous
@@ -521,9 +571,9 @@ def _execute_command(command, input_value=''):
                     errors.append(Fore.MAGENTA + line)
                 else:
                     errors.append(Fore.RED + line)
-            errors = '\n'.join(errors)
+            errors = u'\n'.join(errors)
         else:
-            errors = ''
+            errors = u''
         result = stdout_output + errors
     else:
         # Only return the stdout. Stderr only contains possible
@@ -538,7 +588,7 @@ def _execute_command(command, input_value=''):
     return result
 
 
-def execute_command(command, allow_retry=False, fail_message=""):
+def execute_command(command, allow_retry=False, fail_message=u""):
     """Run the command and possibly retry it.
 
     When allow_retry is False, we simply call the base
@@ -571,10 +621,10 @@ def execute_command(command, allow_retry=False, fail_message=""):
         return result
     # There are warnings or errors. Print the complete result.
     print(result)
-    print(Fore.RED + "There were errors or warnings.")
+    print(Fore.RED + u"There were errors or warnings.")
     if fail_message:
         print(Fore.RED + fail_message)
-    explanation = """
+    explanation = u"""
     You have these options for retrying (first character is enough):
     Yes:   Retry. Do this if it looks like a temporary Internet or PyPI outage.
            You can also first edit $HOME/.pypirc and then retry in
@@ -584,27 +634,29 @@ def execute_command(command, allow_retry=False, fail_message=""):
            been run yet, you need to do that manually.
     ?:     Show this help."""
     explanation = textwrap.dedent(explanation)
-    question = "Retry this command? [Yes/no/quit/?]"
+    question = u"Retry this command? [Yes/no/quit/?]"
     if AUTO_RESPONSE:
-        msg = ("The question '%s' requires a manual answer, but "
-               "we're running in --no-input mode.")
-        msg = msg % question
+        msg = (u"The question '{0}' requires a manual answer, but "
+               u"we're running in --no-input mode.")
+        msg = msg.format(question)
         raise RuntimeError(msg)
     while True:
         input_value = get_input(question)
         if not input_value:
             # Default: yes, retry the command.
-            input_value = 'y'
+            input_value = u'y'
         if input_value:
             input_value = input_value.lower()
-            if input_value == 'y' or input_value == 'yes':
-                logger.info("Retrying command: %r", command)
+            if input_value == u'y' or input_value == u'yes':
+                logger.info(u"Retrying command: {0!r}".format(
+                    cmd_to_text(command)))
                 return execute_command(command, allow_retry=True)
-            if input_value == 'n' or input_value == 'no':
+            if input_value == u'n' or input_value == u'no':
                 # Accept the error, continue with the program.
                 return result
-            if input_value == 'q' or input_value == 'quit':
-                raise CommandException("Command failed: %r" % command)
+            if input_value == u'q' or input_value == u'quit':
+                raise CommandException(u"Command failed: {0!r}".format(
+                    cmd_to_text(command)))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.
@@ -619,11 +671,11 @@ def get_last_tag(vcs):
     """
     version = vcs.version
     if not version:
-        logger.critical("No version detected, so we can't do anything.")
+        logger.critical(u"No version detected, so we can't do anything.")
         sys.exit(1)
     available_tags = vcs.available_tags()
     if not available_tags:
-        logger.critical("No tags found, so we can't do anything.")
+        logger.critical(u"No tags found, so we can't do anything.")
         sys.exit(1)
 
     # Mostly nicked from zest.stabilizer.
@@ -640,11 +692,11 @@ def get_last_tag(vcs):
         parsed_found = parse_version(found)
         if parsed_tag == parsed_version:
             found = tag
-            logger.debug("Found exact match: %s", found)
+            logger.debug(u"Found exact match: %s", found)
             break
         if (parsed_tag >= parsed_found and
                 parsed_tag < parsed_version):
-            logger.debug("Found possible lower match: %s", tag)
+            logger.debug(u"Found possible lower match: %s", tag)
             found = tag
     return found
 
@@ -657,9 +709,9 @@ def sanity_check(vcs):
     Returns True when all is fine.
     """
     if not vcs.is_clean_checkout():
-        q = ("This is NOT a clean checkout. You are on a tag or you have "
-             "local changes.\n"
-             "Are you sure you want to continue?")
+        q = (u"This is NOT a clean checkout. You are on a tag or you have "
+             u"local changes.\n"
+             u"Are you sure you want to continue?")
         if not ask(q, default=False):
             return False
     return True
@@ -671,11 +723,11 @@ def check_recommended_files(data, vcs):
     Returns True when all is fine.
     """
     main_files = os.listdir(data['workingdir'])
-    if 'setup.py' not in main_files and 'setup.cfg' not in main_files:
+    if u'setup.py' not in main_files and u'setup.cfg' not in main_files:
         # Not a python package.  We have no recommendations.
         return True
-    if 'MANIFEST.in' not in main_files and 'MANIFEST' not in main_files:
-        q = """This package is missing a MANIFEST.in file. This file is
+    if u'MANIFEST.in' not in main_files and u'MANIFEST' not in main_files:
+        q = u"""This package is missing a MANIFEST.in file. This file is
 recommended. See http://docs.python.org/distutils/sourcedist.html for
 more info. Sample contents:
 
@@ -687,12 +739,13 @@ global-exclude *.pyc
 You may want to quit and fix this.
 """
         if not vcs.is_setuptools_helper_package_installed():
-            q += "Installing %s may help too.\n" % \
+            q += u"Installing {0} may help too.\n".format(
                 vcs.setuptools_helper_package
+                )
         # We could ask, but simply printing it is nicer.  Well, okay,
         # let's avoid some broken eggs on PyPI, per
         # https://github.com/zestsoftware/zest.releaser/issues/10
-        q += "Do you want to continue with the release?"
+        q += u"Do you want to continue with the release?"
         if not ask(q, default=False):
             return False
         print(q)
@@ -703,4 +756,4 @@ def configure_logging():
     logging.addLevelName(logging.WARNING, Fore.MAGENTA + logging.getLevelName(logging.WARNING))
     logging.addLevelName(logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
     logging.basicConfig(level=loglevel(),
-                        format="%(levelname)s: %(message)s")
+                        format=u"%(levelname)s: %(message)s")

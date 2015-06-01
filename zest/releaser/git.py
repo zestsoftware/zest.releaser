@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Git(BaseVersionControl):
     """Command proxy for Git"""
-    internal_filename = '.git'
+    internal_filename = u'.git'
     setuptools_helper_package = 'setuptools-git'
 
     def is_setuptools_helper_package_installed(self):
@@ -35,8 +35,8 @@ class Git(BaseVersionControl):
 
     def available_tags(self):
         tag_info = execute_command([u'git', u'tag'])
-        tags = [line for line in tag_info.split('\n') if line]
-        logger.debug("Available tags: %r", tags)
+        tags = [line for line in tag_info.split(u'\n') if line]
+        logger.debug(u"Available tags: {!r}".format(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):

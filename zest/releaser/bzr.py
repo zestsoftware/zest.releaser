@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Bzr(BaseVersionControl):
     """Command proxy for Bazaar"""
-    internal_filename = '.bzr'
+    internal_filename = u'.bzr'
     setuptools_helper_package = 'setuptools_bzr'
 
     @property
@@ -25,9 +25,9 @@ class Bzr(BaseVersionControl):
 
     def available_tags(self):
         tag_info = execute_command([u'bzr', u'tags'])
-        tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
+        tags = [line[:line.find(u' ')] for line in tag_info.split(u'\n')]
         tags = [tag for tag in tags if tag]
-        logger.debug("Available tags: %r", tags)
+        logger.debug(u"Available tags: {0!r}".format(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):
