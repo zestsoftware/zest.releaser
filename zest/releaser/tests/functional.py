@@ -37,19 +37,25 @@ def setup(test):
     test.orig_urlopen = urllib2.urlopen
     test.mock_pypi_available = []
 
-    def _mock_urlopen(url):
-        # print "Mock opening", url
-        package = url.replace('https://pypi.python.org/simple/', '')
-        if package not in test.mock_pypi_available:
-            raise HTTPError(
-                url, 404,
-                'HTTP Error 404: Not Found (%s does not have any releases)'
-                % package, None, None)
-        else:
-            answer = ' '.join(test.mock_pypi_available)
-        return StringIO(buf=answer)
+    def _make_mock_urlopen(mock_pypi_available):
+        # To fix scope issues in Python 3 without using "nonlocal" and
+        # breaking Python 2
 
-    urllib2.urlopen = _mock_urlopen
+        def _mock_urlopen(url):
+            # print "Mock opening", url
+            package = url.replace(u'https://pypi.python.org/simple/', u'')
+            if package not in mock_pypi_available:
+                raise HTTPError(
+                    url, 404,
+                    u'HTTP Error 404: Not Found (%s does not have any releases)'
+                    % package, None, None)
+            else:
+                answer = u' '.join(mock_pypi_available)
+            return StringIO(answer)
+
+        return _mock_urlopen
+
+    urllib2.urlopen = _make_mock_urlopen(test.mock_pypi_available)
 
     # Extract example project
     example_tar = pkg_resources.resource_filename(
