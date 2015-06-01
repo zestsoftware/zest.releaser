@@ -7,12 +7,6 @@ from setuptools import setup, find_packages
 version = '5.0.dev0'
 
 
-if sys.version_info >= (3,):
-    SETUPTOOLS = 'setuptools>=17.0'
-else:
-    SETUPTOOLS = 'setuptools<16.0'
-
-
 def read(filename):
     try:
         return unicode(codecs.open(filename, encoding='utf-8').read())
@@ -47,7 +41,7 @@ setup(name='zest.releaser',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          SETUPTOOLS,
+          'setuptools',
           'colorama',
           'six',
       ],
