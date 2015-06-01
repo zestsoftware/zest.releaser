@@ -162,13 +162,16 @@ class Releaser(baserelease.Basereleaser):
 
         if self.pypiconfig.is_old_pypi_config():
             if use_twine:
-                shell_command = utils.twine_command(
-                    'upload dist%s*' % os.path.sep)
+                shell_command = utils.twine_command([
+                    u'upload', u'dist{0}*'.format(os.path.sep)
+                    ])
             else:
                 if self.pypiconfig.create_wheel():
-                    pypi_command = 'register sdist bdist_wheel upload'
+                    pypi_command = [
+                        u'register', u'sdist', u'bdist', u'wheel', u'upload'
+                        ]
                 else:
-                    pypi_command = 'register sdist upload'
+                    pypi_command = [u'register', u'sdist', u'upload']
                 shell_command = utils.setup_py(pypi_command)
             if use_pypi:
                 default = True
@@ -187,17 +190,18 @@ class Releaser(baserelease.Basereleaser):
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
             if use_twine:
-                shell_command = utils.twine_command('upload dist%s* -r %s' % (
-                    os.path.sep, server))
+                shell_command = utils.twine_command([
+                    u'upload', u'dist{0}*'.format(os.path.sep), u'-r', server
+                    ])
             else:
                 if self.pypiconfig.create_wheel():
-                    commands = ('register', '-r', server, 'sdist',
-                                'bdist_wheel',
-                                'upload', '-r', server)
+                    commands = [u'register', u'-r', server, u'sdist',
+                                u'bdist_wheel',
+                                u'upload', u'-r', server]
                 else:
-                    commands = ('register', '-r', server, 'sdist',
-                                'upload', '-r', server)
-                shell_command = utils.setup_py(' '.join(commands))
+                    commands = [u'register', u'-r', server, u'sdist',
+                                u'upload', u'-r', server]
+                shell_command = utils.setup_py(commands)
             default = True
             exact = False
             if server == 'pypi' and not use_pypi:

@@ -19,7 +19,7 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command("svn info %s" % svnsourcedir))
+    >>> print(execute_command([u"svn", u"info", svnsourcedir]))
     Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...

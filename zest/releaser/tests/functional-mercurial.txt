@@ -17,7 +17,7 @@ A mercurial directory (repository and checkout in one):
 There are no tags yet:
 
     >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command("hg tags"))
+    >>> print(execute_command([u"hg", u"tags"]))
     tip 1:234567890abc
 
 The changelog is unreleased:
@@ -80,7 +80,7 @@ The release script tags the release and uploads it:
     >>> release.main()
     Checking data dict
     Tag needed to proceed, you can use the following command:
-    hg tag -m "Tagging 0.1" 0.1
+    hg tag -m 'Tagging 0.1' 0.1
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
@@ -109,7 +109,7 @@ The release script tags the release and uploads it:
 
 There is now a tag:
 
-    >>> print(execute_command("hg tags"))
+    >>> print(execute_command([u"hg", u"tags"]))
     tip  1:234567890abc
     0.1  1:234567890abc
 

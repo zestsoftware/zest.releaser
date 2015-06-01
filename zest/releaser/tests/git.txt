@@ -40,7 +40,7 @@ Make a change:
     >>> open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
-    'git diff'
+    [u'git', u'diff']
     >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
@@ -57,7 +57,7 @@ Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
-    'git commit -a -m "small tweak"'
+    [u'git', u'commit', u'-a', u'-m', u'small tweak']
 
 In some cases we get this output:
 ``[master ...] small tweak``
@@ -79,10 +79,10 @@ Originally there are no tags:
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
-    >>> cmd
-    'git tag 0.1 -m "Tagging 0.1"'
-    >>> dont_care = execute_command(cmd)
+    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds
+    [[u'git', u'tag', u'0.1', u'-m', u'Tagging 0.1']]
+    >>> dont_care = execute_command(cmds[0])
     >>> checkout.available_tags()
     ['0.1']
 
@@ -104,7 +104,7 @@ Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'git diff 0.1'
+    [u'git', u'diff', u'0.1']
     >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
@@ -155,10 +155,13 @@ For git, we have to change to that directory!  Git doesn't work with paths.
 Chdir and make a tag checkout:
 
     >>> os.chdir(temp)
-    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
-    >>> cmd
-    'git checkout 0.1 && git submodule update --init --recursive'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmds
+    [[u'git', u'checkout', u'0.1'],
+     [u'git', u'submodule', u'update', u'--init', u'--recursive']]
+    >>> for cmd in cmds:
+    ...     print(execute_command(cmd))
+    ...
     RED Note: ...0.1...
     RED HEAD is now at ... small tweak
 
@@ -176,4 +179,4 @@ Pushing changes
 For git, committing isn't enough. We need to push changes to the server:
 
     >>> checkout.push_commands()
-    ['git push', 'git push --tags']
+    [[u'git', u'push'], [u'git', u'push', u'--tags']]
