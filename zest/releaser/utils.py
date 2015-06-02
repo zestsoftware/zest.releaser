@@ -38,6 +38,13 @@ def cmd_to_text(cmd):
     return u' '.join(map(shlex_quote, cmd))
 
 
+def fs_to_text(fs_name):
+    if not isinstance(fs_name, six.text_type):
+        fs_name = fs_name.decode(sys.getfilesystemencoding(),
+                                 'surrogateescape')
+    return fs_name
+
+
 class CommandException(Exception):
     """Exception for when a command fails."""
 
