@@ -28,9 +28,7 @@ class Hg(BaseVersionControl):
     def available_tags(self):
         tag_info = execute_command([u'hg', u'tags'])
         tags = [line[:line.find(u' ')] for line in tag_info.split(u'\n')]
-        tags = [tag for tag in tags if tag]
-        while u'tip' in tags:
-            tags.remove(u'tip')  # Not functional for us
+        tags = [tag for tag in tags if tag and tag != u'tip']
         logger.debug(u"Available tags: {0}".format(tags))
         return tags
 
