@@ -47,6 +47,7 @@ setup(name='zest.releaser',
       ],
       extras_require={
           'recommended': [
+              'chardet',
               'check-manifest',
               'readme',
               'pyroma',
