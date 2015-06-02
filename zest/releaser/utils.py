@@ -83,7 +83,8 @@ def read_text_file(filename, encoding=None):
 
     if HAVE_CHARDET:
         encoding_result = chardet.detect(data)
-        return data.decode(encoding_result['encoding'])
+        if encoding_result and encoding_result['encoding'] is not None:
+            return data.decode(encoding_result['encoding'])
 
     # Look for hints, PEP263-style
     if data[:3] == b'\xef\xbb\xbf':
