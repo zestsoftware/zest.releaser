@@ -8,12 +8,17 @@ from zest.releaser import pypi
 from zest.releaser import utils
 
 VERSION_PATTERN = re.compile(r"""
-version\W*=\W*   # 'version =  ' with possible whitespace
+^                # Start of line
+\s*              # Indentation
+version\s*=\s*   # 'version =  ' with possible whitespace
+['"]             # String literal begins
 \d               # Some digit, start of version.
 """, re.VERBOSE)
 
 UNDERSCORED_VERSION_PATTERN = re.compile(r"""
-__version__\W*=\W*   # '__version__ =  ' with possible whitespace
+^                    # Start of line
+__version__\s*=\s*   # '__version__ =  ' with possible whitespace
+['"]                 # String literal begins
 \d                   # Some digit, start of version.
 """, re.VERBOSE)
 
