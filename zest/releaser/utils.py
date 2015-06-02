@@ -8,7 +8,16 @@ import shlex
 import subprocess
 import sys
 import textwrap
+try:
+    from tokenize import open as tok_open
+except ImportError:
+    tok_open = None
 
+try:
+    import chardet
+    HAVE_CHARDET = True
+except ImportError:
+    HAVE_CHARDET = False
 from colorama import Fore
 import pkg_resources
 from pkg_resources import parse_version
@@ -61,11 +70,20 @@ def read_text_file(filename, encoding=None):
     # encoding this file may be in.
     # The 'open' method uses the default system encoding to read text
     # files in Python 3 or falls back to utf-8.
+    if tok_open is not None and encoding is None:
+        # If an encoding is manually specified, never try to detect one
+        with tok_open(filename) as fh:
+            return fh.read()
+
     with open(filename, 'rb') as fh:
         data = fh.read()
 
     if encoding is not None:
         return data.decode(encoding)
+
+    if HAVE_CHARDET:
+        encoding_result = chardet.detect(data)
+        return data.decode(encoding_result['encoding'])
 
     # Look for hints, PEP263-style
     if data[:3] == b'\xef\xbb\xbf':
