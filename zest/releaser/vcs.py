@@ -1,6 +1,9 @@
 import ast
+import io
 import logging
 import os
+import token
+import tokenize
 import sys
 
 import six
@@ -52,6 +55,22 @@ class BaseVersionControl(object):
             return None
 
         return assignment
+
+    def _replace_string(self, line, position, new_value):
+        toks = tokenize.tokenize(
+            io.BytesIO(line.encode('utf8')).readline
+            )
+        for tok in toks:
+            if tok.type != token.STRING:
+                continue
+            if tok.start[1] < position:
+                continue
+            return (
+                line[:tok.start[1]] +
+                repr(new_value) +
+                line[tok.end[1]:]
+                )
+        raise ValueError('Could not find string!')
 
     def get_setup_py_version(self):
         if os.path.exists(u'setup.py'):
@@ -211,13 +230,12 @@ class BaseVersionControl(object):
                 position = (
                     assignment.value.lineno - 1,
                     assignment.value.col_offset,
-                    assignment.value.col_offset + len(repr(assignment.value.s))
                     )
                 lines = content.splitlines()
-                lines[position[0]] = (
-                    lines[position[0]][:position[1]] +
-                    repr(version) +
-                    lines[position[0]][position[2]:]
+                lines[position[0]] = self._replace_string(
+                    lines[position[0]],
+                    position[1],
+                    version
                     )
                 contents = u'\n'.join(lines)
                 open(filename, 'w').write(contents)
@@ -253,16 +271,15 @@ class BaseVersionControl(object):
             # one line
             position = (
                 assignment.value.lineno - 1,
-                assignment.value.col_offset,
-                assignment.value.col_offset + len(repr(assignment.value.s))
+                assignment.value.col_offset
                 )
             lines = content.splitlines()
             logger.debug(u"Matching version line found: {0!r}".format(
                 lines[position[0]]))
-            lines[position[0]] = (
-                lines[position[0]][:position[1]] +
-                repr(version) +
-                lines[position[0]][position[2]:]
+            lines[position[0]] = self._replace_string(
+                lines[position[0]],
+                position[1],
+                version
                 )
             contents = u'\n'.join(lines)
             open('setup.py', 'w').write(contents)
