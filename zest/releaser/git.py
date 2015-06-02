@@ -118,10 +118,9 @@ class Git(BaseVersionControl):
             # to work.
             logger.warn(u"We haven't been chdir'ed to {0}".format(checkout_dir))
             sys.exit(1)
-        return [
-            [u'git', u'checkout', version],
-            [u'git', u'submodule', u'update', u'--init', u'--recursive']
-            ]
+        return [[u'git', u'checkout', version],
+                [u'git', u'submodule', u'update', u'--init', u'--recursive'],
+               ]
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
