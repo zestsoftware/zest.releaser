@@ -208,7 +208,7 @@ def ask(question, default=True, exact=False):
             default and u"yes" or u"no"))
         logger.debug(question)
         return default
-    while 1:
+    while True:
         yn = u'y/n'
         if default is True:
             yn = u'Y/n'
