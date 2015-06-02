@@ -1,10 +1,10 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
 try:
-    from docutils.core import publish_string
-    HAVE_DOCUTILS = True
+    from readme.rst import render
+    HAVE_README = True
 except ImportError:
-    HAVE_DOCUTILS = False
+    HAVE_README = False
 import logging
 import sys
 import tempfile
@@ -17,31 +17,23 @@ logger = logging.getLogger(__name__)
 
 
 def show_longdesc():
-    if not HAVE_DOCUTILS:
-        # Stupid docutils throws SystemExit
-        logging.error(
-            'Error generating html. Please install docutils (or zc.rst2).')
+    if not HAVE_README:
+        logging.error(u'Error generating html. Please install `readme`.')
         sys.exit(1)
 
     filename = tempfile.mktemp(u'.html')
     # Note: for the setup.py call we use execute_command() from our
     # utils module. This makes sure the python path is set up right.
-    # For the other calls we use os.system(), because that returns an
-    # error code which we need.
     longdesc = _execute_command(utils.setup_py([u'--long-description']))
-    try:
-        rst = publish_string(
-            source=longdesc,
-            writer_name='html',
-            enable_exit_status=False)
-    except SystemExit:
+    html, rendered = render(longdesc)
+    if not rendered:
         # Stupid docutils throws SystemExit
-        logging.error(
-            'Error generating html. Invalid ReST.')
-        raise
+        logging.error('Error generating html. Invalid ReST.')
+        raise RuntimeError("Invalid markup which will not be rendered on "
+                           "PyPI.")
 
     with open(filename, 'w') as fh:
-        fh.write(rst)
+        fh.write(html)
     url = u'file://' + filename
     logging.info(u"Opening {0} in your webbrowser.".format(url))
     webbrowser.open(url)
