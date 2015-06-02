@@ -61,9 +61,11 @@ class BaseVersionControl(object):
         return assignment
 
     def _replace_string(self, line, position, new_value):
-        toks = tokenize(
-            io.BytesIO(line.encode('utf8')).readline
-            )
+        if six.PY2:
+            readline = io.BytesIO(line.encode('utf8')).readline
+        else:
+            readline = io.StringIO(line).readline
+        toks = tokenize(readline)
         for type_, _token, start, end, _line in toks:
             if type_ != token.STRING:
                 continue
