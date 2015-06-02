@@ -48,7 +48,7 @@ setup(name='zest.releaser',
       extras_require={
           'recommended': [
               'check-manifest',
-              'docutils',
+              'readme',
               'pyroma',
               'wheel',
               'twine',
