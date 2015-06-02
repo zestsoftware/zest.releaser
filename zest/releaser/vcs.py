@@ -64,15 +64,15 @@ class BaseVersionControl(object):
         toks = tokenize(
             io.BytesIO(line.encode('utf8')).readline
             )
-        for tok in toks:
-            if tok[0] != token.STRING:
+        for type_, _token, start, end, _line in toks:
+            if type_ != token.STRING:
                 continue
-            if tok[2][1] < position:
+            if start[1] < position:
                 continue
             return (
-                line[:tok[2][1]] +
+                line[:start[1]] +
                 repr(new_value) +
-                line[tok[3][1]:]
+                line[end[1]:]
                 )
         raise ValueError('Could not find string!')
 
