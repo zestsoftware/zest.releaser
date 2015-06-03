@@ -5,7 +5,6 @@ import logging
 import sys
 
 import zest.releaser.choose
-from zest.releaser.utils import execute_command
 from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
@@ -20,10 +19,10 @@ def main():
         found = utils.get_last_tag(vcs)
     name = vcs.name
     full_tag = vcs.tag_url(found)
-    logger.debug("Picked tag %r for %s (currently at %r).",
-                 full_tag, name, vcs.version)
-    logger.info("Showing log since tag %s and the last commit.",
-                full_tag)
+    logger.debug(u"Picked tag {0!r} for {1} (currently at {2!r}).".format(
+                 full_tag, name, vcs.version))
+    logger.info(u"Showing log since tag {0} and the last commit.".format(
+                full_tag))
     log_command = vcs.cmd_log_since_tag(found)
-    print(log_command)
-    print(execute_command(log_command))
+    print(utils.cmd_to_text(log_command))
+    print(utils.execute_command(log_command))

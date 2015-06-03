@@ -1,6 +1,8 @@
 import re
 import tempfile
 
+from colorama import Fore
+import six
 import z3c.testsetup
 from zope.testing import renormalizing
 
@@ -13,8 +15,8 @@ checker = renormalizing.RENormalizing([
     # Hg bare hash formatting
     (re.compile(r'[0-9a-f]{12}'), '234567890abc'),
     # Hg has an updated comment
-    (re.compile('updating working directory'),
-     'updating to branch default'),
+    (re.compile(u'updating working directory'),
+     u'updating to branch default'),
     # Newer Hg no longer prints 'requesting all changes'
     (re.compile('requesting all changes'), ''),
     # Git diff hash formatting
@@ -25,13 +27,13 @@ checker = renormalizing.RENormalizing([
     # Normalize tempdirs.  For this to work reliably, we need to use a prefix
     # in all tempfile.mkdtemp() calls.
     (re.compile(
-        '%s/testtemp[^/]+/svnrepo' % re.escape(tempfile.gettempdir())),
+        '{0}/testtemp[^/]+/svnrepo'.format(re.escape(tempfile.gettempdir()))),
      'TESTREPO'),
     (re.compile(
-        '/private%s/testtemp[^/]+' % re.escape(tempfile.gettempdir())),
+        '/private{0}/testtemp[^/]+'.format(re.escape(tempfile.gettempdir()))),
      'TESTTEMP'),  # OSX madness
     (re.compile(
-        '%s/testtemp[^/]+' % re.escape(tempfile.gettempdir())),
+        '{0}/testtemp[^/]+'.format(re.escape(tempfile.gettempdir()))),
      'TESTTEMP'),
     (re.compile(re.escape(tempfile.gettempdir())),
      'TMPDIR'),
@@ -58,9 +60,17 @@ checker = renormalizing.RENormalizing([
     # clearly.  This catches Fore.RED and Fore.MAGENTA.
     # Note the extra backslash in front of the left bracket, otherwise
     # you get: "error: unexpected end of regular expression"
-    (re.compile(r'\x1b\[31m'), 'RED '),
-    (re.compile(r'\x1b\[35m'), 'MAGENTA '),
-])
+    (re.compile(re.escape(Fore.RED)), 'RED '),
+    (re.compile(re.escape(Fore.MAGENTA)), 'MAGENTA '),
+] + ([
+
+    # Six - this is a terrible regexp and may produce false positives
+    (re.compile('u\''), '\''),
+    (re.compile('u"'), '"'),
+] if six.PY3 else [
+    (re.compile('FileNotFoundError'), 'IOError'),
+    (re.compile('zest.releaser.utils.CommandException'), 'CommandException'),
+]))
 
 
 test_suite = z3c.testsetup.register_all_tests('zest.releaser', checker=checker)

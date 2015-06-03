@@ -16,3 +16,6 @@ Credits
 
 * `Godefroid Chapelle <http://bubblenet.be>`_ (BubbleNet) added /tag besides
   /tags for subversion.
+
+* `Richard Mitchell <https://github.com/mitchellrj>`_
+  (`Isotoma Limited <https://www.isotoma.com/>`_) added Python 3 support.

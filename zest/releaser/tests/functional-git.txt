@@ -1,7 +1,7 @@
 Integration test
 ================
 
-.. :doctest:
+.. :doctest: +NORMALIZE_WHITESPACE
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
@@ -17,7 +17,7 @@ A git directory (repository and checkout in one):
 There are no tags yet:
 
     >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command("git tag"))
+    >>> print(execute_command([u"git", u"tag"]))
     <BLANKLINE>
 
 The changelog is unreleased:
@@ -70,7 +70,7 @@ And the version number is just 0.1 and has lost its dev marker:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.1'
+    version = u'0.1'
 
 The release script tags the release and uploads it:
 
@@ -80,12 +80,11 @@ The release script tags the release and uploads it:
     >>> release.main()
     Checking data dict
     Tag needed to proceed, you can use the following command:
-    git tag 0.1 -m "Tagging 0.1"
+    git tag 0.1 -m 'Tagging 0.1'
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Question: Check out the tag
-        (for tweaks or pypi/distutils server upload) (Y/n)?
+    Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
     RED Note: ...0.1...
     ...
@@ -95,7 +94,7 @@ The release script tags the release and uploads it:
     Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
     Our reply: y
     [egg_info]
-    tag_build =
+    tag_build = 
     tag_svn_revision = false
     <BLANKLINE>
     <BLANKLINE>
@@ -108,11 +107,11 @@ The release script tags the release and uploads it:
     removing 'tha.example-0.1' ...
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
-    MOCK twine upload dist/tha.example-0.1.tar.gz
+    MOCK twine upload dist/*
 
 There is now a tag:
 
-    >>> print(execute_command("git tag"))
+    >>> print(execute_command([u"git", u"tag"]))
     0.1
 
 And the postrelease script ups the version:
@@ -152,10 +151,10 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2.dev0'
+    version = u'0.2.dev0'
 
 And there are no uncommitted changes:
 
-    >>> print(execute_command("git status"))
+    >>> print(execute_command([u"git", u"status"]))
     On branch master
     nothing to commit, working directory clean

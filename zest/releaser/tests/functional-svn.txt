@@ -1,7 +1,7 @@
 Integration test
 ================
 
-.. :doctest:
+.. :doctest: +NORMALIZE_WHITESPACE
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
@@ -19,14 +19,14 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command("svn info %s" % svnsourcedir))
+    >>> print(execute_command([u"svn", u"info", svnsourcedir]))
     Path: ...tha.example-svn...
     file://TESTREPO/tha.example/trunk
     ...
 
 There are no tags yet:
 
-    >>> print(execute_command("svn list %s/tha.example/tags" % repo_url))
+    >>> print(execute_command([u"svn", u"list", "{0}/tha.example/tags".format(repo_url)]))
 
 The changelog is unreleased:
 
@@ -78,7 +78,7 @@ And the version number is just 0.1 and has lost its dev marker:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.1'
+    version = u'0.1'
 
 The release script tags the release and uploads it:
 
@@ -88,11 +88,11 @@ The release script tags the release and uploads it:
     >>> release.main()
     Checking data dict
     Tag needed to proceed, you can use the following command:
-    svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"
+    svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m 'Tagging 0.1'
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
-    Committed revision 6...
+    Committed revision 6.
     Question: Check out the tag (for tweaks or pypi/distutils server upload) (Y/n)?
     Our reply: y
     ...CHANGES.txt...
@@ -101,7 +101,7 @@ The release script tags the release and uploads it:
     Question: Fix setup.cfg (and commit to tag if possible) (Y/n)?
     Our reply: y
     [egg_info]
-    tag_build =
+    tag_build = 
     tag_svn_revision = false
     <BLANKLINE>
     <BLANKLINE>
@@ -119,14 +119,14 @@ The release script tags the release and uploads it:
     removing 'tha.example-0.1' ...
     Question: Register and upload to PyPI (Y/n)?
     Our reply: y
-    MOCK twine upload dist/tha.example-0.1.tar.gz...
+    MOCK twine upload dist/*
 
 Note that the last dots above could be saying
 that we upload to alternative pypis as well.
 
 There is now a tag:
 
-    >>> print(execute_command("svn list %s/tha.example/tags" % repo_url))
+    >>> print(execute_command([u"svn", u"list", u"{0}/tha.example/tags".format(repo_url)]))
     0.1/
 
 And the postrelease script ups the version:
@@ -153,4 +153,4 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2.dev0'
+    version = u'0.2.dev0'

@@ -22,7 +22,7 @@ The data dict is initialized.  And a vcs is chosen:
     >>> base.data['workingdir']
     'TESTTEMP/tha.example-svn'
     >>> base.data['name']
-    'tha.example'
+    u'tha.example'
     >>> base.vcs
     <zest.releaser.svn.Subversion object at ...>
 
@@ -42,9 +42,9 @@ We can update commit messages based on what we find in ``setup.cfg``::
     >>> lines = [
     ...     "[zest.releaser]",
     ...     "extra-message = Aargh!"]
-    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> dont_care = open('setup.cfg', 'w').write('\n'.join(lines))
     >>> base = baserelease.Basereleaser()
-    >>> print base.update_commit_message('Ni!')
+    >>> print(base.update_commit_message(u'Ni!'))
     Ni!
     <BLANKLINE>
     Aargh!
@@ -52,12 +52,12 @@ We can update commit messages based on what we find in ``setup.cfg``::
 Check that this works with non-ascii too.
 
     >>> lines = [
-    ...     "[zest.releaser]",
-    ...     u"extra-message = \xec\xab".encode('utf-8')]
-    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    ...     u"[zest.releaser]".encode('utf-8'),
+    ...     u"extra-message = \u2603".encode('utf-8')]
+    >>> dont_care = open('setup.cfg', 'wb').write(b'\n'.join(lines))
     >>> base = baserelease.Basereleaser()
-    >>> base.update_commit_message('Ni!')
-    'Ni!\n\n\xc3\xac\xc2\xab'
+    >>> base.update_commit_message(u'Ni!')
+    u'Ni!\n\n\u2603'
 
 And check with multiple lines.
 
@@ -66,9 +66,9 @@ And check with multiple lines.
     ...     "extra-message =",
     ...     "    Where is my towel?",
     ...     "    Not again."]
-    >>> open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> dont_care = open('setup.cfg', 'w').write('\n'.join(lines))
     >>> base = baserelease.Basereleaser()
-    >>> print base.update_commit_message('Ni!')
+    >>> print(base.update_commit_message(u'Ni!'))
     Ni!
     <BLANKLINE>
     Where is my towel?

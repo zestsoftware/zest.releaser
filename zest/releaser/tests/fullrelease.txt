@@ -19,7 +19,7 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command("svn info %s" % svnsourcedir))
+    >>> print(execute_command([u"svn", u"info", svnsourcedir]))
     Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...
@@ -68,7 +68,7 @@ The changelog and setup.py are at 0.2.dev0:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.2.dev0'
+    version = u'0.2.dev0'
 
 An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
 
@@ -81,7 +81,7 @@ An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
     ... [zest.releaser]
     ... no-input = true
     ... """
-    >>> open('setup.cfg', 'w').write(cfg)
+    >>> dont_care = open('setup.cfg', 'w').write(cfg)
 
 The prerelease part would complain when the changelog still contains
 '- Nothing changed yet.'  So change it.
@@ -114,7 +114,7 @@ The changelog and setup.py are at 0.3.dev0 now:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.3.dev0'
+    version = u'0.3.dev0'
 
 When you do some commits, but forget to update the changelog,
 prerelease (or fullrelease) will warn you, as indicated earlier:

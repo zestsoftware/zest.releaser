@@ -19,7 +19,7 @@ The prepared git project has a setup.py, so the name in there is used:
     >>> os.chdir(gitsvnsourcedir)
     >>> checkout = git.Git()
     >>> checkout.name
-    'tha.example'
+    u'tha.example'
 
 When the setup.py doesn't exist or doesn't return a proper name, we fall back
 to the directory name.
@@ -27,7 +27,7 @@ to the directory name.
     >>> orig = checkout.get_setup_py_name
     >>> checkout.get_setup_py_name= lambda: None  # Hack
     >>> checkout.name
-    'tha.example-gitsvn'
+    u'tha.example-gitsvn'
     >>> checkout.get_setup_py_name = orig  # Restore hack
 
 
@@ -37,10 +37,10 @@ Diff and commit
 Make a change:
 
     >>> setup_py = os.path.join(gitsvnsourcedir, 'setup.py')
-    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
-    'git diff'
+    [u'git', u'diff']
     >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
@@ -55,9 +55,9 @@ Make a change:
 
 Commit it:
 
-    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd = checkout.cmd_commit(u'small tweak')
     >>> cmd
-    'git commit -a -m "small tweak"'
+    [u'git', u'commit', u'-a', u'-m', u'small tweak']
 
 In some cases we get this output:
 ``[master ...] small tweak``
@@ -79,7 +79,7 @@ Originally there are no tags:
 
 Create a tag and it will show up (master diverges from trunk):
 
-    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds = checkout.cmd_create_tag(u'0.1')
     <BLANKLINE>
     EXPERIMENTAL support for git-svn tagging!
     <BLANKLINE>
@@ -87,35 +87,35 @@ Create a tag and it will show up (master diverges from trunk):
     Your local master diverges from trunk.
     <BLANKLINE>
     >>> cmds
-    ['git svn dcommit',
-     'git tag 0.1 -m "Tagging 0.1"',
-     'git svn tag -m "Tagging 0.1" 0.1']
+    [[u'git', u'svn', u'dcommit'],
+     [u'git', u'tag', u'0.1', u'-m', u'Tagging 0.1'],
+     [u'git', u'svn', u'tag', u'-m', u'Tagging 0.1', u'0.1']]
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
-    ['0.1']
+    [u'0.1']
 
 Create a tag and it will show up (master == trunk):
 
-    >>> cmds = checkout.cmd_create_tag('0.2')
+    >>> cmds = checkout.cmd_create_tag(u'0.2')
     <BLANKLINE>
     EXPERIMENTAL support for git-svn tagging!
     <BLANKLINE>
     You are on branch master.
     >>> cmds
-    ['git tag 0.2 -m "Tagging 0.2"',
-     'git svn tag -m "Tagging 0.2" 0.2']
+    [[u'git', u'tag', u'0.2', u'-m', u'Tagging 0.2'],
+     [u'git', u'svn', u'tag', u'-m', u'Tagging 0.2', u'0.2']]
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
-    ['0.1', '0.2']
+    [u'0.1', u'0.2']
 
 Work on a branch different from master (unsupported):
 
-    >>> dontcare = execute_command('git checkout -b foo')
+    >>> dontcare = execute_command([u'git', u'checkout', u'-b', u'foo'])
     >>> cmds = checkout.cmd_create_tag('0.3')
     Traceback (most recent call last):
     ...
     RuntimeError: SYSTEM EXIT (code=1)
     >>> checkout.available_tags()
-    ['0.1', '0.2']
+    [u'0.1', u'0.2']

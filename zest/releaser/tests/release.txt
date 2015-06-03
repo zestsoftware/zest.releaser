@@ -20,9 +20,9 @@ Check availability on pypi
 "Testing" means "don't really poll pypi", so the test setup does some
 monkeypatching for us:
 
-    >>> import urllib2
+    >>> from six.moves.urllib import request as urllib2
     >>> urllib2.urlopen
-    <function _mock_urlopen at ...>
+    <function ..._mock_urlopen at ...>
 
 There's a mock list of packages that our mock pypi provides:
 
@@ -37,6 +37,8 @@ Search a non-existing package:
 Now search for an "existing" package:
 
     >>> mock_pypi_available.append('zest.releaser')
+    >>> 'zest.releaser' in mock_pypi_available
+    True
     >>> release.package_in_pypi('zest.releaser')
     True
 
@@ -51,7 +53,7 @@ Grab the version:
 
     >>> releaser._grab_version()
     >>> releaser.data['version']
-    '0.1.dev0'
+    u'0.1.dev0'
 
 If, by some weird twist of fate, there's no release: we exit.
 
@@ -68,7 +70,7 @@ Check tag existence
 We check if a tag already exists.  First set the version to 0.1:
 
     >>> releaser = release.Releaser()
-    >>> releaser.vcs.version = '0.1'
+    >>> releaser.vcs.version = u'0.1'
     >>> releaser._grab_version()
     >>> releaser._check_if_tag_already_exists()
     >>> releaser.data['tag_already_exists']
@@ -90,7 +92,7 @@ Mock that the tag exists and check again:
     >>> releaser._check_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: y
-    svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk
+    [u'svn', u'--non-interactive', u'diff', u'file://TESTREPO/tha.example/tags/0.1', u'file://TESTREPO/tha.example/trunk']
     ...
     >>> # ^^^ The diff itself fails as we mocked its existence
     >>> releaser.data['tag_already_exists']
@@ -107,7 +109,7 @@ tag command:
 
     >>> releaser = release.Releaser()
     >>> releaser.data['tag_already_exists'] = False
-    >>> releaser.data['version'] = '0.1'
+    >>> releaser.data['version'] = u'0.1'
     >>> utils.test_answer_book.set_answers(['n'])
     >>> releaser._make_tag()
     Traceback (most recent call last):

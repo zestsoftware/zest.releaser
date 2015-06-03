@@ -19,7 +19,7 @@ An svn checkout of a project:
     >>> import os
     >>> os.chdir(svnsourcedir)
     >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command("svn info %s" % svnsourcedir))
+    >>> print(execute_command([u"svn", u"info", svnsourcedir]))
     Path: ...
     URL: file://TESTREPO/tha.example/trunk
     ...
@@ -62,4 +62,4 @@ The changelog and setup.py are at 0.1 and indicate a release date:
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '0.1'
+    version = u'0.1'

@@ -7,26 +7,27 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import read_text_file
 
 logger = logging.getLogger(__name__)
 
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
-NOTHING_CHANGED_YET = '- Nothing changed yet.'
-COMMIT_MSG = 'Back to development: %(new_version)s'
-DEV_VERSION_TEMPLATE = '%(new_version)s.dev0'
+NOTHING_CHANGED_YET = u'- Nothing changed yet.'
+COMMIT_MSG = u'Back to development: %(new_version)s'
+DEV_VERSION_TEMPLATE = u'{new_version:s}.dev0'
 
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
-    'workingdir': 'Original working directory',
-    'name': 'Name of the project being released',
-    'nothing_changed_yet': 'First line in new changelog section',
-    'new_version': 'New development version (so 1.1)',
-    'dev_version': 'New development version with dev marker (so 1.1.dev0)',
-    'commit_msg': 'Message template used when committing',
-    'history_header': 'Header template used for 1st history header',
-    'dev_version_template': 'Template for dev version number',
+    'workingdir': u'Original working directory',
+    'name': u'Name of the project being released',
+    'nothing_changed_yet': u'First line in new changelog section',
+    'new_version': u'New development version (so 1.1)',
+    'dev_version': u'New development version with dev marker (so 1.1.dev0)',
+    'commit_msg': u'Message template used when committing',
+    'history_header': u'Header template used for 1st history header',
+    'dev_version_template': u'Template for dev version number',
 }
 
 
@@ -48,7 +49,7 @@ class Postreleaser(baserelease.Basereleaser):
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
         if not utils.sanity_check(self.vcs):
-            logger.critical("Sanity check failed.")
+            logger.critical(u"Sanity check failed.")
             sys.exit(1)
         self._ask_for_new_dev_version()
 
@@ -66,12 +67,12 @@ class Postreleaser(baserelease.Basereleaser):
         current = utils.cleanup_version(current)
         # Try to make sure that the suggestion for next version after
         # 1.1.19 is not 1.1.110, but 1.1.20.
-        current_split = current.split('.')
-        major = '.'.join(current_split[:-1])
+        current_split = current.split(u'.')
+        major = u'.'.join(current_split[:-1])
         minor = current_split[-1]
         try:
             minor = int(minor) + 1
-            suggestion = '.'.join([major, str(minor)])
+            suggestion = u'.'.join([major, str(minor)])
         except ValueError:
             # Fall back on simply updating the last character when it is
             # an integer.
@@ -79,23 +80,22 @@ class Postreleaser(baserelease.Basereleaser):
                 last = int(current[-1]) + 1
                 suggestion = current[:-1] + str(last)
             except ValueError:
-                logger.warn("Version does not end with a number, so we can't "
-                            "calculate a suggestion for a next version.")
+                logger.warn(u"Version does not end with a number, so we can't "
+                            u"calculate a suggestion for a next version.")
                 suggestion = None
-        print("Current version is %r" % current)
-        q = "Enter new development version ('.dev0' will be appended)"
+        print(u"Current version is '{0!s}'".format(current))
+        q = u"Enter new development version ('.dev0' will be appended)"
         version = utils.ask_version(q, default=suggestion)
         if not version:
             version = suggestion
         if not version:
-            logger.error("No version entered.")
+            logger.error(u"No version entered.")
             sys.exit(1)
 
         self.data['new_version'] = version
-        dev_version = self.data['dev_version_template'] % self.data
+        dev_version = self.data['dev_version_template'].format(**self.data)
         self.data['dev_version'] = dev_version
-        logger.info("New version string is %r",
-                    dev_version)
+        logger.info(u"New version string is {0!r}".format(dev_version))
 
     def _update_version(self):
         """Update the version in vcs"""
@@ -106,15 +106,15 @@ class Postreleaser(baserelease.Basereleaser):
         version = self.data['new_version']
         history = self.vcs.history_file()
         if not history:
-            logger.warn("No history file found")
+            logger.warn(u"No history file found")
             return
-        history_lines = open(history).read().split('\n')
+        history_lines = read_text_file(history).split(u'\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
-            logger.warn("No detectable existing version headings in the "
-                        "history file.")
+            logger.warn(u"No detectable existing version headings in the "
+                        u"history file.")
             inject_location = 0
-            underline_char = '-'
+            underline_char = u'-'
         else:
             first = headings[0]
             inject_location = first['line']
@@ -122,19 +122,20 @@ class Postreleaser(baserelease.Basereleaser):
             try:
                 underline_char = history_lines[underline_line][0]
             except IndexError:
-                logger.debug("No character on line below header.")
-                underline_char = '-'
-        header = '%s (unreleased)' % version
+                logger.debug(u"No character on line below header.")
+                underline_char = u'-'
+        header = u'{0} (unreleased)'.format(version)
         inject = [header,
                   underline_char * len(header),
-                  '',
+                  u'',
                   self.data['nothing_changed_yet'],
-                  '',
-                  '']
+                  u'',
+                  u'']
         history_lines[inject_location:inject_location] = inject
-        contents = '\n'.join(history_lines)
+        contents = u'\n'.join(history_lines)
         open(history, 'w').write(contents)
-        logger.info("Injected new section into the history: %r", header)
+        logger.info(u"Injected new section into the history: {0!r}".format(
+            header))
 
     def _diff_and_commit(self):
         """Show diff and offer commit"""
@@ -144,12 +145,12 @@ class Postreleaser(baserelease.Basereleaser):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can
             # contain every kind of character.  The rest is mostly ascii.
-            print("Diff results:")
+            print(u"Diff results:")
             print(diff)
         else:
             # Common case
-            logger.info("The '%s':\n\n%s\n", diff_cmd, diff)
-        if utils.ask("OK to commit this"):
+            logger.info(u"The '{0}':\n\n{1}\n".format(diff_cmd, diff))
+        if utils.ask(u"OK to commit this"):
             msg = self.data['commit_msg'] % self.data
             msg = self.update_commit_message(msg)
             commit_cmd = self.vcs.cmd_commit(msg)
@@ -161,7 +162,7 @@ class Postreleaser(baserelease.Basereleaser):
         push_cmds = self.vcs.push_commands()
         if not push_cmds:
             return
-        if utils.ask("OK to push commits to the server?"):
+        if utils.ask(u"OK to push commits to the server?"):
             for push_cmd in push_cmds:
                 output = execute_command(push_cmd)
                 logger.info(output)
