@@ -1,6 +1,10 @@
+from __future__ import unicode_literals
+
 import re
 import tempfile
 
+from colorama import Fore
+import six
 import z3c.testsetup
 from zope.testing import renormalizing
 
@@ -58,9 +62,16 @@ checker = renormalizing.RENormalizing([
     # clearly.  This catches Fore.RED and Fore.MAGENTA.
     # Note the extra backslash in front of the left bracket, otherwise
     # you get: "error: unexpected end of regular expression"
-    (re.compile(r'\x1b\[31m'), 'RED '),
-    (re.compile(r'\x1b\[35m'), 'MAGENTA '),
-])
+    (re.compile(re.escape(Fore.RED)), 'RED '),
+    (re.compile(re.escape(Fore.MAGENTA)), 'MAGENTA '),
+] + ([
+
+] if six.PY3 else [
+    (re.compile('u\''), '\''),
+    (re.compile('u"'), '"'),
+    (re.compile('FileNotFoundError'), 'IOError'),
+    (re.compile('zest.releaser.utils.CommandException'), 'CommandException'),
+]))
 
 
 test_suite = z3c.testsetup.register_all_tests('zest.releaser', checker=checker)

@@ -1,8 +1,9 @@
 """Do the prerelease, actual release and post release in one fell swoop!
 """
+from __future__ import unicode_literals
+
 import logging
 import os
-
 
 from zest.releaser import prerelease
 from zest.releaser import release

@@ -37,7 +37,7 @@ Diff and commit
 Make a change:
 
     >>> setup_py = os.path.join(hgsourcedir, 'setup.py')
-    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'hg diff'
@@ -87,7 +87,7 @@ mercurial.  We just return the version as-is:
 
 Make and commit a small change:
 
-    >>> open(setup_py, 'a').write('\nb = 3\n')
+    >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print(execute_command(cmd))
     setup.py...

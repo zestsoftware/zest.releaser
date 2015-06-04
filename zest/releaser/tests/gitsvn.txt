@@ -37,7 +37,7 @@ Diff and commit
 Make a change:
 
     >>> setup_py = os.path.join(gitsvnsourcedir, 'setup.py')
-    >>> open(setup_py, 'a').write('\na = 2\n')
+    >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'git diff'

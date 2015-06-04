@@ -1,8 +1,12 @@
 # GPL, (c) Reinout van Rees
+from __future__ import unicode_literals
+
 import logging
 import os
-import urllib2
 import sys
+
+from six.moves.urllib.error import HTTPError
+from six.moves.urllib import request as urllib2
 
 from zest.releaser import baserelease
 from zest.releaser import pypi
@@ -30,7 +34,7 @@ def package_in_pypi(package):
     try:
         urllib2.urlopen(url)
         return True
-    except urllib2.HTTPError, e:
+    except HTTPError as e:
         logger.debug("Package not found on pypi: %s", e)
         return False
 

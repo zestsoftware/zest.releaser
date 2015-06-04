@@ -1,6 +1,9 @@
 """Provide a base for the three releasers"""
 
+from __future__ import unicode_literals
+
 import pkg_resources
+
 from zest.releaser import utils
 from zest.releaser import choose
 from zest.releaser import pypi

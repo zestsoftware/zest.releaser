@@ -1,11 +1,15 @@
+from __future__ import unicode_literals
+
 import logging
 import os
 import sys
+
 from zest.releaser import git
 from zest.releaser import hg
 from zest.releaser import bzr
 from zest.releaser import svn
 from zest.releaser import utils
+
 
 logger = logging.getLogger(__name__)
 

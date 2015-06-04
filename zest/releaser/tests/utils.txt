@@ -343,8 +343,8 @@ Warnings may also end up in the error output.  That may be unwanted.
     False
     >>> result.startswith(Fore.MAGENTA)
     True
-    >>> result
-    '\x1b[35mwarning: no previously-included files matching *.pyc found anywhere in distribution.'
+    >>> print(result)
+    MAGENTA warning: no previously-included files matching *.pyc found anywhere in distribution.
 
 One similar harmless warning by distutils does not get the 'warning:'
 prefixed, so we handle it explicitly:
@@ -355,8 +355,8 @@ prefixed, so we handle it explicitly:
     False
     >>> result.startswith(Fore.MAGENTA)
     True
-    >>> result
-    '\x1b[35mno previously-included directories found matching devsrc'
+    >>> print(result)
+    MAGENTA no previously-included directories found matching devsrc
 
 Let's do a combination:
 
@@ -394,7 +394,7 @@ The user can choose to quit:
     >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
     Traceback (most recent call last):
     ...
-    CommandException: Command failed: 'ls some-non-existing-file'
+    zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
 
 The user can choose to not retry and just continue:
 
@@ -429,7 +429,7 @@ And there is the retry.  In the end you do have to choose something:
     >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
     Traceback (most recent call last):
     ...
-    CommandException: Command failed: 'ls some-non-existing-file'
+    zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
 
 
 Changelog header detection

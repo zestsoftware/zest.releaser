@@ -1,12 +1,16 @@
 """Do the checks and tasks that have to happen after doing a release.
 """
+from __future__ import unicode_literals
+
 import datetime
 import logging
 import sys
 
 from zest.releaser import baserelease
 from zest.releaser import utils
+from zest.releaser.utils import read_text_file
 from zest.releaser.utils import execute_command
+
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +112,7 @@ class Postreleaser(baserelease.Basereleaser):
         if not history:
             logger.warn("No history file found")
             return
-        history_lines = open(history).read().split('\n')
+        history_lines = read_text_file(history).split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
             logger.warn("No detectable existing version headings in the "

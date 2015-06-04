@@ -39,8 +39,6 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     [zest.releaser]
     extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
-    >>> pypiconfig.config
-    <ConfigParser.ConfigParser instance at ...>
     >>> pypiconfig.is_old_pypi_config()
     True
     >>> pypiconfig.is_new_pypi_config()
@@ -66,7 +64,7 @@ And the new format that allows multiple uploads:
     username:ploneuser
     password:password
     <BLANKLINE>
-    [plone.org]
+    [mycompany]
     repository:http://my.company/products
     username:user
     password:password
@@ -74,8 +72,6 @@ And the new format that allows multiple uploads:
     [zest.releaser]
     extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
-    >>> pypiconfig.config
-    <ConfigParser.ConfigParser instance at ...>
     >>> pypiconfig.is_old_pypi_config()
     False
     >>> pypiconfig.is_new_pypi_config()
@@ -104,8 +100,6 @@ A file with both is also possible:
     username:bdfl
     password:secret
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
-    >>> pypiconfig.config
-    <ConfigParser.ConfigParser instance at ...>
     >>> pypiconfig.is_old_pypi_config()
     True
     >>> pypiconfig.is_new_pypi_config()
@@ -246,10 +240,8 @@ Now we add a setup.cfg with some good and some bad commands:
     ... [egg_info]
     ... tag_build = dev
     ... tag_svn_revision = true"""
-    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
+    >>> dont_care = open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
-    >>> setup_config.config
-    <ConfigParser.ConfigParser instance at ...>
     >>> setup_config.has_bad_commands()
     True
 
@@ -275,8 +267,6 @@ Fixing the config also prints the new config:
 We try that again with this fixed up config file as input:
 
     >>> setup_config = pypi.SetupConfig()
-    >>> setup_config.config
-    <ConfigParser.ConfigParser instance at ...>
     >>> setup_config.has_bad_commands()
     False
     >>> setup_config.fix_config()
@@ -310,7 +300,7 @@ Enable the option:
     ... [zest.releaser]
     ... no-input = yes
     ... """
-    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
+    >>> dont_care = open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.no_input()
     True
@@ -332,7 +322,7 @@ Enable the option:
     ... [zest.releaser]
     ... python-file-with-version = reinout/maurits.py
     ... """
-    >>> open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
+    >>> dont_care = open(pypi.SETUP_CONFIG_FILE, 'w').write(SETUP_CFG)
     >>> setup_config = pypi.SetupConfig()
     >>> setup_config.python_file_with_version()
     'reinout/maurits.py'

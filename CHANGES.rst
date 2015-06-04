@@ -1,10 +1,11 @@
 Changelog for zest.releaser
 ===========================
 
-4.1 (unreleased)
+5.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Python 3 support.
+  [mitchellrj]
 
 
 4.0 (2015-05-21)

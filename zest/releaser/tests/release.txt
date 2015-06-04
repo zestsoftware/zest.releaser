@@ -20,9 +20,9 @@ Check availability on pypi
 "Testing" means "don't really poll pypi", so the test setup does some
 monkeypatching for us:
 
-    >>> import urllib2
+    >>> from six.moves.urllib import request as urllib2
     >>> urllib2.urlopen
-    <function _mock_urlopen at ...>
+    <function ..._mock_urlopen at ...>
 
 There's a mock list of packages that our mock pypi provides:
 
