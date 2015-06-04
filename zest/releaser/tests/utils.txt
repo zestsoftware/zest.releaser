@@ -323,7 +323,7 @@ Running commands
 
 We can run commands.
 
-    >>> print(utils.execute_command('echo "E.T. phone home."'))
+    >>> print(utils.execute_command(['echo', 'E.T. phone home.']))
     E.T. phone home.
 
 We want to discover errors and show them in red.
@@ -332,25 +332,26 @@ We want to discover errors and show them in red.
     '\x1b[31m'
     >>> Fore.MAGENTA
     '\x1b[35m'
-    >>> utils.execute_command('ls some-non-existing-file')
+    >>> utils.execute_command(['ls', 'some-non-existing-file'])
     '\x1b[31mls...'
 
 Warnings may also end up in the error output.  That may be unwanted.
 
+    >>> from six.moves import shlex_quote
     >>> warning = "warning: no previously-included files matching '*.pyc' found anywhere in distribution."
-    >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
+    >>> result = utils.execute_command(['sh', '-c', 'echo %s > /dev/stderr' % shlex_quote(warning)])
     >>> result.startswith(Fore.RED)
     False
     >>> result.startswith(Fore.MAGENTA)
     True
     >>> print(result)
-    MAGENTA warning: no previously-included files matching *.pyc found anywhere in distribution.
+    MAGENTA warning: no previously-included files matching '*.pyc' found anywhere in distribution.
 
 One similar harmless warning by distutils does not get the 'warning:'
 prefixed, so we handle it explicitly:
 
     >>> warning = "no previously-included directories found matching devsrc"
-    >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
+    >>> result = utils.execute_command(['sh', '-c', 'echo %s > /dev/stderr' % shlex_quote(warning)])
     >>> result.startswith(Fore.RED)
     False
     >>> result.startswith(Fore.MAGENTA)
@@ -364,9 +365,7 @@ Let's do a combination:
     ... Warn: What is the answer to life, the universe and everything?
     ...
     ... 41"""
-    >>> result = utils.execute_command('echo "%s" > /dev/stderr' % message)
-    >>> result
-    '\x1b[35mWarn: What is the answer to life, the universe and everything?\n\n\x1b[31m41'
+    >>> result = utils.execute_command(['sh', '-c', 'echo %s > /dev/stderr' % shlex_quote(message)])
     >>> print(result)
     MAGENTA Warn: What is the answer to life, the universe and everything?
     <BLANKLINE>
@@ -391,7 +390,7 @@ significantly on different systems, so we do not check the exact line.
 The user can choose to quit:
 
     >>> utils.test_answer_book.set_answers(['q'])
-    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     Traceback (most recent call last):
     ...
     zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
@@ -399,7 +398,7 @@ The user can choose to quit:
 The user can choose to not retry and just continue:
 
     >>> utils.test_answer_book.set_answers(['n'])
-    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> result = utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     RED ls...
     RED There were errors or warnings.
     Question: Retry this command? [Yes/no/quit/?]
@@ -410,7 +409,7 @@ The user can choose to not retry and just continue:
 And there is the retry.  In the end you do have to choose something:
 
     >>> utils.test_answer_book.set_answers(['y', 'y', 'n'])
-    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> result = utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     RED ls...
     RED There were errors or warnings.
     Question: Retry this command? [Yes/no/quit/?]
@@ -426,7 +425,7 @@ And there is the retry.  In the end you do have to choose something:
     >>> print(result)
     RED ls...
     >>> utils.test_answer_book.set_answers(['y', 'y', 'q'])
-    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     Traceback (most recent call last):
     ...
     zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
@@ -525,7 +524,7 @@ Safe setup.py running
 sys.executable.
 
     >>> cmd = utils.setup_py('cook a cow')
-    >>> print(cmd.replace(sys.executable, 'python'))  # test normalization
+    >>> print(utils.cmd_to_text(['python'] + cmd[1:]))  # test normalization
     python setup.py cook a cow
 
 When the setup.py arguments include arguments that indicate pypi interaction,
@@ -534,9 +533,9 @@ happens when TESTMODE is on:
 
     >>> utils.TESTMODE = True
     >>> print(utils.setup_py('upload'))
-    echo MOCK setup.py upload
+    ['echo', 'MOCK', 'setup.py', 'upload']
     >>> print(utils.setup_py('register'))
-    echo MOCK setup.py register
+    ['echo', 'MOCK', 'setup.py', 'register']
 
 
 Data dict documentation

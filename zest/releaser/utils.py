@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 import logging
 import os
 import re
+import shlex
 import subprocess
 import sys
 import textwrap
@@ -23,6 +24,7 @@ import pkg_resources
 from pkg_resources import parse_version
 import six
 from six.moves import input
+from six.moves import shlex_quote
 
 
 logger = logging.getLogger(__name__)
@@ -47,6 +49,10 @@ def fs_to_text(fs_name):
         fs_name = fs_name.decode(sys.getfilesystemencoding(),
                                  'surrogateescape')
     return fs_name
+
+
+def cmd_to_text(cmd):
+    return ' '.join(map(shlex_quote, cmd))
 
 
 class CommandException(Exception):
@@ -173,12 +179,12 @@ def get_input(question):
             result = result.decode(INPUT_ENCODING)
         return result.strip()
     # Testing means no interactive input. Get it from answers_for_testing.
-    print("Question: %s" % question)
+    print("Question: %s" % question.strip())
     answer = test_answer_book.get_next_answer()
     if answer == '':
         print("Our reply: <ENTER>")
     else:
-        print("Our reply: %s" % answer)
+        print("Our reply: %s" % answer.strip())
     return answer
 
 
@@ -357,24 +363,30 @@ def show_interesting_lines(result):
 
 def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
-    executable = sys.executable
+    if isinstance(rest_of_cmdline, basestring):
+        # BBB
+        rest_of_cmdline = shlex.split(rest_of_cmdline)
+    executable = [sys.executable]
     if TESTMODE:
         # Hack for testing
         for unsafe in ['upload', 'register']:
             if unsafe in rest_of_cmdline:
-                executable = 'echo MOCK'
+                executable = ['echo', 'MOCK']
 
-    return '%s setup.py %s' % (executable, rest_of_cmdline)
+    return executable + ['setup.py'] + rest_of_cmdline
 
 
 def twine_command(rest_of_cmdline):
     """Return 'twine' command (with hack for testing)"""
-    executable = 'twine'
+    if isinstance(rest_of_cmdline, basestring):
+        # BBB
+        rest_of_cmdline = shlex.split(rest_of_cmdline)
+    executable = ['twine']
     if TESTMODE:
         # Hack for testing
-        executable = 'echo MOCK twine'
+        executable = ['echo', 'MOCK', 'twine']
 
-    return '%s %s' % (executable, rest_of_cmdline)
+    return executable + rest_of_cmdline
 
 
 def has_twine():
@@ -389,7 +401,7 @@ def has_twine():
     Note that --version prints to stderr, so it fails.  --help prints
     to stdout as it should.
     """
-    result = execute_command(twine_command('--help'))
+    result = execute_command(twine_command(['--help']))
     return Fore.RED not in result
 
 
@@ -518,10 +530,13 @@ def run_entry_points(which_releaser, when, data):
 
 def _execute_command(command, input_value=''):
     """commands.getoutput() replacement that also works on windows"""
-    logger.debug("Running command: %r", command)
-    if command.startswith(sys.executable):
+    if isinstance(command, basestring):
+        # BBB
+        command = shlex.split(command)
+    logger.debug("Running command: %r", cmd_to_text(command))
+    if command[:1] == [sys.executable]:
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        if ' upload ' in command or ' register ' in command:
+        if 'upload' in command or 'register' in command:
             # We really do want to see the stderr here, otherwise a
             # failed upload does not even show up in the output.
             show_stderr = True
@@ -531,7 +546,6 @@ def _execute_command(command, input_value=''):
         env = None
         show_stderr = True
     p = subprocess.Popen(command,
-                         shell=True,
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
@@ -593,7 +607,7 @@ def _execute_command(command, input_value=''):
         result = stdout_output
         if stderr_output:
             logger.debug("Stderr of running command '%s':\n%s",
-                         command, stderr_output)
+                         cmd_to_text(command), stderr_output)
     o.close()
     e.close()
     return result
@@ -620,6 +634,9 @@ def execute_command(command, allow_retry=False, fail_message=""):
 
     It might be a warning, but we cannot detect the distinction.
     """
+    if isinstance(command, basestring):
+        # BBB - also done by _execute_command, but we use this ourselves, below
+        command = shlex.split(command)
     result = _execute_command(command)
     if not allow_retry:
         return result
@@ -655,13 +672,13 @@ def execute_command(command, allow_retry=False, fail_message=""):
         if input_value:
             input_value = input_value.lower()
             if input_value == 'y' or input_value == 'yes':
-                logger.info("Retrying command: %r", command)
+                logger.info("Retrying command: %r", cmd_to_text(command))
                 return execute_command(command, allow_retry=True)
             if input_value == 'n' or input_value == 'no':
                 # Accept the error, continue with the program.
                 return result
             if input_value == 'q' or input_value == 'quit':
-                raise CommandException("Command failed: %r" % command)
+                raise CommandException("Command failed: %r" % cmd_to_text(command))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.

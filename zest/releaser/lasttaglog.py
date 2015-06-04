@@ -26,6 +26,7 @@ def main():
                  full_tag, name, vcs.version)
     logger.info("Showing log since tag %s and the last commit.",
                 full_tag)
-    log_command = vcs.cmd_log_since_tag(found)
-    print(log_command)
-    print(execute_command(log_command))
+    log_commands = vcs.cmd_log_since_tag(found)
+    for log_command in log_commands:
+        print(utils.cmd_to_text(log_command))
+        print(execute_command(log_command))

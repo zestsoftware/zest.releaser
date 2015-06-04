@@ -142,8 +142,10 @@ class Postreleaser(baserelease.Basereleaser):
 
     def _diff_and_commit(self):
         """Show diff and offer commit"""
-        diff_cmd = self.vcs.cmd_diff()
-        diff = execute_command(diff_cmd)
+        diff_cmds = self.vcs.cmd_diff()
+        diff = ''
+        for diff_cmd in diff_cmds:
+            diff += execute_command(diff_cmd)
         if sys.version.startswith('2.6.2'):
             # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
             # spot it can surface as we show a part of the changelog which can
@@ -156,9 +158,10 @@ class Postreleaser(baserelease.Basereleaser):
         if utils.ask("OK to commit this"):
             msg = self.data['commit_msg'] % self.data
             msg = self.update_commit_message(msg)
-            commit_cmd = self.vcs.cmd_commit(msg)
-            commit = execute_command(commit_cmd)
-            logger.info(commit)
+            commit_cmds = self.vcs.cmd_commit(msg)
+            for commit_cmd in commit_cmds:
+                commit = execute_command(commit_cmd)
+                logger.info(commit)
 
     def _push(self):
         """Offer to push changes, if needed."""

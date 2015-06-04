@@ -38,10 +38,10 @@ Make a change:
 
     >>> setup_py = os.path.join(svnsourcedir, 'setup.py')
     >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
-    >>> cmd = checkout.cmd_diff()
-    >>> cmd
-    'svn diff'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff()
+    >>> cmds
+    [['svn', 'diff']]
+    >>> print(execute_command(cmds[0]))
     Index: ...
     --- setup.py      (revision 3)
     +++ setup.py      (working copy)
@@ -54,10 +54,10 @@ Make a change:
 
 Commit it:
 
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> cmd
-    'svn commit -m "small tweak"'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> cmds
+    [['svn', 'commit', '-m', 'small tweak']]
+    >>> print(execute_command(cmds[0]))
     Sending        setup.py
     Transmitting file data...
     Committed revision 5.
@@ -77,10 +77,10 @@ The name of the /tags directory (so: a plural) is succesfully detected:
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
-    >>> cmd
-    'svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"'
-    >>> dont_care = execute_command(cmd)
+    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds
+    [['svn', 'cp', 'file://TESTREPO/tha.example/trunk', 'file://TESTREPO/tha.example/tags/0.1', '-m', 'Tagging 0.1']]
+    >>> dont_care = execute_command(cmds[0])
     >>> checkout.available_tags()
     ['0.1']
 
@@ -92,8 +92,10 @@ A tag url is important for subversion:
 Make and commit a small change:
 
     >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> for cmd in cmds:
+    ...     print(execute_command(cmd))
+    ...
     Sending        setup.py
     Transmitting file data .
     Committed revision 7.
@@ -102,10 +104,10 @@ Now we can request the changes since a specific tag.  Note that we use the
 ``--non-interactive`` option to make sure it can be run from cronjobs or
 post-commit hooks:
 
-    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
-    >>> cmd
-    'svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmds
+    [['svn', '--non-interactive', 'diff', 'file://TESTREPO/tha.example/tags/0.1', 'file://TESTREPO/tha.example/trunk']]
+    >>> print(execute_command(cmds[0]))
     Index: setup.py
     ===================================================================
     --- setup.py      (.../tags/0.1)  (revision 7)
@@ -131,10 +133,10 @@ For checking out a tag, we first need a temp folder to do the checkout in:
 
 The tag checkout command makes a checkout in that tempdir:
 
-    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
-    >>> cmd
-    'svn co file://TESTREPO/tha.example/tags/0.1 TMPDIR/somename...'
-    >>> print('\n'.join(sorted(execute_command(cmd).splitlines())))
+    >>> cmds = checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmds
+    [['svn', 'co', 'file://TESTREPO/tha.example/tags/0.1', 'TMPDIR/somename...']]
+    >>> print('\n'.join(sorted(execute_command(cmds[0]).splitlines())))
     A    TMPDIR/somename.../CHANGES.txt
     A    TMPDIR/somename.../README.txt
     A    TMPDIR/somename.../TODO.txt
@@ -194,15 +196,15 @@ Set up a new sample project in the repository:
 
     >>> repo_url
     'file://TESTREPO'
-    >>> cmd = 'svn mkdir %s/sample -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/sample' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
-    >>> cmd = 'svn mkdir %s/sample/trunk -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/sample/trunk' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
 
 Make a checkout:
 
     >>> os.chdir(tempdir)
-    >>> cmd = 'svn co %s/sample/trunk sample' % repo_url
+    >>> cmd = ['svn', 'co', '%s/sample/trunk' % repo_url, 'sample']
     >>> dont_care = execute_command(cmd)
     >>> os.chdir('sample')
 
@@ -245,7 +247,7 @@ obviously an empty list:
     []
     >>> print(sample_checkout._tags_name)
     tags
-    >>> cmd = 'svn list %s/sample' % repo_url
+    >>> cmd = ['svn', 'list', '%s/sample' % repo_url]
     >>> print(execute_command(cmd))
     tags/
     trunk/
@@ -262,22 +264,22 @@ Set up a new sample project in the repository:
 
     >>> repo_url
     'file://TESTREPO'
-    >>> cmd = 'svn mkdir %s/singular -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/singular' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
-    >>> cmd = 'svn mkdir %s/singular/trunk -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/singular/trunk' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
 
 And make a /tag directory.  We don't support adding one ourselves (we always
 suggest /tags, make a /tag dir yourself if you really really need it), but we
 *do* detect and use one:
 
-    >>> cmd = 'svn mkdir %s/singular/tag -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/singular/tag' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
 
 Make a checkout:
 
     >>> os.chdir(tempdir)
-    >>> cmd = 'svn co %s/singular/trunk singular' % repo_url
+    >>> cmd = ['svn', 'co', '%s/singular/trunk' % repo_url, 'singular']
     >>> dont_care = execute_command(cmd)
     >>> os.chdir('singular')
 
@@ -306,27 +308,28 @@ Tag urls are formed correctly with the singular name:
 
 Tag and checkout commands also use the singular:
 
-    >>> cmd = singular_checkout.cmd_checkout_from_tag('0.1', temp)
-    >>> cmd
-    'svn co file://TESTREPO/singular/tag/0.1 TMPDIR/somename...'
-    >>> cmd = singular_checkout.cmd_create_tag('0.1')
-    >>> cmd
-    'svn cp file://TESTREPO/singular/trunk file://TESTREPO/singular/tag/0.1 -m "Tagging 0.1"'
+    >>> cmds = singular_checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmds
+    [['svn', 'co', 'file://TESTREPO/singular/tag/0.1', 'TMPDIR/somename...']]
+    
+    >>> cmds = singular_checkout.cmd_create_tag('0.1')
+    >>> cmds
+    [['svn', 'cp', 'file://TESTREPO/singular/trunk', 'file://TESTREPO/singular/tag/0.1', '-m', 'Tagging 0.1']]
 
 If we have branch checkout, the base url is still extracted correctly, even if
 the singular /tag and /branch is used:
 
-    >>> cmd = 'svn mkdir %s/singular/branch -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/singular/branch' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
-    >>> cmd = 'svn mkdir %s/singular/branch/mybranch -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/singular/branch/mybranch' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
-    >>> cmd = 'svn mkdir %s/singular/tag/mytag -m "mkdir"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/singular/tag/mytag' % repo_url, '-m', 'mkdir']
     >>> dont_care = execute_command(cmd)
 
     >>> os.chdir(tempdir)
-    >>> cmd = 'svn co %s/singular/branch/mybranch mysingularbranch' % repo_url
+    >>> cmd = ['svn', 'co', '%s/singular/branch/mybranch' % repo_url, 'mysingularbranch']
     >>> dont_care = execute_command(cmd)
-    >>> cmd = 'svn co %s/singular/tag/mytag mysingulartag' % repo_url
+    >>> cmd = ['svn', 'co', '%s/singular/tag/mytag' % repo_url, 'mysingulartag']
     >>> dont_care = execute_command(cmd)
 
     >>> os.chdir(tempdir)
@@ -374,15 +377,15 @@ Create trunk/ for both projects:
 
     >>> repo_url
     'file://TESTREPO'
-    >>> cmd = 'svn mkdir --parents %s/trunk/projectA/trunk -m"mk projectA"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '--parents', '%s/trunk/projectA/trunk' % repo_url, '-m', 'mk projectA']
     >>> dont_care = execute_command(cmd)
-    >>> cmd = 'svn mkdir %s/trunk/projectB/trunk -m "mkdir projectB"' % repo_url
+    >>> cmd = ['svn', 'mkdir', '%s/trunk/projectB/trunk' % repo_url, '-m', 'mkdir projectB']
     >>> dont_care = execute_command(cmd)
 
 Make a checkout:
 
     >>> os.chdir(tempdir)
-    >>> cmd = 'svn co %s/trunk' % repo_url
+    >>> cmd = ['svn', 'co', '%s/trunk' % repo_url]
     >>> dont_care = execute_command(cmd)
 
 Now check that we try to create the proper trunk/projectA/tags directory
@@ -399,7 +402,7 @@ Now check that we try to create the proper trunk/projectA/tags directory
     <BLANKLINE>
     Committed revision 18.
     []
-    >>> cmd = 'svn list -R %s/trunk' % repo_url
+    >>> cmd = ['svn', 'list', '-R', '%s/trunk' % repo_url]
     >>> print(execute_command(cmd))
     projectA/
     projectA/tags/

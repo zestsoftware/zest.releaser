@@ -8,6 +8,8 @@ import sys
 import tempfile
 import webbrowser
 
+from six.moves import shlex_quote
+
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
 
@@ -22,15 +24,18 @@ def show_longdesc():
     # utils module. This makes sure the python path is set up right.
     # For the other calls we use os.system(), because that returns an
     # error code which we need.
-    execute_command(utils.setup_py('--long-description > %s' %
-                                   filename1))
-    error = os.system('rst2html.py %s > %s' % (filename1, filename2))
+    execute_command(['sh', '-c', utils.cmd_to_text(
+        utils.setup_py('--long-description > %s' % filename1))])
+    error = os.system('rst2html.py %s > %s' % (shlex_quote(filename1),
+                                               shlex_quote(filename2)))
     if error:
         # On Linux it needs to be 'rst2html', without the '.py'
-        error = os.system('rst2html %s > %s' % (filename1, filename2))
+        error = os.system('rst2html %s > %s' % (shlex_quote(filename1),
+                                                shlex_quote(filename2)))
     if error:
         # Alternatively, zc.rst2 provides rst2 xyz.
-        error = os.system('rst2 html %s > %s' % (filename1, filename2))
+        error = os.system('rst2 html %s > %s' % (shlex_quote(filename1),
+                                                 shlex_quote(filename2)))
     if error:
         logging.error(
             'Error generating html. Please install docutils (or zc.rst2).')

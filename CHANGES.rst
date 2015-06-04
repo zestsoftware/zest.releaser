@@ -7,6 +7,9 @@ Changelog for zest.releaser
 - Python 3 support.
   [mitchellrj]
 
+- Stopped using string interpolation for external commands, or where
+  they are required, escape the values properly.
+  [mitchellrj]
 
 4.0 (2015-05-21)
 ----------------
