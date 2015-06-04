@@ -1,4 +1,3 @@
-from zest.releaser.utils import execute_command
 import logging
 import os
 import re
@@ -48,8 +47,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            execute_command(utils.setup_py('egg_info'))
-            version = execute_command(
+            utils.execute_command(utils.setup_py('egg_info'))
+            version = utils.execute_command(
                 utils.setup_py('--version')).splitlines()[0]
             if 'Traceback' in version:
                 # Likely cause is for example forgetting to 'import
@@ -65,8 +64,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            execute_command(utils.setup_py('egg_info'))
-            return execute_command(utils.setup_py('--name')).strip()
+            utils.execute_command(utils.setup_py('egg_info'))
+            return utils.execute_command(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
         filenames = ['version']
@@ -292,7 +291,7 @@ class BaseVersionControl(object):
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print(execute_command(cmd))
+        print(utils.execute_command(cmd))
 
     def is_clean_checkout(self):
         "Is this a clean checkout?"
