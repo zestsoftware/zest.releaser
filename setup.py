@@ -11,7 +11,7 @@ def read(filename):
         return unicode(codecs.open(filename, encoding='utf-8').read())
     except NameError:
         # python 3, perhaps six can handle this more elegantly.
-        return open(filename).read()
+        return open(filename, 'r', encoding='utf-8').read()
 
 
 
