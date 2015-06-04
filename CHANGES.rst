@@ -7,6 +7,9 @@ Changelog for zest.releaser
 - Python 3 support.
   [mitchellrj]
 
+- Use the same `readme` library that PyPI uses to parse long
+  descriptions when we test and render them.
+  [mitchellrj]
 
 4.0 (2015-05-21)
 ----------------
