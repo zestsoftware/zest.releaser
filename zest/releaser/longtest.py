@@ -22,7 +22,8 @@ logger = logging.getLogger(__name__)
 def show_longdesc():
     if not HAVE_README:
         logging.error(
-            'Error generating html. Please install `readme`.')
+            "To check the long description, we need the 'readme' package. "
+            "(It is included if you install `zest.releaser[recommended]`)")
         sys.exit(1)
 
     filename = tempfile.mktemp('html')
