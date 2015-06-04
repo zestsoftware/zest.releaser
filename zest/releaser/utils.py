@@ -363,7 +363,7 @@ def show_interesting_lines(result):
 
 def setup_py(rest_of_cmdline):
     """Return 'python setup.py' command (with hack for testing)"""
-    if isinstance(rest_of_cmdline, basestring):
+    if isinstance(rest_of_cmdline, six.text_type):
         # BBB
         rest_of_cmdline = shlex.split(rest_of_cmdline)
     executable = [sys.executable]
@@ -378,7 +378,7 @@ def setup_py(rest_of_cmdline):
 
 def twine_command(rest_of_cmdline):
     """Return 'twine' command (with hack for testing)"""
-    if isinstance(rest_of_cmdline, basestring):
+    if isinstance(rest_of_cmdline, six.text_type):
         # BBB
         rest_of_cmdline = shlex.split(rest_of_cmdline)
     executable = ['twine']
@@ -530,7 +530,7 @@ def run_entry_points(which_releaser, when, data):
 
 def _execute_command(command, input_value=''):
     """commands.getoutput() replacement that also works on windows"""
-    if isinstance(command, basestring):
+    if isinstance(command, six.text_type):
         # BBB
         command = shlex.split(command)
     logger.debug("Running command: %r", cmd_to_text(command))
@@ -634,7 +634,7 @@ def execute_command(command, allow_retry=False, fail_message=""):
 
     It might be a warning, but we cannot detect the distinction.
     """
-    if isinstance(command, basestring):
+    if isinstance(command, six.text_type):
         # BBB - also done by _execute_command, but we use this ourselves, below
         command = shlex.split(command)
     result = _execute_command(command)
