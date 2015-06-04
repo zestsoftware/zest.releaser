@@ -27,7 +27,7 @@ def show_longdesc():
             "(It is included if you install `zest.releaser[recommended]`)")
         sys.exit(1)
 
-    filename = tempfile.mktemp('html')
+    filename = tempfile.mktemp('.html')
     # Note: for the setup.py call we use _execute_command() from our
     # utils module. This makes sure the python path is set up right.
     longdesc = _execute_command(utils.setup_py('--long-description'))
