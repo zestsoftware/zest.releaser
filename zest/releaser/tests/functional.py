@@ -1,12 +1,16 @@
 """Set up functional test fixtures"""
+from __future__ import unicode_literals
+
 import os
-import pkg_resources
 import shutil
 import sys
 import tarfile
 import tempfile
-import urllib2
-import StringIO
+
+import pkg_resources
+from six import StringIO
+from six.moves.urllib import request as urllib2
+from six.moves.urllib.error import HTTPError
 
 from zest.releaser import utils
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
@@ -36,19 +40,22 @@ def setup(test):
     test.orig_urlopen = urllib2.urlopen
     test.mock_pypi_available = []
 
-    def _mock_urlopen(url):
-        # print "Mock opening", url
-        package = url.replace('https://pypi.python.org/simple/', '')
-        if package not in test.mock_pypi_available:
-            raise urllib2.HTTPError(
-                url, 404,
-                'HTTP Error 404: Not Found (%s does not have any releases)'
-                % package, None, None)
-        else:
-            answer = ' '.join(test.mock_pypi_available)
-        return StringIO.StringIO(buf=answer)
+    def _make_mock_urlopen(mock_pypi_available):
+        def _mock_urlopen(url):
+            # print "Mock opening", url
+            package = url.replace('https://pypi.python.org/simple/', '')
+            if package not in mock_pypi_available:
+                raise HTTPError(
+                    url, 404,
+                    'HTTP Error 404: Not Found (%s does not have any releases)'
+                    % package, None, None)
+            else:
+                answer = ' '.join(mock_pypi_available)
+            return StringIO(answer)
 
-    urllib2.urlopen = _mock_urlopen
+        return _mock_urlopen
+
+    urllib2.urlopen = _make_mock_urlopen(test.mock_pypi_available)
 
     # Extract example project
     example_tar = pkg_resources.resource_filename(
@@ -81,7 +88,7 @@ def setup(test):
     shutil.copytree(sourcedir, hgsourcedir)
     execute_command("hg init %s" % hgsourcedir)
     open(os.path.join(hgsourcedir, '.hgignore'), 'wb').write(
-        'tha.example.egg-info\n\.pyc$\n')
+        'tha.example.egg-info\n\.pyc$\n'.encode('utf-8'))
     execute_command("hg add %s" % hgsourcedir)
     execute_command("hg commit -m 'init' %s" % hgsourcedir)
 
@@ -142,7 +149,8 @@ def setup(test):
             NOTHING_CHANGED_YET, '- Brown bag release.')
         open('CHANGES.txt', 'w').write(new_changes)
 
-    test.globs.update({'tempdir': test.tempdir,
+    test.globs.update({'unicode_literals': unicode_literals,
+                       'tempdir': test.tempdir,
                        'repo_url': repo_url,
                        'svnsourcedir': svnsourcedir,
                        'hgsourcedir': hgsourcedir,

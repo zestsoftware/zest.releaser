@@ -1,11 +1,15 @@
-from zest.releaser.utils import execute_command
+from __future__ import unicode_literals
+
 import logging
 import os
 import re
 import sys
 
+import six
+
 from zest.releaser import pypi
 from zest.releaser import utils
+
 
 VERSION_PATTERN = re.compile(r"""
 ^                # Start of line
@@ -48,8 +52,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            execute_command(utils.setup_py('egg_info'))
-            version = execute_command(
+            utils.execute_command(utils.setup_py('egg_info'))
+            version = utils.execute_command(
                 utils.setup_py('--version')).splitlines()[0]
             if 'Traceback' in version:
                 # Likely cause is for example forgetting to 'import
@@ -65,8 +69,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            execute_command(utils.setup_py('egg_info'))
-            return execute_command(utils.setup_py('--name')).strip()
+            utils.execute_command(utils.setup_py('egg_info'))
+            return utils.execute_command(utils.setup_py('--name')).strip()
 
     def get_version_txt_version(self):
         filenames = ['version']
@@ -82,7 +86,8 @@ class BaseVersionControl(object):
         setup_cfg = pypi.SetupConfig()
         if not setup_cfg.python_file_with_version():
             return
-        lines = open(setup_cfg.python_file_with_version()).read().split('\n')
+        lines = utils.read_text_file(
+            setup_cfg.python_file_with_version()).split('\n')
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
             if match:
@@ -103,7 +108,7 @@ class BaseVersionControl(object):
         a CHANGES.txt and a docs/HISTORY.txt, you want the top level
         CHANGES.txt to be found first.
         """
-        if isinstance(names, basestring):
+        if isinstance(names, six.string_types):
             names = [names]
         names = [name.lower() for name in names]
         files = self.list_files()
@@ -189,7 +194,7 @@ class BaseVersionControl(object):
         if self.get_python_file_version():
             setup_cfg = pypi.SetupConfig()
             filename = setup_cfg.python_file_with_version()
-            lines = open(filename).read().split('\n')
+            lines = utils.read_text_file(filename).split('\n')
             for index, line in enumerate(lines):
                 match = UNDERSCORED_VERSION_PATTERN.search(line)
                 if match:
@@ -215,7 +220,7 @@ class BaseVersionControl(object):
 
         good_version = "version = '%s'" % version
         line_number = 0
-        setup_lines = open('setup.py').read().split('\n')
+        setup_lines = utils.read_text_file('setup.py').split('\n')
         for line_number, line in enumerate(setup_lines):
             match = VERSION_PATTERN.search(line)
             if match:
@@ -292,7 +297,7 @@ class BaseVersionControl(object):
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print(execute_command(cmd))
+        print(utils.execute_command(cmd))
 
     def is_clean_checkout(self):
         "Is this a clean checkout?"

@@ -13,7 +13,7 @@ repository:http://plone.org/products
 username:ploneuser
 password:password
 
-[plone.org]
+[mycompany]
 repository:http://my.company/products
 username:user
 password:password

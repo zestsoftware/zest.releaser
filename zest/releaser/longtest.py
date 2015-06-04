@@ -1,5 +1,7 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
+from __future__ import unicode_literals
+
 import logging
 import os
 import sys
@@ -21,7 +23,7 @@ def show_longdesc():
     # For the other calls we use os.system(), because that returns an
     # error code which we need.
     execute_command(utils.setup_py('--long-description > %s' %
-                          filename1))
+                                   filename1))
     error = os.system('rst2html.py %s > %s' % (filename1, filename2))
     if error:
         # On Linux it needs to be 'rst2html', without the '.py'

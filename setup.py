@@ -3,7 +3,7 @@ import codecs
 
 from setuptools import setup, find_packages
 
-version = '4.1.dev0'
+version = '5.0.dev0'
 
 
 def read(filename):
@@ -11,7 +11,7 @@ def read(filename):
         return unicode(codecs.open(filename, encoding='utf-8').read())
     except NameError:
         # python 3, perhaps six can handle this more elegantly.
-        return open(filename).read()
+        return open(filename, 'r', encoding='utf-8').read()
 
 
 
@@ -43,9 +43,11 @@ setup(name='zest.releaser',
       install_requires=[
           'setuptools',
           'colorama',
+          'six',
       ],
       extras_require={
           'recommended': [
+              'chardet',
               'check-manifest',
               'pyroma',
               'wheel',
@@ -53,6 +55,7 @@ setup(name='zest.releaser',
               ],
           'test': [
               'z3c.testsetup >= 0.8.4',
+              'zope.testrunner',
               'wheel',
               ]},
       entry_points={

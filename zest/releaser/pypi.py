@@ -1,10 +1,13 @@
+from __future__ import unicode_literals
+
+import codecs
 import logging
 import os
-import pkg_resources
 
-from ConfigParser import ConfigParser
-from ConfigParser import NoSectionError
-from ConfigParser import NoOptionError
+import pkg_resources
+from six.moves.configparser import ConfigParser
+from six.moves.configparser import NoSectionError
+from six.moves.configparser import NoOptionError
 
 try:
     pkg_resources.get_distribution('wheel')
@@ -44,7 +47,8 @@ class SetupConfig(object):
             self.config = None
             return
         self.config = ConfigParser()
-        self.config.read(self.config_filename)
+        with codecs.open(self.config_filename, 'r', 'utf8') as fp:
+            self.config.readfp(fp)
 
     def has_bad_commands(self):
         if self.config is None:
@@ -164,7 +168,9 @@ class PypiConfig(object):
             self.config = None
             return
         self.config = ConfigParser()
-        self.config.read(files)
+        for filename in files:
+            with codecs.open(filename, 'r', 'utf8') as fp:
+                self.config.readfp(fp)
 
     def is_pypi_configured(self):
         # Do we have configuration for releasing to at least one

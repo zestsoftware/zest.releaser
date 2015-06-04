@@ -1,14 +1,29 @@
 # Small utility methods.
-from colorama import Fore
-from optparse import OptionParser
-from pkg_resources import parse_version
+from __future__ import unicode_literals
+
+from argparse import ArgumentParser
 import logging
 import os
 import re
 import subprocess
 import sys
 import textwrap
+try:
+    from tokenize import open as tok_open
+except ImportError:
+    tok_open = None
+
+try:
+    import chardet
+    HAVE_CHARDET = True
+except ImportError:
+    HAVE_CHARDET = False
+from colorama import Fore
 import pkg_resources
+from pkg_resources import parse_version
+import six
+from six.moves import input
+
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +33,20 @@ MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
 VERBOSE = False
+INPUT_ENCODING = 'UTF-8'
+if getattr(sys.stdin, 'encoding', None):
+    INPUT_ENCODING = sys.stdin.encoding
+OUTPUT_ENCODING = INPUT_ENCODING
+if getattr(sys.stdout, 'encoding', None):
+    OUTPUT_ENCODING = sys.stdout.encoding
+ENCODING_HINTS = (b'# coding=', b'# -*- coding: ', b'# vim: set fileencoding=')
+
+
+def fs_to_text(fs_name):
+    if not isinstance(fs_name, six.text_type):
+        fs_name = fs_name.decode(sys.getfilesystemencoding(),
+                                 'surrogateescape')
+    return fs_name
 
 
 class CommandException(Exception):
@@ -29,6 +58,53 @@ def loglevel():
     if VERBOSE:
         return logging.DEBUG
     return logging.INFO
+
+
+def read_text_file(filename, encoding=None):
+    # Unless specified manually, We have no way of knowing what text
+    # encoding this file may be in.
+    # The 'open' method uses the default system encoding to read text
+    # files in Python 3 or falls back to utf-8.
+    if tok_open is not None and encoding is None:
+        # If an encoding is manually specified, never try to detect one
+        with tok_open(filename) as fh:
+            return fh.read()
+
+    with open(filename, 'rb') as fh:
+        data = fh.read()
+
+    if encoding is not None:
+        return data.decode(encoding)
+
+    if HAVE_CHARDET:
+        encoding_result = chardet.detect(data)
+        if encoding_result and encoding_result['encoding'] is not None:
+            return data.decode(encoding_result['encoding'])
+
+    # Look for hints, PEP263-style
+    if data[:3] == b'\xef\xbb\xbf':
+        return data.decode('UTF-8')
+
+    data_len = len(data)
+    for canary in ENCODING_HINTS:
+        if canary in data:
+            pos = data.index(canary)
+            if pos > 1 and data[pos - 1] not in (b' ', b'\n', b'\r'):
+                continue
+            pos += len(canary)
+            coding = b''
+            while pos < data_len and data[pos] not in (b' ', b'\n'):
+                coding += data[pos]
+                pos += 1
+            encoding = coding.decode('ascii').strip()
+            try:
+                return data.decode(encoding)
+            except (LookupError, UnicodeError):
+                # Try the next one
+                pass
+
+    # Fall back to utf-8
+    return data.decode('UTF-8')
 
 
 def strip_version(version):
@@ -50,17 +126,21 @@ def cleanup_version(version):
 def parse_options():
     global AUTO_RESPONSE
     global VERBOSE
-    parser = OptionParser()
-    parser.add_option("--no-input",
-                      action="store_true",
-                      dest="auto_response",
-                      default=False,
-                      help="Don't ask questions, just use the default values")
-    parser.add_option("-v", "--verbose",
-                      action="store_true", dest="verbose", default=False,
-                      help="Verbose mode")
-    (options, args) = parser.parse_args()
-    args  # noqa pylint
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--no-input",
+        action="store_true",
+        dest="auto_response",
+        default=False,
+        help="Don't ask questions, just use the default values")
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        dest="verbose",
+        default=False,
+        help="Verbose mode")
+    options = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
 
@@ -88,7 +168,10 @@ test_answer_book = AnswerBook()
 def get_input(question):
     if not TESTMODE:
         # Normal operation.
-        return raw_input(question).strip()
+        result = input(question)
+        if not isinstance(result, six.text_type):
+            result = result.decode(INPUT_ENCODING)
+        return result.strip()
     # Testing means no interactive input. Get it from answers_for_testing.
     print("Question: %s" % question)
     answer = test_answer_book.get_next_answer()
@@ -119,7 +202,7 @@ def ask_version(question, default=None):
         if input_value:
             if input_value.lower() in ('y', 'n'):
                 # Please read the question.
-                print "y/n not accepted as version."
+                print("y/n not accepted as version.")
                 continue
             return input_value
         if default:
@@ -404,7 +487,7 @@ def run_hooks(setup_cfg, which_releaser, when, data):
             for hook_name in hook_names:
                 try:
                     hooks.append(resolve_name(hook_name))
-                except ImportError, e:
+                except ImportError as e:
                     logger.warning('cannot find %s hook: %s; skipping...',
                                    hook_name, e.args[0])
             for hook in hooks:
@@ -456,10 +539,15 @@ def _execute_command(command, input_value=''):
                          env=env)
     i, o, e = (p.stdin, p.stdout, p.stderr)
     if input_value:
-        i.write(input_value)
+        i.write(input_value.encode(INPUT_ENCODING))
     i.close()
     stdout_output = o.read()
     stderr_output = e.read()
+    # We assume that the output from commands we're running is text.
+    if not isinstance(stdout_output, six.text_type):
+        stdout_output = stdout_output.decode(OUTPUT_ENCODING)
+    if not isinstance(stderr_output, six.text_type):
+        stderr_output = stderr_output.decode(OUTPUT_ENCODING)
     # TODO.  Note that the returncode is always None, also after
     # running p.kill().  The shell=True may be tripping us up.  For
     # some ideas, see http://stackoverflow.com/questions/4789837

@@ -1,5 +1,6 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
+from __future__ import unicode_literals
 
 import datetime
 import logging
@@ -8,6 +9,7 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import read_text_file
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
 
 logger = logging.getLogger(__name__)
@@ -109,7 +111,7 @@ class Prereleaser(baserelease.Basereleaser):
             self.data['history_file'] = None
             return
         logger.debug("Checking %s", history_file)
-        history_lines = open(history_file).read().split('\n')
+        history_lines = read_text_file(history_file).split('\n')
         # ^^^ TODO: .readlines()?
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
