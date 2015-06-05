@@ -4,6 +4,10 @@ Changelog for zest.releaser
 5.1 (unreleased)
 ----------------
 
+- Release zest.releaser as universal wheel, so one wheel for Python 2
+  and 3.  As usual, we release it also as a source distribution.
+  [maurits]
+
 - Regard "Skipping installation of __init__.py (namespace package)" as
   warning, printing it in magenta.  This can happen when creating a
   wheel.  Issue #108.
