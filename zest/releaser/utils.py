@@ -22,7 +22,7 @@ from colorama import Fore
 import pkg_resources
 from pkg_resources import parse_version
 import six
-from six.moves import input
+from six.moves import input  # noqa
 
 
 logger = logging.getLogger(__name__)
