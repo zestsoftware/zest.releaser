@@ -11,6 +11,9 @@ Changelog for zest.releaser
   descriptions when we test and render them.
   [mitchellrj]
 
+- Use the AST and tokenizer when parsing and writing Python code files.
+  [mitchellrj]
+
 4.0 (2015-05-21)
 ----------------
 
