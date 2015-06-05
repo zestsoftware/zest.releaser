@@ -2,6 +2,7 @@
 """
 from __future__ import unicode_literals
 
+import io
 import logging
 import sys
 import tempfile
@@ -22,17 +23,20 @@ logger = logging.getLogger(__name__)
 def show_longdesc():
     if not HAVE_README:
         logging.error(
-            'Error generating html. Please install `readme`.')
+            "To check the long description, we need the 'readme' package. "
+            "(It is included if you install `zest.releaser[recommended]`)")
         sys.exit(1)
 
-    filename = tempfile.mktemp('html')
+    filename = tempfile.mktemp('.html')
     # Note: for the setup.py call we use _execute_command() from our
     # utils module. This makes sure the python path is set up right.
     longdesc = _execute_command(utils.setup_py('--long-description'))
-    html, rendered = render(longdesc)
+    warnings = io.StringIO()
+    html, rendered = render(longdesc, warnings)
     if not rendered:
         logging.error(
             'Error generating html. Invalid ReST.')
+        print(warnings.getvalue())
         sys.exit(1)
 
     with open(filename, 'wb') as fh:
