@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.0 (unreleased)
+5.0 (2015-06-05)
 ----------------
 
 - Python 3 support.
