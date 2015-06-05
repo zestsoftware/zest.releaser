@@ -75,10 +75,11 @@ class Releaser(baserelease.Basereleaser):
             q = ("There is already a tag %s, show "
                  "if there are differences?" % version)
             if utils.ask(q):
-                diff_command = self.vcs.cmd_diff_last_commit_against_tag(
+                diff_commands = self.vcs.cmd_diff_last_commit_against_tag(
                     version)
-                print(diff_command)
-                print(execute_command(diff_command))
+                for diff_command in diff_commands:
+                    print(utils.cmd_to_text(diff_command))
+                    print(execute_command(diff_command))
         else:
             self.data['tag_already_exists'] = False
 
@@ -86,12 +87,10 @@ class Releaser(baserelease.Basereleaser):
         if self.data['tag_already_exists']:
             return
         cmds = self.vcs.cmd_create_tag(self.data['version'])
-        if not isinstance(cmds, list):
-            cmds = [cmds]
         if len(cmds) == 1:
             print("Tag needed to proceed, you can use the following command:")
         for cmd in cmds:
-            print(cmd)
+            print(utils.cmd_to_text(cmd))
             if utils.ask("Run this command"):
                 print(execute_command(cmd))
             else:
@@ -117,7 +116,7 @@ class Releaser(baserelease.Basereleaser):
                 command, allow_retry=True,
                 fail_message="Package upload may have failed.")
         except utils.CommandException:
-            logger.error("Command failed: %r", command)
+            logger.error("Command failed: %r", utils.cmd_to_text(command))
             tagdir = self.data.get('tagdir')
             if tagdir:
                 logger.info("Note: we have placed a fresh tag checkout "
@@ -133,12 +132,12 @@ class Releaser(baserelease.Basereleaser):
         logger.info(
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data['tagdir'])
-        result = utils.execute_command(utils.setup_py('sdist'))
+        result = utils.execute_command(utils.setup_py(['sdist']))
         utils.show_interesting_lines(result)
         if self.pypiconfig.create_wheel():
             logger.info("Making a wheel of a fresh tag checkout (in %s).",
                         self.data['tagdir'])
-            result = utils.execute_command(utils.setup_py('bdist_wheel'))
+            result = utils.execute_command(utils.setup_py(['bdist_wheel']))
         utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
             logger.warn("You must have a properly configured %s file in "
@@ -166,13 +165,14 @@ class Releaser(baserelease.Basereleaser):
 
         if self.pypiconfig.is_old_pypi_config():
             if use_twine:
-                shell_command = utils.twine_command(
-                    'upload dist%s*' % os.path.sep)
+                shell_command = utils.twine_command([
+                    'upload', 'dist%s*' % os.path.sep])
             else:
                 if self.pypiconfig.create_wheel():
-                    pypi_command = 'register sdist bdist_wheel upload'
+                    pypi_command = ['register', 'sdist', 'bdist_wheel',
+                                    'upload']
                 else:
-                    pypi_command = 'register sdist upload'
+                    pypi_command = ['register', 'sdist', 'upload']
                 shell_command = utils.setup_py(pypi_command)
             if use_pypi:
                 default = True
@@ -185,23 +185,23 @@ class Releaser(baserelease.Basereleaser):
                 exact = True
             if utils.ask("Register and upload to PyPI", default=default,
                          exact=exact):
-                logger.info("Running: %s", shell_command)
+                logger.info("Running: %s", utils.cmd_to_text(shell_command))
                 self._pypi_command(shell_command)
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
             if use_twine:
-                shell_command = utils.twine_command('upload dist%s* -r %s' % (
-                    os.path.sep, server))
+                shell_command = utils.twine_command([
+                    'upload', 'dist%s*' % os.path.sep, '-r', server])
             else:
                 if self.pypiconfig.create_wheel():
-                    commands = ('register', '-r', server, 'sdist',
+                    commands = ['register', '-r', server, 'sdist',
                                 'bdist_wheel',
-                                'upload', '-r', server)
+                                'upload', '-r', server]
                 else:
-                    commands = ('register', '-r', server, 'sdist',
-                                'upload', '-r', server)
-                shell_command = utils.setup_py(' '.join(commands))
+                    commands = ['register', '-r', server, 'sdist',
+                                'upload', '-r', server]
+                shell_command = utils.setup_py(commands)
             default = True
             exact = False
             if server == 'pypi' and not use_pypi:
@@ -212,7 +212,7 @@ class Releaser(baserelease.Basereleaser):
                 exact = True
             if utils.ask("Register and upload to %s" % server,
                          default=default, exact=exact):
-                logger.info("Running: %s", shell_command)
+                logger.info("Running: %s", utils.cmd_to_text(shell_command))
                 self._pypi_command(shell_command)
 
     def _release(self):
@@ -269,10 +269,11 @@ class Releaser(baserelease.Basereleaser):
                 # So for clarity and safety we should only do this for
                 # subversion.
                 if self.vcs.internal_filename == '.svn':
-                    command = self.vcs.cmd_commit(
+                    commands = self.vcs.cmd_commit(
                         "Fixed %s on tag for release" %
                         self.setup_cfg.config_filename)
-                    print(execute_command(command))
+                    for command in commands:
+                        print(execute_command(command))
                 else:
                     logger.debug("Not committing in non-svn repository as "
                                  "this is not needed or may be harmful.")

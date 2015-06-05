@@ -38,10 +38,10 @@ Make a change:
 
     >>> setup_py = os.path.join(gitsourcedir, 'setup.py')
     >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
-    >>> cmd = checkout.cmd_diff()
-    >>> cmd
-    'git diff'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff()
+    >>> cmds
+    [['git', 'diff']]
+    >>> print(execute_command(cmds[0]))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
     --- a/setup.py
@@ -55,16 +55,16 @@ Make a change:
 
 Commit it:
 
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> cmd
-    'git commit -a -m "small tweak"'
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> cmds
+    [['git', 'commit', '-a', '-m', 'small tweak']]
 
 In some cases we get this output:
 ``[master ...] small tweak``
 and in other this:
 ``Created commit ...: small tweak``
 
-    >>> print('dummy %s' % execute_command(cmd))
+    >>> print('dummy %s' % execute_command(cmds[0]))
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
@@ -79,10 +79,10 @@ Originally there are no tags:
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
-    >>> cmd
-    'git tag 0.1 -m "Tagging 0.1"'
-    >>> dont_care = execute_command(cmd)
+    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds
+    [['git', 'tag', '0.1', '-m', 'Tagging 0.1']]
+    >>> dont_care = execute_command(cmds[0])
     >>> checkout.available_tags()
     ['0.1']
 
@@ -95,17 +95,19 @@ git.  We just return the version as-is:
 Make and commit a small change:
 
     >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print('dummy %s' % execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> for cmd in cmds:
+    ...     print('dummy %s' % execute_command(cmd))
+    ...
     dummy...small tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
 Now we can request the changes since a specific tag:
 
-    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
-    >>> cmd
-    'git diff 0.1'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmds
+    [['git', 'diff', '0.1']]
+    >>> print(execute_command(cmds[0]))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
     --- a/setup.py
@@ -147,7 +149,7 @@ setup.py also contains our latest "b = 3" change:
 
 For git, we have to change to that directory!  Git doesn't work with paths.
 
-    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmds = checkout.cmd_checkout_from_tag('0.1', temp)
     Traceback (most recent call last):
     ...
     RuntimeError: SYSTEM EXIT (code=1)
@@ -155,10 +157,13 @@ For git, we have to change to that directory!  Git doesn't work with paths.
 Chdir and make a tag checkout:
 
     >>> os.chdir(temp)
-    >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
-    >>> cmd
-    'git checkout 0.1 && git submodule update --init --recursive'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_checkout_from_tag('0.1', temp)
+    >>> cmds
+    [['git', 'checkout', '0.1'],
+     ['git', 'submodule', 'update', '--init', '--recursive']]
+    >>> for cmd in cmds:
+    ...     print(execute_command(cmd))
+    ...
     RED Note: ...0.1...
     RED HEAD is now at ... small tweak
 
@@ -176,4 +181,4 @@ Pushing changes
 For git, committing isn't enough. We need to push changes to the server:
 
     >>> checkout.push_commands()
-    ['git push', 'git push --tags']
+    [['git', 'push'], ['git', 'push', '--tags']]

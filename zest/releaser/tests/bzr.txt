@@ -38,10 +38,10 @@ Make a change:
 
     >>> setup_py = os.path.join(bzrsourcedir, 'setup.py')
     >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
-    >>> cmd = checkout.cmd_diff()
-    >>> cmd
-    'bzr diff'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff()
+    >>> cmds
+    [['bzr', 'diff']]
+    >>> print(execute_command(cmds[0]))
     === modified file 'setup.py'
     --- setup.py	...
     +++ setup.py	...
@@ -54,10 +54,10 @@ Make a change:
 
 Commit it:
 
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> cmd
-    'bzr commit -v -m "small tweak"'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> cmds
+    [['bzr', 'commit', '-v', '-m', 'small tweak']]
+    >>> print(execute_command(cmds[0]))
     RED Committing to: TESTTEMP/tha.example-bzr/
     RED modified setup.py
     RED Committed revision 2.
@@ -75,10 +75,10 @@ Originally there are no tags (the default 'tip' tag is filtered out):
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
-    >>> cmd
-    'bzr tag 0.1'
-    >>> dont_care = execute_command(cmd)
+    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds
+    [['bzr', 'tag', '0.1']]
+    >>> dont_care = execute_command(cmds[0])
     >>> checkout.available_tags()
     ['0.1']
 
@@ -91,18 +91,20 @@ bazaar.  We just return the version as-is:
 Make and commit a small change:
 
     >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> for cmd in cmds:
+    ...     print(execute_command(cmd))
+    ...
     RED Committing to: TESTTEMP/tha.example-bzr/
     RED modified setup.py
     RED Committed revision 3.
 
 Now we can request the changes since a specific tag:
 
-    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
-    >>> cmd
-    'bzr diff -r tag:0.1..-1'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmds
+    [['bzr', 'diff', '-r', 'tag:0.1..-1']]
+    >>> print(execute_command(cmds[0]))
     === modified file 'setup.py'
     --- setup.py	...
     +++ setup.py	...

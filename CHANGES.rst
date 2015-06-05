@@ -17,6 +17,10 @@ Changelog for zest.releaser
   descriptions when we test and render them.
   [mitchellrj]
 
+- Stopped using string interpolation for external commands, or where
+  they are required, escape the values properly.
+  [mitchellrj]
+
 4.0 (2015-05-21)
 ----------------
 

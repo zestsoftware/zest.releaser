@@ -1,7 +1,7 @@
 Integration test
 ================
 
-.. :doctest:
+.. :doctest: +NORMALIZE_WHITESPACE
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
@@ -45,8 +45,10 @@ Commit the change to setup.cfg so that we have a clean checkout:
 
     >>> from zest.releaser import git
     >>> checkout = git.Git()
-    >>> cmd = checkout.cmd_commit("tweak setup.cfg to enable hooks")
-    >>> print('dummy %s' % utils.execute_command(cmd))
+    >>> cmds = checkout.cmd_commit("tweak setup.cfg to enable hooks")
+    >>> for cmd in cmds:
+    ...     print('dummy %s' % utils.execute_command(cmd))
+    ...
     dummy...tweak setup.cfg to enable hooks
       1 file changed, 14 insertions(+)
 
@@ -78,7 +80,7 @@ The release script tags the release and uploads it:
     releaser_middle
     Checking data dict
     Tag needed to proceed, you can use the following command:
-    git tag 0.1 -m "Tagging 0.1"
+    git tag 0.1 -m 'Tagging 0.1'
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
@@ -109,7 +111,7 @@ The release script tags the release and uploads it:
     releaser_before_upload
     Question: Register and upload to pypi (Y/n)?
     Our reply: y
-    MOCK twine upload dist/tha.example-0.1.tar.gz
+    MOCK twine upload dist/*
     releaser_after
 
 

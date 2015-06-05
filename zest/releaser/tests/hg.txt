@@ -38,10 +38,10 @@ Make a change:
 
     >>> setup_py = os.path.join(hgsourcedir, 'setup.py')
     >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
-    >>> cmd = checkout.cmd_diff()
-    >>> cmd
-    'hg diff'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff()
+    >>> cmds
+    [['hg', 'diff']]
+    >>> print(execute_command(cmds[0]))
     diff -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
@@ -54,10 +54,10 @@ Make a change:
 
 Commit it:
 
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> cmd
-    'hg commit -v -m "small tweak"'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> cmds
+    [['hg', 'commit', '-v', '-m', 'small tweak']]
+    >>> print(execute_command(cmds[0]))
     setup.py...
     committed changeset 1:234567890abc
 
@@ -72,10 +72,10 @@ Originally there are no tags (the default 'tip' tag is filtered out):
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
-    >>> cmd
-    'hg tag -m "Tagging 0.1" 0.1'
-    >>> dont_care = execute_command(cmd)
+    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds
+    [['hg', 'tag', '-m', 'Tagging 0.1', '0.1']]
+    >>> dont_care = execute_command(cmds[0])
     >>> checkout.available_tags()
     ['0.1']
 
@@ -88,17 +88,21 @@ mercurial.  We just return the version as-is:
 Make and commit a small change:
 
     >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
-    >>> cmd = checkout.cmd_commit('small tweak')
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_commit('small tweak')
+    >>> for cmd in cmds:
+    ...     print(execute_command(cmd))
+    ...
     setup.py...
     committed changeset 1:234567890abc
 
 Now we can request the changes since a specific tag:
 
-    >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
-    >>> cmd
-    'hg diff -r 0.1 -r 234567890abc'
-    >>> print(execute_command(cmd))
+    >>> cmds = checkout.cmd_diff_last_commit_against_tag('0.1')
+    >>> cmds
+    [['hg', 'diff', '-r', '0.1', '-r', '234567890abc']]
+    >>> for cmd in cmds:
+    ...     print(execute_command(cmd))
+    ...
     diff -r 234567890abc -r 234567890abc .hgtags
     --- /dev/null     ...
     +++ b/.hgtags     ...
@@ -147,4 +151,4 @@ Pushing changes
 For hg, committing isn't enough. We need to push changes to the server:
 
     >>> checkout.push_commands()
-    ['hg push']
+    [['hg', 'push']]

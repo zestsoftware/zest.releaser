@@ -52,9 +52,9 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
-            utils.execute_command(utils.setup_py('egg_info'))
+            utils.execute_command(utils.setup_py(['egg_info']))
             version = utils.execute_command(
-                utils.setup_py('--version')).splitlines()[0]
+                utils.setup_py(['--version'])).splitlines()[0]
             if 'Traceback' in version:
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
@@ -69,8 +69,8 @@ class BaseVersionControl(object):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
-            utils.execute_command(utils.setup_py('egg_info'))
-            return utils.execute_command(utils.setup_py('--name')).strip()
+            utils.execute_command(utils.setup_py(['egg_info']))
+            return utils.execute_command(utils.setup_py(['--name'])).strip()
 
     def get_version_txt_version(self):
         filenames = ['version']
@@ -296,8 +296,9 @@ class BaseVersionControl(object):
         prefix = '%s-%s-' % (package, version)
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
-        cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print(utils.execute_command(cmd))
+        cmds = self.cmd_checkout_from_tag(version, tagdir)
+        for cmd in cmds:
+            print(utils.execute_command(cmd))
 
     def is_clean_checkout(self):
         "Is this a clean checkout?"
