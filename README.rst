@@ -65,10 +65,12 @@ We depend on:
 
 - ``colorama`` for colorized output (some errors printed in red).
 
+- ``six`` for python2/python3 compatibility.
+
 Since version 4.0 there is a ``recommended`` extra that you can get by
-running ``pip install zest.releaser[recommended]``.  It contains a few
-trusted add-ons that we feel are useful for the great majority of
-``zest.releaser`` users:
+installing ``zest.releaser[recommended]`` instead of ``zest.releaser``.  It
+contains a few trusted add-ons that we feel are useful for the great majority
+of ``zest.releaser`` users:
 
 - wheel_ for creating a Python wheel that we upload to PyPI next to
   the standard source distribution.  Wheels are the new Python package
@@ -89,9 +91,22 @@ trusted add-ons that we feel are useful for the great majority of
   packaging.  Mostly it performs checks on the ``setup.py`` file, like
   checking for Python version classifiers.
 
+- chardet_, the universal character encoding detector. To do the right thing
+  in case your readme or changelog is in a non-utf-8 character set.
+
+- readme_ to check your long description in the same way as pypi does. No more
+  unformatted restructured text on your pypi page just because there was a
+  small error somewhere. Handy.
+
+- twine_ for secure uploading via https to pypi. Plain setuptools doesn't
+  support this.
+
 .. _wheel: https://pypi.python.org/pypi/wheel
 .. _`check-manifest`: https://pypi.python.org/pypi/check-manifest
 .. _pyroma: https://pypi.python.org/pypi/pyroma
+.. _chardet: https://pypi.python.org/pypi/chardet
+.. _readme: https://pypi.python.org/pypi/readme
+.. _twine: https://pypi.python.org/pypi/twine
 
 
 Installation
