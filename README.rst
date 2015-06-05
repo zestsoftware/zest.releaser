@@ -113,7 +113,8 @@ Installation
 ------------
 
 Just a simple ``pip install zest.releaser`` or ``easy_install zest.releaser`` is
-enough.
+enough. If you want the recommended extra utilities, do a ``pip install
+zest.releaser[recommended]``.
 
 Alternatively, buildout users can install zest.releaser as part of a specific
 project's buildout, by having a buildout configuration such as::
@@ -124,7 +125,7 @@ project's buildout, by having a buildout configuration such as::
 
     [scripts]
     recipe = zc.recipe.egg
-    eggs = zest.releaser
+    eggs = zest.releaser[recommended]
 
 
 Version control systems: svn, hg, git, bzr
