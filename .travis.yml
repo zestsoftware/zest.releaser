@@ -35,3 +35,7 @@ install:
   - bin/buildout
 script:
   - bin/test
+matrix:
+  allow_failures:
+    - python: 3.4
+# ^^^ python3.4 often isn't found currently on jenkins machines...
