@@ -580,6 +580,11 @@ def _execute_command(command, input_value=''):
                     # distutils run has done its job properly while
                     # reading the package manifest.
                     errors.append(Fore.MAGENTA + line)
+                elif line.lower().startswith("skipping installation of"):
+                    # This is from bdist_wheel displaying a warning by
+                    # setuptools that it will not include the
+                    # __init__.py of a namespace package.  See issue 108.
+                    errors.append(Fore.MAGENTA + line)
                 else:
                     errors.append(Fore.RED + line)
             errors = '\n'.join(errors)

@@ -4,7 +4,10 @@ Changelog for zest.releaser
 5.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Regard "Skipping installation of __init__.py (namespace package)" as
+  warning, printing it in magenta.  This can happen when creating a
+  wheel.  Issue #108.
+  [maurits]
 
 
 5.0 (2015-06-05)
@@ -16,6 +19,7 @@ Changelog for zest.releaser
 - Use the same `readme` library that PyPI uses to parse long
   descriptions when we test and render them.
   [mitchellrj]
+
 
 4.0 (2015-05-21)
 ----------------
