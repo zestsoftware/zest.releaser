@@ -140,6 +140,8 @@ currently supports:
 
 - Git (git).
 
+- Git-svn.
+
 - Bazaar (bzr).
 
 Others could be added if there are volunteers! Git and mercurial support
