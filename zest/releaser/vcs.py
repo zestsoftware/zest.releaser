@@ -1,9 +1,17 @@
 from __future__ import unicode_literals
 
+import ast
 import logging
+import io
+import itertools
 import os
-import re
 import sys
+import token
+try:
+    from tokenize import generate_tokens as tokenize
+except ImportError:
+    # Py3k
+    from tokenize import tokenize
 
 import six
 
@@ -11,23 +19,7 @@ from zest.releaser import pypi
 from zest.releaser import utils
 
 
-VERSION_PATTERN = re.compile(r"""
-^                # Start of line
-\s*              # Indentation
-version\s*=\s*   # 'version =  ' with possible whitespace
-['"]             # String literal begins
-\d               # Some digit, start of version.
-""", re.VERBOSE)
-
-UNDERSCORED_VERSION_PATTERN = re.compile(r"""
-^                    # Start of line
-__version__\s*=\s*   # '__version__ =  ' with possible whitespace
-['"]                 # String literal begins
-\d                   # Some digit, start of version.
-""", re.VERBOSE)
-
 TXT_EXTENSIONS = ['rst', 'txt', 'markdown', 'md']
-
 logger = logging.getLogger(__name__)
 
 
@@ -39,6 +31,80 @@ class BaseVersionControl(object):
 
     def __init__(self):
         self.workingdir = os.getcwd()
+
+    def _find_nodes(self, tree, type_):
+        for node in ast.walk(tree):
+            if isinstance(node, type_):
+                yield node
+
+    def _find_string_assignments(self, tree, name):
+        """In an abstract syntax tree finds variable assignments to
+        `name` that are strings.
+        """
+
+        for assignment_node in self._find_nodes(tree, ast.Assign):
+            # in the code `spam = ham = eggs`, 'spam' and 'ham' are targets.
+            for target in assignment_node.targets:
+                if not isinstance(target, ast.Name):
+                    # Should never happen
+                    continue
+                if target.id != name:
+                    continue
+                if isinstance(assignment_node.value, ast.Str):
+                    yield assignment_node
+
+    def _find_string_keywords(self, tree, name):
+        """In and abstract syntax tree finds keyword assignments to
+        `name` that are strings.
+        """
+
+        for keyword_node in self._find_nodes(tree, ast.keyword):
+            if keyword_node.arg != name:
+                continue
+            if isinstance(keyword_node.value, ast.Str):
+                yield keyword_node
+
+    def _replace_string(self, code, start_line, start_col, new_value):
+        """Takes a string containing Python code, integers indicating
+        where a Python string appears in that code and a new value,
+        then replaces that Python string in the source with the new
+        string value and returns the new Python code.
+        """
+
+        if six.PY2:
+            readline = io.BytesIO(code.encode('utf8')).readline
+        else:
+            readline = io.StringIO(code).readline
+
+        toks = tokenize(readline)
+        found = False
+        for type_, _token, start, end, _line in toks:
+            token_start_line, token_start_col = start
+            token_end_line, token_end_col = end
+            if type_ != token.STRING:
+                continue
+            if token_start_line < start_line:
+                continue
+            if token_start_col < start_col:
+                continue
+
+            found = True
+            break
+
+        if not found:
+            raise ValueError('Could not find string assignment.')
+
+        lines = code.split('\n')
+        # -1 below because line numbers start at 1, but our list starts at 0
+        return '\n'.join(
+            lines[:token_start_line - 1] +
+            [
+                lines[token_start_line - 1][:token_start_col] +
+                repr(new_value) +
+                lines[token_end_line - 1][token_end_col:]
+            ] +
+            lines[token_end_line:]
+            )
 
     def is_setuptools_helper_package_installed(self):
         try:
@@ -86,16 +152,13 @@ class BaseVersionControl(object):
         setup_cfg = pypi.SetupConfig()
         if not setup_cfg.python_file_with_version():
             return
-        lines = utils.read_text_file(
-            setup_cfg.python_file_with_version()).split('\n')
-        for line in lines:
-            match = UNDERSCORED_VERSION_PATTERN.search(line)
-            if match:
-                logger.debug("Matching __version__ line found: %r", line)
-                line = line.lstrip('__version__').strip()
-                line = line.lstrip('=').strip()
-                line = line.replace('"', '').replace("'", "")
-                return utils.strip_version(line)
+        code = utils.read_text_file(
+            setup_cfg.python_file_with_version())
+        tree = ast.parse(code, setup_cfg.python_file_with_version())
+        for assignment in self._find_string_assignments(tree, '__version__'):
+            return utils.strip_version(assignment.value.s)
+
+        return None
 
     def filefind(self, names):
         """Return first found file matching name (case-insensitive).
@@ -194,12 +257,15 @@ class BaseVersionControl(object):
         if self.get_python_file_version():
             setup_cfg = pypi.SetupConfig()
             filename = setup_cfg.python_file_with_version()
-            lines = utils.read_text_file(filename).split('\n')
-            for index, line in enumerate(lines):
-                match = UNDERSCORED_VERSION_PATTERN.search(line)
-                if match:
-                    lines[index] = "__version__ = '%s'" % version
-            contents = '\n'.join(lines)
+            code = utils.read_text_file(filename)
+            tree = ast.parse(code, filename)
+            assignment = next(self._find_string_assignments(
+                tree, '__version__'))
+            contents = self._replace_string(
+                code,
+                assignment.value.lineno,
+                assignment.value.col_offset,
+                version)
             open(filename, 'w').write(contents)
             logger.info("Set __version__ in %s to %r", filename, version)
             return
@@ -218,23 +284,24 @@ class BaseVersionControl(object):
                 logger.info("Changed %s to %r", versionfile, version)
                 return
 
-        good_version = "version = '%s'" % version
-        line_number = 0
-        setup_lines = utils.read_text_file('setup.py').split('\n')
-        for line_number, line in enumerate(setup_lines):
-            match = VERSION_PATTERN.search(line)
-            if match:
-                logger.debug("Matching version line found: %r", line)
-                if line.startswith(' '):
-                    # oh, probably '    version = 1.0,' line.
-                    indentation = line.split('version')[0]
-                    # Note: no spaces around the '='.
-                    good_version = indentation + "version='%s'," % version
-                setup_lines[line_number] = good_version
-                contents = '\n'.join(setup_lines)
-                open('setup.py', 'w').write(contents)
-                logger.info("Set setup.py's version to %r", version)
-                return
+        contents = utils.read_text_file('setup.py')
+        tree = ast.parse(contents, 'setup.py')
+        for assignment in itertools.chain(
+                self._find_string_assignments(tree, 'version'),
+                self._find_string_keywords(tree, 'version')
+                ):
+
+            logger.debug("Matching version line found: %r",
+                         assignment.value.lineno)
+            contents = self._replace_string(
+                contents,
+                assignment.value.lineno,
+                assignment.value.col_offset,
+                version)
+
+        open('setup.py', 'w').write(contents)
+        logger.info("Set setup.py's version to %r", version)
+        return
 
         logger.error(
             "We could read a version from setup.py, but could not write it " +
