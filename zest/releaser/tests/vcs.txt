@@ -138,8 +138,106 @@ version.txt is the one left as-is.
           version='1.4',
           )
 
-The version writing breaks down if there's more than just a "version=" on that
-line.  The 99.9% case works, though.
+Let's try a case where someone's been a bit silly and set the version
+in two places in the same file.
+
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "version='1.3'",
+    ...     "setup(name='urgh',",
+    ...     "      version='1.3',",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    version='1.4'
+    setup(name='urgh',
+          version='1.4',
+          )
+
+What if you've done something a bit weird?
+
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version=('1.3'),",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    setup(name='urgh',
+          version=('1.4'),
+          )
+
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "version = \\",
+    ...     "    '1.3'",
+    ...     "setup(name='urgh',",
+    ...     "      version=version,",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    version = \
+        '1.4'
+    setup(name='urgh',
+          version=version,
+          )
+
+Or used a different string syntax?
+
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version='''1.3''',",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    setup(name='urgh',
+          version='1.4',
+          )
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version=r'1.3',",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    setup(name='urgh',
+          version='1.4',
+          )
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version=b'1.3',",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    setup(name='urgh',
+          version='1.4',
+          )
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version=u'1.3',",
+    ...     "      )"]
+    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> checkout.version = '1.4'
+    >>> print(open('setup.py').read()) # Modified into 1.4
+    from setuptools import setup
+    setup(name='urgh',
+          version='1.4',
+          )
 
 Another option is a ``__version__`` marker in a Python file. We cannot
 reliably figure out the right Python file to look in, so this file needs to be
