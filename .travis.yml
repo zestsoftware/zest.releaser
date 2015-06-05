@@ -2,7 +2,7 @@ language: python
 python:
   - 2.7
   - 3.3
-  - 3,4
+  - 3.4
 before_install:
   - sudo apt-get update
 # apt-get update is needed as there's a faulty PPA in use inside travis
@@ -35,7 +35,3 @@ install:
   - bin/buildout
 script:
   - bin/test
-matrix:
-  allow_failures:
-    - python: 3.4
-# ^^^ python3.4 often isn't found currently on jenkins machines...
