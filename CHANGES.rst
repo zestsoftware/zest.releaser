@@ -7,6 +7,10 @@ Changelog for zest.releaser
 - Python 3 support.
   [mitchellrj]
 
+- Use the same `readme` library that PyPI uses to parse long
+  descriptions when we test and render them.
+  [mitchellrj]
+
 - Stopped using string interpolation for external commands, or where
   they are required, escape the values properly.
   [mitchellrj]
