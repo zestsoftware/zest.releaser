@@ -516,6 +516,25 @@ def run_entry_points(which_releaser, when, data):
         plugin(data)
 
 
+# Lines ending up in stderr that are only warnings, not errors.
+# We only check the start of lines.  Should be lowercase.
+KNOWN_WARNINGS = [
+    # Not a real error.
+    'warn',
+    # A warning from distutils like this:
+    # no previously-included directories found matching...
+    # distutils is basically warning that a previous distutils run has
+    # done its job properly while reading the package manifest.
+    'no previously-included',
+    # This is from bdist_wheel displaying a warning by setuptools that
+    # it will not include the __init__.py of a namespace package.  See
+    # issue 108.
+    'skipping installation of',
+    ]
+# Make them lowercase just to be sure.
+KNOWN_WARNINGS = [w.lower() for w in KNOWN_WARNINGS]
+
+
 def _execute_command(command, input_value=''):
     """commands.getoutput() replacement that also works on windows"""
     logger.debug("Running command: %r", command)
@@ -562,25 +581,20 @@ def _execute_command(command, input_value=''):
             # as an error: warning: no previously-included files
             # matching '*.pyc' found anywhere in distribution.  Same
             # for empty lines.  So try to be smart about it.
-
-            # errors = [(Fore.RED + line) for line in
-            # stderr_output.split('\n')]
             errors = []
             for line in stderr_output.split('\n'):
                 line = line.strip()
                 if not line:
+                    # Keep it in the errors, but do not mark it with a color.
                     errors.append(line)
-                elif line.lower().startswith('warn'):
-                    # Not a real error.
-                    errors.append(Fore.MAGENTA + line)
-                elif line.lower().startswith("no previously-included"):
-                    # Specifically a warning from distutils like this:
-                    # no previously-included directories found matching...
-                    # distutils is basically warning that a previous
-                    # distutils run has done its job properly while
-                    # reading the package manifest.
-                    errors.append(Fore.MAGENTA + line)
+                    continue
+                for known in KNOWN_WARNINGS:
+                    if line.lower().startswith(known):
+                        # Not a real error, so mark it as a warning.
+                        errors.append(Fore.MAGENTA + line)
+                        break
                 else:
+                    # Not found in known warnings, so mark it as an error.
                     errors.append(Fore.RED + line)
             errors = '\n'.join(errors)
         else:
