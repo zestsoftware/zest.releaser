@@ -118,7 +118,7 @@ And the postrelease script ups the version:
     >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
-    Current version is '0.1'
+    Current version is 0.1
     Question: Enter new development version ('.dev0' will be appended) [0.2]:
     Our reply: <ENTER>
     Checking data dict

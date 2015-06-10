@@ -43,7 +43,7 @@ Run the postrelease script:
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
-    Current version is '0.1'
+    Current version is 0.1
     Question: Enter new development version ('.dev0' will be appended) [0.2]:
     Our reply: <ENTER>
     Checking data dict
@@ -83,7 +83,7 @@ number is normalized by setuptools already:
     >>> utils.test_answer_book.set_answers(['0.2', ''])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
-    Current version is '0.1b0'
+    Current version is 0.1b0
     Question: Enter new development version ('.dev0' will be appended) [0.1b1]:
     Our reply: 0.2
     Checking data dict
@@ -124,7 +124,7 @@ but 0.2.20:
     Our reply: <ENTER>
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
-    Current version is '0.2.19'
+    Current version is 0.2.19
     Question: Enter new development version ('.dev0' will be appended) [0.2.20]:
     Our reply: <ENTER>
     Checking data dict
@@ -145,7 +145,7 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Our reply: <ENTER>
     >>> utils.test_answer_book.set_answers(['0.3rc', ''])
     >>> postrelease.main()
-    Current version is '0.3b0'
+    Current version is 0.3b0
     Question: Enter new development version ('.dev0' will be appended) [0.3b1]:
     Our reply: 0.3rc
     Checking data dict
@@ -165,7 +165,7 @@ Numbers and characters can be combined:
     Our reply: <ENTER>
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
-    Current version is '1.0a1'
+    Current version is 1.0a1
     Question: Enter new development version ('.dev0' will be appended) [1.0a2]:
     Our reply: <ENTER>
     Checking data dict
