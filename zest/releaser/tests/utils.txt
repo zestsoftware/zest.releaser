@@ -526,7 +526,7 @@ sys.executable.
 
     >>> cmd = utils.setup_py('cook a cow')
     >>> print(cmd.replace(sys.executable, 'python'))  # test normalization
-    python setup.py cook a cow
+    python ./setup.py cook a cow
 
 When the setup.py arguments include arguments that indicate pypi interaction,
 the python executable is replaced by ``echo`` for safety reasons.  This only
@@ -534,9 +534,9 @@ happens when TESTMODE is on:
 
     >>> utils.TESTMODE = True
     >>> print(utils.setup_py('upload'))
-    echo MOCK setup.py upload
+    echo MOCK ./setup.py upload
     >>> print(utils.setup_py('register'))
-    echo MOCK setup.py register
+    echo MOCK ./setup.py register
 
 
 Data dict documentation

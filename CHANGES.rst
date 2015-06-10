@@ -16,6 +16,8 @@ Changelog for zest.releaser
   wheel.  Issue #108.
   [maurits]
 
+- Add support for projects with setup.py located in subdirectories.
+
 
 5.0 (2015-06-05)
 ----------------
