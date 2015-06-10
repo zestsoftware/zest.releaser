@@ -60,6 +60,13 @@ def loglevel():
     return logging.INFO
 
 
+def write_text_file(filename, contents):
+    if six.PY2 and isinstance(contents, six.text_type):
+        # Python 2 unicode needs to be encoded.
+        contents = contents.encode(OUTPUT_ENCODING)
+    open(filename, 'w').write(contents)
+
+
 def read_text_file(filename, encoding=None):
     # Unless specified manually, We have no way of knowing what text
     # encoding this file may be in.

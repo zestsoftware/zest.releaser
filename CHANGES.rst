@@ -4,6 +4,9 @@ Changelog for zest.releaser
 5.1 (unreleased)
 ----------------
 
+- Fix writing history/changelog file with non-ascii.  Issue #109.
+  [maurits]
+
 - Release zest.releaser as universal wheel, so one wheel for Python 2
   and 3.  As usual, we release it also as a source distribution.
   [maurits]

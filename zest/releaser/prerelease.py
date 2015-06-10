@@ -10,6 +10,7 @@ from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
 from zest.releaser.utils import read_text_file
+from zest.releaser.utils import write_text_file
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
 
 logger = logging.getLogger(__name__)
@@ -158,7 +159,7 @@ class Prereleaser(baserelease.Basereleaser):
             return
         contents = '\n'.join(self.data['history_lines'])
         history = self.data['history_file']
-        open(history, 'w').write(contents)
+        write_text_file(history, contents)
         logger.info("History file %s updated.", history)
 
     def _diff_and_commit(self):
