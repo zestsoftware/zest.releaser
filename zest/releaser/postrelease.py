@@ -99,7 +99,7 @@ class Postreleaser(baserelease.Basereleaser):
         self.data['new_version'] = version
         dev_version = self.data['dev_version_template'] % self.data
         self.data['dev_version'] = dev_version
-        logger.info("New version string is %r",
+        logger.info("New version string is %s",
                     dev_version)
 
     def _update_version(self):
