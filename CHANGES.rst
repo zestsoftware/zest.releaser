@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.1 (unreleased)
+5.1 (2015-06-11)
 ----------------
 
 - Fix writing history/changelog file with non-ascii.  Issue #109.

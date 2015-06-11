@@ -3,7 +3,7 @@ import codecs
 
 from setuptools import setup, find_packages
 
-version = '5.1.dev0'
+version = '5.1'
 
 
 def read(filename):
