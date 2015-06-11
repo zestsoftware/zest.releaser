@@ -65,7 +65,8 @@ checker = renormalizing.RENormalizing([
     (re.compile(re.escape(Fore.RED)), 'RED '),
     (re.compile(re.escape(Fore.MAGENTA)), 'MAGENTA '),
 ] + ([
-
+    (re.compile('b\''), '\''),
+    (re.compile('b"'), '"'),
 ] if six.PY3 else [
     (re.compile('u\''), '\''),
     (re.compile('u"'), '"'),
