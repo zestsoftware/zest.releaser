@@ -32,7 +32,7 @@ WRONG_IN_VERSION = ['svn', 'dev', '(']
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
-BASE = "."
+BASE = os.curdir
 VERBOSE = False
 INPUT_ENCODING = 'UTF-8'
 if getattr(sys.stdin, 'encoding', None):
