@@ -48,7 +48,7 @@ class BaseVersionControl(object):
         return True
 
     def get_setup_py_version(self):
-        if os.path.exists(os.path.join(utils.BASE, 'setup.py')):
+        if os.path.exists(os.path.join(utils.PACKAGE_ROOT, 'setup.py')):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
@@ -65,7 +65,7 @@ class BaseVersionControl(object):
             return utils.strip_version(version)
 
     def get_setup_py_name(self):
-        if os.path.exists(os.path.join(utils.BASE, 'setup.py')):
+        if os.path.exists(os.path.join(utils.PACKAGE_ROOT, 'setup.py')):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
@@ -220,7 +220,7 @@ class BaseVersionControl(object):
 
         good_version = "version = '%s'" % version
         line_number = 0
-        setup_py = os.path.join(utils.BASE, 'setup.py')
+        setup_py = os.path.join(utils.PACKAGE_ROOT, 'setup.py')
 
         setup_lines = utils.read_text_file(setup_py).split('\n')
         for line_number, line in enumerate(setup_lines):
@@ -320,7 +320,7 @@ class BaseVersionControl(object):
         works is handy for the vcs.txt tests.
         """
         files = []
-        for dirpath, dirnames, filenames in os.walk(utils.BASE):
+        for dirpath, dirnames, filenames in os.walk(utils.PACKAGE_ROOT):
             dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))

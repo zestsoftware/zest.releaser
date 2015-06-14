@@ -32,7 +32,7 @@ WRONG_IN_VERSION = ['svn', 'dev', '(']
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
 
 AUTO_RESPONSE = False
-BASE = os.curdir
+PACKAGE_ROOT = os.curdir
 VERBOSE = False
 INPUT_ENCODING = 'UTF-8'
 if getattr(sys.stdin, 'encoding', None):
@@ -134,11 +134,11 @@ def cleanup_version(version):
 def parse_options():
     global AUTO_RESPONSE
     global VERBOSE
-    global BASE
+    global PACKAGE_ROOT
     parser = ArgumentParser()
     parser.add_argument(
-        "--base",
-        default=BASE,
+        "--package-root",
+        default=PACKAGE_ROOT,
         help="Directory containing setup.py")
     parser.add_argument(
         "--no-input",
@@ -156,7 +156,7 @@ def parse_options():
     options = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
-    BASE = options.base
+    PACKAGE_ROOT = options.package_root
 
 
 # Hack for testing, see get_input()
@@ -378,7 +378,7 @@ def setup_py(rest_of_cmdline):
             if unsafe in rest_of_cmdline:
                 executable = 'echo MOCK'
 
-    setup_py = os.path.join(BASE, 'setup.py')
+    setup_py = os.path.join(PACKAGE_ROOT, 'setup.py')
 
     return ' '.join([executable, setup_py, rest_of_cmdline])
 
