@@ -320,7 +320,7 @@ class BaseVersionControl(object):
         works is handy for the vcs.txt tests.
         """
         files = []
-        for dirpath, dirnames, filenames in os.walk(utils.PACKAGE_ROOT):
+        for dirpath, dirnames, filenames in os.walk(os.curdir):
             dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))
