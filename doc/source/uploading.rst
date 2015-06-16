@@ -6,13 +6,13 @@ zest.releaser basically just executes the command ``python setup.py register
 sdist --formats=zip upload``.
 
 For safety reasons zest.releaser will *only* offer to upload your package to
-http://pypi.python.org when the package is already registered there.  If this
+https://pypi.python.org when the package is already registered there.  If this
 is not the case yet, you get a confirmation question whether you want to
 create a new package.
 
 If the ``setup.py register ...`` command fails, you probably need to configure
 your PyPI configuration file. And of course you need to have
-setuptools/distribute installed.
+setuptools installed.
 
 
 PyPI configuration file (``~/.pypirc``)
@@ -55,7 +55,7 @@ See the `Python Packaging User Guide`_ for more info.
 .. _`Python Packaging User Guide`: https://packaging.python.org/en/latest/distributing.html#uploading-your-project-to-pypi for more info.
 
 When all this is configured correctly, zest.releaser will first register and
-upload at the official pypi (if the package is registered there already).
+upload at the official PyPI (if the package is registered there already).
 Then it will offer to upload to the other index servers that you have
 specified in ``.pypirc``.
 
@@ -206,12 +206,12 @@ In case you always want to accept the defaults, a setting in your
 ``setup.cfg`` is available::
 
     [zest.releaser]
-    no-input = true
+    no-input = yes
 
 An important reminder: if you want to make sure you never upload anything
 automatically to the python package index, include the ``release = no``
 setting in ``setup.cfg``::
 
     [zest.releaser]
-    no-input = true
+    no-input = yes
     release = no
