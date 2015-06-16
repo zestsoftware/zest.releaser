@@ -22,6 +22,9 @@ Changelog for zest.releaser
   wheel.  Issue #108.
   [maurits]
 
+- Add a `--package-root` option to support projects where `setup.py` is not
+  located at the top level of the repository.
+
 
 5.0 (2015-06-05)
 ----------------

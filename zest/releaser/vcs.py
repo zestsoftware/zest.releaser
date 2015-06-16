@@ -48,7 +48,7 @@ class BaseVersionControl(object):
         return True
 
     def get_setup_py_version(self):
-        if os.path.exists('setup.py'):
+        if os.path.exists(os.path.join(utils.PACKAGE_ROOT, 'setup.py')):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted version, like
             # UserWarnings.
@@ -65,7 +65,7 @@ class BaseVersionControl(object):
             return utils.strip_version(version)
 
     def get_setup_py_name(self):
-        if os.path.exists('setup.py'):
+        if os.path.exists(os.path.join(utils.PACKAGE_ROOT, 'setup.py')):
             # First run egg_info, as that may get rid of some warnings
             # that otherwise end up in the extracted name, like
             # UserWarnings.
@@ -220,7 +220,9 @@ class BaseVersionControl(object):
 
         good_version = "version = '%s'" % version
         line_number = 0
-        setup_lines = utils.read_text_file('setup.py').split('\n')
+        setup_py = os.path.join(utils.PACKAGE_ROOT, 'setup.py')
+
+        setup_lines = utils.read_text_file(setup_py).split('\n')
         for line_number, line in enumerate(setup_lines):
             match = VERSION_PATTERN.search(line)
             if match:
@@ -232,7 +234,7 @@ class BaseVersionControl(object):
                     good_version = indentation + "version='%s'," % version
                 setup_lines[line_number] = good_version
                 contents = '\n'.join(setup_lines)
-                open('setup.py', 'w').write(contents)
+                open(setup_py, 'w').write(contents)
                 logger.info("Set setup.py's version to %r", version)
                 return
 
@@ -318,7 +320,7 @@ class BaseVersionControl(object):
         works is handy for the vcs.txt tests.
         """
         files = []
-        for dirpath, dirnames, filenames in os.walk('.'):
+        for dirpath, dirnames, filenames in os.walk(os.curdir):
             dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))
