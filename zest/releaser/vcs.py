@@ -86,8 +86,9 @@ class BaseVersionControl(object):
         setup_cfg = pypi.SetupConfig()
         if not setup_cfg.python_file_with_version():
             return
-        lines = utils.read_text_file(
-            setup_cfg.python_file_with_version()).split('\n')
+        lines, encoding = utils.read_text_file(
+            setup_cfg.python_file_with_version())
+        lines = lines.splitlines()
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
             if match:
@@ -194,13 +195,14 @@ class BaseVersionControl(object):
         if self.get_python_file_version():
             setup_cfg = pypi.SetupConfig()
             filename = setup_cfg.python_file_with_version()
-            lines = utils.read_text_file(filename).split('\n')
+            lines, encoding = utils.read_text_file(filename)
+            lines = lines.splitlines()
             for index, line in enumerate(lines):
                 match = UNDERSCORED_VERSION_PATTERN.search(line)
                 if match:
                     lines[index] = "__version__ = '%s'" % version
             contents = '\n'.join(lines)
-            open(filename, 'w').write(contents)
+            utils.write_text_file(filename, contents, encoding)
             logger.info("Set __version__ in %s to %r", filename, version)
             return
 
@@ -220,7 +222,8 @@ class BaseVersionControl(object):
 
         good_version = "version = '%s'" % version
         line_number = 0
-        setup_lines = utils.read_text_file('setup.py').split('\n')
+        setup_lines, encoding = utils.read_text_file('setup.py')
+        setup_lines = setup_lines.splitlines()
         for line_number, line in enumerate(setup_lines):
             match = VERSION_PATTERN.search(line)
             if match:
@@ -232,7 +235,7 @@ class BaseVersionControl(object):
                     good_version = indentation + "version='%s'," % version
                 setup_lines[line_number] = good_version
                 contents = '\n'.join(setup_lines)
-                open('setup.py', 'w').write(contents)
+                utils.write_text_file('setup.py', contents, encoding)
                 logger.info("Set setup.py's version to %r", version)
                 return
 

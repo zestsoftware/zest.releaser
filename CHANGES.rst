@@ -4,7 +4,9 @@ Changelog for zest.releaser
 5.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Write file with the same encoding that we used for reading them.
+  Issue #109.
+  [maurits]
 
 
 5.1 (2015-06-11)

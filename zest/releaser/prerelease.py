@@ -29,6 +29,7 @@ DATA = {
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
     'history_file': 'Filename of history/changelog file (when found)',
     'history_lines': 'List with all history file lines (when found)',
+    'history_encoding': 'The detected encoding of the history file',
     'nothing_changed_yet': (
         'First line in new changelog section, '
         'warn when this is still in there before releasing'),
@@ -110,10 +111,11 @@ class Prereleaser(baserelease.Basereleaser):
             logger.warn("No history file found")
             self.data['history_lines'] = None
             self.data['history_file'] = None
+            self.data['history_encoding'] = None
             return
         logger.debug("Checking %s", history_file)
-        history_lines = read_text_file(history_file).split('\n')
-        # ^^^ TODO: .readlines()?
+        history_lines, history_encoding = read_text_file(history_file)
+        history_lines = history_lines.splitlines()
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
             logger.error("No detectable version heading in the history "
@@ -132,6 +134,7 @@ class Prereleaser(baserelease.Basereleaser):
                      history_lines[line + 1])
         self.data['history_lines'] = history_lines
         self.data['history_file'] = history_file
+        self.data['history_encoding'] = history_encoding
         # TODO: add line number where an extra changelog entry can be
         # inserted.
 
