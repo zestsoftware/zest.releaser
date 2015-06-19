@@ -88,6 +88,7 @@ class BaseVersionControl(object):
             return
         lines, encoding = utils.read_text_file(
             setup_cfg.python_file_with_version())
+        encoding  # noqa, unused variable
         lines = lines.splitlines()
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
