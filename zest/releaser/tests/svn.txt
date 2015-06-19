@@ -40,7 +40,7 @@ Make a change:
     >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
-    'svn diff'
+    'svn diff --non-interactive'
     >>> print(execute_command(cmd))
     Index: ...
     --- setup.py      (revision 3)
@@ -56,7 +56,7 @@ Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
-    'svn commit -m "small tweak"'
+    'svn commit --non-interactive -m "small tweak"'
     >>> print(execute_command(cmd))
     Sending        setup.py
     Transmitting file data...
@@ -79,7 +79,7 @@ Create a tag and it will show up:
 
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
-    'svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"'
+    'svn cp --non-interactive file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"'
     >>> dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1']
@@ -133,7 +133,7 @@ The tag checkout command makes a checkout in that tempdir:
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'svn co file://TESTREPO/tha.example/tags/0.1 TMPDIR/somename...'
+    'svn co --non-interactive file://TESTREPO/tha.example/tags/0.1 TMPDIR/somename...'
     >>> print('\n'.join(sorted(execute_command(cmd).splitlines())))
     A    TMPDIR/somename.../CHANGES.txt
     A    TMPDIR/somename.../README.txt
@@ -308,10 +308,10 @@ Tag and checkout commands also use the singular:
 
     >>> cmd = singular_checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'svn co file://TESTREPO/singular/tag/0.1 TMPDIR/somename...'
+    'svn co --non-interactive file://TESTREPO/singular/tag/0.1 TMPDIR/somename...'
     >>> cmd = singular_checkout.cmd_create_tag('0.1')
     >>> cmd
-    'svn cp file://TESTREPO/singular/trunk file://TESTREPO/singular/tag/0.1 -m "Tagging 0.1"'
+    'svn cp --non-interactive file://TESTREPO/singular/trunk file://TESTREPO/singular/tag/0.1 -m "Tagging 0.1"'
 
 If we have branch checkout, the base url is still extracted correctly, even if
 the singular /tag and /branch is used:

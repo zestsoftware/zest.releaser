@@ -88,7 +88,7 @@ The release script tags the release and uploads it:
     >>> release.main()
     Checking data dict
     Tag needed to proceed, you can use the following command:
-    svn cp file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"
+    svn cp --non-interactive file://TESTREPO/tha.example/trunk file://TESTREPO/tha.example/tags/0.1 -m "Tagging 0.1"
     Question: Run this command (Y/n)?
     Our reply: y
     <BLANKLINE>
