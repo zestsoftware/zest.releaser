@@ -98,7 +98,7 @@ class Subversion(BaseVersionControl):
             else:
                 sys.exit(0)
 
-        tag_info = execute_command('svn list %s%s' % (base, tags_name))
+        tag_info = execute_command('svn list --non-interactive %s%s' % (base, tags_name))
         network_errors = [
             'Could not resolve hostname',
             'E670008',
@@ -125,10 +125,10 @@ class Subversion(BaseVersionControl):
         return base + self._tags_name + '/' + version
 
     def cmd_diff(self):
-        return 'svn diff'
+        return 'svn diff --non-interactive'
 
     def cmd_commit(self, message):
-        return 'svn commit -m "%s"' % message
+        return 'svn commit --non-interactive -m "%s"' % message
 
     def cmd_diff_last_commit_against_tag(self, version):
         url = self._svn_info()
@@ -141,7 +141,7 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = execute_command('svn info %s' % tag_url)
+        tag_info = execute_command('svn info--non-interactive %s' % tag_url)
         # Search for: Last Changed Rev: 42761
         revision = None
         for line in tag_info.split('\n'):
@@ -157,11 +157,11 @@ class Subversion(BaseVersionControl):
     def cmd_create_tag(self, version):
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        return 'svn cp %s %s -m "Tagging %s"' % (url, tag_url, version)
+        return 'svn cp --non-interactive %s %s -m "Tagging %s"' % (url, tag_url, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         tag_url = self.tag_url(version)
-        return 'svn co %s %s' % (tag_url, checkout_dir)
+        return 'svn co --non-interactive %s %s' % (tag_url, checkout_dir)
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
@@ -177,4 +177,4 @@ class Subversion(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('svn ls --recursive').splitlines()
+        return execute_command('svn ls --non-interactive --recursive').splitlines()
