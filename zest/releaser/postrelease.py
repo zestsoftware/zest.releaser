@@ -113,7 +113,8 @@ class Postreleaser(baserelease.Basereleaser):
         if not history:
             logger.warn("No history file found")
             return
-        history_lines = read_text_file(history).split('\n')
+        history_lines, history_encoding = read_text_file(history)
+        history_lines = history_lines.splitlines()
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
             logger.warn("No detectable existing version headings in the "
@@ -138,7 +139,7 @@ class Postreleaser(baserelease.Basereleaser):
                   '']
         history_lines[inject_location:inject_location] = inject
         contents = '\n'.join(history_lines)
-        write_text_file(history, contents)
+        write_text_file(history, contents, history_encoding)
         logger.info("Injected new section into the history: %r", header)
 
     def _diff_and_commit(self):

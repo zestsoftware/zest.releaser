@@ -9,10 +9,9 @@ import subprocess
 import sys
 import textwrap
 try:
-    from tokenize import open as tok_open
+    from tokenize import detect_encoding
 except ImportError:
-    tok_open = None
-
+    detect_encoding = None
 try:
     import chardet
     HAVE_CHARDET = True
@@ -60,37 +59,51 @@ def loglevel():
     return logging.INFO
 
 
-def write_text_file(filename, contents):
+def write_text_file(filename, contents, encoding=OUTPUT_ENCODING):
     if six.PY2 and isinstance(contents, six.text_type):
         # Python 2 unicode needs to be encoded.
-        contents = contents.encode(OUTPUT_ENCODING)
+        contents = contents.encode(encoding)
     open(filename, 'w').write(contents)
 
 
 def read_text_file(filename, encoding=None):
-    # Unless specified manually, We have no way of knowing what text
-    # encoding this file may be in.
-    # The 'open' method uses the default system encoding to read text
-    # files in Python 3 or falls back to utf-8.
-    if tok_open is not None and encoding is None:
-        # If an encoding is manually specified, never try to detect one
-        with tok_open(filename) as fh:
-            return fh.read()
+    """Read text file.
 
-    with open(filename, 'rb') as fh:
-        data = fh.read()
+    Give back the contents, and the encoding we used.
+
+    Unless specified manually, We have no way of knowing what text
+    encoding this file may be in.
+
+    The standard Python 'open' method uses the default system encoding
+    to read text files in Python 3 or falls back to utf-8.
+
+    On Python 3 we can use tokenize to detect the encoding.
+
+    On Python 2 we can use chardet to detect the encoding.
+
+    """
+    # Only if the encoding is not manually specified, we may try to
+    # detect it.
+    if encoding is None and detect_encoding is not None:
+        with open(filename, 'rb') as filehandler:
+            encoding = detect_encoding(filehandler.readline)[0]
+
+    with open(filename, 'rb') as filehandler:
+        data = filehandler.read()
 
     if encoding is not None:
-        return data.decode(encoding)
+        return data.decode(encoding), encoding
 
     if HAVE_CHARDET:
         encoding_result = chardet.detect(data)
         if encoding_result and encoding_result['encoding'] is not None:
-            return data.decode(encoding_result['encoding'])
+            encoding = encoding_result['encoding']
+            return data.decode(encoding), encoding
 
     # Look for hints, PEP263-style
     if data[:3] == b'\xef\xbb\xbf':
-        return data.decode('UTF-8')
+        encoding = 'utf-8'
+        return data.decode(encoding), encoding
 
     data_len = len(data)
     for canary in ENCODING_HINTS:
@@ -105,13 +118,14 @@ def read_text_file(filename, encoding=None):
                 pos += 1
             encoding = coding.decode('ascii').strip()
             try:
-                return data.decode(encoding)
+                return data.decode(encoding), encoding
             except (LookupError, UnicodeError):
                 # Try the next one
                 pass
 
     # Fall back to utf-8
-    return data.decode('UTF-8')
+    encoding = 'utf-8'
+    return data.decode(encoding), encoding
 
 
 def strip_version(version):
