@@ -114,7 +114,7 @@ class Postreleaser(baserelease.Basereleaser):
             logger.warn("No history file found")
             return
         history_lines, history_encoding = read_text_file(history)
-        history_lines = history_lines.splitlines()
+        history_lines = history_lines.split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
             logger.warn("No detectable existing version headings in the "

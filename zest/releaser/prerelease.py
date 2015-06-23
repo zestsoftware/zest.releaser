@@ -115,7 +115,7 @@ class Prereleaser(baserelease.Basereleaser):
             return
         logger.debug("Checking %s", history_file)
         history_lines, history_encoding = read_text_file(history_file)
-        history_lines = history_lines.splitlines()
+        history_lines = history_lines.split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not len(headings):
             logger.error("No detectable version heading in the history "

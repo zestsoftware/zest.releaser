@@ -197,7 +197,7 @@ class BaseVersionControl(object):
             setup_cfg = pypi.SetupConfig()
             filename = setup_cfg.python_file_with_version()
             lines, encoding = utils.read_text_file(filename)
-            lines = lines.splitlines()
+            lines = lines.split('\n')
             for index, line in enumerate(lines):
                 match = UNDERSCORED_VERSION_PATTERN.search(line)
                 if match:
@@ -224,7 +224,7 @@ class BaseVersionControl(object):
         good_version = "version = '%s'" % version
         line_number = 0
         setup_lines, encoding = utils.read_text_file('setup.py')
-        setup_lines = setup_lines.splitlines()
+        setup_lines = setup_lines.split('\n')
         for line_number, line in enumerate(setup_lines):
             match = VERSION_PATTERN.search(line)
             if match:
