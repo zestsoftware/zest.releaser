@@ -9,6 +9,8 @@ from six.moves.configparser import ConfigParser
 from six.moves.configparser import NoSectionError
 from six.moves.configparser import NoOptionError
 
+from zest.releaser import utils
+
 try:
     pkg_resources.get_distribution('wheel')
 except pkg_resources.DistributionNotFound:
@@ -43,7 +45,7 @@ class SetupConfig(object):
     def __init__(self):
         """Grab the configuration (overridable for test purposes)"""
         # If there is a setup.cfg in the package, parse it
-        if not os.path.exists(self.config_filename):
+        if not os.path.exists(os.path.join(utils.PACKAGE_ROOT, self.config_filename)):
             self.config = None
             return
         self.config = ConfigParser()
