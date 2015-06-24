@@ -44,8 +44,9 @@ class BaseVersionControl(object):
             self.relative_path_in_repo = ''
         else:
             self.reporoot = reporoot
-            # path from root of repo
-            self.relative_path_in_repo = self.workingdir[len(reporoot):]
+            # Determine relative path from root of repo.
+            self.relative_path_in_repo = os.path.relpath(
+                self.workingdir, reporoot)
 
     def is_setuptools_helper_package_installed(self):
         try:
