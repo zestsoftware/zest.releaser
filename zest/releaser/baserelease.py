@@ -11,8 +11,13 @@ from zest.releaser import pypi
 
 class Basereleaser(object):
 
-    def __init__(self):
-        self.vcs = choose.version_control()
+    def __init__(self, vcs=None):
+        if vcs is None:
+            self.vcs = choose.version_control()
+        else:
+            # In a fullrelease, we share the determined vcs between
+            # prerelease, release and postrelease.
+            self.vcs = vcs
         self.data = {'workingdir': self.vcs.workingdir,
                      'reporoot': self.vcs.reporoot,
                      'name': self.vcs.name}

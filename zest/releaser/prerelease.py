@@ -47,8 +47,8 @@ class Prereleaser(baserelease.Basereleaser):
 
     """
 
-    def __init__(self):
-        baserelease.Basereleaser.__init__(self)
+    def __init__(self, vcs=None):
+        baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             today=datetime.datetime.today().strftime('%Y-%m-%d'),

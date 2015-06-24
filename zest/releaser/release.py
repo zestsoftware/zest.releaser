@@ -47,8 +47,8 @@ def package_in_pypi(package):
 class Releaser(baserelease.Basereleaser):
     """Release the project by tagging it and optionally uploading to pypi."""
 
-    def __init__(self):
-        baserelease.Basereleaser.__init__(self)
+    def __init__(self, vcs=None):
+        baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             # Nothing yet
@@ -310,15 +310,11 @@ def datacheck(data):
     utils.is_data_documented(data, documentation=DATA)
 
 
-def main(return_tagdir=False):
+def main():
     utils.parse_options()
     utils.configure_logging()
     releaser = Releaser()
     releaser.run()
-    if return_tagdir:
-        # At the end, for the benefit of fullrelease.
-        return releaser.data.get('tagdir')
-    else:
-        tagdir = releaser.data.get('tagdir')
-        if tagdir:
-            logger.info("Reminder: tag checkout is in %s", tagdir)
+    tagdir = releaser.data.get('tagdir')
+    if tagdir:
+        logger.info("Reminder: tag checkout is in %s", tagdir)
