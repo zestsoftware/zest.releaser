@@ -14,6 +14,7 @@ class Basereleaser(object):
     def __init__(self):
         self.vcs = choose.version_control()
         self.data = {'workingdir': self.vcs.workingdir,
+                     'reporoot': self.vcs.reporoot,
                      'name': self.vcs.name}
         self.setup_cfg = pypi.SetupConfig()
         if self.setup_cfg.no_input():

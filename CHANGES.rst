@@ -4,6 +4,16 @@ Changelog for zest.releaser
 5.2 (unreleased)
 ----------------
 
+- When we find no version control in the current directory, look a few
+  directories up.  When looking for version and history files, we look
+  in the current directory and its sub directories, and not in the
+  repository root.  After making a tag checkout, we change directory
+  to the same relative path that we were in before.  You can use this
+  when you want to release a Python package that is in a sub directory
+  of the repository.  When we detect this, we first offer to change to
+  the root directory of the repository.
+  [maurits]
+
 - Write file with the same encoding that we used for reading them.
   Issue #109.
   [maurits]

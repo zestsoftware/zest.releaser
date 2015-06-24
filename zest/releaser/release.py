@@ -18,9 +18,14 @@ DATA = {
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
     'workingdir': 'Original working directory',
+    'reporoot': 'Root of the version control repository',
     'name': 'Name of the project being released',
     'tagdir': '''Directory where the tag checkout is placed (*if* a tag
     checkout has been made)''',
+    'tagworkingdir': '''Working directory inside the tag checkout. This is
+    the same, except when you make a release from within a sub directory.
+    We then make sure you end up in the same relative directory after a
+    checkout is done.''',
     'version': "Version we're releasing",
     'tag_already_exists': "Internal detail, don't touch this :-)",
 }
@@ -132,12 +137,12 @@ class Releaser(baserelease.Basereleaser):
         # And for twine, who will just upload the created files.
         logger.info(
             "Making a source distribution of a fresh tag checkout (in %s).",
-            self.data['tagdir'])
+            self.data['tagworkingdir'])
         result = utils.execute_command(utils.setup_py('sdist'))
         utils.show_interesting_lines(result)
         if self.pypiconfig.create_wheel():
             logger.info("Making a wheel of a fresh tag checkout (in %s).",
-                        self.data['tagdir'])
+                        self.data['tagworkingdir'])
             result = utils.execute_command(utils.setup_py('bdist_wheel'))
         utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
@@ -241,6 +246,19 @@ class Releaser(baserelease.Basereleaser):
         # ^^^ This changes directory to a temp folder.
         self.data['tagdir'] = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
+        if self.vcs.relative_path_in_repo:
+            # We were in a sub directory of the repo when we started
+            # the release, so we go to the same relative sub
+            # directory.
+            tagworkingdir = os.path.realpath(
+                os.path.join(os.getcwd(), self.vcs.relative_path_in_repo))
+            os.chdir(tagworkingdir)
+            self.data['tagworkingdir'] = tagworkingdir
+            logger.info("Changing to sub directory in tag checkout: %s",
+                        self.data['tagworkingdir'])
+        else:
+            # The normal case.
+            self.data['tagworkingdir'] = self.data['tagdir']
 
         # Possibly fix setup.cfg.
         if self.setup_cfg.has_bad_commands():
@@ -280,7 +298,7 @@ class Releaser(baserelease.Basereleaser):
         # Run extra entry point
         self._run_hooks('after_checkout')
 
-        if 'setup.py' in os.listdir(self.data['tagdir']):
+        if 'setup.py' in os.listdir(self.data['tagworkingdir']):
             self._upload_distributions(package)
 
         # Make sure we are in the expected directory again.

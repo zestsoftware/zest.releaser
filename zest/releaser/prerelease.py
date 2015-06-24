@@ -24,6 +24,7 @@ DATA = {
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
     'workingdir': 'Original working directory',
+    'reporoot': 'Root of the version control repository',
     'name': 'Name of the project being released',
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',

@@ -37,8 +37,15 @@ class BaseVersionControl(object):
     internal_filename = ''  # e.g. '.svn' or '.hg'
     setuptools_helper_package = ''
 
-    def __init__(self):
+    def __init__(self, reporoot=None):
         self.workingdir = os.getcwd()
+        if reporoot is None:
+            self.reporoot = self.workingdir
+            self.relative_path_in_repo = ''
+        else:
+            self.reporoot = reporoot
+            # path from root of repo
+            self.relative_path_in_repo = self.workingdir[len(reporoot):]
 
     def is_setuptools_helper_package_installed(self):
         try:
@@ -116,7 +123,7 @@ class BaseVersionControl(object):
         files = self.list_files()
         found = []
         for fullpath in files:
-            if fullpath.lower() == 'debian/changelog':
+            if fullpath.lower().endswith('debian/changelog'):
                 logger.debug(
                     "Ignoring %s, unreadable (for us) debian changelog",
                     fullpath)
@@ -322,7 +329,7 @@ class BaseVersionControl(object):
         works is handy for the vcs.txt tests.
         """
         files = []
-        for dirpath, dirnames, filenames in os.walk('.'):
+        for dirpath, dirnames, filenames in os.walk(os.curdir):
             dirnames  # noqa pylint
             for filename in filenames:
                 files.append(os.path.join(dirpath, filename))

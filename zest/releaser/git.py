@@ -49,7 +49,7 @@ class Git(BaseVersionControl):
         temp = tempfile.mkdtemp(prefix=prefix)
         cwd = os.getcwd()
         os.chdir(temp)
-        cmd = 'git clone %s %s' % (self.workingdir, 'gitclone')
+        cmd = 'git clone %s %s' % (self.reporoot, 'gitclone')
         logger.debug(execute_command(cmd))
         clonedir = os.path.join(temp, 'gitclone')
         os.chdir(clonedir)
