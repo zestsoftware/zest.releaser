@@ -48,6 +48,10 @@ class BaseVersionControl(object):
             self.relative_path_in_repo = os.path.relpath(
                 self.workingdir, reporoot)
 
+    def __repr__(self):
+        return '<{0} at {1} {2}>'.format(
+            self.__class__.__name__, self.reporoot, self.relative_path_in_repo)
+
     def is_setuptools_helper_package_installed(self):
         try:
             __import__(self.setuptools_helper_package)

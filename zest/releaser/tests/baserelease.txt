@@ -24,7 +24,7 @@ The data dict is initialized.  And a vcs is chosen:
     >>> base.data['name']
     'tha.example'
     >>> base.vcs
-    <zest.releaser.svn.Subversion object at ...>
+    <Subversion at TESTTEMP/tha.example-svn .>
 
 Two methods are unimplemented:
 
