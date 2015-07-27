@@ -38,7 +38,7 @@ Prepare a mock documentation file:
 When the name *is* zest.releaser, we generate documentation.
 
     >>> data = {'name': 'zest.releaser',
-    ...         'workingdir': tempdir}
+    ...         'reporoot': tempdir}
     >>> preparedocs.prepare_entrypoint_documentation(data)
     Wrote entry point documentation to ...doc/source/entrypoints.rst
 

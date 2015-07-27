@@ -57,7 +57,7 @@ class Bzr(BaseVersionControl):
         return 'bzr tag %s' % version
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
-        source = self.workingdir
+        source = self.reporoot
         target = checkout_dir
         return 'bzr checkout -r tag:%s %s %s' % (version, source, target)
 

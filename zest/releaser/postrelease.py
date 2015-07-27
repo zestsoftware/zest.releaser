@@ -25,6 +25,7 @@ DATA = {
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
     'workingdir': 'Original working directory',
+    'reporoot': 'Root of the version control repository',
     'name': 'Name of the project being released',
     'nothing_changed_yet': 'First line in new changelog section',
     'new_version': 'New development version (so 1.1)',
@@ -42,8 +43,8 @@ class Postreleaser(baserelease.Basereleaser):
 
     """
 
-    def __init__(self):
-        baserelease.Basereleaser.__init__(self)
+    def __init__(self, vcs=None):
+        baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             nothing_changed_yet=NOTHING_CHANGED_YET,

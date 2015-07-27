@@ -69,7 +69,7 @@ class Hg(BaseVersionControl):
         return 'hg tag -m "Tagging %s" %s' % (version, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
-        source = self.workingdir
+        source = self.reporoot
         target = checkout_dir
         return 'hg clone -r %s %s %s' % (version, source, target)
 
@@ -99,4 +99,4 @@ class Hg(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('hg locate').splitlines()
+        return execute_command('hg locate --fullpath').splitlines()

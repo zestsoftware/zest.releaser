@@ -24,6 +24,7 @@ DATA = {
     # in self.data that is not in this list.  Embarrasment-driven
     # documentation!
     'workingdir': 'Original working directory',
+    'reporoot': 'Root of the version control repository',
     'name': 'Name of the project being released',
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
@@ -46,8 +47,8 @@ class Prereleaser(baserelease.Basereleaser):
 
     """
 
-    def __init__(self):
-        baserelease.Basereleaser.__init__(self)
+    def __init__(self, vcs=None):
+        baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             today=datetime.datetime.today().strftime('%Y-%m-%d'),

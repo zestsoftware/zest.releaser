@@ -9,6 +9,8 @@ Some initial imports:
 
     >>> from zest.releaser import choose
     >>> import os
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
 
 Choose makes the choice between version control systems.
 
@@ -16,19 +18,40 @@ Subversion:
 
     >>> os.chdir(svnsourcedir)
     >>> choose.version_control()
-    <zest.releaser.svn.Subversion object at ...>
+    <Subversion at TESTTEMP/tha.example-svn .>
 
 Mercurial:
 
     >>> os.chdir(hgsourcedir)
     >>> choose.version_control()
-    <zest.releaser.hg.Hg object at ...>
+    <Hg at TESTTEMP/tha.example-hg .>
 
 Bazaar:
 
     >>> os.chdir(bzrsourcedir)
     >>> choose.version_control()
-    <zest.releaser.bzr.Bzr object at ...>
+    <Bzr at TESTTEMP/tha.example-bzr .>
+
+Git:
+
+    >>> os.chdir(gitsourcedir)
+    >>> choose.version_control()
+    <Git at TESTTEMP/tha.example-git .>
+
+It works when we are in a sub directory too:
+
+    >>> os.chdir(gitsourcedir)
+    >>> os.chdir('src')
+    >>> utils.test_answer_book.set_answers(['n'])
+    >>> choose.version_control()
+    Question: You are NOT in the root of the repository. Do you want to go there? (Y/n)?
+    Our reply: n
+    <Git at TESTTEMP/tha.example-git src>
+    >>> utils.test_answer_book.set_answers(['y'])
+    >>> choose.version_control()
+    Question: You are NOT in the root of the repository. Do you want to go there? (Y/n)?
+    Our reply: y
+    <Git at TESTTEMP/tha.example-git .>
 
 When no version control system is found, zest.releaser exits (with a log
 message, but we don't test those yet):
