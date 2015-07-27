@@ -103,6 +103,9 @@ Prerelease data dict items
 commit_msg
     Message template used when committing
 
+history_encoding
+    The detected encoding of the history file
+
 history_file
     Filename of history/changelog file (when found)
 
@@ -124,6 +127,9 @@ nothing_changed_yet
 original_version
     Version before prereleasing (e.g. 1.0dev)
 
+reporoot
+    Root of the version control repository
+
 today
     Date string used in history header
 
@@ -136,12 +142,21 @@ Release data dict items
 name
     Name of the project being released
 
+reporoot
+    Root of the version control repository
+
 tag_already_exists
     Internal detail, don't touch this :-)
 
 tagdir
     Directory where the tag checkout is placed (*if* a tag
     checkout has been made)
+
+tagworkingdir
+    Working directory inside the tag checkout. This is
+    the same, except when you make a release from within a sub directory.
+    We then make sure you end up in the same relative directory after a
+    checkout is done.
 
 version
     Version we're releasing
@@ -172,6 +187,9 @@ new_version
 
 nothing_changed_yet
     First line in new changelog section
+
+reporoot
+    Root of the version control repository
 
 workingdir
     Original working directory
