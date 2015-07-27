@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.2 (unreleased)
+5.2 (2015-07-27)
 ----------------
 
 - When we find no version control in the current directory, look a few
