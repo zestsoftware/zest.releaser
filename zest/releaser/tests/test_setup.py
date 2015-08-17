@@ -64,6 +64,8 @@ checker = renormalizing.RENormalizing([
     # you get: "error: unexpected end of regular expression"
     (re.compile(re.escape(Fore.RED)), 'RED '),
     (re.compile(re.escape(Fore.MAGENTA)), 'MAGENTA '),
+    # svn 1.9 prints 'Committing transaction...'
+    (re.compile('Committing transaction...'), ''),
 ] + ([
 
 ] if six.PY3 else [

@@ -106,7 +106,7 @@ The release script tags the release and uploads it:
     <BLANKLINE>
     <BLANKLINE>
     Sending        setup.cfg
-    Transmitting file data .
+    Transmitting file data...
     Committed revision 7.
     <BLANKLINE>
     <BLANKLINE>

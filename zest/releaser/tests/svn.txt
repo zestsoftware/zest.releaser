@@ -95,7 +95,7 @@ Make and commit a small change:
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print(execute_command(cmd))
     Sending        setup.py
-    Transmitting file data .
+    Transmitting file data...
     Committed revision 7.
 
 Now we can request the changes since a specific tag.  Note that we use the
