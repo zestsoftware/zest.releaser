@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.3 (unreleased)
+5.3 (2015-08-21)
 ----------------
 
 - Fixed typo in svn command to show the changelog since the last tag.
