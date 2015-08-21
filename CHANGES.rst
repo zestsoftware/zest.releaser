@@ -4,7 +4,8 @@ Changelog for zest.releaser
 5.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed typo in svn command to show the changelog since the last tag.
+  [awello]
 
 
 5.2 (2015-07-27)
