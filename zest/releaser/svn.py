@@ -141,7 +141,7 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = execute_command('svn info--non-interactive %s' % tag_url)
+        tag_info = execute_command('svn info --non-interactive %s' % tag_url)
         # Search for: Last Changed Rev: 42761
         revision = None
         for line in tag_info.split('\n'):
