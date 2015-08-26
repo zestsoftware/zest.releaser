@@ -98,7 +98,7 @@ class Releaser(baserelease.Basereleaser):
         for cmd in cmds:
             print(cmd)
             if utils.ask("Run this command"):
-                print(execute_command(cmd))
+                logger.info(execute_command(cmd))
             else:
                 # all commands are needed in order to proceed normally
                 print("Please create a tag for %s yourself and rerun." %
