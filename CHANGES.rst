@@ -4,7 +4,10 @@ Changelog for zest.releaser
 5.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Requiring at least version 0.6 of the (optional, btw) readme package. The
+  API of readme changed slightly. Only needed when you want to check your
+  package's long description with ``bin/longtest``.
+  [reinout]
 
 
 5.3 (2015-08-21)
