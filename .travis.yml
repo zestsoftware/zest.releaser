@@ -4,10 +4,7 @@ python:
   - 2.7
   - 3.3
   - 3.4
-addons:
-  apt:
-    packages:
-    - git-svn
+addons: {apt: {packages: git-svn}}
 # We need these too, but they are already installed by default:
 # git bzr mercurial subversion
 # Now, we need to upgrade the system distribute, otherwise the
