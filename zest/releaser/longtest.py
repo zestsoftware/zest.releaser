@@ -32,8 +32,8 @@ def show_longdesc():
     # utils module. This makes sure the python path is set up right.
     longdesc = _execute_command(utils.setup_py('--long-description'))
     warnings = io.StringIO()
-    html, rendered = render(longdesc, warnings)
-    if not rendered:
+    html = render(longdesc, warnings)
+    if html is None:
         logging.error(
             'Error generating html. Invalid ReST.')
         print(warnings.getvalue())
