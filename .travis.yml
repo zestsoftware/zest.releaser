@@ -1,17 +1,15 @@
+sudo: false
 language: python
 python:
   - 2.7
   - 3.3
   - 3.4
-before_install:
-  - sudo apt-get update
-# apt-get update is needed as there's a faulty PPA in use inside travis
-# itself, which means we cannot install git-svn. The update fixes it.
-  - sudo apt-get install git-svn
-# In the line above, really only git-svn is needed as the rest
-# is automatically installed. But then again, git-svn used to be
-# installed by default, too. So for later reference, you need
-# "git bzr mercurial subversion", too.
+addons:
+  apt:
+    packages:
+    - git-svn
+# We need these too, but they are already installed by default:
+# git bzr mercurial subversion
 # Now, we need to upgrade the system distribute, otherwise the
 # bootstrap will fail:
   - pip install --upgrade distribute
