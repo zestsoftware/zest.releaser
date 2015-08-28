@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.4 (unreleased)
+5.4 (2015-08-28)
 ----------------
 
 - Requiring at least version 0.6 of the (optional, btw) readme package. The
