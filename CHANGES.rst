@@ -4,7 +4,10 @@ Changelog for zest.releaser
 5.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- The ``bin/longtest`` command adds the correct utf-8 character encoding hint
+  to the resulting html so that non-ascii long descriptions are properly
+  rendered in all browsers.
+  [reinout]
 
 
 5.4 (2015-08-28)
