@@ -17,6 +17,16 @@ except ImportError:
 from zest.releaser import utils
 from zest.releaser.utils import _execute_command
 
+HTML_PREFIX = '''<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>'''
+HTML_POSTFIX = '''
+  </body>
+</html>'''
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -38,6 +48,10 @@ def show_longdesc():
             'Error generating html. Invalid ReST.')
         print(warnings.getvalue())
         sys.exit(1)
+
+    if not '<html' in html[:20]:
+        # Add a html declaration including utf-8 indicator
+        html = HTML_PREFIX + html + HTML_POSTFIX
 
     with open(filename, 'wb') as fh:
         fh.write(html.encode('utf-8'))
