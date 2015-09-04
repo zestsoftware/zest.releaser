@@ -46,7 +46,12 @@ def show_longdesc():
     if html is None:
         logging.error(
             'Error generating html. Invalid ReST.')
-        print(warnings.getvalue())
+        rst_filename = tempfile.mktemp('.rst')
+        with open(rst_filename, 'wb') as rst_file:
+            rst_file.write(longdesc.encode('utf-8'))
+        warning_text = warnings.getvalue()
+        warning_text = warning_text.replace('<string>', rst_filename)
+        print(warning_text)
         sys.exit(1)
 
     if not '<html' in html[:20]:
