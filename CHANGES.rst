@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.5 (unreleased)
+5.5 (2015-09-05)
 ----------------
 
 - The ``bin/longtest`` command adds the correct utf-8 character encoding hint
