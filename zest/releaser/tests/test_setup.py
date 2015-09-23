@@ -66,12 +66,12 @@ checker = renormalizing.RENormalizing([
     (re.compile(re.escape(Fore.MAGENTA)), 'MAGENTA '),
     # svn 1.9 prints 'Committing transaction...'
     (re.compile('Committing transaction...'), ''),
+    (re.compile('FileNotFoundError'), 'IOError'),
 ] + ([
 
 ] if six.PY3 else [
     (re.compile('u\''), '\''),
     (re.compile('u"'), '"'),
-    (re.compile('FileNotFoundError'), 'IOError'),
     (re.compile('zest.releaser.utils.CommandException'), 'CommandException'),
 ]))
 
