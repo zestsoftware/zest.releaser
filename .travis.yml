@@ -4,6 +4,7 @@ python:
   - 3.3
   - 3.4
   - pypy
+  - pypy3
 before_install:
   - sudo apt-get update
 # apt-get update is needed as there's a faulty PPA in use inside travis
