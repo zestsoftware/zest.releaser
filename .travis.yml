@@ -12,6 +12,7 @@ addons:
     - git-svn
 # We need these too, but they are already installed by default:
 # git bzr mercurial subversion
+before_install:
 # Now, we need to upgrade the system distribute, otherwise the
 # bootstrap will fail:
   - pip install --upgrade distribute
