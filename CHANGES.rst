@@ -5,6 +5,7 @@ Changelog for zest.releaser
 ----------------
 
 - Add support for PyPy.
+  [jamadden]
 
 
 5.5 (2015-09-05)

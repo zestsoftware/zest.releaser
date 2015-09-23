@@ -1,7 +1,4 @@
-# Note: we cannot use 'sudo: false' because we need to use apt-get.
-# That should be doable with addons: apt: packages, but I cannot get it to work.
-# See https://github.com/travis-ci/travis-yaml/issues/58
-# and https://github.com/travis-ci/docs-travis-ci-com/issues/366
+sudo: false
 language: python
 python:
   - 2.7
@@ -9,15 +6,13 @@ python:
   - 3.4
   - pypy
 # Note: pypy3 fails at starting the bin/test script.
+addons:
+  apt:
+    packages:
+    - git-svn
+# We need these too, but they are already installed by default:
+# git bzr mercurial subversion
 before_install:
-  - sudo apt-get update
-# apt-get update is needed as there's a faulty PPA in use inside travis
-# itself, which means we cannot install git-svn. The update fixes it.
-  - sudo apt-get install git-svn
-# In the line above, really only git-svn is needed as the rest
-# is automatically installed. But then again, git-svn used to be
-# installed by default, too. So for later reference, you need
-# "git bzr mercurial subversion", too.
 # Now, we need to upgrade the system distribute, otherwise the
 # bootstrap will fail:
   - pip install --upgrade distribute
