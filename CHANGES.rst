@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.6 (unreleased)
+5.6 (2015-09-23)
 ----------------
 
 - Add support for PyPy.
