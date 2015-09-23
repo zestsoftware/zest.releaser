@@ -5,10 +5,13 @@ Detailed tests of vcs.py
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
-Some initial imports:
+Some initial imports and utility functions:
 
     >>> from zest.releaser import vcs
     >>> import os
+    >>> def writeto(filename, contents):
+    ...     with open(filename, 'w') as f:
+    ...         _ = f.write(contents)
 
 BaseVersionControl is the base class for subversion/mercurial/git support.  It
 handles some base cases and has a bunch of NotImplementedError methods.
@@ -84,7 +87,7 @@ products:
     >>> versiontxtproject = os.path.join(tempdir, 'vp')
     >>> os.mkdir(versiontxtproject)
     >>> os.chdir(versiontxtproject)
-    >>> dont_care = open('version.txt', 'w').write('1.0 dev')
+    >>> writeto('version.txt', '1.0 dev')
 
 We need some version control marker (like an ``.svn`` dir):
 
@@ -112,7 +115,7 @@ version.txt and the setup.py must be left unmolested.
     >>> lines = [
     ...     "from setuptools import setup",
     ...     "setup(name='urgh', version=open('version.txt').read().strip())"]
-    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> writeto('setup.py', '\n'.join(lines))
     >>> checkout.version = '1.2'
     >>> print(open('version.txt').read())
     1.2
@@ -128,7 +131,7 @@ version.txt is the one left as-is.
     ...     "setup(name='urgh',",
     ...     "      version='1.3',",
     ...     "      )"]
-    >>> dont_care = open('setup.py', 'w').write('\n'.join(lines))
+    >>> writeto('setup.py', '\n'.join(lines))
     >>> checkout.version = '1.4'
     >>> print(open('version.txt').read())  # Still at 1.2
     1.2
@@ -156,7 +159,7 @@ change a thing:
     ...     "import something",
     ...     "__version__ = '2.0'",
     ...     "print('something.else')"]
-    >>> dont_care = open('some_file.py', 'w').write('\n'.join(lines))
+    >>> writeto('some_file.py', '\n'.join(lines))
     >>> checkout.version
     '1.4'
 
@@ -166,7 +169,7 @@ picked up:
     >>> lines = [
     ...     "[zest.releaser]",
     ...     "python-file-with-version = some_file.py"]
-    >>> dont_care = open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> writeto('setup.cfg', '\n'.join(lines))
     >>> checkout.get_python_file_version()
     '2.0'
     >>> checkout.version
@@ -190,7 +193,7 @@ Version files can also be called ``VERSION`` instead of ``version.txt`` (or
     >>> versiontxtproject = os.path.join(tempdir, 'vp2')
     >>> os.mkdir(versiontxtproject)
     >>> os.chdir(versiontxtproject)
-    >>> dont_care = open('VERSION', 'w').write('1.0 dev')
+    >>> writeto('VERSION', '1.0 dev')
 
 We need some version control marker (like an ``.svn`` dir):
 
@@ -213,7 +216,7 @@ Setting the version works also with ``VERSION`` files:
 Same with a ``VERSION.txt``:
 
     >>> os.remove('VERSION')
-    >>> dont_care = open('VERSION.txt', 'w').write('22.3')
+    >>> writeto('VERSION.txt', '22.3')
     >>> checkout.get_version_txt_version()
     '22.3'
     >>> checkout.version = '22.4'
@@ -223,6 +226,6 @@ Same with a ``VERSION.txt``:
 Version files can also be called ``version.rst`` (or .md or so) instead of ``version.txt``:
 
     >>> os.remove('VERSION.txt')
-    >>> dont_care = open('version.rst', 'w').write('25.0')
+    >>> writeto('version.rst', '25.0')
     >>> checkout.get_version_txt_version()
     '25.0'

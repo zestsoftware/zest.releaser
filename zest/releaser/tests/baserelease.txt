@@ -42,7 +42,8 @@ We can update commit messages based on what we find in ``setup.cfg``::
     >>> lines = [
     ...     "[zest.releaser]",
     ...     "extra-message = Aargh!"]
-    >>> dont_care = open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
     >>> base = baserelease.Basereleaser()
     >>> print(base.update_commit_message('Ni!'))
     Ni!
@@ -54,7 +55,8 @@ Check that this works with non-ascii too.
     >>> lines = [
     ...     "[zest.releaser]".encode('utf-8'),
     ...     "extra-message = \u2603".encode('utf-8')]
-    >>> dont_care = open('setup.cfg', 'wb').write(b'\n'.join(lines))
+    >>> with open('setup.cfg', 'wb') as f:
+    ...     _ = f.write(b'\n'.join(lines))
     >>> base = baserelease.Basereleaser()
     >>> base.update_commit_message('Ni!')
     'Ni!\n\n\u2603'
@@ -66,7 +68,8 @@ And check with multiple lines.
     ...     "extra-message =",
     ...     "    Where is my towel?",
     ...     "    Not again."]
-    >>> dont_care = open('setup.cfg', 'w').write('\n'.join(lines))
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
     >>> base = baserelease.Basereleaser()
     >>> print(base.update_commit_message('Ni!'))
     Ni!

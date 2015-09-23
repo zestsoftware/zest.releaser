@@ -26,7 +26,8 @@ testing hack in utils.py:
 Append the [zest.releaser] section to the setup.cfg file, enabling the
 releaser hooks:
 
-    >>> dont_care = open('setup.cfg', 'a').write("""
+    >>> with open('setup.cfg', 'a') as f:
+    ...     _ = f.write("""
     ... [zest.releaser]
     ... hook_package_dir = src
     ... prereleaser.before = tha.example.hooks.prereleaser_before

@@ -63,7 +63,8 @@ def write_text_file(filename, contents, encoding=OUTPUT_ENCODING):
     if six.PY2 and isinstance(contents, six.text_type):
         # Python 2 unicode needs to be encoded.
         contents = contents.encode(encoding)
-    open(filename, 'w').write(contents)
+    with open(filename, 'w') as f:
+        f.write(contents)
 
 
 def read_text_file(filename, encoding=None):

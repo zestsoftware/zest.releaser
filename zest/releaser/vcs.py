@@ -90,8 +90,8 @@ class BaseVersionControl(object):
             filenames.append('.'.join(['version', extension]))
         version_file = self.filefind(filenames)
         if version_file:
-            f = open(version_file, 'r')
-            version = f.read()
+            with open(version_file, 'r') as f:
+                version = f.read()
             return utils.strip_version(version)
 
     def get_python_file_version(self):
@@ -229,7 +229,8 @@ class BaseVersionControl(object):
             setup_version = self.get_setup_py_version()
             if not setup_version or (setup_version ==
                                      self.get_version_txt_version()):
-                open(versionfile, 'w').write(version + '\n')
+                with open(versionfile, 'w') as f:
+                    f.write(version + '\n')
                 logger.info("Changed %s to %r", versionfile, version)
                 return
 

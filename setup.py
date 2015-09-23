@@ -10,9 +10,11 @@ version = '5.6.dev0'
 
 def read(filename):
     try:
-        return unicode(codecs.open(filename, encoding='utf-8').read())
+        with codecs.open(filename, encoding='utf-8') as f:
+            return unicode(f.read())
     except NameError:
-        return open(filename, 'r', encoding='utf-8').read()
+        with open(filename, 'r', encoding='utf-8') as f:
+            return f.read()
 
 
 
@@ -38,6 +40,8 @@ setup(name='zest.releaser',
           "Programming Language :: Python :: 3",
           "Programming Language :: Python :: 3.3",
           "Programming Language :: Python :: 3.4",
+          "Programming Language :: Python :: Implementation :: CPython",
+          "Programming Language :: Python :: Implementation :: PyPy",
           "Topic :: Software Development :: Libraries :: Python Modules",
           ],
       keywords=['releasing', 'packaging', 'pypi'],
