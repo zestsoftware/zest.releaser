@@ -87,8 +87,8 @@ def setup(test):
     hgsourcedir = os.path.join(test.tempdir, 'tha.example-hg')
     shutil.copytree(sourcedir, hgsourcedir)
     execute_command("hg init %s" % hgsourcedir)
-    open(os.path.join(hgsourcedir, '.hgignore'), 'wb').write(
-        'tha.example.egg-info\n\.pyc$\n'.encode('utf-8'))
+    with open(os.path.join(hgsourcedir, '.hgignore'), 'wb') as f:
+        f.write('tha.example.egg-info\n\\.pyc$\n'.encode('utf-8'))
     execute_command("hg add %s" % hgsourcedir)
     execute_command("hg commit -m 'init' %s" % hgsourcedir)
 
@@ -96,8 +96,8 @@ def setup(test):
     bzrsourcedir = os.path.join(test.tempdir, 'tha.example-bzr')
     shutil.copytree(sourcedir, bzrsourcedir)
     execute_command("bzr init %s" % bzrsourcedir)
-    open(os.path.join(bzrsourcedir, '.bzrignore'), 'w').write(
-        'tha.example.egg-info\n*.pyc\n')
+    with open(os.path.join(bzrsourcedir, '.bzrignore'), 'w') as f:
+        f.write('tha.example.egg-info\n*.pyc\n')
     execute_command("bzr add %s" % bzrsourcedir)
     execute_command("bzr commit -m 'init' %s" % bzrsourcedir)
 
@@ -106,8 +106,8 @@ def setup(test):
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
     execute_command("git init")
-    open(os.path.join(gitsourcedir, '.gitignore'), 'w').write(
-        'tha.example.egg-info\n*.pyc\n')
+    with open(os.path.join(gitsourcedir, '.gitignore'), 'w') as f:
+        f.write('tha.example.egg-info\n*.pyc\n')
     execute_command("git add .")
     execute_command("git commit -a -m 'init'")
     os.chdir(test.orig_dir)
@@ -120,34 +120,40 @@ def setup(test):
 
     def svnhead(*filename_parts):
         filename = os.path.join(svnsourcedir, *filename_parts)
-        lines = open(filename).readlines()
+        with open(filename) as f:
+            lines = f.readlines()
         for line in lines[:5]:
             print(line.strip())
 
     def hghead(*filename_parts):
         filename = os.path.join(hgsourcedir, *filename_parts)
-        lines = open(filename).readlines()
+        with open(filename) as f:
+            lines = f.readlines()
         for line in lines[:5]:
             print(line.strip())
 
     def bzrhead(*filename_parts):
         filename = os.path.join(bzrsourcedir, *filename_parts)
-        lines = open(filename).readlines()
+        with open(filename) as f:
+            lines = f.readlines()
         for line in lines[:5]:
             print(line.strip())
 
     def githead(*filename_parts):
         filename = os.path.join(gitsourcedir, *filename_parts)
-        lines = open(filename).readlines()
+        with open(filename) as f:
+            lines = f.readlines()
         for line in lines[:5]:
             print(line.strip())
 
     def add_changelog_entry():
         # Replace '- Nothing changed yet.'  by a different entry.
-        orig_changes = open('CHANGES.txt').read()
+        with open('CHANGES.txt') as f:
+            orig_changes = f.read()
         new_changes = orig_changes.replace(
             NOTHING_CHANGED_YET, '- Brown bag release.')
-        open('CHANGES.txt', 'w').write(new_changes)
+        with open('CHANGES.txt', 'w') as f:
+            f.write(new_changes)
 
     test.globs.update({'unicode_literals': unicode_literals,
                        'tempdir': test.tempdir,

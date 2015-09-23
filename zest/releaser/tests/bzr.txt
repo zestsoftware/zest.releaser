@@ -37,7 +37,8 @@ Diff and commit
 Make a change:
 
     >>> setup_py = os.path.join(bzrsourcedir, 'setup.py')
-    >>> dont_care = open(setup_py, 'a').write('\na = 2\n')
+    >>> with open(setup_py, 'a') as f:
+    ...    _ = f.write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
     'bzr diff'
@@ -90,7 +91,8 @@ bazaar.  We just return the version as-is:
 
 Make and commit a small change:
 
-    >>> dont_care = open(setup_py, 'a').write('\nb = 3\n')
+    >>> with open(setup_py, 'a') as f:
+    ...     _ = f.write('\nb = 3\n')
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> print(execute_command(cmd))
     RED Committing to: TESTTEMP/tha.example-bzr/
