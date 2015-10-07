@@ -4,7 +4,10 @@ Changelog for zest.releaser
 5.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- The history/changelog file is now written back with the originally detected
+  encoding. The functionality was added in 5.2, but only used for writing the
+  ``setup.py``, not the changelog. This is fixed now.
+  [reinout]
 
 
 5.6 (2015-09-23)
