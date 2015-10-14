@@ -59,7 +59,14 @@ def loglevel():
     return logging.INFO
 
 
-def write_text_file(filename, contents, encoding=OUTPUT_ENCODING):
+def write_text_file(filename, contents, encoding=None):
+    if encoding is None:
+        encoding = OUTPUT_ENCODING
+        logger.debug("Writing to %s with the default output encoding %s",
+                     filename, encoding)
+    else:
+        logger.debug("Writing to %s with its original encoding %s",
+                     filename, encoding)
     if six.PY2 and isinstance(contents, six.text_type):
         # Python 2 unicode needs to be encoded.
         contents = contents.encode(encoding)
@@ -88,6 +95,8 @@ def read_text_file(filename, encoding=None):
     if encoding is None and detect_encoding is not None:
         with open(filename, 'rb') as filehandler:
             encoding = detect_encoding(filehandler.readline)[0]
+            logger.debug("Detected encoding of %s with tokenize: %s",
+                         filename, encoding)
 
     with open(filename, 'rb') as filehandler:
         data = filehandler.read()
@@ -99,11 +108,15 @@ def read_text_file(filename, encoding=None):
         encoding_result = chardet.detect(data)
         if encoding_result and encoding_result['encoding'] is not None:
             encoding = encoding_result['encoding']
+            logger.debug("Detected encoding of %s with chardet: %s",
+                         filename, encoding)
             return data.decode(encoding), encoding
 
     # Look for hints, PEP263-style
     if data[:3] == b'\xef\xbb\xbf':
         encoding = 'utf-8'
+        logger.debug("Detected encoding of %s, standard 3 opening chars: %s",
+                     filename, encoding)
         return data.decode(encoding), encoding
 
     data_len = len(data)
@@ -119,13 +132,18 @@ def read_text_file(filename, encoding=None):
                 pos += 1
             encoding = coding.decode('ascii').strip()
             try:
-                return data.decode(encoding), encoding
+                result = data.decode(encoding)
+                logger.debug("Detected encoding of %s because of '%s': %s",
+                             filename, canary, encoding)
+                return result, encoding
             except (LookupError, UnicodeError):
                 # Try the next one
                 pass
 
     # Fall back to utf-8
     encoding = 'utf-8'
+    logger.debug("No encoding detected for %s, falling back to %s",
+                 filename, encoding)
     return data.decode(encoding), encoding
 
 
