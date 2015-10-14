@@ -1,6 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
+5.8 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 5.7 (2015-10-14)
 ----------------
 
