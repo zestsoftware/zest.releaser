@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-5.7 (unreleased)
+5.7 (2015-10-14)
 ----------------
 
 - The history/changelog file is now written back with the originally detected
