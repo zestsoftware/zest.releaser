@@ -72,10 +72,13 @@ And the version number is just 0.1 and has lost its dev marker:
     <BLANKLINE>
     version = '0.1'
 
-The release script tags the release and uploads it:
+The release script tags the release and uploads it.  Note that in the
+other function tests we call
+``mock_pypi_available.append('tha.example')``, but we do not do this
+here.  This way we can check what happens when a package is not yet
+known on PyPI:
 
-    >>> utils.test_answer_book.set_answers(['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y'])
-    >>> mock_pypi_available.append('tha.example')
+    >>> utils.test_answer_book.set_answers(['y', 'y', 'y', 'yes'])
     >>> from zest.releaser import release
     >>> release.main()
     Checking data dict
@@ -106,8 +109,9 @@ The release script tags the release and uploads it:
     creating dist
     Creating ...
     removing 'tha.example-0.1' ...
-    Question: Register and upload to pypi (Y/n)?
-    Our reply: y
+    Question: Register and upload to pypi (y/N)?
+    Our reply: yes
+    MOCK twine register dist/tha.example-0.1.tar.gz
     MOCK twine upload dist/tha.example-0.1.tar.gz
 
 There is now a tag:

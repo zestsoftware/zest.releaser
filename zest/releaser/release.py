@@ -151,74 +151,75 @@ class Releaser(baserelease.Basereleaser):
                         pypi.DIST_CONFIG_FILE)
             return
 
-        # If twine is available, we prefer it for uploading.  But:
-        # currently, when a package is not yet registered, twine
-        # upload will fail.
-        use_twine = utils.has_twine()
+        # For the register command we must point to one file in the dist
+        # directory.
+        file_in_dist = os.path.join('dist', os.listdir('dist')[0])
 
-        # First ask if we want to upload to pypi.
-        use_pypi = package_in_pypi(package)
-        if use_pypi:
-            logger.info("This package is registered on PyPI.")
-        else:
-            logger.warn("This package is NOT registered on PyPI.")
-            if use_twine:
-                logger.warn("Please login and manually register this "
-                            "package on PyPI first.")
+        # Is this package already registered on pypi?
+        on_pypi = package_in_pypi(package)
 
         # Run extra entry point
         self._run_hooks('before_upload')
 
         if self.pypiconfig.is_old_pypi_config():
-            if use_twine:
-                shell_command = utils.twine_command(
-                    'upload dist%s*' % os.path.sep)
-            else:
-                if self.pypiconfig.create_wheel():
-                    pypi_command = 'register sdist bdist_wheel upload'
-                else:
-                    pypi_command = 'register sdist upload'
-                shell_command = utils.setup_py(pypi_command)
-            if use_pypi:
+            # Set commands and prepare question and answers.
+            upload_command = utils.twine_command(
+                'upload dist%s*' % os.path.sep)
+            if on_pypi:
+                logger.info("This package is registered on PyPI.")
+                # Already registered.  Uploading is enough.
+                shell_commands =  [upload_command]
                 default = True
                 exact = False
+                question = "Upload to PyPI"
             else:
+                logger.info("This package is NOT registered on PyPI.")
+                # We must register first.
+                register_command = utils.twine_command(
+                    'register %s' % file_in_dist)
+                shell_commands =  [register_command, upload_command]
                 # We are not yet on pypi.  To avoid an 'Oops...,
                 # sorry!' when registering and uploading an internal
                 # package we default to False here.
                 default = False
                 exact = True
-            if utils.ask("Register and upload to PyPI", default=default,
-                         exact=exact):
-                logger.info("Running: %s", shell_command)
-                self._pypi_command(shell_command)
+                question = "Register and upload to PyPI"
+            if utils.ask(question, default=default, exact=exact):
+                for shell_command in shell_commands:
+                    logger.info("Running: %s", shell_command)
+                    self._pypi_command(shell_command)
 
         # The user may have defined other servers to upload to.
         for server in self.pypiconfig.distutils_servers():
-            if use_twine:
-                shell_command = utils.twine_command('upload dist%s* -r %s' % (
-                    os.path.sep, server))
+            register_command = utils.twine_command(
+                'register -r %s %s' % (server, file_in_dist))
+            upload_command = utils.twine_command('upload dist%s* -r %s' % (
+                os.path.sep, server))
+            if server == 'pypi' and on_pypi:
+                logger.info("This package is registered on PyPI.")
+                # Already registered on PyPI.  Uploading is enough.
+                shell_commands =  [upload_command]
+                question = "Upload"
             else:
-                if self.pypiconfig.create_wheel():
-                    commands = ('register', '-r', server, 'sdist',
-                                'bdist_wheel',
-                                'upload', '-r', server)
-                else:
-                    commands = ('register', '-r', server, 'sdist',
-                                'upload', '-r', server)
-                shell_command = utils.setup_py(' '.join(commands))
+                # We must register first.
+                register_command = utils.twine_command(
+                    'register %s' % file_in_dist)
+                shell_commands =  [register_command, upload_command]
+                question = "Register and upload"
             default = True
             exact = False
-            if server == 'pypi' and not use_pypi:
+            if server == 'pypi' and not on_pypi:
+                logger.info("This package is NOT registered on PyPI.")
                 # We are not yet on pypi.  To avoid an 'Oops...,
                 # sorry!' when registering and uploading an internal
                 # package we default to False here.
                 default = False
                 exact = True
-            if utils.ask("Register and upload to %s" % server,
+            if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
-                logger.info("Running: %s", shell_command)
-                self._pypi_command(shell_command)
+                for shell_command in shell_commands:
+                    logger.info("Running: %s", shell_command)
+                    self._pypi_command(shell_command)
 
     def _release(self):
         """Upload the release, when desired"""
