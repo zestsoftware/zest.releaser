@@ -66,7 +66,11 @@ def setup(test):
 
     # Init svn repo.
     repodir = os.path.join(test.tempdir, 'svnrepo')
-    execute_command('svnadmin create %s' % repodir)
+    # The --compatible-version argument is needed because some 'git svn'
+    # versions cannot handle higher versions.  You get this error when doing
+    # 'git svn clone':
+    # "Expected FS format between '1' and '4'; found format '6'"
+    execute_command('svnadmin create --compatible-version=1.6 %s' % repodir)
     repo_url = 'file://' + repodir  # TODO: urllib or so for windows
     # Import example project
     execute_command('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
