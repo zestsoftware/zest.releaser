@@ -54,7 +54,7 @@ def show_longdesc():
         print(warning_text)
         sys.exit(1)
 
-    if not '<html' in html[:20]:
+    if '<html' not in html[:20]:
         # Add a html declaration including utf-8 indicator
         html = HTML_PREFIX + html + HTML_POSTFIX
 
