@@ -9,6 +9,7 @@ import sys
 from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import AUTO_RESPONSE
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
@@ -154,7 +155,7 @@ class Prereleaser(baserelease.Basereleaser):
                         default=False):
                     logger.info("You can use the 'lasttaglog' command to "
                                 "see the commits since the last tag.")
-                    sys.exit(0)
+                    sys.exit(1 if AUTO_RESPONSE else 0)
                 break
 
     def _write_history(self):
