@@ -29,6 +29,7 @@ DATA = {
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
     'history_file': 'Filename of history/changelog file (when found)',
+    'history_last_release': 'Text of all history entries of current release',
     'history_lines': 'List with all history file lines (when found)',
     'history_encoding': 'The detected encoding of the history file',
     'nothing_changed_yet': (
@@ -146,6 +147,7 @@ class Prereleaser(baserelease.Basereleaser):
             end = headings[1]['line']
         else:
             end = -1
+        self.data['history_last_release'] = '\n'.join(history_lines[start:end])
         for line in history_lines[start:end]:
             if self.data['nothing_changed_yet'] in line:
                 if not utils.ask(

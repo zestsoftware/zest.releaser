@@ -8,6 +8,8 @@ Changelog for zest.releaser
   chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.
   Fixes issue #136.
+- Added ``history_last_release`` to the prerelease data.  This is the
+  text with all history entries of the current release.
   [maurits]
 
 
