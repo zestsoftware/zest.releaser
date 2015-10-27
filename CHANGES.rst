@@ -8,6 +8,10 @@ Changelog for zest.releaser
   chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.
   Fixes issue #136.
+- Added ``history_insert_line_here`` to the prerelease data.  This is
+  the Line number where an extra changelog entry can be inserted.
+  [maurits]
+
 - Added ``history_last_release`` to the prerelease data.  This is the
   text with all history entries of the current release.
   [maurits]

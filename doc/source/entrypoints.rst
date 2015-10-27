@@ -112,6 +112,9 @@ history_file
 history_header
     Header template used for 1st history header
 
+history_insert_line_here
+    Line number where an extra changelog entry can be inserted.
+
 history_last_release
     Text of all history entries of current release
 

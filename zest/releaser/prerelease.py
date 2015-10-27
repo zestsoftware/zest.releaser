@@ -32,6 +32,8 @@ DATA = {
     'history_last_release': 'Text of all history entries of current release',
     'history_lines': 'List with all history file lines (when found)',
     'history_encoding': 'The detected encoding of the history file',
+    'history_insert_line_here': (
+        'Line number where an extra changelog entry can be inserted.'),
     'nothing_changed_yet': (
         'First line in new changelog section, '
         'warn when this is still in there before releasing'),
@@ -137,8 +139,6 @@ class Prereleaser(baserelease.Basereleaser):
         self.data['history_lines'] = history_lines
         self.data['history_file'] = history_file
         self.data['history_encoding'] = history_encoding
-        # TODO: add line number where an extra changelog entry can be
-        # inserted.
 
         # Look for 'Nothing changed yet' under the latest header.  Not
         # nice if this text ends up in the changelog.  Did nothing happen?
@@ -146,7 +146,7 @@ class Prereleaser(baserelease.Basereleaser):
         if len(headings) > 1:
             end = headings[1]['line']
         else:
-            end = -1
+            end = len(history_lines)
         self.data['history_last_release'] = '\n'.join(history_lines[start:end])
         for line in history_lines[start:end]:
             if self.data['nothing_changed_yet'] in line:
@@ -158,6 +158,16 @@ class Prereleaser(baserelease.Basereleaser):
                                 "see the commits since the last tag.")
                     sys.exit(0)
                 break
+        # Add line number where an extra changelog entry can be inserted.  Can
+        # be useful for entry points.  'start' is the header, +1 is the
+        # underline, +2 is probably an empty line, so then we should take +3.
+        # Or rather: the first non-empty line.
+        insert = start + 2
+        while insert < end:
+            if history_lines[insert].strip():
+                break
+            insert += 1
+        self.data['history_insert_line_here'] = insert
 
     def _write_history(self):
         """Write previously-calculated history lines back to the file"""
