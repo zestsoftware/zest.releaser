@@ -8,6 +8,7 @@ import tarfile
 import tempfile
 
 import pkg_resources
+from colorama import Fore
 from six import StringIO
 from six.moves.urllib import request as urllib2
 from six.moves.urllib.error import HTTPError
@@ -66,11 +67,16 @@ def setup(test):
 
     # Init svn repo.
     repodir = os.path.join(test.tempdir, 'svnrepo')
-    # The --compatible-version argument is needed because some 'git svn'
-    # versions cannot handle higher versions.  You get this error when doing
-    # 'git svn clone':
+    # With newer svn versions (1.8), we need to add the --compatible-version
+    # argument, because some 'git svn' versions cannot handle higher versions.
+    # You get this error when doing 'git svn clone':
     # "Expected FS format between '1' and '4'; found format '6'"
-    execute_command('svnadmin create --compatible-version=1.6 %s' % repodir)
+    # But on svn 1.6, this option is not available so it crashes.  So we try.
+    result = execute_command(
+        'svnadmin create --compatible-version=1.6 %s' % repodir)
+    if Fore.RED in result:
+        execute_command('svnadmin create %s' % repodir)
+
     repo_url = 'file://' + repodir  # TODO: urllib or so for windows
     # Import example project
     execute_command('svn mkdir %s/tha.example -m "mkdir"' % repo_url)
