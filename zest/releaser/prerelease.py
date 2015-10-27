@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import six
 import sys
 
 from zest.releaser import baserelease
@@ -37,6 +38,10 @@ DATA = {
     'nothing_changed_yet': (
         'First line in new changelog section, '
         'warn when this is still in there before releasing'),
+    'required_changelog_text': (
+        'Text that must be present in the changelog. Can be a string or a '
+        'list, for example ["New:", "Fixes:"]. For a list, only one of them '
+        'needs to be present.'),
     'original_version': 'Version before prereleasing (e.g. 1.0dev)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
@@ -150,13 +155,37 @@ class Prereleaser(baserelease.Basereleaser):
         history_last_release = '\n'.join(history_lines[start:end])
         self.data['history_last_release'] = history_last_release
         if self.data['nothing_changed_yet'] in history_last_release:
+            # We want quotes around the text, but also want to avoid printing
+            # text with a u'unicode marker' in front...
+            pretty_nothing_changed = '"{}"'.format(
+                self.data['nothing_changed_yet'])
             if not utils.ask(
-                    "WARNING: Changelog contains %r. Are you sure you "
-                    "want to release?" % self.data['nothing_changed_yet'],
+                    "WARNING: Changelog contains {}. Are you sure you "
+                    "want to release?".format(pretty_nothing_changed),
                     default=False):
                 logger.info("You can use the 'lasttaglog' command to "
                             "see the commits since the last tag.")
-                sys.exit(0)
+                sys.exit(1)
+
+        # Look for required text under the latest header.  This can be a list,
+        # in which case only one item needs to be there.
+        required = self.data.get('required_changelog_text')
+        if required:
+            if isinstance(required, six.string_types):
+                required = [required]
+            found = False
+            for text in required:
+                if text in history_last_release:
+                    found = True
+                    break
+            if not found:
+                pretty_required = '"{}"'.format('", "'.join(required))
+                if not utils.ask(
+                        "WARNING: Changelog should contain at least one of "
+                        "these required texts: {}. Are you sure you "
+                        "want to release?".format(pretty_required),
+                        default=False):
+                    sys.exit(1)
 
         # Add line number where an extra changelog entry can be inserted.  Can
         # be useful for entry points.  'start' is the header, +1 is the

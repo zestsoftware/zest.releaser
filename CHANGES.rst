@@ -8,6 +8,12 @@ Changelog for zest.releaser
   chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.
   Fixes issue #136.
+- Added ``required_changelog_text`` to the prerelease data.  This is
+  text that must be present in the changelog.  It can be a string or a
+  list, for example ``["New:", "Fixes:"]``.  For a list, only one of
+  them needs to be present.
+  [maurits]
+
 - Look for the 'Nothing changed yet' text in the complete text of the
   history entries of the current release, instead of looking at it
   line by line.  This means that third party code can overwrite

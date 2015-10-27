@@ -136,6 +136,9 @@ original_version
 reporoot
     Root of the version control repository
 
+required_changelog_text
+    Text that must be present in the changelog. Can be a string or a list, for example ["New:", "Fixes:"]. For a list, only one of them needs to be present.
+
 today
     Date string used in history header
 
