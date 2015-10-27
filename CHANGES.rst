@@ -4,6 +4,37 @@ Changelog for zest.releaser
 5.8 (unreleased)
 ----------------
 
+- Always exit with error code 1 when we exit explicitly.  In some
+  cases we would exit with success code 0 when we exited based on the
+  answer to a question.  This happened when the user did not want us
+  to create the missing ``tags`` directory in subversion, and also
+  after asking if the user wanted to continue even though 'nothing
+  changed yet' was in the history.
+  [maurits]
+
+- Extensions can now tell zest.releaser to look for specific required
+  words in the history.  Just add ``required_changelog_text`` to the
+  prerelease data.  It can be a string or a list, for example
+  ``["New:", "Fixes:"]``.  For a list, only one of them needs to be
+  present.
+  [maurits]
+
+- Look for the 'Nothing changed yet' text in the complete text of the
+  history entries of the current release, instead of looking at it
+  line by line.  This means that zest releaser extensions can overwrite
+  ``nothing_changed_yet`` in the prerelease data to span multiple lines.
+  [maurits]
+
+- zest.releaser extensions can now look at
+  ``history_insert_line_here`` in the prerelease data.  On this line
+  number in the history file they can add an extra changelog entry if
+  wanted.
+  [maurits]
+
+- Added ``history_last_release`` to the prerelease data.  This is the
+  text with all history entries of the current release.
+  [maurits]
+
 - When using the ``--no-input`` option, show the question and the
   chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.

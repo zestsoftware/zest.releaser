@@ -124,4 +124,4 @@ prerelease (or fullrelease) will warn you, as indicated earlier:
     >>> prerelease.main()
     Traceback (most recent call last):
     ...
-    RuntimeError: SYSTEM EXIT (code=0)
+    RuntimeError: SYSTEM EXIT (code=1)

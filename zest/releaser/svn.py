@@ -96,7 +96,7 @@ class Subversion(BaseVersionControl):
                 tags_name = self._tags_name
                 assert tags_name == 'tags'
             else:
-                sys.exit(0)
+                sys.exit(1)
 
         tag_info = execute_command('svn list --non-interactive %s%s' % (base, tags_name))
         network_errors = [

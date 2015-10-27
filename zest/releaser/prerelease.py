@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import six
 import sys
 
 from zest.releaser import baserelease
@@ -29,11 +30,19 @@ DATA = {
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
     'history_file': 'Filename of history/changelog file (when found)',
+    'history_last_release': (
+        'Full text of all history entries of the current release'),
     'history_lines': 'List with all history file lines (when found)',
     'history_encoding': 'The detected encoding of the history file',
+    'history_insert_line_here': (
+        'Line number where an extra changelog entry can be inserted.'),
     'nothing_changed_yet': (
         'First line in new changelog section, '
         'warn when this is still in there before releasing'),
+    'required_changelog_text': (
+        'Text that must be present in the changelog. Can be a string or a '
+        'list, for example ["New:", "Fixes:"]. For a list, only one of them '
+        'needs to be present.'),
     'original_version': 'Version before prereleasing (e.g. 1.0dev)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
@@ -136,8 +145,6 @@ class Prereleaser(baserelease.Basereleaser):
         self.data['history_lines'] = history_lines
         self.data['history_file'] = history_file
         self.data['history_encoding'] = history_encoding
-        # TODO: add line number where an extra changelog entry can be
-        # inserted.
 
         # Look for 'Nothing changed yet' under the latest header.  Not
         # nice if this text ends up in the changelog.  Did nothing happen?
@@ -145,17 +152,52 @@ class Prereleaser(baserelease.Basereleaser):
         if len(headings) > 1:
             end = headings[1]['line']
         else:
-            end = -1
-        for line in history_lines[start:end]:
-            if self.data['nothing_changed_yet'] in line:
+            end = len(history_lines)
+        history_last_release = '\n'.join(history_lines[start:end])
+        self.data['history_last_release'] = history_last_release
+        if self.data['nothing_changed_yet'] in history_last_release:
+            # We want quotes around the text, but also want to avoid printing
+            # text with a u'unicode marker' in front...
+            pretty_nothing_changed = '"{}"'.format(
+                self.data['nothing_changed_yet'])
+            if not utils.ask(
+                    "WARNING: Changelog contains {}. Are you sure you "
+                    "want to release?".format(pretty_nothing_changed),
+                    default=False):
+                logger.info("You can use the 'lasttaglog' command to "
+                            "see the commits since the last tag.")
+                sys.exit(1)
+
+        # Look for required text under the latest header.  This can be a list,
+        # in which case only one item needs to be there.
+        required = self.data.get('required_changelog_text')
+        if required:
+            if isinstance(required, six.string_types):
+                required = [required]
+            found = False
+            for text in required:
+                if text in history_last_release:
+                    found = True
+                    break
+            if not found:
+                pretty_required = '"{}"'.format('", "'.join(required))
                 if not utils.ask(
-                        "WARNING: Changelog contains %r. Are you sure you "
-                        "want to release?" % self.data['nothing_changed_yet'],
+                        "WARNING: Changelog should contain at least one of "
+                        "these required strings: {}. Are you sure you "
+                        "want to release?".format(pretty_required),
                         default=False):
-                    logger.info("You can use the 'lasttaglog' command to "
-                                "see the commits since the last tag.")
-                    sys.exit(0)
+                    sys.exit(1)
+
+        # Add line number where an extra changelog entry can be inserted.  Can
+        # be useful for entry points.  'start' is the header, +1 is the
+        # underline, +2 is probably an empty line, so then we should take +3.
+        # Or rather: the first non-empty line.
+        insert = start + 2
+        while insert < end:
+            if history_lines[insert].strip():
                 break
+            insert += 1
+        self.data['history_insert_line_here'] = insert
 
     def _write_history(self):
         """Write previously-calculated history lines back to the file"""

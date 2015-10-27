@@ -112,6 +112,12 @@ history_file
 history_header
     Header template used for 1st history header
 
+history_insert_line_here
+    Line number where an extra changelog entry can be inserted.
+
+history_last_release
+    Full text of all history entries of the current release
+
 history_lines
     List with all history file lines (when found)
 
@@ -129,6 +135,9 @@ original_version
 
 reporoot
     Root of the version control repository
+
+required_changelog_text
+    Text that must be present in the changelog. Can be a string or a list, for example ["New:", "Fixes:"]. For a list, only one of them needs to be present.
 
 today
     Date string used in history header
