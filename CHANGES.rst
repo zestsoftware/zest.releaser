@@ -1,8 +1,20 @@
 Changelog for zest.releaser
 ===========================
 
-5.8 (unreleased)
+6.0 (unreleased)
 ----------------
+
+- Made ``twine`` a core dependency.  We now always use it for
+  registering and uploading.  We require at least version 1.6.0, as
+  this introduces the ``register`` command.
+  [maurits]
+
+- When uploading with ``twine`` first use the ``twine register``
+  command.  On PyPI, when the project is already registered, we do not
+  call it again, but we can only check this for PyPI, not for other
+  servers.
+  Issue #128.
+  [maurits]
 
 - Always exit with error code 1 when we exit explicitly.  In some
   cases we would exit with success code 0 when we exited based on the

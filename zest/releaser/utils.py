@@ -416,22 +416,6 @@ def twine_command(rest_of_cmdline):
     return '%s %s' % (executable, rest_of_cmdline)
 
 
-def has_twine():
-    """Is the twine command available?
-
-    If twine is available, we prefer it for uploading.  We could try
-    to import it, but it might be importable and still not available
-    on the system path.
-
-    So check if the twine command gives an error.
-
-    Note that --version prints to stderr, so it fails.  --help prints
-    to stdout as it should.
-    """
-    result = execute_command(twine_command('--help'))
-    return Fore.RED not in result
-
-
 def is_data_documented(data, documentation=None):
     """check that the self.data dict is fully documented"""
     if documentation is None:

@@ -94,23 +94,17 @@ case are all fine.
 Uploading with twine
 --------------------
 
-Since version 4.0, we prefer twine_ for uploading to the Python
+Since version 6.0, we always use twine_ for uploading to the Python
 Package Index, because it is safer: it uses ``https`` for uploading.
-If the ``twine`` command is available, it is used for uploading to
-PyPI.  It is installed automatically if you use the
-``zest.releaser[recommended]`` extra.  Note that if the ``twine``
-command is not available, you may need to change your system ``PATH``
-or need to install ``twine`` explicitly.  This seems more needed when
-using ``zc.buildout`` than when using ``pip``.
+Since version 4.0 we already prefered it if it was available, but it
+is now a core dependency, installed automatically.
 
-Note that if your package is not yet on PyPI you must first register
-it manually_.  We could use the ``python setup.py register`` command,
-but that may use cleartext passwords, which defeats the purpose of
-``twine``.  That may have been fixed meanwhile in `twine issue 21`_.
+Note that if the ``twine`` command is not available, you may need to
+change your system ``PATH`` or need to install ``twine`` explicitly.
+This seems more needed when using ``zc.buildout`` than when using
+``pip``.
 
 .. _twine: https://pypi.python.org/pypi/twine
-.. _manually: https://pypi.python.org/pypi?%3Aaction=submit_form
-.. _`twine issue 21`: https://github.com/pypa/twine/issues/21
 
 
 Uploading wheels

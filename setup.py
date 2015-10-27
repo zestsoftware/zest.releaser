@@ -5,7 +5,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '5.8.dev0'
+version = '6.0.dev0'
 
 
 def read(filename):
@@ -57,6 +57,7 @@ setup(name='zest.releaser',
           'setuptools',
           'colorama',
           'six',
+          'twine >= 1.6.0',
       ],
       extras_require={
           'recommended': [
@@ -65,7 +66,6 @@ setup(name='zest.releaser',
               'pyroma',
               'readme >= 0.6',
               'wheel',
-              'twine',
               ],
           'test': [
               'z3c.testsetup >= 0.8.4',
