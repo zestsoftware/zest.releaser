@@ -230,7 +230,7 @@ zest.releaser has no business with this project, so exit.
     >>> sample_checkout.available_tags()
     Traceback (most recent call last):
     ...
-    RuntimeError: SYSTEM EXIT (code=0)
+    RuntimeError: SYSTEM EXIT (code=1)
 
 Answer 'yes' and the tags dir gets created.  The available tags result is
 obviously an empty list:

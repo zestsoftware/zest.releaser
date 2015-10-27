@@ -8,6 +8,14 @@ Changelog for zest.releaser
   chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.
   Fixes issue #136.
+- Always exit with error code 1 when we exit explicitly.  In some
+  cases we would exit with success code 0 when we exited based on the
+  answer to a question.  This happened when the user did not want us
+  to create the missing ``tags`` directory in subversion, and also
+  after asking if the user wanted to continue even though 'nothing
+  changed yet' was in the history.
+  [maurits]
+
 - Added ``required_changelog_text`` to the prerelease data.  This is
   text that must be present in the changelog.  It can be a string or a
   list, for example ``["New:", "Fixes:"]``.  For a list, only one of
