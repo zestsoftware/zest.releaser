@@ -8,6 +8,12 @@ Changelog for zest.releaser
   chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.
   Fixes issue #136.
+- Look for the 'Nothing changed yet' text in the complete text of the
+  history entries of the current release, instead of looking at it
+  line by line.  This means that third party code can overwrite
+  ``nothing_changed_yet`` in the prerelease data to span multiple lines.
+  [maurits]
+
 - Added ``history_insert_line_here`` to the prerelease data.  This is
   the Line number where an extra changelog entry can be inserted.
   [maurits]

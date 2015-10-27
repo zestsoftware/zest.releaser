@@ -147,17 +147,17 @@ class Prereleaser(baserelease.Basereleaser):
             end = headings[1]['line']
         else:
             end = len(history_lines)
-        self.data['history_last_release'] = '\n'.join(history_lines[start:end])
-        for line in history_lines[start:end]:
-            if self.data['nothing_changed_yet'] in line:
-                if not utils.ask(
-                        "WARNING: Changelog contains %r. Are you sure you "
-                        "want to release?" % self.data['nothing_changed_yet'],
-                        default=False):
-                    logger.info("You can use the 'lasttaglog' command to "
-                                "see the commits since the last tag.")
-                    sys.exit(0)
-                break
+        history_last_release = '\n'.join(history_lines[start:end])
+        self.data['history_last_release'] = history_last_release
+        if self.data['nothing_changed_yet'] in history_last_release:
+            if not utils.ask(
+                    "WARNING: Changelog contains %r. Are you sure you "
+                    "want to release?" % self.data['nothing_changed_yet'],
+                    default=False):
+                logger.info("You can use the 'lasttaglog' command to "
+                            "see the commits since the last tag.")
+                sys.exit(0)
+
         # Add line number where an extra changelog entry can be inserted.  Can
         # be useful for entry points.  'start' is the header, +1 is the
         # underline, +2 is probably an empty line, so then we should take +3.
