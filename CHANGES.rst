@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.0 (unreleased)
+6.0 (2015-10-27)
 ----------------
 
 - Made ``twine`` a core dependency.  We now always use it for
