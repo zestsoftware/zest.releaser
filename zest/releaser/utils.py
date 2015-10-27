@@ -230,8 +230,8 @@ def ask_version(question, default=None):
                    "question: %s")
             msg = msg % question
             raise RuntimeError(msg)
-        logger.debug("Auto-responding '%s' to the question below.", default)
-        logger.debug(question)
+        logger.info(question)
+        logger.info("Auto-responding '%s'.", default)
         return default
     if default:
         question += " [%s]: " % default
@@ -265,9 +265,8 @@ def ask(question, default=True, exact=False):
                    "we're running in --no-input mode.")
             msg = msg % question
             raise RuntimeError(msg)
-        logger.debug("Auto-responding '%s' to the question below.",
-                     default and "yes" or "no")
-        logger.debug(question)
+        logger.info(question)
+        logger.info("Auto-responding '%s'.", "yes" if default else "no")
         return default
     while True:
         yn = 'y/n'

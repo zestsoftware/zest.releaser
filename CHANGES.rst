@@ -4,7 +4,11 @@ Changelog for zest.releaser
 5.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- When using the ``--no-input`` option, show the question and the
+  chosen answer.  Otherwise in case of a problem it is not clear why
+  the command stopped.
+  Fixes issue #136.
+  [maurits]
 
 
 5.7 (2015-10-14)
