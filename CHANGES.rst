@@ -4,10 +4,6 @@ Changelog for zest.releaser
 5.8 (unreleased)
 ----------------
 
-- When using the ``--no-input`` option, show the question and the
-  chosen answer.  Otherwise in case of a problem it is not clear why
-  the command stopped.
-  Fixes issue #136.
 - Always exit with error code 1 when we exit explicitly.  In some
   cases we would exit with success code 0 when we exited based on the
   answer to a question.  This happened when the user did not want us
@@ -34,6 +30,12 @@ Changelog for zest.releaser
 
 - Added ``history_last_release`` to the prerelease data.  This is the
   text with all history entries of the current release.
+  [maurits]
+
+- When using the ``--no-input`` option, show the question and the
+  chosen answer.  Otherwise in case of a problem it is not clear why
+  the command stopped.
+  Fixes issue #136.
   [maurits]
 
 
