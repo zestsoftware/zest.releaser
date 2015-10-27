@@ -12,20 +12,23 @@ Changelog for zest.releaser
   changed yet' was in the history.
   [maurits]
 
-- Added ``required_changelog_text`` to the prerelease data.  This is
-  text that must be present in the changelog.  It can be a string or a
-  list, for example ``["New:", "Fixes:"]``.  For a list, only one of
-  them needs to be present.
+- Extensions can now tell zest.releaser to look for specific required
+  words in the history.  Just add ``required_changelog_text`` to the
+  prerelease data.  It can be a string or a list, for example
+  ``["New:", "Fixes:"]``.  For a list, only one of them needs to be
+  present.
   [maurits]
 
 - Look for the 'Nothing changed yet' text in the complete text of the
   history entries of the current release, instead of looking at it
-  line by line.  This means that third party code can overwrite
+  line by line.  This means that zest releaser extensions can overwrite
   ``nothing_changed_yet`` in the prerelease data to span multiple lines.
   [maurits]
 
-- Added ``history_insert_line_here`` to the prerelease data.  This is
-  the Line number where an extra changelog entry can be inserted.
+- zest.releaser extensions can now look at
+  ``history_insert_line_here`` in the prerelease data.  On this line
+  number in the history file they can add an extra changelog entry if
+  wanted.
   [maurits]
 
 - Added ``history_last_release`` to the prerelease data.  This is the

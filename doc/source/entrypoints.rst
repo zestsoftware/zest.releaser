@@ -116,7 +116,7 @@ history_insert_line_here
     Line number where an extra changelog entry can be inserted.
 
 history_last_release
-    Text of all history entries of current release
+    Full text of all history entries of the current release
 
 history_lines
     List with all history file lines (when found)

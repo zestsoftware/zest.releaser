@@ -30,7 +30,8 @@ DATA = {
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
     'history_file': 'Filename of history/changelog file (when found)',
-    'history_last_release': 'Text of all history entries of current release',
+    'history_last_release': (
+        'Full text of all history entries of the current release'),
     'history_lines': 'List with all history file lines (when found)',
     'history_encoding': 'The detected encoding of the history file',
     'history_insert_line_here': (
@@ -182,7 +183,7 @@ class Prereleaser(baserelease.Basereleaser):
                 pretty_required = '"{}"'.format('", "'.join(required))
                 if not utils.ask(
                         "WARNING: Changelog should contain at least one of "
-                        "these required texts: {}. Are you sure you "
+                        "these required strings: {}. Are you sure you "
                         "want to release?".format(pretty_required),
                         default=False):
                     sys.exit(1)
