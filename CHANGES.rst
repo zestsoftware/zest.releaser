@@ -5,7 +5,7 @@ Changelog for zest.releaser
 ----------------
 
 - When using the ``--no-input`` option, show the question and the
-  chosen answer.  Otherwise in case of a problem it was not clear why
+  chosen answer.  Otherwise in case of a problem it is not clear why
   the command stopped.
   Fixes issue #136.
   [maurits]
