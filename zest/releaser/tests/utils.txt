@@ -529,14 +529,16 @@ sys.executable.
     python setup.py cook a cow
 
 When the setup.py arguments include arguments that indicate pypi interaction,
-the python executable is replaced by ``echo`` for safety reasons.  This only
-happens when TESTMODE is on:
+we refuse to work, because this should be done with twine now:
 
-    >>> utils.TESTMODE = True
     >>> print(utils.setup_py('upload'))
-    echo MOCK setup.py upload
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
     >>> print(utils.setup_py('register'))
-    echo MOCK setup.py register
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
 
 
 Data dict documentation

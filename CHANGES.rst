@@ -4,7 +4,12 @@ Changelog for zest.releaser
 6.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+New:
+
+- Use ``twine`` as library instead of as command.  You no longer need
+  to have ``twine`` on your ``PATH``.
+  Fixes issue #142.
+  [maurits]
 
 
 6.1 (2015-10-29)

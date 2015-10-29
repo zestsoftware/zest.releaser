@@ -108,29 +108,6 @@ class Releaser(baserelease.Basereleaser):
             print("\nFailed to create tag %s!" % (self.data['version'],))
             sys.exit(1)
 
-    def _pypi_command(self, command):
-        """Run a command that accesses PyPI or similar.
-
-        We offer to retry the command if it fails.
-        """
-        try:
-            # Note that if something goes wrong, it may just be
-            # because we detect a warning: the command may have
-            # succeeded after all.  So the fail message is a bit
-            # cautious.
-            result = utils.execute_command(
-                command, allow_retry=True,
-                fail_message="Package upload may have failed.")
-        except utils.CommandException:
-            logger.error("Command failed: %r", command)
-            tagdir = self.data.get('tagdir')
-            if tagdir:
-                logger.info("Note: we have placed a fresh tag checkout "
-                            "in %s. You can retry uploading from there "
-                            "if needed.", tagdir)
-            sys.exit(1)
-        return result
-
     def _upload_distributions(self, package):
         # See if creating an sdist (and maybe a wheel) actually works.
         # Also, this makes the sdist (and wheel) available for plugins.
@@ -151,9 +128,9 @@ class Releaser(baserelease.Basereleaser):
                         pypi.DIST_CONFIG_FILE)
             return
 
-        # For the register command we must point to one file in the dist
-        # directory.
-        file_in_dist = os.path.join('dist', os.listdir('dist')[0])
+        # Get list of all files to upload.
+        files_in_dist = [
+            os.path.join('dist', filename) for filename in os.listdir('dist')]
 
         # Is this package already registered on pypi?
         on_pypi = package_in_pypi(package)
@@ -161,50 +138,22 @@ class Releaser(baserelease.Basereleaser):
         # Run extra entry point
         self._run_hooks('before_upload')
 
+        # Get servers/repositories.
         if self.pypiconfig.is_old_pypi_config():
-            # Set commands and prepare question and answers.
-            upload_command = utils.twine_command(
-                'upload dist%s*' % os.path.sep)
-            if on_pypi:
-                logger.info("This package is registered on PyPI.")
-                # Already registered.  Uploading is enough.
-                shell_commands = [upload_command]
-                default = True
-                exact = False
-                question = "Upload to PyPI"
-            else:
-                logger.info("This package is NOT registered on PyPI.")
-                # We must register first.
-                register_command = utils.twine_command(
-                    'register %s' % file_in_dist)
-                shell_commands = [register_command, upload_command]
-                # We are not yet on pypi.  To avoid an 'Oops...,
-                # sorry!' when registering and uploading an internal
-                # package we default to False here.
-                default = False
-                exact = True
-                question = "Register and upload to PyPI"
-            if utils.ask(question, default=default, exact=exact):
-                for shell_command in shell_commands:
-                    logger.info("Running: %s", shell_command)
-                    self._pypi_command(shell_command)
+            servers = ['pypi']
+        else:
+            # The user may have defined other servers to upload to.
+            servers = self.pypiconfig.distutils_servers()
 
-        # The user may have defined other servers to upload to.
-        for server in self.pypiconfig.distutils_servers():
-            register_command = utils.twine_command(
-                'register -r %s %s' % (server, file_in_dist))
-            upload_command = utils.twine_command('upload dist%s* -r %s' % (
-                os.path.sep, server))
+        for server in servers:
             if server == 'pypi' and on_pypi:
                 logger.info("This package is registered on PyPI.")
                 # Already registered on PyPI.  Uploading is enough.
-                shell_commands = [upload_command]
+                do_register = False
                 question = "Upload"
             else:
                 # We must register first.
-                register_command = utils.twine_command(
-                    'register -r %s %s' % (server, file_in_dist))
-                shell_commands = [register_command, upload_command]
+                do_register = True
                 question = "Register and upload"
             default = True
             exact = False
@@ -217,9 +166,10 @@ class Releaser(baserelease.Basereleaser):
                 exact = True
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
-                for shell_command in shell_commands:
-                    logger.info("Running: %s", shell_command)
-                    self._pypi_command(shell_command)
+                if do_register:
+                    logger.info("Registering...")
+                    utils.retry_twine('register', server, files_in_dist)
+                utils.retry_twine('upload', server, files_in_dist)
 
     def _release(self):
         """Upload the release, when desired"""

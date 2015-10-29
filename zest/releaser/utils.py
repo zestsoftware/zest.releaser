@@ -22,6 +22,8 @@ import pkg_resources
 from pkg_resources import parse_version
 import six
 from six.moves import input  # noqa
+from twine.commands.register import register
+from twine.commands.upload import upload
 
 
 logger = logging.getLogger(__name__)
@@ -395,25 +397,14 @@ def show_interesting_lines(result):
 
 
 def setup_py(rest_of_cmdline):
-    """Return 'python setup.py' command (with hack for testing)"""
+    """Return 'python setup.py' command."""
     executable = sys.executable
-    if TESTMODE:
-        # Hack for testing
-        for unsafe in ['upload', 'register']:
-            if unsafe in rest_of_cmdline:
-                executable = 'echo MOCK'
+    for unsafe in ['upload', 'register']:
+        if unsafe in rest_of_cmdline:
+            logger.error('Must not use setup.py %s. Use twine instead', unsafe)
+            sys.exit(1)
 
     return '%s setup.py %s' % (executable, rest_of_cmdline)
-
-
-def twine_command(rest_of_cmdline):
-    """Return 'twine' command (with hack for testing)"""
-    executable = 'twine'
-    if TESTMODE:
-        # Hack for testing
-        executable = 'echo MOCK twine'
-
-    return '%s %s' % (executable, rest_of_cmdline)
 
 
 def is_data_documented(data, documentation=None):
@@ -668,6 +659,39 @@ def execute_command(command, allow_retry=False, fail_message=""):
     print(Fore.RED + "There were errors or warnings.")
     if fail_message:
         print(Fore.RED + fail_message)
+    retry = retry_yes_no(command)
+    if retry:
+        logger.info("Retrying command: %r", command)
+        return execute_command(command, allow_retry=True)
+    # Accept the error, continue with the program.
+    return result
+
+
+def retry_twine(twine_command, server, files):
+    if twine_command == 'register':
+        twine_function = register
+        twine_args = (files[0], server, None, None, None, '~/.pypirc')
+    elif twine_command == 'upload':
+        twine_function = upload
+        twine_args = (files, server, False, None, None, None,
+                      None, 'gpg', '~/.pypirc', False)
+    else:
+        print(Fore.RED + "Unknown twine command: %s" % twine_command)
+        sys.exit(1)
+    try:
+        return twine_function(*twine_args)
+    except:
+        print(Fore.RED + "There were errors or warnings.")
+        logger.exception("Package {} has failed.", twine_command)
+        retry = retry_yes_no('twine %s' % twine_command)
+        if retry:
+            logger.info("Retrying.")
+            return retry_twine(twine_command, server, *files)
+
+
+def retry_yes_no(command):
+    """Ask the user to maybe retry a command.
+    """
     explanation = """
     You have these options for retrying (first character is enough):
     Yes:   Retry. Do this if it looks like a temporary Internet or PyPI outage.
@@ -693,10 +717,10 @@ def execute_command(command, allow_retry=False, fail_message=""):
             input_value = input_value.lower()
             if input_value == 'y' or input_value == 'yes':
                 logger.info("Retrying command: %r", command)
-                return execute_command(command, allow_retry=True)
+                return True
             if input_value == 'n' or input_value == 'no':
                 # Accept the error, continue with the program.
-                return result
+                return False
             if input_value == 'q' or input_value == 'quit':
                 raise CommandException("Command failed: %r" % command)
             # We could print the help/explanation only if the input is
