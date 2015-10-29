@@ -99,11 +99,6 @@ Package Index, because it is safer: it uses ``https`` for uploading.
 Since version 4.0 we already prefered it if it was available, but it
 is now a core dependency, installed automatically.
 
-Note that if the ``twine`` command is not available, you may need to
-change your system ``PATH`` or need to install ``twine`` explicitly.
-This seems more needed when using ``zc.buildout`` than when using
-``pip``.
-
 .. _twine: https://pypi.python.org/pypi/twine
 
 

@@ -7,7 +7,26 @@ from colorama import Fore
 import six
 import z3c.testsetup
 from zope.testing import renormalizing
+from twine.commands import register
+from twine.commands import upload
 
+
+def mock_register(package, repository, username, password, comment,
+                  config_file):
+    """Replacement for twine register command.
+    """
+    print('MOCK twine register -r {} {}'.format(repository, package))
+
+
+def mock_upload(dists, repository, sign, identity, username, password, comment,
+                sign_with, config_file, skip_existing):
+    """Replacement for twine upload command.
+    """
+    print('MOCK twine upload -r {} {}'.format(repository, ' '.join(dists)))
+
+print('Mocking twine register and upload commands.')
+register.register = mock_register
+upload.upload = mock_upload
 
 checker = renormalizing.RENormalizing([
     # Date formatting
