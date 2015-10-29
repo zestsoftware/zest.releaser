@@ -794,7 +794,9 @@ You may want to quit and fix this.
 
 
 def configure_logging():
-    logging.addLevelName(logging.WARNING, Fore.MAGENTA + logging.getLevelName(logging.WARNING))
-    logging.addLevelName(logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
+    logging.addLevelName(
+        logging.WARNING, Fore.MAGENTA + logging.getLevelName(logging.WARNING))
+    logging.addLevelName(
+        logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
     logging.basicConfig(level=loglevel(),
                         format="%(levelname)s: %(message)s")

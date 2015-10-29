@@ -89,7 +89,8 @@ def setup(test):
     execute_command(
         'svn co %s/tha.example/trunk %s' % (repo_url, svnsourcedir))
     execute_command(
-        'svn propset svn:ignore "tha.example.egg-info *.pyc" %s/src ' % svnsourcedir)
+        'svn propset svn:ignore "tha.example.egg-info *.pyc" %s/src ' %
+        svnsourcedir)
     execute_command('svn up %s' % svnsourcedir)
     execute_command('svn commit %s -m "ignoring egginfo"' % svnsourcedir)
 

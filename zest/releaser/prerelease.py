@@ -205,7 +205,8 @@ class Prereleaser(baserelease.Basereleaser):
             return
         contents = '\n'.join(self.data['history_lines'])
         history = self.data['history_file']
-        write_text_file(history, contents, encoding=self.data['history_encoding'])
+        write_text_file(
+            history, contents, encoding=self.data['history_encoding'])
         logger.info("History file %s updated.", history)
 
     def _diff_and_commit(self):

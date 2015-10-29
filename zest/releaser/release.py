@@ -168,7 +168,7 @@ class Releaser(baserelease.Basereleaser):
             if on_pypi:
                 logger.info("This package is registered on PyPI.")
                 # Already registered.  Uploading is enough.
-                shell_commands =  [upload_command]
+                shell_commands = [upload_command]
                 default = True
                 exact = False
                 question = "Upload to PyPI"
@@ -177,7 +177,7 @@ class Releaser(baserelease.Basereleaser):
                 # We must register first.
                 register_command = utils.twine_command(
                     'register %s' % file_in_dist)
-                shell_commands =  [register_command, upload_command]
+                shell_commands = [register_command, upload_command]
                 # We are not yet on pypi.  To avoid an 'Oops...,
                 # sorry!' when registering and uploading an internal
                 # package we default to False here.
@@ -198,13 +198,13 @@ class Releaser(baserelease.Basereleaser):
             if server == 'pypi' and on_pypi:
                 logger.info("This package is registered on PyPI.")
                 # Already registered on PyPI.  Uploading is enough.
-                shell_commands =  [upload_command]
+                shell_commands = [upload_command]
                 question = "Upload"
             else:
                 # We must register first.
                 register_command = utils.twine_command(
                     'register %s' % file_in_dist)
-                shell_commands =  [register_command, upload_command]
+                shell_commands = [register_command, upload_command]
                 question = "Register and upload"
             default = True
             exact = False

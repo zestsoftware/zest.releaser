@@ -98,7 +98,8 @@ class Subversion(BaseVersionControl):
             else:
                 sys.exit(1)
 
-        tag_info = execute_command('svn list --non-interactive %s%s' % (base, tags_name))
+        tag_info = execute_command(
+            'svn list --non-interactive %s%s' % (base, tags_name))
         network_errors = [
             'Could not resolve hostname',
             'E670008',
@@ -157,7 +158,8 @@ class Subversion(BaseVersionControl):
     def cmd_create_tag(self, version):
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        return 'svn cp --non-interactive %s %s -m "Tagging %s"' % (url, tag_url, version)
+        return 'svn cp --non-interactive %s %s -m "Tagging %s"' % (
+            url, tag_url, version)
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         tag_url = self.tag_url(version)
@@ -177,4 +179,5 @@ class Subversion(BaseVersionControl):
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('svn ls --non-interactive --recursive').splitlines()
+        return execute_command(
+            'svn ls --non-interactive --recursive').splitlines()
