@@ -4,7 +4,11 @@ Changelog for zest.releaser
 6.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+Fixes:
+
+- Fixed registering on servers other than PyPI.  We forgot to specify
+  the server in that case.
+  [maurits]
 
 
 6.0 (2015-10-27)

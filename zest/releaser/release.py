@@ -203,7 +203,7 @@ class Releaser(baserelease.Basereleaser):
             else:
                 # We must register first.
                 register_command = utils.twine_command(
-                    'register %s' % file_in_dist)
+                    'register -r %s %s' % (server, file_in_dist))
                 shell_commands = [register_command, upload_command]
                 question = "Register and upload"
             default = True
