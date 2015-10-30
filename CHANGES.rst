@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed exception when logging an exception when a twine command
+  fails.
+  [maurits]
 
 
 6.2 (2015-10-29)

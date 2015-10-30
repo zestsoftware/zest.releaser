@@ -682,7 +682,7 @@ def retry_twine(twine_command, server, files):
         return twine_function(*twine_args)
     except:
         print(Fore.RED + "There were errors or warnings.")
-        logger.exception("Package {} has failed.", twine_command)
+        logger.exception("Package %s has failed.", twine_command)
         retry = retry_yes_no('twine %s' % twine_command)
         if retry:
             logger.info("Retrying.")
