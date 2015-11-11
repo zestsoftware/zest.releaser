@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.3 (unreleased)
+6.3 (2015-11-11)
 ----------------
 
 - Fixed exception when logging an exception when a twine command
