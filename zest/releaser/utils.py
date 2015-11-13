@@ -667,7 +667,9 @@ def execute_command(command, allow_retry=False, fail_message=""):
     return result
 
 
-def retry_twine(twine_command, server, files):
+def retry_twine(twine_command, server, *files):
+    if isinstance(files, six.text_type):
+        files = [files]
     if twine_command == 'register':
         twine_function = register
         twine_args = (files[0], server, None, None, None, '~/.pypirc')

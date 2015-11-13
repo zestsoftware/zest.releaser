@@ -168,8 +168,8 @@ class Releaser(baserelease.Basereleaser):
                          default=default, exact=exact):
                 if do_register:
                     logger.info("Registering...")
-                    utils.retry_twine('register', server, files_in_dist)
-                utils.retry_twine('upload', server, files_in_dist)
+                    utils.retry_twine('register', server, *files_in_dist)
+                utils.retry_twine('upload', server, *files_in_dist)
 
     def _release(self):
         """Upload the release, when desired"""

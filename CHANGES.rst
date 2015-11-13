@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed error when retrying twine command.
+  Fixes #148
+  [maurits]
 
 
 6.3 (2015-11-11)
