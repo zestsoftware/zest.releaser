@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.4 (unreleased)
+6.4 (2015-11-13)
 ----------------
 
 - Fixed error when retrying twine command.
