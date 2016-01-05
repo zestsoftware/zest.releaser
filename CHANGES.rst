@@ -4,7 +4,14 @@ Changelog for zest.releaser
 6.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Adjusted ``bin/longtest`` for the (necessary) rename of the ``readme``
+  library to ``readme_renderer``.
+  Fixes #153
+
+  Note: the current ``readme`` package on pypi is broken to force an
+  upgrade. If you use an older zest.releaser, you have to pin ``readme`` to
+  ``0.6.0``, it works just fine.
+  [reinout]
 
 
 6.4 (2015-11-13)
