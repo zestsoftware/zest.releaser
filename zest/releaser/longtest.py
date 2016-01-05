@@ -9,7 +9,7 @@ import tempfile
 import webbrowser
 
 try:
-    from readme.rst import render
+    from readme_renderer.rst import render
     HAVE_README = True
 except ImportError:
     HAVE_README = False
@@ -33,7 +33,8 @@ logger = logging.getLogger(__name__)
 def show_longdesc():
     if not HAVE_README:
         logging.error(
-            "To check the long description, we need the 'readme' package. "
+            "To check the long description, we need the 'readme_renderer' "
+            "package. "
             "(It is included if you install `zest.releaser[recommended]`)")
         sys.exit(1)
 

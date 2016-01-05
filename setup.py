@@ -64,7 +64,7 @@ setup(name='zest.releaser',
               'chardet',
               'check-manifest',
               'pyroma',
-              'readme >= 0.6',
+              'readme_renderer',
               'wheel',
               ],
           'test': [
