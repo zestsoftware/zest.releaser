@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.5 (unreleased)
+6.5 (2016-01-05)
 ----------------
 
 - Adjusted ``bin/longtest`` for the (necessary) rename of the ``readme``
