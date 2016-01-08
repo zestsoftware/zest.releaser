@@ -52,6 +52,13 @@ Now run the fullrelease:
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
     lists of files in version control and sdist match
+    Changelog entries for version 0.1:
+    <BLANKLINE>
+    0.1 (1972-12-25)
+    ----------------
+    <BLANKLINE>
+    - Initial library skeleton created by thaskel.  [your name]
+    <BLANKLINE>
     Checking data dict
     Checking data dict
     Tag needed ...
@@ -94,6 +101,16 @@ Now run the fullrelease:
     >>> from zest.releaser import fullrelease
     >>> fullrelease.main()
     lists of files in version control and sdist match
+    Changelog entries for version 0.2:
+    <BLANKLINE>
+    0.2 (1972-12-25)
+    ----------------
+    <BLANKLINE>
+    - Brown bag release.
+    <BLANKLINE>
+    <BLANKLINE>
+    0.1 (1972-12-25)
+    ----------------
     Checking data dict
     Checking data dict
     Tag needed ...
