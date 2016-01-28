@@ -4,9 +4,13 @@ Changelog for zest.releaser
 6.6 (unreleased)
 ----------------
 
+- Moved ``_diff_and_commit``, ``_push`` and ``_grab_version`` to
+  ``baserelease.py``, as the first was duplicated and the second and
+  third may be handy for other code too.  ``_grab_version`` is the
+  basic implementation, and is overridden in the prereleaser.  [maurits]
+
 - Show changelog of current release before asking for the new version
   number.  Issue #155.  [maurits]
-
 
 
 6.5 (2016-01-05)

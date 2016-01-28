@@ -10,7 +10,6 @@ from zest.releaser import baserelease
 from zest.releaser import utils
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
-from zest.releaser.utils import execute_command
 
 
 logger = logging.getLogger(__name__)
@@ -142,36 +141,6 @@ class Postreleaser(baserelease.Basereleaser):
         contents = '\n'.join(history_lines)
         write_text_file(history, contents, history_encoding)
         logger.info("Injected new section into the history: %r", header)
-
-    def _diff_and_commit(self):
-        """Show diff and offer commit"""
-        diff_cmd = self.vcs.cmd_diff()
-        diff = execute_command(diff_cmd)
-        if sys.version.startswith('2.6.2'):
-            # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
-            # spot it can surface as we show a part of the changelog which can
-            # contain every kind of character.  The rest is mostly ascii.
-            print("Diff results:")
-            print(diff)
-        else:
-            # Common case
-            logger.info("The '%s':\n\n%s\n", diff_cmd, diff)
-        if utils.ask("OK to commit this"):
-            msg = self.data['commit_msg'] % self.data
-            msg = self.update_commit_message(msg)
-            commit_cmd = self.vcs.cmd_commit(msg)
-            commit = execute_command(commit_cmd)
-            logger.info(commit)
-
-    def _push(self):
-        """Offer to push changes, if needed."""
-        push_cmds = self.vcs.push_commands()
-        if not push_cmds:
-            return
-        if utils.ask("OK to push commits to the server?"):
-            for push_cmd in push_cmds:
-                output = execute_command(push_cmd)
-                logger.info(output)
 
 
 def datacheck(data):
