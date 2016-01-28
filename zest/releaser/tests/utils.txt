@@ -18,12 +18,14 @@ A ``-v`` on the commandline turns on debug level logging:
     >>> import logging
     >>> sys.argv[1:] = []
     >>> utils.parse_options()
+    Namespace(auto_response=False, verbose=False)
     >>> utils.VERBOSE
     False
     >>> utils.loglevel() == logging.INFO
     True
     >>> sys.argv[1:] = ['-v']
     >>> utils.parse_options()
+    Namespace(auto_response=False, verbose=True)
     >>> utils.VERBOSE
     True
     >>> utils.loglevel() == logging.DEBUG
@@ -198,6 +200,7 @@ We can switch it on:
     >>> import sys
     >>> sys.argv[1:] = ['--no-input']
     >>> utils.parse_options()
+    Namespace(auto_response=True, verbose=False)
     >>> utils.AUTO_RESPONSE
     True
 

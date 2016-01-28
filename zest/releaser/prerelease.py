@@ -4,13 +4,10 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
-import six
 import sys
 
 from zest.releaser import baserelease
 from zest.releaser import utils
-from zest.releaser.utils import read_text_file
-from zest.releaser.utils import write_text_file
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
 
 logger = logging.getLogger(__name__)
@@ -28,6 +25,7 @@ DATA = {
     'name': 'Name of the project being released',
     'today': 'Date string used in history header',
     'new_version': 'New version (so 1.0 instead of 1.0dev)',
+    'headings': 'Extracted headings from the history file',
     'history_file': 'Filename of history/changelog file (when found)',
     'history_last_release': (
         'Full text of all history entries of the current release'),
@@ -76,18 +74,21 @@ class Prereleaser(baserelease.Basereleaser):
         # Grab current version.
         self._grab_version(initial=True)
         # Grab current history.
-        self._grab_history(initial=True)
+        self._grab_history()
         # Print changelog for this release.
         print("Changelog entries for version {0}:\n".format(
             self.data['new_version']))
         print(self.data.get('history_last_release'))
-        # Grab new version.
+        # Grab and set new version.
         self._grab_version()
-        # Grab new history.
-        self._grab_history()
+        # Look for unwanted 'Nothing changed yet' in latest header.
+        self._check_nothing_changed()
+        # Look for required text under the latest header.
+        self._check_required()
 
     def execute(self):
         """Make the changes and offer a commit"""
+        self._change_header()
         self._write_version()
         self._write_history()
         self._diff_and_commit()
@@ -121,16 +122,6 @@ class Prereleaser(baserelease.Basereleaser):
             logger.info("Changed version from %s to %s",
                         self.data['original_version'],
                         self.data['new_version'])
-
-    def _write_history(self):
-        """Write previously-calculated history lines back to the file"""
-        if self.data['history_file'] is None:
-            return
-        contents = '\n'.join(self.data['history_lines'])
-        history = self.data['history_file']
-        write_text_file(
-            history, contents, encoding=self.data['history_encoding'])
-        logger.info("History file %s updated.", history)
 
 
 def datacheck(data):

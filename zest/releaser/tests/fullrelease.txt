@@ -44,6 +44,7 @@ Run the whole process without asking for input. For that we pass the
     >>> import sys
     >>> sys.argv[1:] = ['--no-input']
     >>> utils.parse_options()
+    Namespace(auto_response=True, verbose=False)
     >>> utils.AUTO_RESPONSE
     True
 
@@ -54,7 +55,7 @@ Now run the fullrelease:
     lists of files in version control and sdist match
     Changelog entries for version 0.1:
     <BLANKLINE>
-    0.1 (1972-12-25)
+    0.1 (unreleased)
     ----------------
     <BLANKLINE>
     - Initial library skeleton created by thaskel.  [your name]
@@ -82,6 +83,7 @@ An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
     >>> sys.argv[1:] = []
     >>> from zest.releaser import utils
     >>> utils.parse_options()
+    Namespace(auto_response=False, verbose=False)
     >>> utils.AUTO_RESPONSE
     False
     >>> cfg = """
@@ -103,7 +105,7 @@ Now run the fullrelease:
     lists of files in version control and sdist match
     Changelog entries for version 0.2:
     <BLANKLINE>
-    0.2 (1972-12-25)
+    0.2 (unreleased)
     ----------------
     <BLANKLINE>
     - Brown bag release.
