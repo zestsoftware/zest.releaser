@@ -64,14 +64,6 @@ class Releaser(baserelease.Basereleaser):
         self._make_tag()
         self._release()
 
-    def _grab_version(self):
-        """Just grab the version"""
-        version = self.vcs.version
-        if not version:
-            logger.critical("No version detected, so we can't do anything.")
-            sys.exit(1)
-        self.data['version'] = version
-
     def _check_if_tag_already_exists(self):
         """Check if tag already exists and show the difference if so"""
         version = self.data['version']
