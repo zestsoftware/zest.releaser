@@ -57,16 +57,17 @@ class Basereleaser(object):
         check if the first one matches the version and whether it has a the
         current date.
         """
-        self.data['history_lines'] = None
+        self.data['history_lines'] = []
         self.data['history_file'] = None
         self.data['history_encoding'] = None
-        self.data['headings'] = None
+        self.data['headings'] = []
         self.data['history_last_release'] = ''
         default_location = None
         config = self.setup_cfg.config
         if config and config.has_option('zest.releaser', 'history_file'):
             default_location = config.get('zest.releaser', 'history_file')
         history_file = self.vcs.history_file(location=default_location)
+        self.data['history_file'] = history_file
         if not history_file:
             logger.warn("No history file found")
             return
@@ -79,7 +80,6 @@ class Basereleaser(object):
                         "file %s", history_file)
             return
         self.data['history_lines'] = history_lines
-        self.data['history_file'] = history_file
         self.data['history_encoding'] = history_encoding
         self.data['headings'] = headings
 
@@ -105,30 +105,69 @@ class Basereleaser(object):
             insert += 1
         self.data['history_insert_line_here'] = insert
 
-    def _change_header(self):
+    def _change_header(self, add=False):
         """Change the latest header.
 
         Change the version number and the release date or development status.
+
+        @add:
+        - False: edit current header (prerelease)
+        - True: add header (postrelease)
         """
+        if self.data['history_file'] is None:
+            return
         good_heading = self.data['history_header'] % self.data
         # ^^^ history_header is a string with %(abc)s replacements.
         headings = self.data['headings']
         history_lines = self.data['history_lines']
+        previous = ''
+        underline_char = '-'
+        empty = False
+        if not history_lines:
+            # Remember that we were empty to start with.
+            empty = True
+            # prepare header line
+            history_lines.append('')
+        if len(history_lines) <= 1:
+            # prepare underline
+            history_lines.append(underline_char)
         if not headings:
-            line = 0
-            previous = ''
-            if not history_lines:
-                history_lines = ['']
+            # Mock a heading
+            headings = [{'line': 0}]
+            inject_location = 0
+        first = headings[0]
+        inject_location = first['line']
+        underline_line = first['line'] + 1
+        try:
+            underline_char = history_lines[underline_line][0]
+        except IndexError:
+            logger.debug("No character on line below header.")
+            underline_char = '-'
+        previous = history_lines[inject_location]
+        if add:
+            inject = [
+                good_heading,
+                underline_char * len(good_heading),
+                '',
+                self.data['nothing_changed_yet'],
+                '',
+                '',
+            ]
+            if empty:
+                history_lines = []
+            history_lines[inject_location:inject_location] = inject
         else:
-            line = headings[0]['line']
-            previous = history_lines[line]
-        history_lines[line] = good_heading
-        logger.debug("Set heading from %r to %r.", previous, good_heading)
-        history_lines[line + 1] = utils.fix_rst_heading(
-            heading=good_heading,
-            below=history_lines[line + 1])
-        logger.debug("Set line below heading to %r",
-                     history_lines[line + 1])
+            # edit current line
+            history_lines[inject_location] = good_heading
+            logger.debug("Set heading from %r to %r.", previous, good_heading)
+            history_lines[underline_line] = utils.fix_rst_heading(
+                heading=good_heading,
+                below=history_lines[underline_line])
+            logger.debug("Set line below heading to %r",
+                         history_lines[underline_line])
+        # Setting history_lines is not needed, except when we have replaced the
+        # original instead of changing it.  So just set it.
+        self.data['history_lines'] = history_lines
 
     def _check_nothing_changed(self):
         """Look for 'Nothing changed yet' under the latest header.
@@ -136,6 +175,8 @@ class Basereleaser(object):
         Not nice if this text ends up in the changelog.  Did nothing
         happen?
         """
+        if self.data['history_file'] is None:
+            return
         nothing_yet = self.data['nothing_changed_yet']
         if nothing_yet not in self.data['history_last_release']:
             return
@@ -156,6 +197,8 @@ class Basereleaser(object):
         This can be a list, in which case only one item needs to be
         there.
         """
+        if self.data['history_file'] is None:
+            return
         required = self.data.get('required_changelog_text')
         if not required:
             return

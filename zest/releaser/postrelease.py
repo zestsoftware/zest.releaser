@@ -68,7 +68,7 @@ class Postreleaser(baserelease.Basereleaser):
     def execute(self):
         """Make the changes and offer a commit"""
         self._write_version()
-        self._update_history()
+        self._change_header(add=True)
         self._write_history()
         self._diff_and_commit()
         self._push()
@@ -114,37 +114,6 @@ class Postreleaser(baserelease.Basereleaser):
     def _write_version(self):
         """Update the version in vcs"""
         self.vcs.version = self.data['dev_version']
-
-    def _update_history(self):
-        """Update the history file"""
-        history_lines = self.data['history_lines']
-        if not history_lines:
-            logger.warn("No history file found")
-            return
-        headings = self.data['headings']
-        if not headings:
-            logger.warn("No detectable existing version headings in the "
-                        "history file.")
-            inject_location = 0
-            underline_char = '-'
-        else:
-            first = headings[0]
-            inject_location = first['line']
-            underline_line = first['line'] + 1
-            try:
-                underline_char = history_lines[underline_line][0]
-            except IndexError:
-                logger.debug("No character on line below header.")
-                underline_char = '-'
-        header = self.data['history_header'] % self.data
-        inject = [header,
-                  underline_char * len(header),
-                  '',
-                  self.data['nothing_changed_yet'],
-                  '',
-                  '']
-        history_lines[inject_location:inject_location] = inject
-        logger.info("Injected new section into the history: %r", header)
 
 
 def datacheck(data):
