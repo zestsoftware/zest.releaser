@@ -483,6 +483,22 @@ Multiple headers:
      {'date': '2008-12-25', 'line': 5, 'version': '1.1'}]
 
 
+Changelog list item detection
+-----------------------------
+
+Empty changelog:
+
+    >>> lines = []
+    >>> utils.get_list_item(lines)
+    '-'
+
+Stars:
+
+    >>> lines = ['- 1', '* 2', '* 3']
+    >>> utils.get_list_item(lines)
+    '*'
+
+
 reST headings
 -------------
 

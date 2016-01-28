@@ -833,3 +833,31 @@ def configure_logging():
         logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
     logging.basicConfig(level=loglevel(),
                         format="%(levelname)s: %(message)s")
+
+
+def get_list_item(lines):
+    """Get most used list item from text.
+
+    Meaning: probably a dash, maybe a star.
+    """
+    unordered_list = []
+    for line in lines:
+        # Possibly there is leading white space, strip it.
+        line = line.strip()
+        # Look for lines starting with one character and a space.
+        if len(line) < 3:
+            continue
+        if line[1] != ' ':
+            continue
+        unordered_list.append(line[0])
+    # Get sane default.
+    best = '-'
+    count = 0
+    # Start counting.
+    for key in set(unordered_list):
+        new_count = unordered_list.count(key)
+        if new_count > count:
+            best = key
+            count = new_count
+    # Return the best one.
+    return best
