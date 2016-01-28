@@ -81,6 +81,7 @@ setup(name='zest.releaser',
               'longtest = zest.releaser.longtest:main',
               'lasttagdiff = zest.releaser.lasttagdiff:main',
               'lasttaglog = zest.releaser.lasttaglog:main',
+              'addchangelogentry = zest.releaser.addchangelogentry:main',
               ],
           # The datachecks are implemented as entry points to be able to check
           # our entry point implementation.
