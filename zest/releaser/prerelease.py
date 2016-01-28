@@ -74,7 +74,17 @@ class Prereleaser(baserelease.Basereleaser):
         if not utils.check_recommended_files(self.data, self.vcs):
             logger.debug("Recommended files check failed.")
             sys.exit(1)
+        # Grab current version.
+        self._grab_version(initial=True)
+        # Grab current history.
+        self._grab_history(initial=True)
+        # Print changelog for this release.
+        print("Changelog entries for version {0}:\n".format(
+            self.data['new_version']))
+        print(self.data.get('history_last_release'))
+        # Grab new version.
         self._grab_version()
+        # Grab new history.
         self._grab_history()
 
     def execute(self):
@@ -83,15 +93,23 @@ class Prereleaser(baserelease.Basereleaser):
         self._write_history()
         self._diff_and_commit()
 
-    def _grab_version(self):
-        """Set the version to a non-development version."""
+    def _grab_version(self, initial=False):
+        """Grab the version.
+
+        When initial is False, ask the user for a non-development
+        version.  When initial is True, grab the current suggestion.
+
+        """
         original_version = self.vcs.version
         logger.debug("Extracted version: %s", original_version)
         if original_version is None:
             logger.critical('No version found.')
             sys.exit(1)
         suggestion = utils.cleanup_version(original_version)
-        new_version = utils.ask_version("Enter version", default=suggestion)
+        new_version = None
+        if not initial:
+            new_version = utils.ask_version(
+                "Enter version", default=suggestion)
         if not new_version:
             new_version = suggestion
         self.data['original_version'] = original_version
@@ -105,12 +123,16 @@ class Prereleaser(baserelease.Basereleaser):
                         self.data['original_version'],
                         self.data['new_version'])
 
-    def _grab_history(self):
+    def _grab_history(self, initial=False):
         """Calculate the needed history/changelog changes
 
         Every history heading looks like '1.0 b4 (1972-12-25)'. Extract them,
         check if the first one matches the version and whether it has a the
         current date.
+
+        This is called twice, with initial first True, then False.
+        When False, some warnings are skipped.
+
         """
         default_location = None
         config = self.setup_cfg.config
@@ -118,7 +140,8 @@ class Prereleaser(baserelease.Basereleaser):
             default_location = config.get('zest.releaser', 'history_file')
         history_file = self.vcs.history_file(location=default_location)
         if not history_file:
-            logger.warn("No history file found")
+            if initial:
+                logger.warn("No history file found")
             self.data['history_lines'] = None
             self.data['history_file'] = None
             self.data['history_encoding'] = None
@@ -150,12 +173,15 @@ class Prereleaser(baserelease.Basereleaser):
         # nice if this text ends up in the changelog.  Did nothing happen?
         start = headings[0]['line']
         if len(headings) > 1:
-            end = headings[1]['line']
+            # Include the next header plus underline, as this is nice
+            # to show in the history_last_release.
+            end = headings[1]['line'] + 2
         else:
             end = len(history_lines)
         history_last_release = '\n'.join(history_lines[start:end])
         self.data['history_last_release'] = history_last_release
-        if self.data['nothing_changed_yet'] in history_last_release:
+        if (initial and self.data['nothing_changed_yet'] in
+                history_last_release):
             # We want quotes around the text, but also want to avoid printing
             # text with a u'unicode marker' in front...
             pretty_nothing_changed = '"{}"'.format(
@@ -171,7 +197,7 @@ class Prereleaser(baserelease.Basereleaser):
         # Look for required text under the latest header.  This can be a list,
         # in which case only one item needs to be there.
         required = self.data.get('required_changelog_text')
-        if required:
+        if initial and required:
             if isinstance(required, six.string_types):
                 required = [required]
             found = False

@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Show changelog of current release before asking for the new version
+  number.  Issue #155.  [maurits]
+
 
 
 6.5 (2016-01-05)
