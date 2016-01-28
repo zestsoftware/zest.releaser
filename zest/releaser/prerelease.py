@@ -9,7 +9,6 @@ import sys
 
 from zest.releaser import baserelease
 from zest.releaser import utils
-from zest.releaser.utils import execute_command
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
 from zest.releaser.postrelease import NOTHING_CHANGED_YET
@@ -208,25 +207,6 @@ class Prereleaser(baserelease.Basereleaser):
         write_text_file(
             history, contents, encoding=self.data['history_encoding'])
         logger.info("History file %s updated.", history)
-
-    def _diff_and_commit(self):
-        diff_cmd = self.vcs.cmd_diff()
-        diff = execute_command(diff_cmd)
-        if sys.version.startswith('2.6.2'):
-            # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
-            # spot it can surface as we show a part of the changelog which can
-            # contain every kind of character.  The rest is mostly ascii.
-            print("Diff results:")
-            print(diff)
-        else:
-            # Common case
-            logger.info("The '%s':\n\n%s\n", diff_cmd, diff)
-        if utils.ask("OK to commit this"):
-            msg = self.data['commit_msg'] % self.data
-            msg = self.update_commit_message(msg)
-            commit_cmd = self.vcs.cmd_commit(msg)
-            commit = execute_command(commit_cmd)
-            logger.info(commit)
 
 
 def datacheck(data):
