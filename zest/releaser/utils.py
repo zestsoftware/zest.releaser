@@ -165,9 +165,7 @@ def cleanup_version(version):
     return version
 
 
-def parse_options():
-    global AUTO_RESPONSE
-    global VERBOSE
+def base_option_parser():
     parser = ArgumentParser()
     parser.add_argument(
         "--no-input",
@@ -182,9 +180,18 @@ def parse_options():
         dest="verbose",
         default=False,
         help="Verbose mode")
+    return parser
+
+
+def parse_options(parser=None):
+    global AUTO_RESPONSE
+    global VERBOSE
+    if parser is None:
+        parser = base_option_parser()
     options = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
+    return options
 
 
 # Hack for testing, see get_input()
