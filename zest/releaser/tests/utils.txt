@@ -498,6 +498,12 @@ Stars:
     >>> utils.get_list_item(lines)
     '*'
 
+Spaces in front:
+
+    >>> lines = ['  - 1', '  * 2', '  - 3']
+    >>> utils.get_list_item(lines)
+    '  -'
+
 
 reST headings
 -------------

@@ -181,7 +181,7 @@ class Basereleaser(object):
             if index == 0:
                 line = '{} {}'.format(prefix, line)
             else:
-                line = '  {}'.format(line)
+                line = '{}  {}'.format(' ' * len(prefix), line)
             lines.append(line)
         lines.append('')
         self.data['history_lines'][insert:insert] = lines

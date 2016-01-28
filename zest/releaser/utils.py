@@ -843,13 +843,16 @@ def get_list_item(lines):
     unordered_list = []
     for line in lines:
         # Possibly there is leading white space, strip it.
-        line = line.strip()
+        stripped = line.strip()
         # Look for lines starting with one character and a space.
-        if len(line) < 3:
+        if len(stripped) < 3:
             continue
-        if line[1] != ' ':
+        if stripped[1] != ' ':
             continue
-        unordered_list.append(line[0])
+        prefix = stripped[0]
+        # Restore stripped whitespace.
+        white = line.find(prefix)
+        unordered_list.append('{}{}'.format(' ' * white, prefix))
     # Get sane default.
     best = '-'
     count = 0
