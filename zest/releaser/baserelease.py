@@ -62,6 +62,7 @@ class Basereleaser(object):
         self.data['history_encoding'] = None
         self.data['headings'] = []
         self.data['history_last_release'] = ''
+        self.data['history_insert_line_here'] = 0
         default_location = None
         config = self.setup_cfg.config
         if config and config.has_option('zest.releaser', 'history_file'):
@@ -168,6 +169,22 @@ class Basereleaser(object):
         # Setting history_lines is not needed, except when we have replaced the
         # original instead of changing it.  So just set it.
         self.data['history_lines'] = history_lines
+
+    def _insert_changelog_entry(self, message):
+        """Insert changelog entry."""
+        if self.data['history_file'] is None:
+            return
+        insert = self.data['history_insert_line_here']
+        lines = []
+        prefix = utils.get_list_item(self.data['history_lines'])
+        for index, line in enumerate(message.splitlines()):
+            if index == 0:
+                line = '{} {}'.format(prefix, line)
+            else:
+                line = '  {}'.format(line)
+            lines.append(line)
+        lines.append('')
+        self.data['history_lines'][insert:insert] = lines
 
     def _check_nothing_changed(self):
         """Look for 'Nothing changed yet' under the latest header.

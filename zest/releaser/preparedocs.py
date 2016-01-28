@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import os
 
+from zest.releaser import addchangelogentry
 from zest.releaser import prerelease
 from zest.releaser import release
 from zest.releaser import postrelease
@@ -31,7 +32,9 @@ def prepare_entrypoint_documentation(data):
     for name, datadict in (
             ('prerelease', prerelease.DATA),
             ('release', release.DATA),
-            ('postrelease', postrelease.DATA)):
+            ('postrelease', postrelease.DATA),
+            ('addchangelogentry', addchangelogentry.DATA),
+            ):
         heading = '%s data dict items' % name.capitalize()
         result.append(heading)
         result.append('-' * len(heading))

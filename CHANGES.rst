@@ -4,6 +4,8 @@ Changelog for zest.releaser
 6.6 (unreleased)
 ----------------
 
+- Added ``addchangelogentry`` command.  Issue #159.  [maurits]
+
 - Moved ``_diff_and_commit``, ``_push`` and ``_grab_version`` to
   ``baserelease.py``, as the first was duplicated and the second and
   third may be handy for other code too.  ``_grab_version`` is the

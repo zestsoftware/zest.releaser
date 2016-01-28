@@ -94,6 +94,9 @@ setup(name='zest.releaser',
           'zest.releaser.postreleaser.middle': [
               'datacheck = zest.releaser.postrelease:datacheck',
               ],
+          'zest.releaser.addchangelogentry.middle': [
+              'datacheck = zest.releaser.addchangelogentry:datacheck',
+              ],
           # Documentation generation
           'zest.releaser.prereleaser.before': [
               'preparedocs = ' +
