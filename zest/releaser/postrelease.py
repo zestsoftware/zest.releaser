@@ -78,24 +78,7 @@ class Postreleaser(baserelease.Basereleaser):
         current = self.vcs.version
         # Clean it up to a non-development version.
         current = utils.cleanup_version(current)
-        # Try to make sure that the suggestion for next version after
-        # 1.1.19 is not 1.1.110, but 1.1.20.
-        current_split = current.split('.')
-        major = '.'.join(current_split[:-1])
-        minor = current_split[-1]
-        try:
-            minor = int(minor) + 1
-            suggestion = '.'.join([major, str(minor)])
-        except ValueError:
-            # Fall back on simply updating the last character when it is
-            # an integer.
-            try:
-                last = int(current[-1]) + 1
-                suggestion = current[:-1] + str(last)
-            except ValueError:
-                logger.warn("Version does not end with a number, so we can't "
-                            "calculate a suggestion for a next version.")
-                suggestion = None
+        suggestion = utils.suggest_version(current)
         print("Current version is %s" % current)
         q = "Enter new development version ('.dev0' will be appended)"
         version = utils.ask_version(q, default=suggestion)

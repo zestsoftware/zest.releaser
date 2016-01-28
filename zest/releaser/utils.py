@@ -177,6 +177,33 @@ def cleanup_version(version):
     return version
 
 
+def suggest_version(current):
+    """Suggest new version.
+
+    Try to make sure that the suggestion for next version after
+    1.1.19 is not 1.1.110, but 1.1.20.
+    """
+    # Split in first and last part, where last part is one integer and the
+    # first part can contain more integers plus dots.
+    current_split = current.split('.')
+    first = '.'.join(current_split[:-1])
+    last = current_split[-1]
+    try:
+        last = int(last) + 1
+        suggestion = '.'.join([first, str(last)])
+    except ValueError:
+        # Fall back on simply updating the last character when it is
+        # an integer.
+        try:
+            last = int(current[-1]) + 1
+            suggestion = current[:-1] + str(last)
+        except ValueError:
+            logger.warn("Version does not end with a number, so we can't "
+                        "calculate a suggestion for a next version.")
+            suggestion = None
+    return suggestion
+
+
 def base_option_parser():
     parser = ArgumentParser()
     parser.add_argument(
