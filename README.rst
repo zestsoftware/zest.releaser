@@ -187,13 +187,13 @@ There are some additional tools:
   and opens it in a web browser. This assumes an installed docutils
   (as it needs ``rst2html.py``).
 
-- **lasttagdiff**: small tool that shows the *diff* of the currently committed
-  trunk with the last released tag.  Handy for checking whether all the
-  changes are adequately described in the changes file.
+- **lasttagdiff**: small tool that shows the *diff* of the current
+  branch with the last released tag.  Handy for checking whether all
+  the changes are adequately described in the changes file.
 
-- **lasttaglog**: small tool that shows the *log* of the currently committed
-  trunk with the last released tag.  Handy for checking whether all the
-  changes are adequately described in the changes file.
+- **lasttaglog**: small tool that shows the *log* of the current
+  branch since the last released tag.  Handy for checking whether all
+  the changes are adequately described in the changes file.
 
 - **addchangelogentry**: pass this a text on the command line and it
   will add this as an entry in the changelog.  This is probably mostly
