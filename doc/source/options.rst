@@ -33,14 +33,14 @@ and by the ``addchangelogentry`` command.
     and safe.  But do not blame us if this does something you do not
     want. :-)
 
-The ``addchangelogentry`` command requires a text as argument.  For
-example::
+The ``addchangelogentry`` command requires the text you want to add as
+argument.  For example::
 
-  addchangelogentry "Fixed bug."
+  $ addchangelogentry "Fixed bug."
 
 Or on multiple lines::
 
-  addchangelogentry "Fixed bug.
+  $ addchangelogentry "Fixed bug.
 
   This was difficult."
 
