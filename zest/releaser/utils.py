@@ -177,6 +177,52 @@ def cleanup_version(version):
     return version
 
 
+def suggest_version(current, feature=False, breaking=False):
+    """Suggest new version.
+
+    Try to make sure that the suggestion for next version after
+    1.1.19 is not 1.1.110, but 1.1.20.
+    """
+    if feature and breaking:
+        print('Cannot have both breaking and feature in suggest_version.')
+        sys.exit(1)
+    dev = ''
+    if '.dev' in current:
+        index = current.find('.dev')
+        dev = current[index:]
+        current = current[:index]
+    # Split in first and last part, where last part is one integer and the
+    # first part can contain more integers plus dots.
+    current_split = current.split('.')
+    if breaking:
+        target = 0
+    elif feature:
+        target = 1
+    else:
+        target = -1
+    first = '.'.join(current_split[:target])
+    last = current_split[target]
+    try:
+        last = int(last) + 1
+        suggestion = '.'.join([char for char in (first, str(last)) if char])
+    except ValueError:
+        # Fall back on simply updating the last character when it is
+        # an integer.
+        try:
+            last = int(current[target]) + 1
+            suggestion = current[:target] + str(last)
+        except (ValueError, IndexError):
+            logger.warn("Version does not end with a number, so we can't "
+                        "calculate a suggestion for a next version.")
+            return None
+    if target != -1:
+        # For feature or breaking release, restore the original amount of dots,
+        # and add zeroes.  So: 1.2.3 in breaking release becomes 2.0.0
+        for dot in range(len(current_split) - target - 1):
+            suggestion += '.0'
+    return suggestion + dev
+
+
 def base_option_parser():
     parser = ArgumentParser()
     parser.add_argument(
@@ -750,11 +796,12 @@ def retry_yes_no(command):
             print(explanation)
 
 
-def get_last_tag(vcs):
+def get_last_tag(vcs, allow_missing=False):
     """Get last tag number, compared to current version.
 
-    Note: when this cannot get a proper tag for some reason, it may
-    exit the program completely.
+    Note: when this cannot get a proper tag for some reason, it may exit
+    the program completely.  When no tags are found and allow_missing is
+    True, we return None.
     """
     version = vcs.version
     if not version:
@@ -762,6 +809,9 @@ def get_last_tag(vcs):
         sys.exit(1)
     available_tags = vcs.available_tags()
     if not available_tags:
+        if allow_missing:
+            logger.debug("No tags found.")
+            return
         logger.critical("No tags found, so we can't do anything.")
         sys.exit(1)
 

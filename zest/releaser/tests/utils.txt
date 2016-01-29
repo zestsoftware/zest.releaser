@@ -63,6 +63,54 @@ Remove development markers in various common forms:
     '1.0'
 
 
+Suggest version number
+----------------------
+
+Mostly for postrelease.  Suggest updated version number.
+
+    >>> utils.suggest_version('1.0')
+    '1.1'
+    >>> utils.suggest_version('1.9')
+    '1.10'
+    >>> utils.suggest_version('1.2.3')
+    '1.2.4'
+    >>> utils.suggest_version('1.2.3.4')
+    '1.2.3.5'
+    >>> utils.suggest_version('1.2.3.19')
+    '1.2.3.20'
+    >>> utils.suggest_version('1.2a1')
+    '1.2a2'
+
+Some corner cases that should not break::
+
+    >>> utils.suggest_version('')
+    >>> utils.suggest_version('a.b')
+    >>> utils.suggest_version('a.1')
+    'a.2'
+
+Keep development marker when it is there.
+
+    >>> utils.suggest_version('1.0.dev0')
+    '1.1.dev0'
+
+Suggest versions for a feature (minor) or breaking (major) release:
+
+    >>> utils.suggest_version('1.0', feature=True)
+    '1.1'
+    >>> utils.suggest_version('1.0.1', feature=True)
+    '1.1.0'
+    >>> utils.suggest_version('1.0', breaking=True)
+    '2.0'
+    >>> utils.suggest_version('1.0.1', breaking=True)
+    '2.0.0'
+    >>> utils.suggest_version('1.0.1.dev0', breaking=True)
+    '2.0.0.dev0'
+    >>> utils.suggest_version('1.0.1a1', feature=True)
+    '1.1.0'
+    >>> utils.suggest_version('1.0.1a1', breaking=True)
+    '2.0.0'
+
+
 Asking input
 ------------
 

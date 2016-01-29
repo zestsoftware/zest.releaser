@@ -40,7 +40,7 @@ DATA = {
         'Text that must be present in the changelog. Can be a string or a '
         'list, for example ["New:", "Fixes:"]. For a list, only one of them '
         'needs to be present.'),
-    'original_version': 'Version before prereleasing (e.g. 1.0dev)',
+    'original_version': 'Version before prereleasing (e.g. 1.0.dev0)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
 }
@@ -114,14 +114,6 @@ class Prereleaser(baserelease.Basereleaser):
             new_version = suggestion
         self.data['original_version'] = original_version
         self.data['new_version'] = new_version
-
-    def _write_version(self):
-        if self.data['new_version'] != self.data['original_version']:
-            # self.vcs.version writes it to the file it got the version from.
-            self.vcs.version = self.data['new_version']
-            logger.info("Changed version from %s to %s",
-                        self.data['original_version'],
-                        self.data['new_version'])
 
 
 def datacheck(data):

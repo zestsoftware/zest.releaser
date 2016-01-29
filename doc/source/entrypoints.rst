@@ -274,3 +274,51 @@ reporoot
 
 workingdir
     Original working directory
+
+Bumpversion data dict items
+---------------------------
+
+breaking
+    True if we handle a breaking (major) change
+
+commit_msg
+    Message template used when committing.
+
+feature
+    True if we handle a feature (minor) change
+
+headings
+    Extracted headings from the history file
+
+history_encoding
+    The detected encoding of the history file
+
+history_file
+    Filename of history/changelog file (when found)
+
+history_header
+    Header template used for 1st history header
+
+history_insert_line_here
+    Line number where an extra changelog entry can be inserted.
+
+history_last_release
+    Full text of all history entries of the current release
+
+history_lines
+    List with all history file lines (when found)
+
+name
+    Name of the project being released
+
+new_version
+    New development version (so 1.1)
+
+release
+    Type of release: breaking, feature, normal
+
+reporoot
+    Root of the version control repository
+
+workingdir
+    Original working directory

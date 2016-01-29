@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.6 (unreleased)
 ----------------
 
+- Added ``bumpversion`` command.  Options ``--feature`` and
+  ``--breaking``.  Issue #160.  The exact behavior might change in
+  future versions after more practical experience.  Try it out and
+  report any issues you find.  [maurits]
+
 - Fixed possible encoding problems when writing files.  This is
   especially for an ascii file to which we add non ascii characters,
   like in the ``addchangelogentry`` command.  [maurits]

@@ -234,6 +234,14 @@ class Basereleaser(object):
                 default=False):
             sys.exit(1)
 
+    def _write_version(self):
+        if self.data['new_version'] != self.data['original_version']:
+            # self.vcs.version writes it to the file it got the version from.
+            self.vcs.version = self.data['new_version']
+            logger.info("Changed version from %s to %s",
+                        self.data['original_version'],
+                        self.data['new_version'])
+
     def _write_history(self):
         """Write previously-calculated history lines back to the file"""
         if self.data['history_file'] is None:
