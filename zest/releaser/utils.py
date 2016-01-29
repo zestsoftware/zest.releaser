@@ -177,31 +177,50 @@ def cleanup_version(version):
     return version
 
 
-def suggest_version(current):
+def suggest_version(current, feature=False, breaking=False):
     """Suggest new version.
 
     Try to make sure that the suggestion for next version after
     1.1.19 is not 1.1.110, but 1.1.20.
     """
+    if feature and breaking:
+        print('Cannot have both breaking and feature in suggest_version.')
+        sys.exit(1)
+    dev = ''
+    if '.dev' in current:
+        index = current.find('.dev')
+        dev = current[index:]
+        current = current[:index]
     # Split in first and last part, where last part is one integer and the
     # first part can contain more integers plus dots.
     current_split = current.split('.')
-    first = '.'.join(current_split[:-1])
-    last = current_split[-1]
+    if breaking:
+        target = 0
+    elif feature:
+        target = 1
+    else:
+        target = -1
+    first = '.'.join(current_split[:target])
+    last = current_split[target]
     try:
         last = int(last) + 1
-        suggestion = '.'.join([first, str(last)])
+        suggestion = '.'.join([char for char in first, str(last) if char])
     except ValueError:
         # Fall back on simply updating the last character when it is
         # an integer.
         try:
-            last = int(current[-1]) + 1
-            suggestion = current[:-1] + str(last)
-        except ValueError:
+            last = int(current[target]) + 1
+            suggestion = current[:target] + str(last)
+        except (ValueError, IndexError):
             logger.warn("Version does not end with a number, so we can't "
                         "calculate a suggestion for a next version.")
-            suggestion = None
-    return suggestion
+            return None
+    if target != -1:
+        # For feature or breaking release, restore the original amount of dots,
+        # and add zeroes.  So: 1.2.3 in breaking release becomes 2.0.0
+        for dot in range(len(current_split) - target - 1):
+            suggestion += '.0'
+    return suggestion + dev
 
 
 def base_option_parser():
