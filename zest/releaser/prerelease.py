@@ -40,7 +40,7 @@ DATA = {
         'Text that must be present in the changelog. Can be a string or a '
         'list, for example ["New:", "Fixes:"]. For a list, only one of them '
         'needs to be present.'),
-    'original_version': 'Version before prereleasing (e.g. 1.0dev)',
+    'original_version': 'Version before prereleasing (e.g. 1.0.dev0)',
     'commit_msg': 'Message template used when committing',
     'history_header': 'Header template used for 1st history header',
 }

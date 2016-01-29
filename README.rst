@@ -202,3 +202,8 @@ There are some additional tools:
   is indented and the first line is started with a dash.  The command
   detects it if you use for example a star as first character of an
   entry.
+
+- **bumpversion**: do not release, only bump the version.  A
+  development marker is kept when it is there.  With ``--feature`` we
+  update the minor version.  With option ``--breaking`` we update the
+  major version.

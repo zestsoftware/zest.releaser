@@ -204,7 +204,7 @@ def suggest_version(current, feature=False, breaking=False):
     last = current_split[target]
     try:
         last = int(last) + 1
-        suggestion = '.'.join([char for char in first, str(last) if char])
+        suggestion = '.'.join([char for char in (first, str(last)) if char])
     except ValueError:
         # Fall back on simply updating the last character when it is
         # an integer.
@@ -796,11 +796,12 @@ def retry_yes_no(command):
             print(explanation)
 
 
-def get_last_tag(vcs):
+def get_last_tag(vcs, allow_missing=False):
     """Get last tag number, compared to current version.
 
-    Note: when this cannot get a proper tag for some reason, it may
-    exit the program completely.
+    Note: when this cannot get a proper tag for some reason, it may exit
+    the program completely.  When no tags are found and allow_missing is
+    True, we return None.
     """
     version = vcs.version
     if not version:
@@ -808,6 +809,9 @@ def get_last_tag(vcs):
         sys.exit(1)
     available_tags = vcs.available_tags()
     if not available_tags:
+        if allow_missing:
+            logger.debug("No tags found.")
+            return
         logger.critical("No tags found, so we can't do anything.")
         sys.exit(1)
 

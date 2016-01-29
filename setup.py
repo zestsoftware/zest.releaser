@@ -82,6 +82,7 @@ setup(name='zest.releaser',
               'lasttagdiff = zest.releaser.lasttagdiff:main',
               'lasttaglog = zest.releaser.lasttaglog:main',
               'addchangelogentry = zest.releaser.addchangelogentry:main',
+              'bumpversion = zest.releaser.bumpversion:main',
               ],
           # The datachecks are implemented as entry points to be able to check
           # our entry point implementation.
@@ -96,6 +97,9 @@ setup(name='zest.releaser',
               ],
           'zest.releaser.addchangelogentry.middle': [
               'datacheck = zest.releaser.addchangelogentry:datacheck',
+              ],
+          'zest.releaser.bumpversion.middle': [
+              'datacheck = zest.releaser.bumpversion:datacheck',
               ],
           # Documentation generation
           'zest.releaser.prereleaser.before': [

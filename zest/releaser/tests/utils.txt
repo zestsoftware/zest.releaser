@@ -93,7 +93,7 @@ Keep development marker when it is there.
     >>> utils.suggest_version('1.0.dev0')
     '1.1.dev0'
 
-Suggest versions for a feature (minor) release:
+Suggest versions for a feature (minor) or breaking (major) release:
 
     >>> utils.suggest_version('1.0', feature=True)
     '1.1'

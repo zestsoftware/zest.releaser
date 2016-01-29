@@ -44,6 +44,12 @@ Or on multiple lines::
 
   This was difficult."
 
+The ``bumpversion`` command accepts two mutually exclusive options:
+
+- With ``--feature`` we update the minor version.
+
+- With option ``--breaking`` we update the major version.
+
 
 Global options
 --------------

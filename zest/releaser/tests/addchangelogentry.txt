@@ -1,5 +1,5 @@
-Detailed tests of prerelease.py
-===============================
+Detailed tests of addchangelogentry.py
+======================================
 
 .. :doctest:
 .. :setup: zest.releaser.tests.functional.setup
@@ -45,7 +45,7 @@ commit::
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
 
-The changelog and setup.py are at 0.1 and indicate a release date:
+The changelog and setup.py are at 0.1 and have the message::
 
     >>> contents = (open('CHANGES.txt').read())
     >>> print(contents)
