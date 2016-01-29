@@ -134,7 +134,7 @@ nothing_changed_yet
     First line in new changelog section, warn when this is still in there before releasing
 
 original_version
-    Version before prereleasing (e.g. 1.0dev)
+    Version before prereleasing (e.g. 1.0.dev0)
 
 reporoot
     Root of the version control repository
@@ -313,6 +313,9 @@ name
 
 new_version
     New development version (so 1.1)
+
+original_version
+    Version before bump (e.g. 1.0.dev0)
 
 release
     Type of release: breaking, feature, normal
