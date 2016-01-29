@@ -103,6 +103,9 @@ Prerelease data dict items
 commit_msg
     Message template used when committing
 
+headings
+    Extracted headings from the history file
+
 history_encoding
     The detected encoding of the history file
 
@@ -185,8 +188,77 @@ dev_version
 dev_version_template
     Template for dev version number
 
+headings
+    Extracted headings from the history file
+
+history_encoding
+    The detected encoding of the history file
+
+history_file
+    Filename of history/changelog file (when found)
+
 history_header
     Header template used for 1st history header
+
+history_insert_line_here
+    Line number where an extra changelog entry can be inserted.
+
+history_last_release
+    Full text of all history entries of the current release
+
+history_lines
+    List with all history file lines (when found)
+
+name
+    Name of the project being released
+
+new_version
+    New development version (so 1.1)
+
+nothing_changed_yet
+    First line in new changelog section
+
+reporoot
+    Root of the version control repository
+
+workingdir
+    Original working directory
+
+Addchangelogentry data dict items
+---------------------------------
+
+commit_msg
+    Message template used when committing. Default: same as the message passed on the command line.
+
+dev_version
+    New development version with dev marker (so 1.1.dev0)
+
+dev_version_template
+    Template for dev version number
+
+headings
+    Extracted headings from the history file
+
+history_encoding
+    The detected encoding of the history file
+
+history_file
+    Filename of history/changelog file (when found)
+
+history_header
+    Header template used for 1st history header
+
+history_insert_line_here
+    Line number where an extra changelog entry can be inserted.
+
+history_last_release
+    Full text of all history entries of the current release
+
+history_lines
+    List with all history file lines (when found)
+
+message
+    The message we want to add
 
 name
     Name of the project being released

@@ -1,0 +1,111 @@
+Detailed tests of prerelease.py
+===============================
+
+.. :doctest:
+.. :setup: zest.releaser.tests.functional.setup
+.. :teardown: zest.releaser.tests.functional.teardown
+
+Several items are prepared for us.
+
+An svn repository:
+
+    >>> repo_url
+    'file://TESTREPO'
+
+An svn checkout of a project:
+
+    >>> svnsourcedir
+    'TESTTEMP/tha.example-svn'
+    >>> import os
+    >>> import sys
+    >>> os.chdir(svnsourcedir)
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+The message argument is required.  In the tests the error is ugly, but
+in practice it looks fine::
+
+    >>> from zest.releaser import addchangelogentry
+    >>> addchangelogentry.main()
+    Traceback (most recent call last):
+    ...too few arguments
+    RuntimeError: SYSTEM EXIT (code=2)
+
+Run the addchangelogentry script with a message and signalling okay to
+commit::
+
+    >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
+    >>> sys.argv[1:] = ['My message.']
+    >>> addchangelogentry.main()
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog and setup.py are at 0.1 and indicate a release date:
+
+    >>> contents = (open('CHANGES.txt').read())
+    >>> print(contents)
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+    <BLANKLINE>
+    - My message.
+    <BLANKLINE>
+    - Initial library skeleton created by thaskel.  [your name]
+    <BLANKLINE>
+
+Add some white space in front of the list items, to show that this is
+kept when adding a message.  Make the list items stars instead of
+dashed.  Add multiple lines in one go.
+
+    >>> utils.write_text_file('CHANGES.txt', contents.replace('- ', '  * '))
+    >>> sys.argv[1:] = ['My longer message.\nOn two lines.']
+    >>> addchangelogentry.main()
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> print(open('CHANGES.txt').read())
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+    <BLANKLINE>
+      * My longer message.
+        On two lines.
+    <BLANKLINE>
+      * My message.
+    <BLANKLINE>
+      * Initial library skeleton created by thaskel.  [your name]
+    <BLANKLINE>
+
+Try non ascii for loads of fun:::
+
+    >>> sys.argv[1:] = ['F\xc3\xbcr Elise']
+    >>> addchangelogentry.main()
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> contents = (open('CHANGES.txt').read())
+    >>> print(contents)
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+    <BLANKLINE>
+      * F...r Elise
+    <BLANKLINE>
+      * My longer message.
+         On two lines.
+    <BLANKLINE>
+      * My message.
+    <BLANKLINE>
+      * Initial library skeleton created by thaskel.  [your name]
+    <BLANKLINE>

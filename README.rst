@@ -181,12 +181,24 @@ are:
 
 - **fullrelease**: all of the above in order.
 
-There are two additional tools:
+There are some additional tools:
 
 - **longtest**: small tool that renders a setup.py's long description
   and opens it in a web browser. This assumes an installed docutils
   (as it needs ``rst2html.py``).
 
-- **lasttagdiff**: small tool that shows the diff of the currently committed
-  trunk with the last released tag.  Handy for checking whether all the
-  changes are adequately described in the changes file.
+- **lasttagdiff**: small tool that shows the *diff* of the current
+  branch with the last released tag.  Handy for checking whether all
+  the changes are adequately described in the changes file.
+
+- **lasttaglog**: small tool that shows the *log* of the current
+  branch since the last released tag.  Handy for checking whether all
+  the changes are adequately described in the changes file.
+
+- **addchangelogentry**: pass this a text on the command line and it
+  will add this as an entry in the changelog.  This is probably mostly
+  useful when you are making the same change in a batch of packages.
+  The same text is used as commit message.  In the changelog, the text
+  is indented and the first line is started with a dash.  The command
+  detects it if you use for example a star as first character of an
+  entry.

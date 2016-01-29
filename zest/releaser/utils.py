@@ -62,16 +62,28 @@ def loglevel():
 
 
 def write_text_file(filename, contents, encoding=None):
-    if encoding is None:
-        encoding = OUTPUT_ENCODING
-        logger.debug("Writing to %s with the default output encoding %s",
-                     filename, encoding)
-    else:
-        logger.debug("Writing to %s with its original encoding %s",
-                     filename, encoding)
     if six.PY2 and isinstance(contents, six.text_type):
         # Python 2 unicode needs to be encoded.
-        contents = contents.encode(encoding)
+        if encoding is None:
+            encoding = OUTPUT_ENCODING
+            logger.debug("Writing to %s with the default output encoding %s",
+                         filename, encoding)
+        else:
+            logger.debug("Writing to %s with its original encoding %s",
+                         filename, encoding)
+        # We might have added something to the contents (a changelog entry)
+        # that does not fit the detected encoding.  So we try a few encodings.
+        orig_encoding = encoding
+        encodings = set([orig_encoding, OUTPUT_ENCODING, 'utf-8'])
+        for encoding in encodings:
+            try:
+                contents = contents.encode(encoding)
+                break
+            except UnicodeEncodeError:
+                pass
+        else:
+            logger.error("Could not write to file %s with any of these "
+                         "encodings: %s", filename, encodings)
     with open(filename, 'w') as f:
         f.write(contents)
 
@@ -165,9 +177,7 @@ def cleanup_version(version):
     return version
 
 
-def parse_options():
-    global AUTO_RESPONSE
-    global VERBOSE
+def base_option_parser():
     parser = ArgumentParser()
     parser.add_argument(
         "--no-input",
@@ -182,9 +192,18 @@ def parse_options():
         dest="verbose",
         default=False,
         help="Verbose mode")
+    return parser
+
+
+def parse_options(parser=None):
+    global AUTO_RESPONSE
+    global VERBOSE
+    if parser is None:
+        parser = base_option_parser()
     options = parser.parse_args()
     AUTO_RESPONSE = options.auto_response
     VERBOSE = options.verbose
+    return options
 
 
 # Hack for testing, see get_input()
@@ -826,3 +845,34 @@ def configure_logging():
         logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
     logging.basicConfig(level=loglevel(),
                         format="%(levelname)s: %(message)s")
+
+
+def get_list_item(lines):
+    """Get most used list item from text.
+
+    Meaning: probably a dash, maybe a star.
+    """
+    unordered_list = []
+    for line in lines:
+        # Possibly there is leading white space, strip it.
+        stripped = line.strip()
+        # Look for lines starting with one character and a space.
+        if len(stripped) < 3:
+            continue
+        if stripped[1] != ' ':
+            continue
+        prefix = stripped[0]
+        # Restore stripped whitespace.
+        white = line.find(prefix)
+        unordered_list.append('{}{}'.format(' ' * white, prefix))
+    # Get sane default.
+    best = '-'
+    count = 0
+    # Start counting.
+    for key in set(unordered_list):
+        new_count = unordered_list.count(key)
+        if new_count > count:
+            best = key
+            count = new_count
+    # Return the best one.
+    return best

@@ -14,7 +14,8 @@ Command line options
 --------------------
 
 These command line options are supported by the release commands
-(``fullrelease``, ``prerelease``, ``release``, ``postrelease``).
+(``fullrelease``, ``prerelease``, ``release``, ``postrelease``)
+and by the ``addchangelogentry`` command.
 
 -v, --verbose
     Run in verbose mode, printing a bit more, mostly only interesting
@@ -31,6 +32,17 @@ These command line options are supported by the release commands
     sometimes no, sometimes a version number) are probably sane
     and safe.  But do not blame us if this does something you do not
     want. :-)
+
+The ``addchangelogentry`` command requires the text you want to add as
+argument.  For example::
+
+  $ addchangelogentry "Fixed bug."
+
+Or on multiple lines::
+
+  $ addchangelogentry "Fixed bug.
+
+  This was difficult."
 
 
 Global options

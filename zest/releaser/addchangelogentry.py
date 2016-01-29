@@ -1,4 +1,4 @@
-"""Do the checks and tasks that have to happen after doing a release.
+"""Add a changelog entry.
 """
 from __future__ import unicode_literals
 
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 HISTORY_HEADER = '%(new_version)s (unreleased)'
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
-COMMIT_MSG = 'Back to development: %(new_version)s'
+COMMIT_MSG = ''
 DEV_VERSION_TEMPLATE = '%(new_version)s.dev0'
 
 DATA = {
@@ -27,7 +27,9 @@ DATA = {
     'nothing_changed_yet': 'First line in new changelog section',
     'new_version': 'New development version (so 1.1)',
     'dev_version': 'New development version with dev marker (so 1.1.dev0)',
-    'commit_msg': 'Message template used when committing',
+    'commit_msg': (
+        'Message template used when committing. '
+        'Default: same as the message passed on the command line.'),
     'headings': 'Extracted headings from the history file',
     'history_file': 'Filename of history/changelog file (when found)',
     'history_last_release': (
@@ -38,23 +40,25 @@ DATA = {
     'history_insert_line_here': (
         'Line number where an extra changelog entry can be inserted.'),
     'dev_version_template': 'Template for dev version number',
+    'message': 'The message we want to add',
 }
 
 
-class Postreleaser(baserelease.Basereleaser):
-    """Post-release tasks like resetting version number.
+class AddChangelogEntry(baserelease.Basereleaser):
+    """Add a changelog entry.
 
     self.data holds data that can optionally be changed by plugins.
 
     """
 
-    def __init__(self, vcs=None):
+    def __init__(self, vcs=None, message=''):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             nothing_changed_yet=NOTHING_CHANGED_YET,
             commit_msg=COMMIT_MSG,
             history_header=HISTORY_HEADER,
+            message=message.strip(),
             dev_version_template=DEV_VERSION_TEMPLATE))
 
     def prepare(self):
@@ -62,58 +66,24 @@ class Postreleaser(baserelease.Basereleaser):
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
-        self._ask_for_new_dev_version()
         self._grab_history()
+        self._get_message()
 
     def execute(self):
         """Make the changes and offer a commit"""
-        self._write_version()
-        self._change_header(add=True)
+        self._insert_changelog_entry(self.data['message'])
         self._write_history()
         self._diff_and_commit()
-        self._push()
 
-    def _ask_for_new_dev_version(self):
-        """Ask for and store a new dev version string."""
-        current = self.vcs.version
-        # Clean it up to a non-development version.
-        current = utils.cleanup_version(current)
-        # Try to make sure that the suggestion for next version after
-        # 1.1.19 is not 1.1.110, but 1.1.20.
-        current_split = current.split('.')
-        major = '.'.join(current_split[:-1])
-        minor = current_split[-1]
-        try:
-            minor = int(minor) + 1
-            suggestion = '.'.join([major, str(minor)])
-        except ValueError:
-            # Fall back on simply updating the last character when it is
-            # an integer.
-            try:
-                last = int(current[-1]) + 1
-                suggestion = current[:-1] + str(last)
-            except ValueError:
-                logger.warn("Version does not end with a number, so we can't "
-                            "calculate a suggestion for a next version.")
-                suggestion = None
-        print("Current version is %s" % current)
-        q = "Enter new development version ('.dev0' will be appended)"
-        version = utils.ask_version(q, default=suggestion)
-        if not version:
-            version = suggestion
-        if not version:
-            logger.error("No version entered.")
-            sys.exit(1)
-
-        self.data['new_version'] = version
-        dev_version = self.data['dev_version_template'] % self.data
-        self.data['dev_version'] = dev_version
-        logger.info("New version string is %s",
-                    dev_version)
-
-    def _write_version(self):
-        """Update the version in vcs"""
-        self.vcs.version = self.data['dev_version']
+    def _get_message(self):
+        """Get changelog message and commit message."""
+        message = self.data['message']
+        while not message:
+            q = "What is the changelog message? "
+            message = utils.get_input(q)
+        self.data['message'] = message
+        if not self.data['commit_msg']:
+            self.data['commit_msg'] = message
 
 
 def datacheck(data):
@@ -122,7 +92,12 @@ def datacheck(data):
 
 
 def main():
-    utils.parse_options()
+    parser = utils.base_option_parser()
+    parser.add_argument(
+        "message",
+        help="Text of changelog entry")
+    options = utils.parse_options(parser)
     utils.configure_logging()
-    postreleaser = Postreleaser()
-    postreleaser.run()
+    addchangelogentry = AddChangelogEntry(
+        message=utils.fs_to_text(options.message))
+    addchangelogentry.run()

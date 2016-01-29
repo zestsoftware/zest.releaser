@@ -4,12 +4,15 @@ from __future__ import unicode_literals
 
 import logging
 import pkg_resources
+import six
 import sys
 
 from zest.releaser import utils
 from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import read_text_file
+from zest.releaser.utils import write_text_file
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +49,200 @@ class Basereleaser(object):
             logger.critical("No version detected, so we can't do anything.")
             sys.exit(1)
         self.data['version'] = version
+
+    def _grab_history(self):
+        """Calculate the needed history/changelog changes
+
+        Every history heading looks like '1.0 b4 (1972-12-25)'. Extract them,
+        check if the first one matches the version and whether it has a the
+        current date.
+        """
+        self.data['history_lines'] = []
+        self.data['history_file'] = None
+        self.data['history_encoding'] = None
+        self.data['headings'] = []
+        self.data['history_last_release'] = ''
+        self.data['history_insert_line_here'] = 0
+        default_location = None
+        config = self.setup_cfg.config
+        if config and config.has_option('zest.releaser', 'history_file'):
+            default_location = config.get('zest.releaser', 'history_file')
+        history_file = self.vcs.history_file(location=default_location)
+        self.data['history_file'] = history_file
+        if not history_file:
+            logger.warn("No history file found")
+            return
+        logger.debug("Checking %s", history_file)
+        history_lines, history_encoding = read_text_file(history_file)
+        history_lines = history_lines.split('\n')
+        headings = utils.extract_headings_from_history(history_lines)
+        if not headings:
+            logger.warn("No detectable version heading in the history "
+                        "file %s", history_file)
+            return
+        self.data['history_lines'] = history_lines
+        self.data['history_encoding'] = history_encoding
+        self.data['headings'] = headings
+
+        # Grab last header.
+        start = headings[0]['line']
+        if len(headings) > 1:
+            # Include the next header plus underline, as this is nice
+            # to show in the history_last_release.
+            end = headings[1]['line'] + 2
+        else:
+            end = len(history_lines)
+        history_last_release = '\n'.join(history_lines[start:end])
+        self.data['history_last_release'] = history_last_release
+
+        # Add line number where an extra changelog entry can be inserted.  Can
+        # be useful for entry points.  'start' is the header, +1 is the
+        # underline, +2 is probably an empty line, so then we should take +3.
+        # Or rather: the first non-empty line.
+        insert = start + 2
+        while insert < end:
+            if history_lines[insert].strip():
+                break
+            insert += 1
+        self.data['history_insert_line_here'] = insert
+
+    def _change_header(self, add=False):
+        """Change the latest header.
+
+        Change the version number and the release date or development status.
+
+        @add:
+        - False: edit current header (prerelease)
+        - True: add header (postrelease)
+        """
+        if self.data['history_file'] is None:
+            return
+        good_heading = self.data['history_header'] % self.data
+        # ^^^ history_header is a string with %(abc)s replacements.
+        headings = self.data['headings']
+        history_lines = self.data['history_lines']
+        previous = ''
+        underline_char = '-'
+        empty = False
+        if not history_lines:
+            # Remember that we were empty to start with.
+            empty = True
+            # prepare header line
+            history_lines.append('')
+        if len(history_lines) <= 1:
+            # prepare underline
+            history_lines.append(underline_char)
+        if not headings:
+            # Mock a heading
+            headings = [{'line': 0}]
+            inject_location = 0
+        first = headings[0]
+        inject_location = first['line']
+        underline_line = first['line'] + 1
+        try:
+            underline_char = history_lines[underline_line][0]
+        except IndexError:
+            logger.debug("No character on line below header.")
+            underline_char = '-'
+        previous = history_lines[inject_location]
+        if add:
+            inject = [
+                good_heading,
+                underline_char * len(good_heading),
+                '',
+                self.data['nothing_changed_yet'],
+                '',
+                '',
+            ]
+            if empty:
+                history_lines = []
+            history_lines[inject_location:inject_location] = inject
+        else:
+            # edit current line
+            history_lines[inject_location] = good_heading
+            logger.debug("Set heading from %r to %r.", previous, good_heading)
+            history_lines[underline_line] = utils.fix_rst_heading(
+                heading=good_heading,
+                below=history_lines[underline_line])
+            logger.debug("Set line below heading to %r",
+                         history_lines[underline_line])
+        # Setting history_lines is not needed, except when we have replaced the
+        # original instead of changing it.  So just set it.
+        self.data['history_lines'] = history_lines
+
+    def _insert_changelog_entry(self, message):
+        """Insert changelog entry."""
+        if self.data['history_file'] is None:
+            return
+        insert = self.data['history_insert_line_here']
+        lines = []
+        prefix = utils.get_list_item(self.data['history_lines'])
+        for index, line in enumerate(message.splitlines()):
+            if index == 0:
+                line = '{} {}'.format(prefix, line)
+            else:
+                line = '{}  {}'.format(' ' * len(prefix), line)
+            lines.append(line)
+        lines.append('')
+        self.data['history_lines'][insert:insert] = lines
+
+    def _check_nothing_changed(self):
+        """Look for 'Nothing changed yet' under the latest header.
+
+        Not nice if this text ends up in the changelog.  Did nothing
+        happen?
+        """
+        if self.data['history_file'] is None:
+            return
+        nothing_yet = self.data['nothing_changed_yet']
+        if nothing_yet not in self.data['history_last_release']:
+            return
+        # We want quotes around the text, but also want to avoid
+        # printing text with a u'unicode marker' in front...
+        pretty_nothing_changed = '"{}"'.format(nothing_yet)
+        if not utils.ask(
+                "WARNING: Changelog contains {}. Are you sure you "
+                "want to release?".format(pretty_nothing_changed),
+                default=False):
+            logger.info("You can use the 'lasttaglog' command to "
+                        "see the commits since the last tag.")
+            sys.exit(1)
+
+    def _check_required(self):
+        """Look for required text under the latest header.
+
+        This can be a list, in which case only one item needs to be
+        there.
+        """
+        if self.data['history_file'] is None:
+            return
+        required = self.data.get('required_changelog_text')
+        if not required:
+            return
+        if isinstance(required, six.string_types):
+            required = [required]
+        history_last_release = self.data['history_last_release']
+        for text in required:
+            if text in history_last_release:
+                # Found it, all is fine.
+                return
+        pretty_required = '"{}"'.format('", "'.join(required))
+        if not utils.ask(
+                "WARNING: Changelog should contain at least one of "
+                "these required strings: {}. Are you sure you "
+                "want to release?".format(pretty_required),
+                default=False):
+            sys.exit(1)
+
+    def _write_history(self):
+        """Write previously-calculated history lines back to the file"""
+        if self.data['history_file'] is None:
+            return
+        contents = '\n'.join(self.data['history_lines'])
+        history = self.data['history_file']
+        write_text_file(
+            history, contents, encoding=self.data['history_encoding'])
+        logger.info("History file %s updated.", history)
 
     def _diff_and_commit(self, commit_msg=''):
         """Show diff and offer commit.
