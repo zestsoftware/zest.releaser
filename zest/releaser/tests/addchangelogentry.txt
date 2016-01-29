@@ -30,7 +30,7 @@ The message argument is required.  In the tests the error is ugly, but
 in practice it looks fine::
 
     >>> from zest.releaser import addchangelogentry
-    >>> print addchangelogentry.main()
+    >>> addchangelogentry.main()
     Traceback (most recent call last):
     ...too few arguments
     RuntimeError: SYSTEM EXIT (code=2)
