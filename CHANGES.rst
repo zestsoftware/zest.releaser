@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-6.6 (unreleased)
-----------------
+6.6.0 (2016-01-29)
+------------------
 
 - Added ``bumpversion`` command.  Options ``--feature`` and
   ``--breaking``.  Issue #160.  The exact behavior might change in
