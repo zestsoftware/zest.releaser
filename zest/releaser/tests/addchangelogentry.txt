@@ -64,8 +64,7 @@ Add some white space in front of the list items, to show that this is
 kept when adding a message.  Make the list items stars instead of
 dashed.  Add multiple lines in one go.
 
-    >>> with open('CHANGES.txt', 'w') as f:
-    ...    _ = f.write(contents.replace('- ', '  * '))
+    >>> utils.write_text_file('CHANGES.txt', contents.replace('- ', '  * '))
     >>> sys.argv[1:] = ['My longer message.\nOn two lines.']
     >>> addchangelogentry.main()
     Checking data dict
@@ -80,6 +79,31 @@ dashed.  Add multiple lines in one go.
     <BLANKLINE>
       * My longer message.
         On two lines.
+    <BLANKLINE>
+      * My message.
+    <BLANKLINE>
+      * Initial library skeleton created by thaskel.  [your name]
+    <BLANKLINE>
+
+Try non ascii for loads of fun:::
+
+    >>> sys.argv[1:] = ['F\xc3\xbcr Elise']
+    >>> addchangelogentry.main()
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> contents = (open('CHANGES.txt').read())
+    >>> print(contents)
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+    <BLANKLINE>
+      * F...r Elise
+    <BLANKLINE>
+      * My longer message.
+         On two lines.
     <BLANKLINE>
       * My message.
     <BLANKLINE>

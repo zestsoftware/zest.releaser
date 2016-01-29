@@ -4,6 +4,10 @@ Changelog for zest.releaser
 6.6 (unreleased)
 ----------------
 
+- Fixed possible encoding problems when writing files.  This is
+  especially for an ascii file to which we add non ascii characters,
+  like in the ``addchangelogentry`` command.  [maurits]
+
 - Added ``addchangelogentry`` command.  Issue #159.  [maurits]
 
 - Moved ``_diff_and_commit``, ``_push`` and ``_grab_version`` to

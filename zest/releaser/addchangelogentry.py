@@ -1,4 +1,4 @@
-"""Do the checks and tasks that have to happen after doing a release.
+"""Add a changelog entry.
 """
 from __future__ import unicode_literals
 
@@ -98,5 +98,6 @@ def main():
         help="Text of changelog entry")
     options = utils.parse_options(parser)
     utils.configure_logging()
-    addchangelogentry = AddChangelogEntry(message=options.message)
+    addchangelogentry = AddChangelogEntry(
+        message=utils.fs_to_text(options.message))
     addchangelogentry.run()

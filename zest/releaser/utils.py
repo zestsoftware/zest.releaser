@@ -62,16 +62,28 @@ def loglevel():
 
 
 def write_text_file(filename, contents, encoding=None):
-    if encoding is None:
-        encoding = OUTPUT_ENCODING
-        logger.debug("Writing to %s with the default output encoding %s",
-                     filename, encoding)
-    else:
-        logger.debug("Writing to %s with its original encoding %s",
-                     filename, encoding)
     if six.PY2 and isinstance(contents, six.text_type):
         # Python 2 unicode needs to be encoded.
-        contents = contents.encode(encoding)
+        if encoding is None:
+            encoding = OUTPUT_ENCODING
+            logger.debug("Writing to %s with the default output encoding %s",
+                         filename, encoding)
+        else:
+            logger.debug("Writing to %s with its original encoding %s",
+                         filename, encoding)
+        # We might have added something to the contents (a changelog entry)
+        # that does not fit the detected encoding.  So we try a few encodings.
+        orig_encoding = encoding
+        encodings = set([orig_encoding, OUTPUT_ENCODING, 'utf-8'])
+        for encoding in encodings:
+            try:
+                contents = contents.encode(encoding)
+                break
+            except UnicodeEncodeError:
+                pass
+        else:
+            logger.error("Could not write to file %s with any of these "
+                         "encodings: %s", filename, encodings)
     with open(filename, 'w') as f:
         f.write(contents)
 
