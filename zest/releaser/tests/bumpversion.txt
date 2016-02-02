@@ -41,7 +41,7 @@ So first run the fullrelease:
     >>> utils.test_answer_book.set_answers(['', '', '', '2.3.4', '', '', '', '', '', '', ''])
     >>> fullrelease.main()
     Question...
-    Question: Enter version [0.1]: 
+    Question: Enter version [0.1]:
     Our reply: 2.3.4
     ...
     >>> svnhead('CHANGES.txt')
@@ -79,16 +79,39 @@ Now a feature bump::
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '2.4.0.dev0'
+    >>> svnhead('CHANGES.txt')
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    2.4.0 (unreleased)
+    ------------------
 
-Now a breaking bump::
+Now a breaking bump, and for this test we explicitly remove the dev marker::
 
+    >>> utils.test_answer_book.set_answers(['3.0.0', ''])
     >>> sys.argv[1:] = ['--breaking']
     >>> bumpversion.main()
     Checking version bump for breaking release.
     Last tag: 2.3.4
     Current version: 2.4.0.dev0
     Question: Enter version [3.0.0.dev0]:
-    Our reply: <ENTER>
+    Our reply: 3.0.0
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    >>> svnhead('setup.py')
+    from setuptools import setup, find_packages
+    import os.path
+    <BLANKLINE>
+    version = '3.0.0'
+    >>> svnhead('CHANGES.txt')
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    3.0.0 (unreleased)
+    ------------------

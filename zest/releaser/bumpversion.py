@@ -10,7 +10,7 @@ from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
 
-HISTORY_HEADER = '%(new_version)s (unreleased)'
+HISTORY_HEADER = '%(clean_new_version)s (unreleased)'
 COMMIT_MSG = 'Bumped version for %(release)s release.'
 
 DATA = {
@@ -20,7 +20,8 @@ DATA = {
     'workingdir': 'Original working directory',
     'reporoot': 'Root of the version control repository',
     'name': 'Name of the project being released',
-    'new_version': 'New development version (so 1.1)',
+    'clean_new_version': 'Clean new version (say 1.1)',
+    'new_version': 'New version (say 1.1.dev0)',
     'commit_msg': 'Message template used when committing.',
     'headings': 'Extracted headings from the history file',
     'history_file': 'Filename of history/changelog file (when found)',
@@ -121,6 +122,7 @@ class BumpVersion(baserelease.Basereleaser):
             new_version = suggestion
         self.data['original_version'] = original_version
         self.data['new_version'] = new_version
+        self.data['clean_new_version'] = utils.cleanup_version(new_version)
 
 
 def datacheck(data):
