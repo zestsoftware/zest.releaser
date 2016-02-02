@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.6.1 (unreleased)
+6.6.1 (2016-02-02)
 ------------------
 
 - Fixed version in changelog after bumpversion call.  [maurits]
