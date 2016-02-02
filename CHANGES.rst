@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed version in changelog after bumpversion call.  [maurits]
 
 
 6.6.0 (2016-01-29)
