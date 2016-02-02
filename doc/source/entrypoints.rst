@@ -281,6 +281,9 @@ Bumpversion data dict items
 breaking
     True if we handle a breaking (major) change
 
+clean_new_version
+    Clean new version (say 1.1)
+
 commit_msg
     Message template used when committing.
 
@@ -312,7 +315,7 @@ name
     Name of the project being released
 
 new_version
-    New development version (so 1.1)
+    New version (say 1.1.dev0)
 
 original_version
     Version before bump (e.g. 1.0.dev0)
