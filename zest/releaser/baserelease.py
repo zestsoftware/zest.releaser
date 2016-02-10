@@ -30,14 +30,14 @@ class Basereleaser(object):
                      'reporoot': self.vcs.reporoot,
                      'name': self.vcs.name}
         self.setup_cfg = pypi.SetupConfig()
-        if self.setup_cfg.no_input():
-            utils.AUTO_RESPONSE = True
         if utils.TESTMODE:
             pypirc_old = pkg_resources.resource_filename(
                 'zest.releaser.tests', 'pypirc_old.txt')
             self.pypiconfig = pypi.PypiConfig(pypirc_old)
         else:
             self.pypiconfig = pypi.PypiConfig()
+        if self.pypiconfig.no_input():
+            utils.AUTO_RESPONSE = True
 
     def _grab_version(self):
         """Just grab the version.

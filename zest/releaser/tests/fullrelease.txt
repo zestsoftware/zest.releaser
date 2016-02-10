@@ -78,7 +78,8 @@ The changelog and setup.py are at 0.2.dev0:
     <BLANKLINE>
     version = '0.2.dev0'
 
-An alternative is to set a ``no-input`` option in the ``setup.cfg`` file:
+An alternative is to set a ``no-input`` option in the ``.pypirc`` or
+``setup.cfg`` file:
 
     >>> sys.argv[1:] = []
     >>> from zest.releaser import utils

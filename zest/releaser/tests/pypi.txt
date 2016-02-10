@@ -288,11 +288,12 @@ No-input mode
 In some cases you want no questions asked. Zest.releaser should just do its
 job without asking for versions or confirmations. You can enable this
 behaviour with a ``--no-input`` commandline option, but also by adding
-``no-input = yes`` to the ``[zest.releaser]`` section in ``setup.cfg``.
+``no-input = yes`` to the ``[zest.releaser]`` section in ``.pypirc`` or
+``setup.cfg``.
 
 The default is False:
 
-    >>> setup_config.no_input()
+    >>> pypiconfig.no_input()
     False
 
 Enable the option:
@@ -303,8 +304,8 @@ Enable the option:
     ... """
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...     _ = f.write(SETUP_CFG)
-    >>> setup_config = pypi.SetupConfig()
-    >>> setup_config.no_input()
+    >>> pypiconfig = pypi.PypiConfig()
+    >>> pypiconfig.no_input()
     True
 
 
