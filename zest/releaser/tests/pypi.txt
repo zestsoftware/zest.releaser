@@ -296,7 +296,18 @@ The default is False:
     >>> pypiconfig.no_input()
     False
 
-Enable the option:
+Enable the option in ``.pypirc``:
+
+    >>> pypirc_no_input = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_no_input.txt')
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_no_input)
+
+Now the option should be set to True:
+
+    >>> pypiconfig.no_input()
+    True
+
+Let's enable the option also in setup.cfg:
 
     >>> SETUP_CFG = """
     ... [zest.releaser]
@@ -305,6 +316,9 @@ Enable the option:
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...     _ = f.write(SETUP_CFG)
     >>> pypiconfig = pypi.PypiConfig()
+
+The option should be set to True here as well:
+
     >>> pypiconfig.no_input()
     True
 
