@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.6.2 (unreleased)
+6.6.2 (2016-02-11)
 ------------------
 
 - Added ``no-input`` option also to global (.pypirc) options.
