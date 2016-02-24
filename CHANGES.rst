@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.6.3 (unreleased)
+6.6.3 (2016-02-24)
 ------------------
 
 - Using a "shallow" git clone when creating a distribution. This speeds up
