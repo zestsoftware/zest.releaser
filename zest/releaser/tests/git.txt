@@ -97,9 +97,9 @@ Make and commit a small change:
 
     >>> with open(setup_py, 'a') as f:
     ...    _ = f.write('\nb = 3\n')
-    >>> cmd = checkout.cmd_commit('small tweak')
+    >>> cmd = checkout.cmd_commit('small second tweak')
     >>> print('dummy %s' % execute_command(cmd))
-    dummy...small tweak
+    dummy...small second tweak
      1 files changed, 2 insertions(+), 0 deletions(-)
 
 Now we can request the changes since a specific tag:
@@ -128,8 +128,21 @@ dir and afterwards do a checkout/clone of a tag.  With git, we immediately
 make a clone of the repository in a tempdir and afterwards switch ("checkout")
 that directory to the tag.
 
-For checking out a tag, we first need a temporary dir with a clone of the
-repository.
+Since version 6.6.3 we create a shallow clone, which only contains the
+last commit.  And since 6.6.4 this works properly. :-) For that to
+work, we switch back to the tag first, otherwise the shallow copy will
+not contain the tag checkout that we need.  In other words: you need
+to be on the tag when you create a release, and that is true for the
+other version control systems too.
+
+So we first switch back to the tag.
+
+    >>> cmd = checkout.cmd_checkout_from_tag('0.1', gitsourcedir)
+    >>> print(execute_command(cmd))
+    RED Note: ...0.1...
+    RED HEAD is now at ... small tweak
+
+Prepare the checkout directory with the clone of the local repository.
 
     >>> temp = checkout.prepare_checkout_dir('somename')
     >>> temp
@@ -137,15 +150,14 @@ repository.
     >>> os.path.isdir(temp)
     True
 
-The checked out clone is really a clone and not an empty directory.  The
-setup.py also contains our latest "b = 3" change:
+The checked out clone is really a clone and not an empty directory.
 
     >>> sorted(os.listdir(temp))
     ['.git', '.gitignore', 'CHANGES.txt', ...]
     >>> print(open(os.path.join(temp, 'setup.py')).read())
     from setuptools import setup, find_packages
     ...
-    b = 3
+    a = 2
 
 For git, we have to change to that directory!  Git doesn't work with paths.
 
@@ -154,14 +166,14 @@ For git, we have to change to that directory!  Git doesn't work with paths.
     ...
     RuntimeError: SYSTEM EXIT (code=1)
 
-Chdir and make a tag checkout:
+Change to the directory.  Verify that we can checkout the tag, even
+though we are already at the correct tag.
 
     >>> os.chdir(temp)
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
     'git checkout 0.1 && git submodule update --init --recursive'
     >>> print(execute_command(cmd))
-    RED Note: ...0.1...
     RED HEAD is now at ... small tweak
 
 The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
@@ -171,6 +183,13 @@ The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
     ...
     a = 2
 
+Change back to the source directory and return to the master branch.
+
+    >>> os.chdir(gitsourcedir)
+    >>> cmd = 'git checkout master && git submodule update --init --recursive'
+    >>> print(execute_command(cmd))
+    RED Previous HEAD position was ... small tweak
+    RED Switched to branch 'master'
 
 Pushing changes
 ---------------
