@@ -4,21 +4,25 @@ Changelog for zest.releaser
 6.6.3 (unreleased)
 ------------------
 
-- Do a shallow clone to speed up release (specially noticeable on big repositories).
-  Issue #169 [gforcada]
+- Using a "shallow" git clone when creating a distribution. This speeds up
+  releases, especially on big repositories.
+  See issue #169.
+  [gforcada]
 
 
 6.6.2 (2016-02-11)
 ------------------
 
 - Added ``no-input`` option also to global (.pypirc) options.
-  Issue #164.  [jcerjak]
+  Issue #164.
+  [jcerjak]
 
 
 6.6.1 (2016-02-02)
 ------------------
 
-- Fixed version in changelog after bumpversion call.  [maurits]
+- Fixed version in changelog after bumpversion call.
+  [maurits]
 
 
 6.6.0 (2016-01-29)
