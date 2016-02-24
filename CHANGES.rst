@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.6.4 (unreleased)
+6.6.4 (2016-02-24)
 ------------------
 
 - Really create a shallow git clone when creating a distribution.
