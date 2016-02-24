@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.6.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Really create a shallow git clone when creating a distribution.
+  See issue #169.
+  [maurits]
 
 
 6.6.3 (2016-02-24)
