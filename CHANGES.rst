@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.6.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do a shallow clone to speed up release (specially noticeable on big repositories).
+  Issue #169 [gforcada]
 
 
 6.6.2 (2016-02-11)
