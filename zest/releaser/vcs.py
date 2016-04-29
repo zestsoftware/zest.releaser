@@ -256,7 +256,7 @@ class BaseVersionControl(object):
         logger.error(
             "We could read a version from setup.py, but could not write it " +
             "back. See " +
-            "http://zestreleaser.readthedocs.org/en/latest/versions.html " +
+            "http://zestreleaser.readthedocs.io/en/latest/versions.html " +
             "for hints.")
         raise RuntimeError("Cannot set version")
 

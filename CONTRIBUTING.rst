@@ -1,7 +1,7 @@
 Hi!
 ===
 
-You're using `zest.releaser <http://zestreleaser.readthedocs.org>`_ and want
+You're using `zest.releaser <http://zestreleaser.readthedocs.io>`_ and want
 to report a bug or problem or you want to fix something yourself? Feel free!
 Github is the place to do so.
 
@@ -22,10 +22,10 @@ longer, feel free to email us as a reminder.
 
 If you want to work on zest.releaser, read the developer info in
 ``doc/source/developing.rst``.  Or read it online at
-http://zestreleaser.readthedocs.org/en/latest/developing.html .
+http://zestreleaser.readthedocs.io/en/latest/developing.html .
 
 Note that there's a way to extend zest.releaser without modifying
 zest.releaser itself: look at the `entrypoints documentation
-<http://zestreleaser.readthedocs.org/en/latest/entrypoints.html>`_ to see if
+<http://zestreleaser.readthedocs.io/en/latest/entrypoints.html>`_ to see if
 that can help you. Several people have used that to tweak zest.releaser to fit
 in perfectly with their specific needs.
