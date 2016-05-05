@@ -15,7 +15,7 @@ TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 HISTORY_HEADER = '%(new_version)s (unreleased)'
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
 COMMIT_MSG = 'Back to development: %(new_version)s'
-DEV_VERSION_TEMPLATE = '%(new_version)s.dev0'
+DEV_VERSION_TEMPLATE = '%(new_version)s%(development_marker)s'
 
 DATA = {
     # Documentation for self.data.  You get runtime warnings when something is
@@ -38,6 +38,7 @@ DATA = {
     'history_insert_line_here': (
         'Line number where an extra changelog entry can be inserted.'),
     'dev_version_template': 'Template for dev version number',
+    'development_marker': 'String to be appended to version after postrelease'
 }
 
 
@@ -51,11 +52,14 @@ class Postreleaser(baserelease.Basereleaser):
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
+        development_marker = self.setup_cfg.development_marker()
+
         self.data.update(dict(
             nothing_changed_yet=NOTHING_CHANGED_YET,
             commit_msg=COMMIT_MSG,
             history_header=HISTORY_HEADER,
-            dev_version_template=DEV_VERSION_TEMPLATE))
+            dev_version_template=DEV_VERSION_TEMPLATE,
+            development_marker=development_marker))
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
@@ -80,7 +84,8 @@ class Postreleaser(baserelease.Basereleaser):
         current = utils.cleanup_version(current)
         suggestion = utils.suggest_version(current)
         print("Current version is %s" % current)
-        q = "Enter new development version ('.dev0' will be appended)"
+        q = ("Enter new development version "
+             "('%(development_marker)s' will be appended)" % self.data)
         version = utils.ask_version(q, default=suggestion)
         if not version:
             version = suggestion
