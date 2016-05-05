@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 HISTORY_HEADER = '%(new_version)s (unreleased)'
 COMMIT_MSG = 'Back to development: %(new_version)s'
-DEV_VERSION_TEMPLATE = '%(new_version)s.dev0'
+DEV_VERSION_TEMPLATE = '%(new_version)s%(development_marker)s'
 
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!
@@ -20,6 +20,7 @@ DATA = baserelease.DATA.copy()
 DATA.update({
     'dev_version': 'New version with development marker (so 1.1.dev0)',
     'dev_version_template': 'Template for development version number',
+    'development_marker': 'String to be appended to version after postrelease',
     'new_version': 'New version, without development marker (so 1.1)',
 })
 
@@ -34,9 +35,12 @@ class Postreleaser(baserelease.Basereleaser):
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
+        development_marker = self.setup_cfg.development_marker()
+
         self.data.update(dict(
             commit_msg=COMMIT_MSG,
             dev_version_template=DEV_VERSION_TEMPLATE,
+            development_marker=development_marker,
             history_header=HISTORY_HEADER,
         ))
 
@@ -67,7 +71,8 @@ class Postreleaser(baserelease.Basereleaser):
             levels=self.pypiconfig.version_levels(),
         )
         print("Current version is %s" % current)
-        q = "Enter new development version ('.dev0' will be appended)"
+        q = ("Enter new development version "
+             "('%(development_marker)s' will be appended)" % self.data)
         version = utils.ask_version(q, default=suggestion)
         if not version:
             version = suggestion
