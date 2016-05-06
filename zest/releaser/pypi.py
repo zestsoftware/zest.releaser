@@ -66,7 +66,7 @@ class SetupConfig(object):
             result = self.config.get('zest.releaser',
                                      'development-marker')
         except (NoSectionError, NoOptionError, ValueError):
-            result = "dev0"
+            result = ".dev0"
         return result
 
     def has_bad_commands(self):
