@@ -16,8 +16,8 @@ zest.releaser checkout, do this::
 Python versions
 ---------------
 
-The tests currently pass on python 2.7, 3.3 & 3.4. Travis continuous
-integration tests 2.7, 3.3 & 3.4 for us automatically.
+The tests currently pass on python 2.7, 3.3, 3.4 & 3.5. Travis continuous
+integration tests 2.7, 3.3, 3.4 & 3.5 for us automatically.
 
 
 Necessary programs
