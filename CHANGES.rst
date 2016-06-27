@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.8 (unreleased)
 ----------------
 
+- Added ``push-changes`` config file option.  Default: yes.  When this
+  is false, zest.releaser sets ``no`` as default answer for the
+  question if you want to push the changes to the remote.
+  [newlog]
+
 - By default no longer register a new package, but only upload it.
   Registering a package is no longer needed on PyPI: uploading a new
   distribution takes care of this.  If you *do* want to register,

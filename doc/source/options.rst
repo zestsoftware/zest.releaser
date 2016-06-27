@@ -69,6 +69,11 @@ Lots of things may be in this file, but zest.releaser looks for a
 For yes/no options, you can use no/false/off/0 or yes/true/on/1 as
 answers; upper, lower or mixed case are all fine.
 
+Various options change the default answer of a question.
+So if you want to use the ``--no-input`` command line option
+or want to press Enter a couple of times without thinking too much,
+see if you can tweak the default answers by setting one of these options
+
 We have these options:
 
 release = yes / no
@@ -92,6 +97,11 @@ register = yes / no
     Default: no.  Set this to yes to register a package before uploading.
     On the official Python Package Index registering a package is no longer needed,
     and may even fail.
+
+push-changes = yes / no
+    Default: yes.  When this is false, zest.releaser sets ``no`` as
+    default answer for the question if you want to push the changes to
+    the remote.
 
 
 Per project options
