@@ -300,3 +300,26 @@ class PypiConfig(object):
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
+
+    def push_changes(self):
+        """Return whether the user wants to push the version changes to the remote.
+
+        Enable this mode by adding a ``push-changes`` option::
+
+            [zest.releaser]
+            push-changes = no
+
+        The default when this option has not been set is True.
+
+        Standard config rules apply, so you can use upper or lower or
+        mixed case and specify 0, false, no or off for boolean False,
+        and 1, on, true or yes for boolean True.
+        """
+        default = True
+        if self.config is None:
+            return default
+        try:
+            result = self.config.getboolean('zest.releaser', 'push-changes')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result

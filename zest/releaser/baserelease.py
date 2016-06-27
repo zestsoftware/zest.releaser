@@ -292,7 +292,8 @@ class Basereleaser(object):
         push_cmds = self.vcs.push_commands()
         if not push_cmds:
             return
-        if utils.ask("OK to push commits to the server?"):
+        default_anwer = self.pypiconfig.push_changes()
+        if utils.ask("OK to push commits to the server?", default=default_anwer):
             for push_cmd in push_cmds:
                 output = execute_command(push_cmd)
                 logger.info(output)
