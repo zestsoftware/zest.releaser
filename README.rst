@@ -158,7 +158,7 @@ are:
 
 - **prerelease**: asks you for a version number (defaults to the current
   version minus a 'dev' or so), updates the setup.py or version.txt and the
-  CHANGES/HISTORY/CHANGELOG file (with either .rst/.txt/.markdown or no
+  CHANGES/HISTORY/CHANGELOG file (with either .rst/.txt/.md/.markdown or no
   extension) with this new version number and offers to commit those changes
   to subversion (or bzr or hg or git)
 
