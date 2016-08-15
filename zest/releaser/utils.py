@@ -175,11 +175,19 @@ def cleanup_version(version):
     return version
 
 
-def suggest_version(current, feature=False, breaking=False):
+def suggest_version(current, feature=False, breaking=False,
+                    less_zeroes=False, levels=0):
     """Suggest new version.
 
     Try to make sure that the suggestion for next version after
     1.1.19 is not 1.1.110, but 1.1.20.
+
+    - feature: increase major version, 1.2.3 -> 1.3.
+    - breaking: increase minor version, 1.2.3 -> 2 (well, 2.0)
+    - less_zeroes: instead of 2.0.0, suggest 2.0.
+      Only makes sense in combination with feature or breaking.
+    - levels: number of levels to aim for.  3 would give: 1.2.3.
+      levels=0 would mean: do not change the number of levels.
     """
     if feature and breaking:
         print('Cannot have both breaking and feature in suggest_version.')
@@ -192,10 +200,28 @@ def suggest_version(current, feature=False, breaking=False):
     # Split in first and last part, where last part is one integer and the
     # first part can contain more integers plus dots.
     current_split = current.split('.')
+    original_levels = len(current_split)
+    try:
+        [int(x) for x in current_split]
+    except ValueError:
+        # probably a/b in the version.
+        pass
+    else:
+        # With levels=3, we prefer major.minor.patch as version.  Add zeroes
+        # where needed.  We don't subtract: if version is 1.2.3.4.5, we are not
+        # going to suggest to drop a few numbers.
+        if levels:
+            while len(current_split) < levels:
+                current_split.append('0')
     if breaking:
         target = 0
     elif feature:
-        target = 1
+        if len(current_split) > 1:
+            target = 1
+        else:
+            # When the version is 1, a feature release is the same as a
+            # breaking release.
+            target = 0
     else:
         target = -1
     first = '.'.join(current_split[:target])
@@ -204,6 +230,10 @@ def suggest_version(current, feature=False, breaking=False):
         last = int(last) + 1
         suggestion = '.'.join([char for char in (first, str(last)) if char])
     except ValueError:
+        if target != -1:
+            # Something like 1.2rc1 where we want a feature bump.  This gets
+            # too tricky.
+            return None
         # Fall back on simply updating the last character when it is
         # an integer.
         try:
@@ -213,10 +243,18 @@ def suggest_version(current, feature=False, breaking=False):
             logger.warn("Version does not end with a number, so we can't "
                         "calculate a suggestion for a next version.")
             return None
-    if target != -1:
-        # For feature or breaking release, restore the original amount of dots,
-        # and add zeroes.  So: 1.2.3 in breaking release becomes 2.0.0
-        suggestion += '.0' * (len(current_split) - target - 1)
+    # Maybe add a few zeroes: turn 2 into 2.0.0 if 3 levels is the goal.
+    goal = max(original_levels, levels)
+    length = len(suggestion.split('.'))
+    if less_zeroes and goal > 2:
+        # Adding zeroes is okay, but the user prefers not to overdo it.  If the
+        # goal is 3 levels, and the current suggestion is 1.3, then that is
+        # fine.  If the current suggestion is 2, then don't increase the zeroes
+        # all the way to 2.0.0, but stop at 2.0.
+        goal = 2
+    missing = goal - length
+    if missing > 0:
+        suggestion += '.0' * missing
     return suggestion + dev
 
 
