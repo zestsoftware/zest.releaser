@@ -3,7 +3,7 @@ Uploading to pypi (or custom servers)
 
 When the (full)release command tries to upload your package to a pypi server,
 zest.releaser basically just executes the command ``python setup.py register
-sdist --formats=zip upload``.
+sdist upload`` (except it uses twine_ for the upload; see below).
 
 For safety reasons zest.releaser will *only* offer to upload your package to
 https://pypi.python.org when the package is already registered there.  If this
