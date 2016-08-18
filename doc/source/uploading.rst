@@ -2,43 +2,41 @@ Uploading to pypi (or custom servers)
 =======================================
 
 When the (full)release command tries to upload your package to a pypi server,
-zest.releaser basically just executes the command ``python setup.py register
-sdist --formats=zip upload``.
+zest.releaser basically executes the command ``python setup.py sdist`` and does a
+``twine upload``.  The twine command replaces the less safe
+``python setup.py register sdist upload``.
 
 For safety reasons zest.releaser will *only* offer to upload your package to
 https://pypi.python.org when the package is already registered there.  If this
 is not the case yet, you get a confirmation question whether you want to
-create a new package.
+register a new package with ``twine register``.
 
-If the ``setup.py register ...`` command fails, you probably need to configure
+If the upload or register command fails, you probably need to configure
 your PyPI configuration file. And of course you need to have
-setuptools installed.
+``setuptools`` and ``twine`` installed, but that is done automatically
+when installing ``zest.releaser``.
 
 
 PyPI configuration file (``~/.pypirc``)
 ---------------------------------------
 
 For uploads to PyPI to work you will need a ``.pypirc`` file in your home directory that
-has your pypi login credentials, like this::
-
-  [server-login]
-  username:maurits
-  password:secret
-
-
-Uploading to other servers
---------------------------
-
-Since python 2.6 you can specify multiple indexes for uploading your
-package in your ``.pypirc``::
+has your pypi login credentials.  This may contain alternative servers too::
 
   [distutils]
   index-servers =
     pypi
+    warehouse
     local
 
   [pypi]
-  #pypi.python.org
+  # default repository is pypi.python.org
+  username:maurits
+  password:secret
+
+  [warehouse]
+  # This is the successor for PyPI, which you can/should already use.
+  repository:https://upload.pypi.org/legacy/
   username:maurits
   password:secret
 
@@ -60,8 +58,8 @@ Then it will offer to upload to the other index servers that you have
 specified in ``.pypirc``.
 
 Note that since version 3.15, zest.releaser also looks for this information in
-the setup.cfg if your package has that file.  One way to use this, is to
-restrict the servers that zest.releaser will ask you upload to.  If you have
+the ``setup.cfg`` if your package has that file.  One way to use this, is to
+restrict the servers that zest.releaser will ask you to upload to.  If you have
 defined 40 index-servers in your pypirc but you have the following in your
 setup.cfg, you will not be asked to upload to any server::
 

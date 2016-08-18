@@ -4,9 +4,12 @@ Changelog for zest.releaser
 6.6.5 (unreleased)
 ------------------
 
+- Updated the documentation on uploading.  [mgedmin, maurits]
+
 - Replaced http://zestreleaser.readthedocs.org with
   http://zestreleaser.readthedocs.io.  This is the new canonical
   domain since 28 April 2016.  [maurits]
+
 
 6.6.4 (2016-02-24)
 ------------------
