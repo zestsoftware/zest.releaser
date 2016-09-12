@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.6.5 (unreleased)
+6.6.5 (2016-09-12)
 ------------------
 
 - Support and require twine 1.8.0 as minimum version.
