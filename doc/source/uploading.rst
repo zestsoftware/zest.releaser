@@ -99,6 +99,12 @@ is now a core dependency, installed automatically.
 
 .. _twine: https://pypi.python.org/pypi/twine
 
+Note that we call functions in ``twine`` that may change their call
+signature, so if you get strange errors, you may be using a too new
+version of ``twine``.  Please open an `issue
+<https://github.com/zestsoftware/zest.releaser/issues/new>`_ then.
+Currently, it works with ``twine`` 1.8.x.
+
 
 Uploading wheels
 ----------------

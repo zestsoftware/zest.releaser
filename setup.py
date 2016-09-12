@@ -57,7 +57,7 @@ setup(name='zest.releaser',
           'setuptools',
           'colorama',
           'six',
-          'twine >= 1.6.0',
+          'twine >= 1.8.0',
       ],
       extras_require={
           'recommended': [

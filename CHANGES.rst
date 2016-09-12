@@ -4,6 +4,10 @@ Changelog for zest.releaser
 6.6.5 (unreleased)
 ------------------
 
+- Support and require twine 1.8.0 as minimum version.
+  Fixes https://github.com/zestsoftware/zest.releaser/issues/183
+  [maurits]
+
 - Updated the documentation on uploading.  [mgedmin, maurits]
 
 - Replaced http://zestreleaser.readthedocs.org with
