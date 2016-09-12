@@ -72,6 +72,9 @@ checker = renormalizing.RENormalizing([
     # Change in git 1.8.0:
     (re.compile('nothing to commit \(working directory clean\)'),
      'nothing to commit, working directory clean'),
+    # Change in git 2.9.1:
+    (re.compile('nothing to commit, working directory clean'),
+     'nothing to commit, working tree clean'),
     # Change in git 1.8.5, the hash is removed:
     (re.compile('# On branch'),
      'On branch'),
