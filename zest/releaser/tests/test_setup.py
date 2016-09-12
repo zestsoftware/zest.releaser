@@ -12,15 +12,20 @@ from twine.commands import upload
 
 
 def mock_register(package, repository, username, password, comment,
-                  config_file):
+                  config_file, cert, client_cert, repository_url):
     """Replacement for twine register command.
+
+    Please keep in sync with twine/commands/register.py.
     """
     print('MOCK twine register -r {} {}'.format(repository, package))
 
 
-def mock_upload(dists, repository, sign, identity, username, password, comment,
-                sign_with, config_file, skip_existing):
+def mock_upload(dists, repository, sign, identity, username, password,
+               comment, sign_with, config_file, skip_existing,
+               cert, client_cert, repository_url):
     """Replacement for twine upload command.
+
+    Please keep in sync with twine/commands/upload.py.
     """
     print('MOCK twine upload -r {} {}'.format(repository, ' '.join(dists)))
 
