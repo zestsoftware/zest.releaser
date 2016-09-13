@@ -17,6 +17,7 @@ else:
     USE_WHEEL = True
 DIST_CONFIG_FILE = '.pypirc'
 SETUP_CONFIG_FILE = 'setup.cfg'
+DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
 
 logger = logging.getLogger(__name__)
 
@@ -175,6 +176,29 @@ class PypiConfig(object):
         except (NoSectionError, NoOptionError):
             return False
         return True
+
+    def get_server_config(self, server):
+        """Get url, username, password for server.
+        """
+        repository_url = DEFAULT_REPOSITORY
+        username = None
+        password = None
+        if self.config.has_section(server):
+            if self.config.has_option(server, 'repository'):
+                repository_url = self.config.get(server, 'repository')
+            if self.config.has_option(server, 'username'):
+                username = self.config.get(server, 'username')
+            if self.config.has_option(server, 'password'):
+                password = self.config.get(server, 'password')
+        if not username and self.config.has_option('server-login', 'username'):
+            username = self.config.get('server-login', 'username')
+        if not password and self.config.has_option('server-login', 'password'):
+            password = self.config.get('server-login', 'password')
+        return {
+            'repository_url': repository_url,
+            'username': username,
+            'password': password,
+        }
 
     def distutils_servers(self):
         """Return a list of known distutils servers.

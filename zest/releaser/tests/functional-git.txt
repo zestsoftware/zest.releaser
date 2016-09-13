@@ -111,8 +111,8 @@ known on PyPI:
     removing 'tha.example-0.1' ...
     Question: Register and upload to pypi (y/N)?
     Our reply: yes
-    MOCK twine register -r pypi dist/tha.example-0.1.tar.gz
-    MOCK twine upload -r pypi dist/tha.example-0.1.tar.gz
+    MOCK twine register dist/tha.example-0.1.tar.gz
+    MOCK twine upload dist/tha.example-0.1.tar.gz
 
 There is now a tag:
 

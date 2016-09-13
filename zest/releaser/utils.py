@@ -22,8 +22,6 @@ import pkg_resources
 from pkg_resources import parse_version
 import six
 from six.moves import input  # noqa
-from twine.commands.register import register
-from twine.commands.upload import upload
 
 
 logger = logging.getLogger(__name__)
@@ -730,47 +728,6 @@ def execute_command(command, allow_retry=False, fail_message=""):
         return execute_command(command, allow_retry=True)
     # Accept the error, continue with the program.
     return result
-
-
-def retry_twine(twine_command, server, *files):
-    if isinstance(files, six.text_type):
-        files = [files]
-    if twine_command == 'register':
-        # There is currently no stable API for twine register.
-        # See https://github.com/zestsoftware/zest.releaser/issues/183
-        # It is 'semi-stable'.  It may get new arguments.
-        # def register(package, repository, username, password, comment,
-        #              config_file, cert, client_cert, repository_url):
-        # If you change the call here, you probably need to change
-        # our mock_register function in tests/test_setup.py.
-        twine_function = register
-        twine_args = (files[0], server, None, None, None,
-                      '~/.pypirc', None, None, None)
-    elif twine_command == 'upload':
-        twine_function = upload
-        # There is currently no stable API for twine upload.
-        # See https://github.com/zestsoftware/zest.releaser/issues/183
-        # It is 'semi-stable'.  It may get new arguments.
-        # def upload(dists, repository, sign, identity, username, password,
-        #            comment, sign_with, config_file, skip_existing,
-        #            cert, client_cert, repository_url)
-        # If you change the call here, you probably need to change
-        # our mock_upload function in tests/test_setup.py.
-        twine_args = (files, server, False, None, None, None,
-                      None, 'gpg', '~/.pypirc', False,
-                      None, None, None)
-    else:
-        print(Fore.RED + "Unknown twine command: %s" % twine_command)
-        sys.exit(1)
-    try:
-        return twine_function(*twine_args)
-    except:
-        print(Fore.RED + "There were errors or warnings.")
-        logger.exception("Package %s has failed.", twine_command)
-        retry = retry_yes_no('twine %s' % twine_command)
-        if retry:
-            logger.info("Retrying.")
-            return retry_twine(twine_command, server, *files)
 
 
 def retry_yes_no(command):

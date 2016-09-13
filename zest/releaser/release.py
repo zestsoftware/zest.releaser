@@ -5,8 +5,12 @@ import logging
 import os
 import sys
 
+from colorama import Fore
+from requests import codes
 from six.moves.urllib.error import HTTPError
 from six.moves.urllib import request as urllib2
+from twine.repository import Repository
+from twine.package import PackageFile
 
 from zest.releaser import baserelease
 from zest.releaser import pypi
@@ -49,6 +53,8 @@ class Releaser(baserelease.Basereleaser):
 
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
+        # dictionary for holding twine repository information
+        self._repositories = {}
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             # Nothing yet
@@ -160,8 +166,68 @@ class Releaser(baserelease.Basereleaser):
                          default=default, exact=exact):
                 if do_register:
                     logger.info("Registering...")
-                    utils.retry_twine('register', server, *files_in_dist)
-                utils.retry_twine('upload', server, *files_in_dist)
+                    # We only need to first file, it has all the needed info.
+                    self._retry_twine('register', server, files_in_dist[0])
+                for filename in files_in_dist:
+                    self._retry_twine('upload', server, filename)
+        self._close_all_repositories()
+
+    def _get_repository(self, server):
+        if server not in self._repositories:
+            self._repositories[server] = Repository(
+                **self.pypiconfig.get_server_config(server))
+        return self._repositories[server]
+
+    def _close_all_repositories(self):
+        for repository in self._repositories.values():
+            repository.close()
+
+    def _drop_repository(self, server):
+        self._repositories.pop(server, None)
+
+    def _retry_twine(self, twine_command, server, filename):
+        repository = self._get_repository(server)
+        package_file = PackageFile.from_filename(filename, comment=None)
+        if twine_command == 'register':
+            # Register the package.
+            twine_function = repository.register
+            twine_args = (package_file, )
+        elif twine_command == 'upload':
+            # Note: we assume here that calling package_is_uploaded does not
+            # give an error, and that there is no reason to retry it.
+            if repository.package_is_uploaded(package_file):
+                logger.warn(
+                    'A file %s has already been uploaded. Ignoring.', filename)
+                return
+            twine_function = repository.upload
+            twine_args = (package_file, )
+        else:
+            print(Fore.RED + "Unknown twine command: %s" % twine_command)
+            sys.exit(1)
+        response = twine_function(*twine_args)
+        if response is not None and response.status_code == codes.OK:
+            return
+        # Something went wrong.  Close repository.
+        repository.close()
+        self._drop_repository(server)
+        if response is not None:
+            # Some errors reported by PyPI after register or upload may be
+            # fine.  The register command is not really needed anymore with the
+            # new PyPI.  See https://github.com/pypa/twine/issues/200
+            # This might change, but for now the register command fails.
+            if (twine_command == 'register'
+                    and response.reason == 'This API is no longer supported, '
+                    'instead simply upload the file.'):
+                return
+            # Show the error.
+            print(Fore.RED + "Response status code: %s" % response.status_code)
+            print(Fore.RED + "Reason: %s" % response.reason)
+        print(Fore.RED + "There were errors or warnings.")
+        logger.exception("Package %s has failed.", twine_command)
+        retry = utils.retry_yes_no('twine %s' % twine_command)
+        if retry:
+            logger.info("Retrying.")
+            return self._retry_twine(twine_command, server, filename)
 
     def _release(self):
         """Upload the release, when desired"""

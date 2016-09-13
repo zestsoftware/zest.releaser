@@ -6,32 +6,39 @@ import tempfile
 from colorama import Fore
 import six
 import z3c.testsetup
+import requests
 from zope.testing import renormalizing
-from twine.commands import register
-from twine.commands import upload
+from twine.repository import Repository
 
 
-def mock_register(package, repository, username, password, comment,
-                  config_file, cert, client_cert, repository_url):
-    """Replacement for twine register command.
+successful_response = requests.Response()
+successful_response.status_code = requests.codes.OK
 
-    Please keep in sync with twine/commands/register.py.
+
+def mock_package_is_uploaded(self, package, bypass_cache=False):
+    """Replacement for twine repository package_is_uploaded command.
     """
-    print('MOCK twine register -r {} {}'.format(repository, package))
+    return False
 
 
-def mock_upload(dists, repository, sign, identity, username, password,
-               comment, sign_with, config_file, skip_existing,
-               cert, client_cert, repository_url):
-    """Replacement for twine upload command.
-
-    Please keep in sync with twine/commands/upload.py.
+def mock_register(self, package):
+    """Replacement for twine repository register command.
     """
-    print('MOCK twine upload -r {} {}'.format(repository, ' '.join(dists)))
+    print('MOCK twine register {}'.format(package.filename))
+    return successful_response
 
-print('Mocking twine register and upload commands.')
-register.register = mock_register
-upload.upload = mock_upload
+
+def mock_upload(self, package, max_redirects=5):
+    """Replacement for twine repository upload command.
+    """
+    print('MOCK twine upload {}'.format(package.filename))
+    return successful_response
+
+
+print('Mocking several twine repository methods.')
+Repository.package_is_uploaded = mock_package_is_uploaded
+Repository.register = mock_register
+Repository.upload = mock_upload
 
 checker = renormalizing.RENormalizing([
     # Date formatting
