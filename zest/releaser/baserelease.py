@@ -39,7 +39,7 @@ class Basereleaser(object):
         if self.pypiconfig.no_input():
             utils.AUTO_RESPONSE = True
 
-    def _grab_version(self):
+    def _grab_version(self, initial=False):
         """Just grab the version.
 
         This may be overridden to get a different version, like in prerelease.
