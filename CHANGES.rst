@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-6.6.6 (unreleased)
-------------------
+6.7 (unreleased)
+----------------
 
 - Use the intended API of twine.  This should work with twine 1.6.0
   and higher, including future versions.  [maurits]
