@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.7 (unreleased)
+6.7 (2016-10-23)
 ----------------
 
 - Use the intended API of twine.  This should work with twine 1.6.0
