@@ -144,15 +144,20 @@ class Releaser(baserelease.Basereleaser):
             servers = self.pypiconfig.distutils_servers()
 
         for server in servers:
-            if server == 'pypi' and on_pypi:
-                logger.info("This package is registered on PyPI.")
-                # Already registered on PyPI.  Uploading is enough.
+            if server == 'pypi':
+                if on_pypi:
+                    logger.info("This package is registered on PyPI.")
+                    # Already registered on PyPI.  Uploading is enough.
+                    do_register = False
+                    question = "Upload"
+                else:
+                    # We must register first.
+                    do_register = True
+                    question = "Register and upload"
+            else:
+                # Assume register unnecessary unless publishing to Public PyPi.
                 do_register = False
                 question = "Upload"
-            else:
-                # We must register first.
-                do_register = True
-                question = "Register and upload"
             default = True
             exact = False
             if server == 'pypi' and not on_pypi:
