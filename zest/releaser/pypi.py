@@ -247,14 +247,7 @@ class PypiConfig(object):
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        default = True
-        if self.config is None:
-            return default
-        try:
-            result = self.config.getboolean('zest.releaser', 'release')
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.__get_boolean('zest.releaser', 'release')
 
     def extra_message(self):
         """Return extra text to be added to commit messages.
@@ -293,14 +286,20 @@ class PypiConfig(object):
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        default = False
-        if self.config is None:
-            return default
-        try:
-            result = self.config.getboolean('zest.releaser', 'create-wheel')
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.__get_boolean('zest.releaser', 'create-wheel')
+
+    def register_package(self):
+        """Should we try to register this package with PyPi?
+
+        If your PyPi server allows register to declare intent to upload, then
+        you will need to turn on the register function.
+        In your setup.cfg, use the following to ensure that register is
+        called on the PyPi server:
+
+        [pypirc]
+        register = yes
+        """
+        return self.__get_boolean('pypirc', 'register')
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
@@ -316,11 +315,13 @@ class PypiConfig(object):
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        default = False
-        if self.config is None:
-            return default
-        try:
-            result = self.config.getboolean('zest.releaser', 'no-input')
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
+        return self.__get_boolean('zest.releaser', 'no-input')
+
+    def __get_boolean(self, section, key):
+        result = False
+        if self.config is not None:
+            try:
+                result = self.config.getboolean(section, key)
+            except (NoSectionError, NoOptionError, ValueError):
+                return False
         return result

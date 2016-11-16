@@ -130,9 +130,6 @@ class Releaser(baserelease.Basereleaser):
         files_in_dist = [
             os.path.join('dist', filename) for filename in os.listdir('dist')]
 
-        # Is this package already registered on pypi?
-        on_pypi = package_in_pypi(package)
-
         # Run extra entry point
         self._run_hooks('before_upload')
 
@@ -144,35 +141,15 @@ class Releaser(baserelease.Basereleaser):
             servers = self.pypiconfig.distutils_servers()
 
         for server in servers:
-            if server == 'pypi':
-                if on_pypi:
-                    logger.info("This package is registered on PyPI.")
-                    # Already registered on PyPI.  Uploading is enough.
-                    do_register = False
-                    question = "Upload"
-                else:
-                    # We must register first.
-                    do_register = True
-                    question = "Register and upload"
-            else:
-                # Assume register unnecessary unless publishing to Public PyPi.
-                do_register = False
-                question = "Upload"
+            if self.pypiconfig.register_package():
+                logger.info("Registering...")
+                # We only need the first file, it has all the needed info
+                self._retry_twine('register', server, files_in_dist[0])
+            question = "Upload"
             default = True
             exact = False
-            if server == 'pypi' and not on_pypi:
-                logger.info("This package is NOT registered on PyPI.")
-                # We are not yet on pypi.  To avoid an 'Oops...,
-                # sorry!' when registering and uploading an internal
-                # package we default to False here.
-                default = False
-                exact = True
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
-                if do_register:
-                    logger.info("Registering...")
-                    # We only need to first file, it has all the needed info.
-                    self._retry_twine('register', server, files_in_dist[0])
                 for filename in files_in_dist:
                     self._retry_twine('upload', server, filename)
         self._close_all_repositories()
