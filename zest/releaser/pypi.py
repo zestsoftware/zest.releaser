@@ -323,5 +323,5 @@ class PypiConfig(object):
             try:
                 result = self.config.getboolean(section, key)
             except (NoSectionError, NoOptionError, ValueError):
-                return False
+                return result
         return result
