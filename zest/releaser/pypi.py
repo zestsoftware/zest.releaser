@@ -247,7 +247,7 @@ class PypiConfig(object):
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        return self.__get_boolean('zest.releaser', 'release')
+        return self._get_boolean('zest.releaser', 'release', default=True)
 
     def extra_message(self):
         """Return extra text to be added to commit messages.
@@ -286,7 +286,7 @@ class PypiConfig(object):
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        return self.__get_boolean('zest.releaser', 'create-wheel')
+        return self._get_boolean('zest.releaser', 'create-wheel')
 
     def register_package(self):
         """Should we try to register this package with PyPi?
@@ -299,7 +299,7 @@ class PypiConfig(object):
         [pypirc]
         register = yes
         """
-        return self.__get_boolean('pypirc', 'register')
+        return self._get_boolean('pypirc', 'register')
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
@@ -315,10 +315,10 @@ class PypiConfig(object):
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        return self.__get_boolean('zest.releaser', 'no-input')
+        return self._get_boolean('zest.releaser', 'no-input')
 
-    def __get_boolean(self, section, key):
-        result = False
+    def _get_boolean(self, section, key, default=False):
+        result = default
         if self.config is not None:
             try:
                 result = self.config.getboolean(section, key)
