@@ -141,15 +141,15 @@ class Releaser(baserelease.Basereleaser):
             servers = self.pypiconfig.distutils_servers()
 
         for server in servers:
-            if self.pypiconfig.register_package():
-                logger.info("Registering...")
-                # We only need the first file, it has all the needed info
-                self._retry_twine('register', server, files_in_dist[0])
             question = "Upload"
             default = True
             exact = False
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
+                if self.pypiconfig.register_package():
+                    logger.info("Registering...")
+                    # We only need the first file, it has all the needed info
+                    self._retry_twine('register', server, files_in_dist[0])
                 for filename in files_in_dist:
                     self._retry_twine('upload', server, filename)
         self._close_all_repositories()
