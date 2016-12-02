@@ -142,7 +142,7 @@ class Releaser(baserelease.Basereleaser):
 
         for server in servers:
             question = "Upload"
-            default = True
+            default = False
             exact = False
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
