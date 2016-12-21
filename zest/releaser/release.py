@@ -126,15 +126,15 @@ class Releaser(baserelease.Basereleaser):
                         pypi.DIST_CONFIG_FILE)
             return
 
-        # Get list of all files to upload.
-        files_in_dist = [
-            os.path.join('dist', filename) for filename in os.listdir('dist')]
-
         # Is this package already registered on pypi?
         on_pypi = package_in_pypi(package)
 
         # Run extra entry point
         self._run_hooks('before_upload')
+
+        # Get list of all files to upload.
+        files_in_dist = [
+            os.path.join('dist', filename) for filename in os.listdir('dist')]
 
         # Get servers/repositories.
         if self.pypiconfig.is_old_pypi_config():
