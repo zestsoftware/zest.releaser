@@ -14,9 +14,6 @@ addons:
 # We need these too, but they are already installed by default:
 # git bzr mercurial subversion
 before_install:
-# Now, we need to upgrade the system distribute, otherwise the
-# bootstrap will fail:
-  - pip install --upgrade distribute
 # Configure git and bazaar:
   - git config --global user.name "Temp user"
   - git config --global user.email "temp@example.com"
