@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Create the list of distributions after the ``before_upload`` hook has fired.
+  This allows the ``before_upload`` hook to create additional distributions,
+  which will then be uploaded.  [t-8ch]
 
 
 6.7 (2016-10-23)
