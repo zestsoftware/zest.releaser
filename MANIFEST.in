@@ -1,5 +1,5 @@
 recursive-include zest *
 recursive-include doc *
-include *
+include *rst LICENSE.GPL
 exclude .installed.cfg
 global-exclude *.pyc
