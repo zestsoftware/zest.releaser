@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-6.7.2 (unreleased)
-------------------
+6.8 (unreleased)
+----------------
 
 - By default no longer register a new package, but only upload it.
   Registering a package is no longer needed on PyPI: uploading a new
