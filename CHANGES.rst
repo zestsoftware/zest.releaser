@@ -4,7 +4,17 @@ Changelog for zest.releaser
 6.7.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- By default no longer register a new package, but only upload it.
+  Registering a package is no longer needed on PyPI: uploading a new
+  distribution takes care of this.  If you *do* want to register,
+  maybe because a different package server requires it, then in your
+  ``setup.cfg`` or ``~/.pypirc``, use the following::
+
+    [zest.releaser]
+    register = yes
+
+  Fixes `issue 191 <https://github.com/zestsoftware/zest.releaser/issues/191>`_.
+  [willowmck]
 
 
 6.7.1 (2016-12-22)

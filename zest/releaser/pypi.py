@@ -289,17 +289,29 @@ class PypiConfig(object):
         return self._get_boolean('zest.releaser', 'create-wheel')
 
     def register_package(self):
-        """Should we try to register this package with PyPi?
+        """Should we try to register this package with a package server?
 
-        If your PyPi server allows register to declare intent to upload, then
+        For the standard Python Package Index (PyPI), registering a
+        package is no longer needed: this is done automatically when
+        uploading a distribution for a package.  In fact, trying to
+        register may fail.  See
+        https://github.com/zestsoftware/zest.releaser/issues/191
+        So by default zest.releaser will no longer register a package.
+
+        But you may be using your own package server, and registering
+        may be wanted or even required there.  In this case
         you will need to turn on the register function.
-        In your setup.cfg, use the following to ensure that register is
-        called on the PyPi server:
+        In your setup.cfg or ~/.pypirc, use the following to ensure that
+        register is called on the package server:
 
-        [pypirc]
+        [zest.releaser]
         register = yes
+
+        Note that if you have specified multiple package servers, this
+        option is used for all of them.  There is no way to register and
+        upload to server A, and only upload to server B.
         """
-        return self._get_boolean('pypirc', 'register')
+        return self._get_boolean('zest.releaser', 'register')
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
