@@ -140,8 +140,12 @@ class Releaser(baserelease.Basereleaser):
             # The user may have defined other servers to upload to.
             servers = self.pypiconfig.distutils_servers()
 
+        register = self.pypiconfig.register_package()
         for server in servers:
-            question = "Upload"
+            if register:
+                question = "Register and upload"
+            else:
+                question = "Upload"
             default = False
             exact = False
             if server == 'pypi' and not package_in_pypi(package):
@@ -152,7 +156,7 @@ class Releaser(baserelease.Basereleaser):
                 exact = True
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
-                if self.pypiconfig.register_package():
+                if register:
                     logger.info("Registering...")
                     # We only need the first file, it has all the needed info
                     self._retry_twine('register', server, files_in_dist[0])
