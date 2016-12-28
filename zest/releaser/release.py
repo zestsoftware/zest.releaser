@@ -144,6 +144,12 @@ class Releaser(baserelease.Basereleaser):
             question = "Upload"
             default = False
             exact = False
+            if server == 'pypi' and not package_in_pypi(package):
+                logger.info("This package is NOT registered on PyPI.")
+                # We are not yet on pypi.  To avoid an 'Oops...,
+                # sorry!' when registering and uploading an internal
+                # package we default to False here.
+                exact = True
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
                 if self.pypiconfig.register_package():
