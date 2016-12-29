@@ -197,6 +197,19 @@ class BaseVersionControl(object):
                 self.get_setup_py_version() or
                 self.get_version_txt_version())
 
+    def _update_python_file_version(self, version):
+        setup_cfg = pypi.SetupConfig()
+        filename = setup_cfg.python_file_with_version()
+        lines, encoding = utils.read_text_file(filename)
+        lines = lines.split('\n')
+        for index, line in enumerate(lines):
+            match = UNDERSCORED_VERSION_PATTERN.search(line)
+            if match:
+                lines[index] = "__version__ = '%s'" % version
+        contents = '\n'.join(lines)
+        utils.write_text_file(filename, contents, encoding)
+        logger.info("Set __version__ in %s to %r", filename, version)
+
     def _update_version(self, version):
         """Find out where to change the version and change it.
 
@@ -206,22 +219,12 @@ class BaseVersionControl(object):
         setup.py. The third is directly in setup.py.
         """
         if self.get_python_file_version():
-            setup_cfg = pypi.SetupConfig()
-            filename = setup_cfg.python_file_with_version()
-            lines, encoding = utils.read_text_file(filename)
-            lines = lines.split('\n')
-            for index, line in enumerate(lines):
-                match = UNDERSCORED_VERSION_PATTERN.search(line)
-                if match:
-                    lines[index] = "__version__ = '%s'" % version
-            contents = '\n'.join(lines)
-            utils.write_text_file(filename, contents, encoding)
-            logger.info("Set __version__ in %s to %r", filename, version)
+            self._update_python_file_version(version)
             return
 
         version_filenames = ['version']
-        for extension in TXT_EXTENSIONS:
-            version_filenames.append('.'.join(['version', extension]))
+        version_filenames.extend([
+            '.'.join(['version', extension]) for extension in TXT_EXTENSIONS])
         versionfile = self.filefind(version_filenames)
         if versionfile:
             # We have a version.txt file but does it match the setup.py
@@ -239,8 +242,7 @@ class BaseVersionControl(object):
         setup_lines, encoding = utils.read_text_file('setup.py')
         setup_lines = setup_lines.split('\n')
         for line_number, line in enumerate(setup_lines):
-            match = VERSION_PATTERN.search(line)
-            if match:
+            if VERSION_PATTERN.search(line):
                 logger.debug("Matching version line found: %r", line)
                 if line.startswith(' '):
                     # oh, probably '    version = 1.0,' line.
@@ -248,15 +250,15 @@ class BaseVersionControl(object):
                     # Note: no spaces around the '='.
                     good_version = indentation + "version='%s'," % version
                 setup_lines[line_number] = good_version
-                contents = '\n'.join(setup_lines)
-                utils.write_text_file('setup.py', contents, encoding)
+                utils.write_text_file(
+                    'setup.py', '\n'.join(setup_lines), encoding)
                 logger.info("Set setup.py's version to %r", version)
                 return
 
         logger.error(
-            "We could read a version from setup.py, but could not write it " +
-            "back. See " +
-            "http://zestreleaser.readthedocs.io/en/latest/versions.html " +
+            "We could read a version from setup.py, but could not write it "
+            "back. See "
+            "http://zestreleaser.readthedocs.io/en/latest/versions.html "
             "for hints.")
         raise RuntimeError("Cannot set version")
 

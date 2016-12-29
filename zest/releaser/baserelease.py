@@ -43,7 +43,15 @@ class Basereleaser(object):
         """Just grab the version.
 
         This may be overridden to get a different version, like in prerelease.
+
+        The 'initial' parameter may be used to making a difference
+        between initially getting the current version, and later getting
+        a suggested version or asking the user.
         """
+        # 'initial' is not used in this method, but may be used by sub classes.
+        # Mention it here so a check on landscape.io does not complain about an
+        # unused argument.
+        initial  # noqa
         version = self.vcs.version
         if not version:
             logger.critical("No version detected, so we can't do anything.")
@@ -293,7 +301,8 @@ class Basereleaser(object):
         if not push_cmds:
             return
         default_anwer = self.pypiconfig.push_changes()
-        if utils.ask("OK to push commits to the server?", default=default_anwer):
+        if utils.ask("OK to push commits to the server?",
+                     default=default_anwer):
             for push_cmd in push_cmds:
                 output = execute_command(push_cmd)
                 logger.info(output)
