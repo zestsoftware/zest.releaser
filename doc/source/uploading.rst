@@ -4,7 +4,7 @@ Uploading to pypi (or custom servers)
 When the (full)release command tries to upload your package to a pypi server,
 zest.releaser basically executes the command ``python setup.py sdist`` and does a
 ``twine upload``.  The twine command replaces the less safe
-``python setup.py register sdist upload``.
+``python setup.py sdist upload``.
 
 For safety reasons zest.releaser will *only* offer to upload your package to
 https://pypi.python.org when the package is already registered there.  If this
@@ -52,8 +52,8 @@ See the `Python Packaging User Guide`_ for more info.
 
 .. _`Python Packaging User Guide`: https://packaging.python.org/en/latest/distributing.html#uploading-your-project-to-pypi for more info.
 
-When all this is configured correctly, zest.releaser will first register and
-upload at the official PyPI (if the package is registered there already).
+When all this is configured correctly, zest.releaser will first upload
+to the official PyPI (if the package is registered there already).
 Then it will offer to upload to the other index servers that you have
 specified in ``.pypirc``.
 
@@ -73,6 +73,10 @@ index-servers listed, may still want to use an entry point like
 `gocept.zestreleaser.customupload
 <http://pypi.python.org/pypi/gocept.zestreleaser.customupload>`_ to do
 uploading, or do some manual steps first before uploading.
+
+Since version 6.8, zest.releaser by default no longer *registers* a new package, but only uploads it.
+This is usually good.
+See `Registering a package`_ for an explanation.
 
 Some people will hardly ever want to do a release on PyPI but in 99 out of 100
 cases only want to create a tag.  They won't like the default answer of 'yes'
@@ -118,6 +122,36 @@ PyPI::
 See http://pythonwheels.com for deciding whether this is a good idea
 for your package.  Briefly, if it is a pure Python 2 *or* pure Python
 3 package: just do it.
+
+
+Registering a package
+---------------------
+
+Registering a package does two things:
+- It claims a package name on your behalf, so that you can upload a file to it.
+- If you already registered the package previously, it updates the general package information.
+  So every time you make a new release, you should register the package.
+
+Well, that used to be the case, but things have changed.
+
+Since version 6.8, zest.releaser by default no longer *registers* a package, but only uploads it.
+This is because for the standard Python Package Index (PyPI),
+registering a package is no longer needed: this is done automatically
+when uploading a distribution for a package.  In fact, trying to
+register may *fail*.  See this `issue <https://github.com/zestsoftware/zest.releaser/issues/191>`_.
+
+But you may be using your own package server, and registering
+may be wanted or even required there.  In this case
+you will need to turn on the register function.
+In your ``setup.cfg`` or ``~/.pypirc``, use the following to ensure that
+register is called on the package server::
+
+  [zest.releaser]
+  register = yes
+
+If you have specified multiple package servers, this option is used
+for all of them.  There is no way to register and upload to server A,
+and only upload to server B.
 
 
 Adding extra text to a commit message

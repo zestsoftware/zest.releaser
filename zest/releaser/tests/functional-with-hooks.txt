@@ -108,7 +108,7 @@ The release script tags the release and uploads it:
     Creating ...
     removing 'tha.example-0.1' ...
     releaser_before_upload
-    Question: Upload to pypi (Y/n)?
+    Question: Upload to pypi (y/N)?
     Our reply: y
     MOCK twine upload dist/tha.example-0.1.tar.gz
     releaser_after

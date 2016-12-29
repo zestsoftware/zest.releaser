@@ -88,6 +88,11 @@ no-input = yes / no
     Default: no.  Set this to yes to accept default answers for all
     questions.
 
+register = yes / no
+    Default: no.  Set this to yes to register a package before uploading.
+    On the official Python Package Index registering a package is no longer needed,
+    and may even fail.
+
 
 Per project options
 -------------------
