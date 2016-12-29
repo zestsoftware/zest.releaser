@@ -36,7 +36,7 @@ def prepare_entrypoint_documentation(data):
             ('postrelease', postrelease.DATA),
             ('addchangelogentry', addchangelogentry.DATA),
             ('bumpversion', bumpversion.DATA),
-            ):
+    ):
         heading = '%s data dict items' % name.capitalize()
         result.append(heading)
         result.append('-' * len(heading))

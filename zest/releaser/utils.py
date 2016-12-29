@@ -216,8 +216,7 @@ def suggest_version(current, feature=False, breaking=False):
     if target != -1:
         # For feature or breaking release, restore the original amount of dots,
         # and add zeroes.  So: 1.2.3 in breaking release becomes 2.0.0
-        for dot in range(len(current_split) - target - 1):
-            suggestion += '.0'
+        suggestion += '.0' * (len(current_split) - target - 1)
     return suggestion + dev
 
 
@@ -607,7 +606,7 @@ KNOWN_WARNINGS = [
     # it will not include the __init__.py of a namespace package.  See
     # issue 108.
     'skipping installation of',
-    ]
+]
 # Make them lowercase just to be sure.
 KNOWN_WARNINGS = [w.lower() for w in KNOWN_WARNINGS]
 
@@ -649,34 +648,7 @@ def _execute_command(command, input_value=''):
     # some ideas, see http://stackoverflow.com/questions/4789837
     if p.returncode or show_stderr or 'Traceback' in stderr_output:
         # Some error occured
-        # print(Fore.RED + stderr_output)
-        stderr_output = stderr_output.strip()
-        if stderr_output:
-            # Make sure every error line is marked red.  The stderr
-            # output also catches some warnings though.  It would be
-            # really irritating if we start treating a line like this
-            # as an error: warning: no previously-included files
-            # matching '*.pyc' found anywhere in distribution.  Same
-            # for empty lines.  So try to be smart about it.
-            errors = []
-            for line in stderr_output.split('\n'):
-                line = line.strip()
-                if not line:
-                    # Keep it in the errors, but do not mark it with a color.
-                    errors.append(line)
-                    continue
-                for known in KNOWN_WARNINGS:
-                    if line.lower().startswith(known):
-                        # Not a real error, so mark it as a warning.
-                        errors.append(Fore.MAGENTA + line)
-                        break
-                else:
-                    # Not found in known warnings, so mark it as an error.
-                    errors.append(Fore.RED + line)
-            errors = '\n'.join(errors)
-        else:
-            errors = ''
-        result = stdout_output + errors
+        result = stdout_output + get_errors(stderr_output)
     else:
         # Only return the stdout. Stderr only contains possible
         # weird/confusing warnings that might trip up extraction of version
@@ -688,6 +660,36 @@ def _execute_command(command, input_value=''):
     o.close()
     e.close()
     return result
+
+
+def get_errors(stderr_output):
+    # Some error occured.  Return the relevant output.
+    # print(Fore.RED + stderr_output)
+    stderr_output = stderr_output.strip()
+    if not stderr_output:
+        return ''
+    # Make sure every error line is marked red.  The stderr
+    # output also catches some warnings though.  It would be
+    # really irritating if we start treating a line like this
+    # as an error: warning: no previously-included files
+    # matching '*.pyc' found anywhere in distribution.  Same
+    # for empty lines.  So try to be smart about it.
+    errors = []
+    for line in stderr_output.split('\n'):
+        line = line.strip()
+        if not line:
+            # Keep it in the errors, but do not mark it with a color.
+            errors.append(line)
+            continue
+        for known in KNOWN_WARNINGS:
+            if line.lower().startswith(known):
+                # Not a real error, so mark it as a warning.
+                errors.append(Fore.MAGENTA + line)
+                break
+        else:
+            # Not found in known warnings, so mark it as an error.
+            errors.append(Fore.RED + line)
+    return '\n'.join(errors)
 
 
 def execute_command(command, allow_retry=False, fail_message=""):
