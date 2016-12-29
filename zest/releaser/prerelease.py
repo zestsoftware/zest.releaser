@@ -8,42 +8,18 @@ import sys
 
 from zest.releaser import baserelease
 from zest.releaser import utils
-from zest.releaser.postrelease import NOTHING_CHANGED_YET
 
 logger = logging.getLogger(__name__)
 
-TODAY = datetime.datetime.today().strftime('%Y-%m-%d')
 HISTORY_HEADER = '%(new_version)s (%(today)s)'
 PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
 
-DATA = {
-    # Documentation for self.data.  You get runtime warnings when something is
-    # in self.data that is not in this list.  Embarrasment-driven
-    # documentation!
-    'workingdir': 'Original working directory',
-    'reporoot': 'Root of the version control repository',
-    'name': 'Name of the project being released',
+# Documentation for self.data.  You get runtime warnings when something is in
+# self.data that is not in this list.  Embarrasment-driven documentation!
+DATA = baserelease.DATA.copy()
+DATA.update({
     'today': 'Date string used in history header',
-    'new_version': 'New version (so 1.0 instead of 1.0dev)',
-    'headings': 'Extracted headings from the history file',
-    'history_file': 'Filename of history/changelog file (when found)',
-    'history_last_release': (
-        'Full text of all history entries of the current release'),
-    'history_lines': 'List with all history file lines (when found)',
-    'history_encoding': 'The detected encoding of the history file',
-    'history_insert_line_here': (
-        'Line number where an extra changelog entry can be inserted.'),
-    'nothing_changed_yet': (
-        'First line in new changelog section, '
-        'warn when this is still in there before releasing'),
-    'required_changelog_text': (
-        'Text that must be present in the changelog. Can be a string or a '
-        'list, for example ["New:", "Fixes:"]. For a list, only one of them '
-        'needs to be present.'),
-    'original_version': 'Version before prereleasing (e.g. 1.0.dev0)',
-    'commit_msg': 'Message template used when committing',
-    'history_header': 'Header template used for 1st history header',
-}
+})
 
 
 class Prereleaser(baserelease.Basereleaser):
@@ -57,10 +33,9 @@ class Prereleaser(baserelease.Basereleaser):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
-            today=datetime.datetime.today().strftime('%Y-%m-%d'),
-            history_header=HISTORY_HEADER,
             commit_msg=PRERELEASE_COMMIT_MSG,
-            nothing_changed_yet=NOTHING_CHANGED_YET,
+            history_header=HISTORY_HEADER,
+            today=datetime.datetime.today().strftime('%Y-%m-%d'),
         ))
 
     def prepare(self):

@@ -17,6 +17,38 @@ from zest.releaser.utils import write_text_file
 logger = logging.getLogger(__name__)
 
 
+# Documentation for self.data.  You get runtime warnings when something is in
+# self.data that is not in this list.  Embarrasment-driven documentation!  This
+# is the data that is available for all commands.  Individual commands may add
+# or override data.  Note that not all data is actually used or filled in by
+# all commands.
+DATA = {
+    'commit_msg': 'Message template used when committing',
+    'headings': 'Extracted headings from the history file',
+    'history_encoding': 'The detected encoding of the history file',
+    'history_file': 'Filename of history/changelog file (when found)',
+    'history_header': 'Header template used for 1st history header',
+    'history_insert_line_here': (
+        'Line number where an extra changelog entry can be inserted.'),
+    'history_last_release': (
+        'Full text of all history entries of the current release'),
+    'history_lines': 'List with all history file lines (when found)',
+    'name': 'Name of the project being released',
+    'new_version': 'New version to write, possibly with development marker',
+    'nothing_changed_yet': (
+        'First line in new changelog section, '
+        'warn when this is still in there before releasing'),
+    'original_version': 'Original package version before any changes',
+    'reporoot': 'Root of the version control repository',
+    'required_changelog_text': (
+        'Text that must be present in the changelog. Can be a string or a '
+        'list, for example ["New:", "Fixes:"]. For a list, only one of them '
+        'needs to be present.'),
+    'workingdir': 'Original working directory',
+}
+NOTHING_CHANGED_YET = '- Nothing changed yet.'
+
+
 class Basereleaser(object):
 
     def __init__(self, vcs=None):
@@ -26,9 +58,12 @@ class Basereleaser(object):
             # In a fullrelease, we share the determined vcs between
             # prerelease, release and postrelease.
             self.vcs = vcs
-        self.data = {'workingdir': self.vcs.workingdir,
-                     'reporoot': self.vcs.reporoot,
-                     'name': self.vcs.name}
+        self.data = {
+            'name': self.vcs.name,
+            'nothing_changed_yet': NOTHING_CHANGED_YET,
+            'reporoot': self.vcs.reporoot,
+            'workingdir': self.vcs.workingdir,
+        }
         self.setup_cfg = pypi.SetupConfig()
         if utils.TESTMODE:
             pypirc_old = pkg_resources.resource_filename(

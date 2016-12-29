@@ -17,13 +17,12 @@ from zest.releaser import pypi
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
 
-DATA = {
-    # Documentation for self.data.  You get runtime warnings when something is
-    # in self.data that is not in this list.  Embarrasment-driven
-    # documentation!
-    'workingdir': 'Original working directory',
-    'reporoot': 'Root of the version control repository',
-    'name': 'Name of the project being released',
+
+# Documentation for self.data.  You get runtime warnings when something is in
+# self.data that is not in this list.  Embarrasment-driven documentation!
+DATA = baserelease.DATA.copy()
+DATA.update({
+    'tag_already_exists': "Internal detail, don't touch this :-)",
     'tagdir': '''Directory where the tag checkout is placed (*if* a tag
     checkout has been made)''',
     'tagworkingdir': '''Working directory inside the tag checkout. This is
@@ -31,8 +30,7 @@ DATA = {
     We then make sure you end up in the same relative directory after a
     checkout is done.''',
     'version': "Version we're releasing",
-    'tag_already_exists': "Internal detail, don't touch this :-)",
-}
+})
 
 logger = logging.getLogger(__name__)
 
