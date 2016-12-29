@@ -14,7 +14,7 @@ from six.moves.urllib import request as urllib2
 from six.moves.urllib.error import HTTPError
 
 from zest.releaser import utils
-from zest.releaser.postrelease import NOTHING_CHANGED_YET
+from zest.releaser.baserelease import NOTHING_CHANGED_YET
 from zest.releaser.utils import execute_command
 
 

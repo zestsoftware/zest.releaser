@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import os
 
 from zest.releaser import addchangelogentry
+from zest.releaser import baserelease
 from zest.releaser import bumpversion
 from zest.releaser import prerelease
 from zest.releaser import release
@@ -31,17 +32,28 @@ def prepare_entrypoint_documentation(data):
     result.append('')
 
     for name, datadict in (
+            ('common', baserelease.DATA),
             ('prerelease', prerelease.DATA),
             ('release', release.DATA),
             ('postrelease', postrelease.DATA),
             ('addchangelogentry', addchangelogentry.DATA),
             ('bumpversion', bumpversion.DATA),
     ):
-        heading = '%s data dict items' % name.capitalize()
+        if name == 'common':
+            heading = '%s data dict items' % name.capitalize()
+        else:
+            # quote the command name
+            heading = '``%s`` data dict items' % name
         result.append(heading)
         result.append('-' * len(heading))
         result.append('')
+        if name == 'common':
+            result.append('These items are shared among all commands.')
+            result.append('')
         for key in sorted(datadict.keys()):
+            if name != 'common' and datadict[key] == baserelease.DATA.get(key):
+                # The key is already in common data, with the same value.
+                continue
             result.append(key)
             result.append('    ' + datadict[key])
             result.append('')

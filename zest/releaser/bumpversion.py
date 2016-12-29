@@ -13,30 +13,15 @@ logger = logging.getLogger(__name__)
 HISTORY_HEADER = '%(clean_new_version)s (unreleased)'
 COMMIT_MSG = 'Bumped version for %(release)s release.'
 
-DATA = {
-    # Documentation for self.data.  You get runtime warnings when something is
-    # in self.data that is not in this list.  Embarrasment-driven
-    # documentation!
-    'workingdir': 'Original working directory',
-    'reporoot': 'Root of the version control repository',
-    'name': 'Name of the project being released',
-    'clean_new_version': 'Clean new version (say 1.1)',
-    'new_version': 'New version (say 1.1.dev0)',
-    'commit_msg': 'Message template used when committing.',
-    'headings': 'Extracted headings from the history file',
-    'history_file': 'Filename of history/changelog file (when found)',
-    'history_last_release': (
-        'Full text of all history entries of the current release'),
-    'history_header': 'Header template used for 1st history header',
-    'history_lines': 'List with all history file lines (when found)',
-    'history_encoding': 'The detected encoding of the history file',
-    'history_insert_line_here': (
-        'Line number where an extra changelog entry can be inserted.'),
-    'original_version': 'Version before bump (e.g. 1.0.dev0)',
+# Documentation for self.data.  You get runtime warnings when something is in
+# self.data that is not in this list.  Embarrasment-driven documentation!
+DATA = baserelease.DATA.copy()
+DATA.update({
     'breaking': 'True if we handle a breaking (major) change',
+    'clean_new_version': 'Clean new version (say 1.1)',
     'feature': 'True if we handle a feature (minor) change',
     'release': 'Type of release: breaking, feature, normal',
-}
+})
 
 
 class BumpVersion(baserelease.Basereleaser):
@@ -56,11 +41,12 @@ class BumpVersion(baserelease.Basereleaser):
         else:
             release = 'normal'
         self.data.update(dict(
-            history_header=HISTORY_HEADER,
             breaking=breaking,
+            commit_msg=COMMIT_MSG,
             feature=feature,
+            history_header=HISTORY_HEADER,
             release=release,
-            commit_msg=COMMIT_MSG))
+        ))
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
