@@ -143,11 +143,11 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.test_answer_book.set_answers(['0.3rc', ''])
+    >>> utils.test_answer_book.set_answers(['0.3rc0', ''])
     >>> postrelease.main()
     Current version is 0.3b0
     Question: Enter new development version ('.dev0' will be appended) [0.3b1]:
-    Our reply: 0.3rc
+    Our reply: 0.3rc0
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
