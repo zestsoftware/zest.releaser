@@ -4,6 +4,21 @@ Changelog for zest.releaser
 6.8 (unreleased)
 ----------------
 
+- Allow ``.pypirc`` with just a ``pypi`` section.  Previously, we
+  required either a ``[server-login]`` section with a ``username``
+  option, or a ``[distutils]`` section with an ``index-servers`` option.
+  Failing this, we gave a warning about a not properly configured
+  file, and happily continued without uploading anything.  Now if
+  there is something missing from the ``pypirc`` file, we give an
+  error and explicitly ask if you want to continue without uploading.
+  Fixes `issue #199 <https://github.com/zestsoftware/zest.releaser/issues/199>`_.
+
+  Note for developers of extensions for ``zest.releaser``: this
+  removes the ``is_old_pypi_config`` and ``is_new_pypi_config``
+  methods, because they made no sense anymore.  If you were using
+  these, see if you can use the ``distutils_server`` method instead.
+  [maurits]
+
 - Added ``push-changes`` config file option.  Default: yes.  When this
   is false, zest.releaser sets ``no`` as default answer for the
   question if you want to push the changes to the remote.

@@ -6,12 +6,11 @@ password:secret
 index-servers =
   pypi
   local
+  unknown
 
 [pypi]
-username:bdfl
-password:secret
+password:verysecret
 
 [local]
-repository:http://localhost:8080/test/products
-username:bdfl
-password:secret
+repository = http://localhost:8080/test/products
+username = knight

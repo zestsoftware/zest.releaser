@@ -39,10 +39,24 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     [zest.releaser]
     extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
-    >>> pypiconfig.is_old_pypi_config()
-    True
-    >>> pypiconfig.is_new_pypi_config()
-    False
+    >>> pypiconfig.distutils_servers()
+    ['pypi']
+
+With ``get_server_config`` we get the settings that we pass to ``twine``:
+
+    >>> from pprint import pprint
+    >>> pprint(pypiconfig.get_server_config('pypi'))
+    {'password': 'asjemenou',
+     'repository_url': 'https://upload.pypi.org/legacy/',
+     'username': 'pipo_de_clown'}
+
+As fallback, the server-login settings and the default url are also
+used when getting the config of a server that does not exist:
+
+    >>> pprint(pypiconfig.get_server_config('nothing'))
+    {'password': 'asjemenou',
+     'repository_url': 'https://upload.pypi.org/legacy/',
+     'username': 'pipo_de_clown'}
 
 And the new format that allows multiple uploads:
 
@@ -72,12 +86,24 @@ And the new format that allows multiple uploads:
     [zest.releaser]
     extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
-    >>> pypiconfig.is_old_pypi_config()
-    False
-    >>> pypiconfig.is_new_pypi_config()
-    True
+    >>> pprint(sorted(pypiconfig.distutils_servers()))
+    ['mycompany', 'plone.org', 'pypi']
+    >>> pprint(pypiconfig.get_server_config('mycompany'))
+    {'password': 'password',
+     'repository_url': 'http://my.company/products',
+     'username': 'user'}
+    >>> pprint(pypiconfig.get_server_config('plone.org'))
+    {'password': 'password',
+     'repository_url': 'http://plone.org/products',
+     'username': 'ploneuser'}
+    >>> pprint(pypiconfig.get_server_config('pypi'))
+    {'password': 'password',
+     'repository_url': 'https://upload.pypi.org/legacy/',
+     'username': 'user'}
 
-A file with both is also possible:
+A file with both is also possible.  The old server-login section is
+used to contain the username and password that are shared among
+servers.  Any servers that have no corresponding section are ignored:
 
     >>> pypirc_both = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_both.txt')
@@ -90,41 +116,45 @@ A file with both is also possible:
     index-servers =
       pypi
       local
+      unknown
     <BLANKLINE>
+    [pypi]
+    password:verysecret
+    <BLANKLINE>
+    [local]
+    repository = http://localhost:8080/test/products
+    username = knight
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
+    >>> pprint(sorted(pypiconfig.distutils_servers()))
+    ['local', 'pypi']
+    >>> pprint(pypiconfig.get_server_config('local'))
+    {'password': 'secret',
+     'repository_url': 'http://localhost:8080/test/products',
+     'username': 'knight'}
+    >>> pprint(pypiconfig.get_server_config('pypi'))
+    {'password': 'verysecret',
+     'repository_url': 'https://upload.pypi.org/legacy/',
+     'username': 'bdfl'}
+
+A simple file with just a pypi section is also possible:
+
+    >>> pypirc_simple = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_simple.txt')
+    >>> print(open(pypirc_simple).read())
     [pypi]
     username:bdfl
     password:secret
-    <BLANKLINE>
-    [local]
-    repository:http://localhost:8080/test/products
-    username:bdfl
-    password:secret
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
-    >>> pypiconfig.is_old_pypi_config()
-    True
-    >>> pypiconfig.is_new_pypi_config()
-    True
-
-Parse the new format again and query a list of distutils servers:
-
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
-    >>> from pprint import pprint
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_simple)
     >>> pprint(sorted(pypiconfig.distutils_servers()))
-    ['mycompany', 'plone.org', 'pypi']
-
-If we have an old config file, the distutils server list is empty:
-
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
-    >>> pypiconfig.distutils_servers()
-    []
-
-And with a file with both an "old" and a "new" set of sections, the pypi entry
-is filtered out of the distutils servers list as that's handled by the "old"
-part:
-
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
-    >>> pprint(sorted(pypiconfig.distutils_servers()))
-    ['local']
+    ['pypi']
+    >>> pprint(pypiconfig.get_server_config('pypi'))
+    {'password': 'secret',
+     'repository_url': 'https://upload.pypi.org/legacy/',
+     'username': 'bdfl'}
+    >>> pprint(pypiconfig.get_server_config('nothing'))
+    {'password': None,
+     'repository_url': 'https://upload.pypi.org/legacy/',
+     'username': None}
 
 
 Asking for making a release or not
