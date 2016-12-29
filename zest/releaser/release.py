@@ -121,10 +121,14 @@ class Releaser(baserelease.Basereleaser):
             result = utils.execute_command(utils.setup_py('bdist_wheel'))
         utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
-            logger.warn("You must have a properly configured %s file in "
-                        "your home dir to upload to a package index.",
-                        pypi.DIST_CONFIG_FILE)
-            return
+            logger.error(
+                "You must have a properly configured %s file in "
+                "your home dir to upload to a Python package index.",
+                pypi.DIST_CONFIG_FILE)
+            if utils.ask("Do you want to continue without uploading?",
+                         default=False):
+                return
+            sys.exit(1)
 
         # Run extra entry point
         self._run_hooks('before_upload')
@@ -134,11 +138,7 @@ class Releaser(baserelease.Basereleaser):
             os.path.join('dist', filename) for filename in os.listdir('dist')]
 
         # Get servers/repositories.
-        if self.pypiconfig.is_old_pypi_config():
-            servers = ['pypi']
-        else:
-            # The user may have defined other servers to upload to.
-            servers = self.pypiconfig.distutils_servers()
+        servers = self.pypiconfig.distutils_servers()
 
         register = self.pypiconfig.register_package()
         for server in servers:

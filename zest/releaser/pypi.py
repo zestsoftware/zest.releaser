@@ -155,27 +155,7 @@ class PypiConfig(object):
         # pypi-compatible server?
         if self.config is None:
             return False
-        if self.is_old_pypi_config():
-            return True
-        if self.is_new_pypi_config() and len(self.distutils_servers()) > 0:
-            return True
-        return False
-
-    def is_old_pypi_config(self):
-        if self.config is None:
-            return False
-        try:
-            self.config.get('server-login', 'username')
-        except (NoSectionError, NoOptionError):
-            return False
-        return True
-
-    def is_new_pypi_config(self):
-        try:
-            self.config.get('distutils', 'index-servers')
-        except (NoSectionError, NoOptionError):
-            return False
-        return True
+        return len(self.distutils_servers()) > 0
 
     def get_server_config(self, server):
         """Get url, username, password for server.
@@ -207,20 +187,22 @@ class PypiConfig(object):
         server from the list.
         """
         try:
-            raw_index_servers = self.config.get('distutils', 'index-servers')
+            index_servers = self.config.get(
+                'distutils', 'index-servers').split()
         except (NoSectionError, NoOptionError):
-            return []
-        ignore_servers = ['']
-        if self.is_old_pypi_config():
-            # We have already asked about uploading to pypi using the normal
-            # upload.
-            ignore_servers.append('pypi')
-            # Yes, you can even have an old pypi config with a
-            # [distutils] server list.
-        index_servers = [
-            server.strip() for server in raw_index_servers.split('\n')
-            if server.strip() not in ignore_servers]
-        return index_servers
+            index_servers = []
+        if not index_servers:
+            # If no distutils index-servers have been given, 'pypi' should be
+            # the default.  This is what twine does.
+            if self.config.has_option('server-login', 'username'):
+                # We have a username, so upload to pypi should work fine, even
+                # when no explicit pypi section is in the file.
+                return ['pypi']
+            # https://github.com/zestsoftware/zest.releaser/issues/199
+            index_servers = ['pypi']
+        # The servers all need to have a section in the config file.
+        return [server for server in index_servers
+                if self.config.has_section(server)]
 
     def want_release(self):
         """Does the user normally want to release this package.
