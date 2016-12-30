@@ -93,20 +93,21 @@ class BumpVersion(baserelease.Basereleaser):
             else:
                 print("Last tag: {}".format(last_tag_version))
             print("Current version: {}".format(original_version))
-            less_zeroes = self.pypiconfig.less_zeroes()
-            version_levels = self.pypiconfig.version_levels()
+            params = dict(
+                feature=feature,
+                breaking=breaking,
+                less_zeroes=self.pypiconfig.less_zeroes(),
+                levels=self.pypiconfig.version_levels(),
+                dev_marker=self.pypiconfig.development_marker(),
+            )
             minimum_version = utils.suggest_version(
-                last_tag_version, feature=feature, breaking=breaking,
-                less_zeroes=less_zeroes,
-                levels=version_levels)
+                last_tag_version, **params)
             if minimum_version <= original_version:
                 print("No version bump needed.")
                 sys.exit(0)
             # A bump is needed.  Get suggestion for next version.
             suggestion = utils.suggest_version(
-                original_version, feature=feature, breaking=breaking,
-                less_zeroes=less_zeroes,
-                levels=version_levels)
+                original_version, **params)
         if not initial:
             new_version = utils.ask_version(
                 "Enter version", default=suggestion)

@@ -67,6 +67,7 @@ class Postreleaser(baserelease.Basereleaser):
             current,
             less_zeroes=self.pypiconfig.less_zeroes(),
             levels=self.pypiconfig.version_levels(),
+            dev_marker=self.pypiconfig.development_marker(),
         )
         print("Current version is %s" % current)
         q = ("Enter new development version "

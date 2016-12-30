@@ -4,6 +4,9 @@ Changelog for zest.releaser
 6.8 (unreleased)
 ----------------
 
+- Added ``development-marker`` config option.  With this can override
+  the default ``.dev0``.  [drucci]
+
 - Added ``version-levels`` and ``less-zeroes`` options.
   This influences the suggested version.  [maurits]
 

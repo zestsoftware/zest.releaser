@@ -127,6 +127,11 @@ version-levels = a number
     If the current version number has more levels, we keep them.
     So with ``version-levels=1`` the next version for 1.2.3.4 will be 1.2.3.5.
 
+development-marker = a string
+    Default: ``.dev0``
+    This is the development marker.
+    This is what gets appended to the version in postrelease.
+
 
 Per project options
 -------------------
