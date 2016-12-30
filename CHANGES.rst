@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.8 (unreleased)
+6.8 (2016-12-30)
 ----------------
 
 - Before retrying a ``twine`` command, reload the pypi config.  Then
