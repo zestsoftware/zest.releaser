@@ -4,6 +4,9 @@ Changelog for zest.releaser
 6.8 (unreleased)
 ----------------
 
+- Added ``version-levels`` and ``less-zeroes`` options.
+  This influences the suggested version.  [maurits]
+
 - Allow ``.pypirc`` with just a ``pypi`` section.  Previously, we
   required either a ``[server-login]`` section with a ``username``
   option, or a ``[distutils]`` section with an ``index-servers`` option.

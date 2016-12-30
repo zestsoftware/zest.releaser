@@ -304,10 +304,6 @@ class PypiConfig(object):
             no-input = yes
 
         The default when this option has not been set is False.
-
-        Standard config rules apply, so you can use upper or lower or
-        mixed case and specify 0, false, no or off for boolean False,
-        and 1, on, true or yes for boolean True.
         """
         return self._get_boolean('zest.releaser', 'no-input')
 
@@ -320,14 +316,71 @@ class PypiConfig(object):
             push-changes = no
 
         The default when this option has not been set is True.
+        """
+        return self._get_boolean('zest.releaser', 'push-changes', default=True)
+
+    def less_zeroes(self):
+        """Return whether the user prefers less zeroes at the end of a version.
+
+        Configure this mode by adding a ``less-zeroes`` option::
+
+            [zest.releaser]
+            less-zeroes = yes
+
+        The default when this option has not been set is False.
+
+        When set to true:
+        - Instead of 1.3.0 we will suggest 1.3.
+        - Instead of 2.0.0 we will suggest 2.0.
+
+        This only makes sense for the bumpversion command.
+        In the postrelease command we read this option too,
+        but with the current logic it has no effect there.
+        """
+        return self._get_boolean('zest.releaser', 'less-zeroes')
+
+    def version_levels(self):
+        """How many levels does the user prefer in a version number?
+
+        Configure this mode by adding a ``version-levels`` option::
+
+            [zest.releaser]
+            version-levels = 3
+
+        The default when this option has not been set is 0, which means:
+        no preference, so use the length of the current number.
+
+        This means when suggesting a next version after 1.2:
+        - with levels=0 we will suggest 1.3: no change
+        - with levels=1 we will still suggest 1.3, as we will not
+          use this to remove numbers, only to add them
+        - with levels=2 we will suggest 1.3
+        - with levels=3 we will suggest 1.2.1
+
+        If the current version number has more levels, we keep them.
+        So next version for 1.2.3.4 with levels=1 is 1.2.3.5.
+
+        Tweaking version-levels and less-zeroes should give you the
+        version number strategy that you prefer.
+        """
+        default = 0
+        if self.config is None:
+            return default
+        try:
+            result = self.config.getint('zest.releaser', 'version-levels')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        if result < 0:
+            return default
+        return result
+
+    def _get_boolean(self, section, key, default=False):
+        """Get a boolean from the config.
 
         Standard config rules apply, so you can use upper or lower or
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        return self._get_boolean('zest.releaser', 'push-changes', default=True)
-
-    def _get_boolean(self, section, key, default=False):
         result = default
         if self.config is not None:
             try:

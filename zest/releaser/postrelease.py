@@ -61,7 +61,11 @@ class Postreleaser(baserelease.Basereleaser):
         current = self.vcs.version
         # Clean it up to a non-development version.
         current = utils.cleanup_version(current)
-        suggestion = utils.suggest_version(current)
+        suggestion = utils.suggest_version(
+            current,
+            less_zeroes=self.pypiconfig.less_zeroes(),
+            levels=self.pypiconfig.version_levels(),
+        )
         print("Current version is %s" % current)
         q = "Enter new development version ('.dev0' will be appended)"
         version = utils.ask_version(q, default=suggestion)

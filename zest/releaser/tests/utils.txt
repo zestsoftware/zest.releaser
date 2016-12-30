@@ -72,6 +72,8 @@ Mostly for postrelease.  Suggest updated version number.
     '1.1'
     >>> utils.suggest_version('1.9')
     '1.10'
+    >>> utils.suggest_version('1.0.9')
+    '1.0.10'
     >>> utils.suggest_version('1.2.3')
     '1.2.4'
     >>> utils.suggest_version('1.2.3.4')
@@ -80,6 +82,22 @@ Mostly for postrelease.  Suggest updated version number.
     '1.2.3.20'
     >>> utils.suggest_version('1.2a1')
     '1.2a2'
+
+If you prefer major.minor.patch as version, you can influence this with the 'levels' parameter.
+
+    >>> utils.suggest_version('1.2', levels=2)
+    '1.3'
+    >>> utils.suggest_version('1.2', levels=3)
+    '1.2.1'
+    >>> utils.suggest_version('1.2', levels=4)
+    '1.2.0.1'
+
+If the existing number of levels is higher than the requested, we are not going to remove any:
+
+    >>> utils.suggest_version('1.2', levels=1)
+    '1.3'
+    >>> utils.suggest_version('1.2.3.4.5', levels=2)
+    '1.2.3.4.6'
 
 Some corner cases that should not break::
 
@@ -92,6 +110,8 @@ Keep development marker when it is there.
 
     >>> utils.suggest_version('1.0.dev0')
     '1.1.dev0'
+    >>> utils.suggest_version('1.0.dev0', levels=3)
+    '1.0.1.dev0'
 
 Suggest versions for a feature (minor) or breaking (major) release:
 
@@ -99,16 +119,69 @@ Suggest versions for a feature (minor) or breaking (major) release:
     '1.1'
     >>> utils.suggest_version('1.0.1', feature=True)
     '1.1.0'
+    >>> utils.suggest_version('1.0.0.1', feature=True)
+    '1.1.0.0'
     >>> utils.suggest_version('1.0', breaking=True)
     '2.0'
+    >>> utils.suggest_version('1', feature=True)
+    '2'
+    >>> utils.suggest_version('1', breaking=True)
+    '2'
+    >>> utils.suggest_version('1', breaking=True, levels=3)
+    '2.0.0'
     >>> utils.suggest_version('1.0.1', breaking=True)
     '2.0.0'
+
+Prefering less levels than currently in the version number has no effect:
+
+    >>> utils.suggest_version('1.0.1', breaking=True, levels=1)
+    '2.0.0'
+
+Test with markers:
+
     >>> utils.suggest_version('1.0.1.dev0', breaking=True)
     '2.0.0.dev0'
     >>> utils.suggest_version('1.0.1a1', feature=True)
     '1.1.0'
-    >>> utils.suggest_version('1.0.1a1', breaking=True)
+    >>> utils.suggest_version('1.0.1b1', breaking=True)
     '2.0.0'
+
+If you want a feature bump on an alpha, beta, or release candidate, it gets confusing, and we give up:
+
+    >>> utils.suggest_version('1.2rc1', feature=True) is None
+    True
+
+We can prefer less zeroes:
+
+    >>> utils.suggest_version('1.2.3', feature=True, less_zeroes=True)
+    '1.3'
+    >>> utils.suggest_version('1.0.0.0.0', breaking=True, less_zeroes=True)
+    '2.0'
+    >>> utils.suggest_version('1.0.0', breaking=True, less_zeroes=True, levels=5)
+    '2.0'
+
+Without feature or breaking, less_zeroes has no effect, because it
+can only affect zeroes at the end of a version:
+
+    >>> utils.suggest_version('0.0.3', less_zeroes=False)
+    '0.0.4'
+
+Maurits thinks he prefers levels=3 and less_zeroes=True, because this
+hopefully delivers what the Plone Release Team prefers, so let's test
+this combination a bit more:
+
+    >>> utils.suggest_version('1.0', less_zeroes=True, levels=3)
+    '1.0.1'
+    >>> utils.suggest_version('1.0.1', less_zeroes=True, levels=3)
+    '1.0.2'
+    >>> utils.suggest_version('1.0.2', feature=True, less_zeroes=True, levels=3)
+    '1.1'
+    >>> utils.suggest_version('1.1', less_zeroes=True, levels=3)
+    '1.1.1'
+    >>> utils.suggest_version('1.1.1', breaking=True, less_zeroes=True, levels=3)
+    '2.0'
+    >>> utils.suggest_version('1.7.2.1', less_zeroes=True, levels=3)
+    '1.7.2.2'
 
 
 Asking input

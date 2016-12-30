@@ -103,6 +103,30 @@ push-changes = yes / no
     default answer for the question if you want to push the changes to
     the remote.
 
+less-zeroes = yes / no
+    Default: no.
+    This influences the version suggested by the bumpversion command.
+    When set to true:
+
+    - Instead of 1.3.0 we will suggest 1.3.
+    - Instead of 2.0.0 we will suggest 2.0.
+
+version-levels = a number
+    Default: 0.
+    This influences the version suggested by the postrelease and bumpversion commands.
+    The default of zero means: no preference, so use the length of the current number.
+
+    This means when suggesting a next version after 1.2:
+
+    - with 0 we will suggest 1.3: no change in length
+    - with 1 we will still suggest 1.3, as we will not
+      use this to remove numbers, only to add them
+    - with 2 we will suggest 1.3
+    - with 3 we will suggest 1.2.1
+
+    If the current version number has more levels, we keep them.
+    So with ``version-levels=1`` the next version for 1.2.3.4 will be 1.2.3.5.
+
 
 Per project options
 -------------------
