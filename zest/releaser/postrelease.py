@@ -35,12 +35,10 @@ class Postreleaser(baserelease.Basereleaser):
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
-        development_marker = self.setup_cfg.development_marker()
-
         self.data.update(dict(
             commit_msg=COMMIT_MSG,
             dev_version_template=DEV_VERSION_TEMPLATE,
-            development_marker=development_marker,
+            development_marker=self.pypiconfig.development_marker(),
             history_header=HISTORY_HEADER,
         ))
 

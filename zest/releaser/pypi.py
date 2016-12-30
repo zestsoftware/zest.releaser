@@ -51,25 +51,6 @@ class SetupConfig(object):
         with codecs.open(self.config_filename, 'r', 'utf8') as fp:
             self.config.readfp(fp)
 
-    def development_marker(self):
-        """Return development marker to be appended in postrelease
-
-        Override the default ``.dev0`` in setup.cfg using
-        a ``development-marker`` option::
-
-            [zest.releaser]
-            development-marker = .dev1
-
-        Returns default of `.dev0` when nothing has been configured.
-
-        """
-        try:
-            result = self.config.get('zest.releaser',
-                                     'development-marker')
-        except (NoSectionError, NoOptionError, ValueError):
-            result = ".dev0"
-        return result
-
     def has_bad_commands(self):
         if self.config is None:
             return False
@@ -325,6 +306,27 @@ class PypiConfig(object):
         The default when this option has not been set is False.
         """
         return self._get_boolean('zest.releaser', 'no-input')
+
+    def development_marker(self):
+        """Return development marker to be appended in postrelease.
+
+        Override the default ``.dev0`` in setup.cfg using
+        a ``development-marker`` option::
+
+            [zest.releaser]
+            development-marker = .dev1
+
+        Returns default of ``.dev0`` when nothing has been configured.
+        """
+        default = '.dev0'
+        if self.config is None:
+            return default
+        try:
+            result = self.config.get(
+                'zest.releaser', 'development-marker')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
 
     def push_changes(self):
         """Return whether the user wants to push the changes to the remote.
