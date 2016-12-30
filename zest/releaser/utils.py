@@ -175,8 +175,23 @@ def cleanup_version(version):
     return version
 
 
+def strip_last_number(value):
+    """Remove last number from a value.
+
+    This is mostly for markers like ``.dev0``, where this would
+    return ``.dev``.
+    """
+    if not value:
+        return value
+    match = re.search('\d+$', value)
+    if not match:
+        return value
+    return value[:-len(match.group())]
+
+
 def suggest_version(current, feature=False, breaking=False,
-                    less_zeroes=False, levels=0):
+                    less_zeroes=False, levels=0,
+                    dev_marker='.dev0'):
     """Suggest new version.
 
     Try to make sure that the suggestion for next version after
@@ -193,9 +208,11 @@ def suggest_version(current, feature=False, breaking=False,
         print('Cannot have both breaking and feature in suggest_version.')
         sys.exit(1)
     dev = ''
-    if '.dev' in current:
-        index = current.find('.dev')
-        dev = current[index:]
+    base_dev_marker = strip_last_number(dev_marker)
+    if base_dev_marker in current:
+        index = current.find(base_dev_marker)
+        # Put the standard development marker back at the end.
+        dev = dev_marker
         current = current[:index]
     # Split in first and last part, where last part is one integer and the
     # first part can contain more integers plus dots.

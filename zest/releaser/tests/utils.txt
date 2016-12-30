@@ -106,12 +106,14 @@ Some corner cases that should not break::
     >>> utils.suggest_version('a.1')
     'a.2'
 
-Keep development marker when it is there.
+Keep development marker when it is there, but reset any version part of that marker.
 
     >>> utils.suggest_version('1.0.dev0')
     '1.1.dev0'
-    >>> utils.suggest_version('1.0.dev0', levels=3)
+    >>> utils.suggest_version('1.0.dev6', levels=3)
     '1.0.1.dev0'
+    >>> utils.suggest_version('1.0-snapshot123', dev_marker='-snapshot')
+    '1.1-snapshot'
 
 Suggest versions for a feature (minor) or breaking (major) release:
 

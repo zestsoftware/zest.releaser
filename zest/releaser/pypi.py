@@ -307,6 +307,27 @@ class PypiConfig(object):
         """
         return self._get_boolean('zest.releaser', 'no-input')
 
+    def development_marker(self):
+        """Return development marker to be appended in postrelease.
+
+        Override the default ``.dev0`` in setup.cfg using
+        a ``development-marker`` option::
+
+            [zest.releaser]
+            development-marker = .dev1
+
+        Returns default of ``.dev0`` when nothing has been configured.
+        """
+        default = '.dev0'
+        if self.config is None:
+            return default
+        try:
+            result = self.config.get(
+                'zest.releaser', 'development-marker')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
     def push_changes(self):
         """Return whether the user wants to push the changes to the remote.
 
