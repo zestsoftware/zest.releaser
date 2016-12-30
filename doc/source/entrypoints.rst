@@ -181,6 +181,9 @@ dev_version
 dev_version_template
     Template for development version number
 
+development_marker
+    String to be appended to version after postrelease
+
 new_version
     New version, without development marker (so 1.1)
 
