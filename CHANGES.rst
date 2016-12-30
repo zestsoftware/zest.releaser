@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.8 (unreleased)
 ----------------
 
+- Before retrying a ``twine`` command, reload the pypi config.  Then
+  when the user fixes his account settings in ``~/.pypirc`` and
+  retries, these changes take effect.  This used to work a while ago,
+  but got broken.  [maurits]
+
 - Added ``development-marker`` config option.  With this can override
   the default ``.dev0``.  [drucci]
 

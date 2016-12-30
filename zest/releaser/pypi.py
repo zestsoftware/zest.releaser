@@ -127,7 +127,19 @@ class PypiConfig(object):
         it too.
         """
         self.config_filename = config_filename
-        self._read_configfile(use_setup_cfg=use_setup_cfg)
+        self.use_setup_cfg = use_setup_cfg
+        self.reload()
+
+    def reload(self):
+        """Load the config.
+
+        Do the initial load of the config.
+
+        Or reload it in case of problems: this is needed when a pypi
+        upload fails, you edit the .pypirc file to fix the account
+        settings, and tell release to retry the command.
+        """
+        self._read_configfile(use_setup_cfg=self.use_setup_cfg)
 
     def _read_configfile(self, use_setup_cfg=True):
         """Read the PyPI config file and store it (when valid).

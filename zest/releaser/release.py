@@ -218,6 +218,9 @@ class Releaser(baserelease.Basereleaser):
         retry = utils.retry_yes_no('twine %s' % twine_command)
         if retry:
             logger.info("Retrying.")
+            # Reload the pypi config so changes that the user has made to
+            # influence the retry can take effect.
+            self.pypiconfig.reload()
             return self._retry_twine(twine_command, server, filename)
 
     def _release(self):
