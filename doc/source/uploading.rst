@@ -128,6 +128,7 @@ Registering a package
 ---------------------
 
 Registering a package does two things:
+
 - It claims a package name on your behalf, so that you can upload a file to it.
 - If you already registered the package previously, it updates the general package information.
   So every time you make a new release, you should register the package.
@@ -165,6 +166,18 @@ case for this is telling Travis to skip Continuous Integration builds::
 
   [zest.releaser]
   extra-message = [ci skip]
+
+
+Signing your commits or tags with git
+-------------------------------------
+
+If you are using git, maybe you want to sign your commits, or more likely your tags, with your gpg key.
+``zest.releaser`` does not do anything special for this: it just calls the normal ``git commit`` or ``git tag``.
+So if you want to sign anything, you should set this up in your ``git`` configuration, so it works outside of ``zest.releaser`` as well.
+Run these commands to configure gpg signing for git::
+
+  git config commit.gpgsign true
+  git config tag.gpgsign true
 
 
 Including all files in your release
