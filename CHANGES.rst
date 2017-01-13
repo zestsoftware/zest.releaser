@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.8.1 (unreleased)
+6.8.1 (2017-01-13)
 ------------------
 
 - Catch error when uploading first package file in new PyPI project.
