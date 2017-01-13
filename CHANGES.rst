@@ -4,7 +4,10 @@ Changelog for zest.releaser
 6.8.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Catch error when uploading first package file in new PyPI project.
+  This fixes `issue 206
+  <https://github.com/zestsoftware/zest.releaser/issues/206>`_.
+  [maurits]
 
 
 6.8 (2016-12-30)

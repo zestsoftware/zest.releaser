@@ -184,9 +184,17 @@ class Releaser(baserelease.Basereleaser):
             twine_function = repository.register
             twine_args = (package_file, )
         elif twine_command == 'upload':
-            # Note: we assume here that calling package_is_uploaded does not
-            # give an error, and that there is no reason to retry it.
-            if repository.package_is_uploaded(package_file):
+            try:
+                already_uploaded = repository.package_is_uploaded(package_file)
+            except ValueError:
+                # For a new package, the call fails, at least with twine 1.8.1.
+                # This is the same as when calling `twine --skip-existing` on
+                # the command line.  See
+                # https://github.com/pypa/twine/issues/220
+                logger.warn('Error calling package_is_uploaded from twine. '
+                            'Probably new project. Will try uploading.')
+                already_uploaded = False
+            if already_uploaded:
                 logger.warn(
                     'A file %s has already been uploaded. Ignoring.', filename)
                 return
