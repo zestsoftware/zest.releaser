@@ -132,6 +132,11 @@ development-marker = a string
     This is the development marker.
     This is what gets appended to the version in postrelease.
 
+tag-format = a string
+    Default: ``%(version)s``
+    This is a formatter that change the name of the tag.
+    It needs to contain ``%(version)s``
+
 
 Per project options
 -------------------
