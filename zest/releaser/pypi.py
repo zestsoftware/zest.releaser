@@ -407,6 +407,31 @@ class PypiConfig(object):
             return default
         return result
 
+    def tag_format(self):
+        """Return the string formating the tag name in the release.
+
+        Override the default ``%(version)`` in setup.cfg using
+        a ``tag-format`` option::
+
+            [zest.releaser]
+            tag-format = v%(version)s
+
+        Returns default of ``%(version)s`` when nothing has been configured.
+        """
+        default = '%(version)s'
+        if self.config is None:
+            return default
+        try:
+            result = self.config.get(
+                'zest.releaser', 'tag-format')
+            try:
+                '%(version)s'%({'version':''})
+            except KeyError:
+                raise ValueError('version needs to be part of the string formater use default')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
     def _get_boolean(self, section, key, default=False):
         """Get a boolean from the config.
 

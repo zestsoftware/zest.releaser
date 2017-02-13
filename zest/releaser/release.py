@@ -71,22 +71,24 @@ class Releaser(baserelease.Basereleaser):
     def _check_if_tag_already_exists(self):
         """Check if tag already exists and show the difference if so"""
         version = self.data['version']
-        if self.vcs.tag_exists(version):
+        tag = self.pypiconfig.tag_format() % ({'version': version})
+        if self.vcs.tag_exists(tag):
             self.data['tag_already_exists'] = True
             q = ("There is already a tag %s, show "
                  "if there are differences?" % version)
             if utils.ask(q):
-                diff_command = self.vcs.cmd_diff_last_commit_against_tag(
-                    version)
+                diff_command = self.vcs.cmd_diff_last_commit_against_tag(tag)
                 print(diff_command)
                 print(execute_command(diff_command))
         else:
             self.data['tag_already_exists'] = False
 
     def _make_tag(self):
+        version = self.data['version']
+        tag = self.pypiconfig.tag_format() % ({'version': version})
         if self.data['tag_already_exists']:
             return
-        cmds = self.vcs.cmd_create_tag(self.data['version'])
+        cmds = self.vcs.cmd_create_tag(tag)
         if not isinstance(cmds, list):
             cmds = [cmds]
         if len(cmds) == 1:
@@ -98,10 +100,10 @@ class Releaser(baserelease.Basereleaser):
             else:
                 # all commands are needed in order to proceed normally
                 print("Please create a tag for %s yourself and rerun." %
-                      (self.data['version'],))
+                      (version,))
                 sys.exit(1)
-        if not self.vcs.tag_exists(self.data['version']):
-            print("\nFailed to create tag %s!" % (self.data['version'],))
+        if not self.vcs.tag_exists(tag):
+            print("\nFailed to create tag %s!" % (tag,))
             sys.exit(1)
 
     def _upload_distributions(self, package):
@@ -251,9 +253,9 @@ class Releaser(baserelease.Basereleaser):
             return
 
         package = self.vcs.name
-        version = self.data['version']
+        tag = self.pypiconfig.tag_format() % ({'version': self.data['version']})
         logger.info("Doing a checkout...")
-        self.vcs.checkout_from_tag(version)
+        self.vcs.checkout_from_tag(tag)
         # ^^^ This changes directory to a temp folder.
         self.data['tagdir'] = os.path.realpath(os.getcwd())
         logger.info("Tag checkout placed in %s", self.data['tagdir'])
