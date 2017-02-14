@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import codecs
 import logging
 import os
+import sys
 
 import pkg_resources
 from six.moves.configparser import ConfigParser
@@ -322,7 +323,7 @@ class PypiConfig(object):
     def development_marker(self):
         """Return development marker to be appended in postrelease.
 
-        Override the default ``.dev0`` in setup.cfg using
+        Override the default ``.dev0`` in ~/.pypirc or setup.cfg using
         a ``development-marker`` option::
 
             [zest.releaser]
@@ -408,9 +409,9 @@ class PypiConfig(object):
         return result
 
     def tag_format(self):
-        """Return the string formating the tag name in the release.
+        """Return the string format for the tag name used in the release.
 
-        Override the default ``%(version)`` in setup.cfg using
+        Override the default ``%(version)s`` in ~/.pypirc or setup.cfg using
         a ``tag-format`` option::
 
             [zest.releaser]
@@ -424,12 +425,14 @@ class PypiConfig(object):
         try:
             result = self.config.get(
                 'zest.releaser', 'tag-format')
-            try:
-                '%(version)s'%({'version':''})
-            except KeyError:
-                raise ValueError('version needs to be part of the string formater use default')
+            #test the formater
+            result % ({'version':''})
+
         except (NoSectionError, NoOptionError, ValueError):
             return default
+        except KeyError:
+            print('%(version)s needs to be part of the string formater')
+            sys.exit(1)
         return result
 
     def _get_boolean(self, section, key, default=False):

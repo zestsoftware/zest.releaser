@@ -134,7 +134,7 @@ development-marker = a string
 
 tag-format = a string
     Default: ``%(version)s``
-    This is a formatter that change the name of the tag.
+    This is a formatter that changes the name of the tag.
     It needs to contain ``%(version)s``
 
 
