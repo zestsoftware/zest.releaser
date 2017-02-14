@@ -30,6 +30,7 @@ DATA.update({
     We then make sure you end up in the same relative directory after a
     checkout is done.''',
     'version': "Version we're releasing",
+    'tag': "Tag we're releasing",
 })
 
 logger = logging.getLogger(__name__)
@@ -61,6 +62,8 @@ class Releaser(baserelease.Basereleaser):
     def prepare(self):
         """Collect some data needed for releasing"""
         self._grab_version()
+        self.data['tag'] = self.pypiconfig.tag_format() % (
+            {'version': self.data['version']})
         self._check_if_tag_already_exists()
 
     def execute(self):
@@ -71,7 +74,7 @@ class Releaser(baserelease.Basereleaser):
     def _check_if_tag_already_exists(self):
         """Check if tag already exists and show the difference if so"""
         version = self.data['version']
-        tag = self.pypiconfig.tag_format() % ({'version': version})
+        tag = self.data['tag']
         if self.vcs.tag_exists(tag):
             self.data['tag_already_exists'] = True
             q = ("There is already a tag %s, show "
@@ -85,7 +88,7 @@ class Releaser(baserelease.Basereleaser):
 
     def _make_tag(self):
         version = self.data['version']
-        tag = self.pypiconfig.tag_format() % ({'version': version})
+        tag = self.data['tag']
         if self.data['tag_already_exists']:
             return
         cmds = self.vcs.cmd_create_tag(tag)
@@ -99,8 +102,8 @@ class Releaser(baserelease.Basereleaser):
                 print(execute_command(cmd))
             else:
                 # all commands are needed in order to proceed normally
-                print("Please create a tag for %s yourself and rerun." %
-                      (version,))
+                print("Please create a tag %s for %s yourself and rerun." %
+                      (tag, version))
                 sys.exit(1)
         if not self.vcs.tag_exists(tag):
             print("\nFailed to create tag %s!" % (tag,))
@@ -253,7 +256,7 @@ class Releaser(baserelease.Basereleaser):
             return
 
         package = self.vcs.name
-        tag = self.pypiconfig.tag_format() % ({'version': self.data['version']})
+        tag = self.data['tag']
         logger.info("Doing a checkout...")
         self.vcs.checkout_from_tag(tag)
         # ^^^ This changes directory to a temp folder.

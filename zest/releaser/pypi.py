@@ -4,6 +4,7 @@ import codecs
 import logging
 import os
 import sys
+import re
 
 import pkg_resources
 from six.moves.configparser import ConfigParser
@@ -426,13 +427,12 @@ class PypiConfig(object):
             result = self.config.get(
                 'zest.releaser', 'tag-format')
             #test the formater
-            result % ({'version':''})
-
+            if not re.search('%\(version\)s', result):
+                print('%(version)s needs to be part of the string formater')
+                sys.exit(1)
         except (NoSectionError, NoOptionError, ValueError):
             return default
-        except KeyError:
-            print('%(version)s needs to be part of the string formater')
-            sys.exit(1)
+
         return result
 
     def _get_boolean(self, section, key, default=False):
