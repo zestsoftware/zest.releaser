@@ -695,9 +695,17 @@ def _execute_command(command, input_value=''):
     stderr_output = e.read()
     # We assume that the output from commands we're running is text.
     if not isinstance(stdout_output, six.text_type):
-        stdout_output = stdout_output.decode(OUTPUT_ENCODING)
+        try:
+            stdout_output = stdout_output.decode(OUTPUT_ENCODING)
+        except UnicodeDecodeError:
+            stdout_output = '%s stdout output is not a valid %s stream.' % (
+                command, OUTPUT_ENCODING)
     if not isinstance(stderr_output, six.text_type):
-        stderr_output = stderr_output.decode(OUTPUT_ENCODING)
+        try:
+            stderr_output = stderr_output.decode(OUTPUT_ENCODING)
+        except UnicodeDecodeError:
+            stderr_output = '%s stderr output is not a valid %s stream.' % (
+                command, OUTPUT_ENCODING)
     # TODO.  Note that the returncode is always None, also after
     # running p.kill().  The shell=True may be tripping us up.  For
     # some ideas, see http://stackoverflow.com/questions/4789837
