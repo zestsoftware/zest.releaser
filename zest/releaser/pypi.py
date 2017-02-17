@@ -430,7 +430,7 @@ class PypiConfig(object):
             return default
         # test the formatter
         if not re.search('%\(version\)s', result):
-            print('%(version)s needs to be part of the string formatter')
+            print("%%(version)s needs to be part of 'tag-format': %s" % result)
             sys.exit(1)
         return result
 
