@@ -4,7 +4,11 @@ Changelog for zest.releaser
 6.8.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add tag formatter in the config.  This is a formatter that changes the name of the tag.
+  Default is the same as the version.
+  Put ``tag-format = a string`` in your ``~/.pypirc`` or ``setup.cfg``.
+  It needs to contain ``%(version)s``.
+  [tcezard]
 
 
 6.8.1 (2017-01-13)
