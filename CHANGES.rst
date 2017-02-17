@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-6.8.2 (unreleased)
-------------------
+6.9 (unreleased)
+----------------
 
 - Add tag formatter in the config.  This is a formatter that changes the name of the tag.
   Default is the same as the version.
