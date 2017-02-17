@@ -156,6 +156,9 @@ today
 ``release`` data dict items
 ---------------------------
 
+tag
+    Tag we're releasing
+
 tag_already_exists
     Internal detail, don't touch this :-)
 
