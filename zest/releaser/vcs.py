@@ -170,12 +170,12 @@ class BaseVersionControl(object):
         if history:
             return history
 
-    def tag_exists(self, version):
+    def tag_exists(self, tag_name):
         """Check if a tag has already been created with the name of the
         version.
         """
         for tag in self.available_tags():
-            if tag == version:
+            if tag == tag_name:
                 return True
         return False
 
