@@ -1,7 +1,7 @@
 Assumptions
 ===========
 
-Zest.releaser originated at `Zest software <http://zestsoftware.nl>`_ so there
+Zest.releaser originated at `Zest software <https://zestsoftware.nl>`_ so there
 are some assumptions build-in that might or might not fit you.  Lots of people
 are using it in various companies and open source projects, so it'll probably
 fit :-)
