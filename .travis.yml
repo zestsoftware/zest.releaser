@@ -24,6 +24,7 @@ before_install:
   - git --version
   - hg --version
   - svn --version
+  - pip install -U setuptools
 notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
