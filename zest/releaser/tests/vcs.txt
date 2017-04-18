@@ -229,3 +229,19 @@ Version files can also be called ``version.rst`` (or .md or so) instead of ``ver
     >>> writeto('version.rst', '25.0')
     >>> checkout.get_version_txt_version()
     '25.0'
+
+Setup.py with an uppercase VERSION:
+
+    >>> uppercaseversionproject = os.path.join(tempdir, 'uvp')
+    >>> os.mkdir(uppercaseversionproject)
+    >>> os.chdir(uppercaseversionproject)
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "VERSION = '1.0'",
+    ...     "setup(name='urgh', version=VERSION)"]
+    >>> writeto('setup.py', '\n'.join(lines))
+    >>> checkout.version = '1.2'
+    >>> print(open('setup.py').read())
+    from setuptools import setup
+    VERSION = '1.2'
+    setup(name='urgh', version=VERSION)

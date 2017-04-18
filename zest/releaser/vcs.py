@@ -18,6 +18,12 @@ version\s*=\s*   # 'version =  ' with possible whitespace
 ['"]             # String literal begins
 \d               # Some digit, start of version.
 """, re.VERBOSE)
+UPPERCASE_VERSION_PATTERN = re.compile(r"""
+^                # Start of line
+VERSION\s*=\s*   # 'VERSION =  ' with possible whitespace
+['"]             # String literal begins
+\d               # Some digit, start of version.
+""", re.VERBOSE)
 
 UNDERSCORED_VERSION_PATTERN = re.compile(r"""
 ^                    # Start of line
@@ -249,6 +255,16 @@ class BaseVersionControl(object):
                     indentation = line.split('version')[0]
                     # Note: no spaces around the '='.
                     good_version = indentation + "version='%s'," % version
+                setup_lines[line_number] = good_version
+                utils.write_text_file(
+                    'setup.py', '\n'.join(setup_lines), encoding)
+                logger.info("Set setup.py's version to %r", version)
+                return
+            if UPPERCASE_VERSION_PATTERN.search(line):
+                # This one only occurs in the first column, so no need to
+                # handle indentation.
+                logger.debug("Matching version line found: %r", line)
+                good_version = good_version.upper()
                 setup_lines[line_number] = good_version
                 utils.write_text_file(
                     'setup.py', '\n'.join(setup_lines), encoding)
