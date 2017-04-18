@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-6.9.1 (unreleased)
-------------------
+6.10 (2017-04-18)
+-----------------
 
 - Corner case fix: a top-level ``version = 1.0`` in your ``setup.py`` is now
   also allowed to be in uppercase, like ``VERSION = 1.0``.
