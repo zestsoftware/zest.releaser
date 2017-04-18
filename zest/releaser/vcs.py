@@ -20,7 +20,7 @@ version\s*=\s*   # 'version =  ' with possible whitespace
 """, re.VERBOSE)
 UPPERCASE_VERSION_PATTERN = re.compile(r"""
 ^                # Start of line
-VERSION\s*=\s*   # 'version =  ' with possible whitespace
+VERSION\s*=\s*   # 'VERSION =  ' with possible whitespace
 ['"]             # String literal begins
 \d               # Some digit, start of version.
 """, re.VERBOSE)
