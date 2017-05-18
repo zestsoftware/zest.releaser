@@ -32,10 +32,11 @@ class Prereleaser(baserelease.Basereleaser):
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
+        date_format = self.pypiconfig.date_format()
         self.data.update(dict(
             commit_msg=PRERELEASE_COMMIT_MSG,
             history_header=HISTORY_HEADER,
-            today=datetime.datetime.today().strftime('%Y-%m-%d'),
+            today=datetime.datetime.today().strftime(date_format),
         ))
 
     def prepare(self):

@@ -434,6 +434,27 @@ class PypiConfig(object):
             sys.exit(1)
         return result
 
+    def date_format(self):
+        """Return the string format for the date used in the changelog.
+
+        Override the default ``%Y-%m-%d`` in ~/.pypirc or setup.cfg using
+        a ``date-format`` option::
+
+            [zest.releaser]
+            date-format = %B %e, %Y
+
+        Returns default of ``%Y-%m-%d`` when nothing has been configured.
+        """
+        default = '%Y-%m-%d'
+        if self.config is None:
+            return default
+        try:
+            result = self.config.get(
+                'zest.releaser', 'date-format')
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
     def _get_boolean(self, section, key, default=False):
         """Get a boolean from the config.
 
