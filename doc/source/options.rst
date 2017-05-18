@@ -137,6 +137,12 @@ tag-format = a string
     This is a formatter that changes the name of the tag.
     It needs to contain ``%(version)s``
 
+date-format = a string
+    Default: ``%Y-%m-%d``
+    This is the format string for the release date to be mentioned in the
+    changelog.
+
+
 
 Per project options
 -------------------

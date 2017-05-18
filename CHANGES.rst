@@ -1,10 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
-6.10.1 (unreleased)
+6.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add date format in the config.  Default is ISO-8601 (%Y-%m-%d).
+  Put ``date-format = format string`` in your ``~/.pypirc`` or ``setup.cfg``.
+  [mgedmin]
 
 
 6.10 (2017-04-18)
