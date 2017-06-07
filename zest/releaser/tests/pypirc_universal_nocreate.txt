@@ -1,0 +1,14 @@
+[distutils]
+index-servers =
+    pypi
+
+[pypi]
+username:user
+password:password
+
+[zest.releaser]
+release = yes
+create-wheel = no
+
+[bdist_wheel]
+universal = 1

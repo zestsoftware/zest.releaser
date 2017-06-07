@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.10.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- If the package wants to build universal wheels by setting
+  ``[bdist_wheel] universal = 1``, then the default for
+  ``create-wheel`` is now yes.
 
 
 6.10 (2017-04-18)
