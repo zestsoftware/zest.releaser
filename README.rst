@@ -79,7 +79,12 @@ of ``zest.releaser`` users:
   ``create-wheel = yes`` to create a wheel to upload to PyPI.  See
   http://pythonwheels.com for deciding whether this is a good idea for
   your package.  Briefly, if it is a pure Python 2 *or* pure Python 3
-  package: just do it.
+  package: just do it. If it is a pure Python 2 *and* a pure Python 3
+  project, it is known as a "universal" wheel, because one wheel can
+  be installed on all implementations and versions of Python. If you
+  indicate this in ``setup.cfg`` with the section ``[bdist_wheel]``
+  having ``universal = 1``, then we will automatically upload a wheel,
+  unless ``create-wheel`` is explicitly set to false.
 
 - `check-manifest`_ checks your ``MANIFEST.in`` file for completeness,
   or tells you that you need such a file.  It basically checks if all

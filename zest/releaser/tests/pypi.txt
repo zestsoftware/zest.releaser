@@ -233,6 +233,22 @@ We can also specify to always create it:
     >>> pypiconfig.create_wheel()
     True
 
+Asking for universal wheels is the same as explicitly asking to create
+wheels:
+
+    >>> pypirc_yes_release = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_universal_create.txt')
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release, use_setup_cfg=False)
+    >>> pypiconfig.create_wheel()
+    True
+
+But a negative setting overrides universal wheels:
+
+    >>> pypirc_yes_release = pkg_resources.resource_filename(
+    ...     'zest.releaser.tests', 'pypirc_universal_nocreate.txt')
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release, use_setup_cfg=False)
+    >>> pypiconfig.create_wheel()
+    False
 
 Fixing setup.cfg
 ----------------
