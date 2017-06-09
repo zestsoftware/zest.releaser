@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-6.10.1 (unreleased)
--------------------
+6.11 (unreleased)
+-----------------
 
 - If the package wants to build universal wheels by setting
   ``[bdist_wheel] universal = 1``, then the default for
