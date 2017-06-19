@@ -1,12 +1,20 @@
 Changelog for zest.releaser
 ===========================
 
-6.11 (unreleased)
--------------------
+6.12 (unreleased)
+-----------------
 
 - Add date format in the config.  Default is ISO-8601 (%Y-%m-%d).
   Put ``date-format = format string`` in your ``~/.pypirc`` or ``setup.cfg``.
   [mgedmin]
+
+
+6.11 (2017-06-09)
+-----------------
+
+- If the package wants to build universal wheels by setting
+  ``[bdist_wheel] universal = 1``, then the default for
+  ``create-wheel`` is now yes.
 
 
 6.10 (2017-04-18)

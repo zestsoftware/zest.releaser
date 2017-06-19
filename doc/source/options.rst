@@ -86,6 +86,10 @@ create-wheel = yes / no
     Python wheels.  You need to install the ``wheel`` package for this
     to work.
 
+    If the package is a universal wheel, indicated by having
+    ``universal = 1`` in the ``[bdist_wheel]`` section of
+    ``setup.cfg``, then the default for this value is yes.
+
 extra-message = [ci skip]
     Extra message to add to each commit (prerelease, postrelease).
 
