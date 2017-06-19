@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.12 (unreleased)
+6.12 (2017-06-19)
 -----------------
 
 - Add date format in the config.  Default is ISO-8601 (%Y-%m-%d).
