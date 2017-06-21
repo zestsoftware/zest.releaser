@@ -455,7 +455,10 @@ class PypiConfig(object):
         a ``date-format`` option::
 
             [zest.releaser]
-            date-format = %B %e, %Y
+            date-format = %%B %%e, %%Y
+
+        Note: the % signs should be doubled for compatibility with other tools
+        (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
 
         Returns default of ``%Y-%m-%d`` when nothing has been configured.
         """
@@ -464,7 +467,7 @@ class PypiConfig(object):
             return default
         try:
             result = self.config.get(
-                'zest.releaser', 'date-format')
+                'zest.releaser', 'date-format').replace('%%', '%')
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result

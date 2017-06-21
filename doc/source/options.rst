@@ -142,9 +142,12 @@ tag-format = a string
     It needs to contain ``%(version)s``
 
 date-format = a string
-    Default: ``%Y-%m-%d``
+    Default: ``%%Y-%%m-%%d``
     This is the format string for the release date to be mentioned in the
     changelog.
+
+    Note: the % signs should be doubled for compatibility with other tools
+    (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
 
 
 
