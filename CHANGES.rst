@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.12.1 (unreleased)
+6.12.1 (2017-07-03)
 -------------------
 
 - Quote the path when making a git clone, to fix problems with spaces.  [halkeye]
