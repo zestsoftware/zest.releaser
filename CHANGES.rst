@@ -4,6 +4,8 @@ Changelog for zest.releaser
 6.12.1 (unreleased)
 -------------------
 
+- Quote the path when making a git clone, to fix problems with spaces.  [halkeye]
+
 - Fixed percentage signs in ``date-format`` in ``setup.cfg`.
   You need double percentages.  [mgedmin]
 
