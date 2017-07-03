@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.12.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed percentage signs in ``date-format`` in ``setup.cfg`.
+  You need double percentages.  [mgedmin]
 
 
 6.12 (2017-06-19)
