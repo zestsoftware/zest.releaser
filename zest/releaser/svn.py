@@ -18,8 +18,8 @@ class Subversion(BaseVersionControl):
 
     def _svn_info(self):
         """Return svn url"""
-        our_info = execute_command('svn info')
         if not hasattr(self, '_cached_url'):
+            our_info = execute_command('svn info')
             url = [line for line in our_info.split('\n')
                    if line.startswith('URL')][0]
             # In English, you have 'URL:', in French 'URL :'

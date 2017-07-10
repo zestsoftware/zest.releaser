@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.12.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Do not needlessly run ``svn info``.  [maurits]
 
 
 6.12.1 (2017-07-03)
