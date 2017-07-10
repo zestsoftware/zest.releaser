@@ -42,6 +42,29 @@ class Subversion(BaseVersionControl):
         logger.debug("Base url is %s", base)
         return base
 
+    def _branch_url_from_svn(self):
+        # Get trunk url, or branches/something, or tags/1.0.
+        # This is usually the same as self._svn_info(),
+        # except when you are not in the repo root.
+        # For example, if you are in trunk/my-pkg1, and don't go
+        # to the repo root, this returns 'trunk' without 'my-pkg1'.
+        # Needed for https://github.com/zestsoftware/zest.releaser/issues/213
+        base = self._svn_info()
+        split_url = base.split('/')
+        if 'trunk' in split_url:
+            # Get url including trunk.
+            base = '/'.join(split_url[:split_url.index('trunk') + 1])
+        else:
+            # Get url including branch name or tag id.
+            # Most logical is that this is called for branches,
+            # so first look for those.
+            for flag in ['branches', 'branch', 'tags', 'tag']:
+                if flag in split_url:
+                    base = '/'.join(split_url[:split_url.index(flag) + 2])
+                    break
+        logger.debug("Branch url is %s", base)
+        return base
+
     def _name_from_svn(self):
         base = self._base_from_svn()
         parts = base.split('/')
@@ -161,7 +184,7 @@ class Subversion(BaseVersionControl):
         return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
 
     def cmd_create_tag(self, version):
-        url = self._svn_info()
+        url = self._branch_url_from_svn()
         tag_url = self.tag_url(version)
         return 'svn cp --non-interactive %s %s -m "Tagging %s"' % (
             url, tag_url, version)
