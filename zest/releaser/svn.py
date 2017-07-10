@@ -27,11 +27,16 @@ class Subversion(BaseVersionControl):
         return self._cached_url
 
     def _base_from_svn(self):
+        # Get repository root url without trunk/tags/branches.
         base = self._svn_info()
-        # Note: slashes are used to prevent problems with 'tha.tagfinder'-like
-        # project names...
-        for remove in ['/trunk', '/tags', '/branches', '/tag', '/branch']:
-            base = base.rsplit(remove, 1)[0]
+        # Split and reverse, then look for the first trunk, tag or branch.
+        split_url = list(reversed(base.split('/')))
+        for remove in ['trunk', 'tags', 'branches', 'tag', 'branch']:
+            if remove in split_url:
+                split_url = split_url[split_url.index(remove) + 1:]
+                base = '/'.join(reversed(split_url))
+                # One trunk/tag/branch is quite enough.
+                break
         if not base.endswith('/'):
             base += '/'
         logger.debug("Base url is %s", base)
