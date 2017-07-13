@@ -4,7 +4,15 @@ Changelog for zest.releaser
 6.12.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Subversion fix: create tag of entire trunk or branch when not in repo root.
+  If you have ``trunk/pkg1`` and ``trunk/pkg2`` and you make tag 1.0 in directory ``pkg1``,
+  then until now we would create ``tags/1.0`` with the contents of directory ``pkg1``.
+  Checking out the tag and changing to the ``pkg1`` directory then failed.
+  We now make a tag of the entire trunk or branch, just like in the other version control systems.
+  Fixes `issue #213 <https://github.com/zestsoftware/zest.releaser/issues/213>`_.
+  [maurits]
+
+- Do not needlessly run ``svn info``.  [maurits]
 
 
 6.12.1 (2017-07-03)
