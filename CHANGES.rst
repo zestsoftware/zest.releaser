@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.12.2 (unreleased)
+6.12.2 (2017-07-13)
 -------------------
 
 - Subversion fix: create tag of entire trunk or branch when not in repo root.
