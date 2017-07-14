@@ -15,7 +15,7 @@ VERSION_PATTERN = re.compile(r"""
 ^                # Start of line
 \s*              # Indentation
 version\s*=\s*   # 'version =  ' with possible whitespace
-['"]             # String literal begins
+['"]?            # String literal begins
 \d               # Some digit, start of version.
 """, re.VERBOSE)
 UPPERCASE_VERSION_PATTERN = re.compile(r"""
@@ -216,13 +216,39 @@ class BaseVersionControl(object):
         utils.write_text_file(filename, contents, encoding)
         logger.info("Set __version__ in %s to %r", filename, version)
 
+    def _replace_in_file(self, old_version, new_version, filename):
+        """Replace the old version with the new version in a file.
+
+        Opens the given filename, finds a line that seems to define
+        the old version and when found, rewrite the file with the
+        new version instead and returns True.
+        """
+        setup_lines, encoding = utils.read_text_file(filename)
+        setup_lines = setup_lines.split('\n')
+        patterns = [VERSION_PATTERN, UPPERCASE_VERSION_PATTERN]
+
+        for line_number, line in enumerate(setup_lines):
+            if any(pattern.search(line) for pattern in patterns):
+                if not old_version in line:
+                    continue
+                logger.debug("Matching version line found: %r", line)
+
+                good_version = line.replace(old_version, new_version)
+                setup_lines[line_number] = good_version
+                utils.write_text_file(
+                    filename, '\n'.join(setup_lines), encoding)
+                logger.info("Set %s's version to %r", filename, new_version)
+                return True
+        return False
+
     def _update_version(self, version):
         """Find out where to change the version and change it.
 
         There are three places where the version can be defined. The first one
         is an explicitly defined Python file with a ``__version__``
         attribute. The second one is some version.txt that gets read by
-        setup.py. The third is directly in setup.py.
+        setup.py. The third is directly in setup.py. The fourth is the
+        setup.cfg that is read from the setup.py.
         """
         if self.get_python_file_version():
             self._update_python_file_version(version)
@@ -232,10 +258,11 @@ class BaseVersionControl(object):
         version_filenames.extend([
             '.'.join(['version', extension]) for extension in TXT_EXTENSIONS])
         versionfile = self.filefind(version_filenames)
+
+        setup_version = self.get_setup_py_version()
         if versionfile:
             # We have a version.txt file but does it match the setup.py
             # version (if any)?
-            setup_version = self.get_setup_py_version()
             if not setup_version or (setup_version ==
                                      self.get_version_txt_version()):
                 with open(versionfile, 'w') as f:
@@ -243,33 +270,11 @@ class BaseVersionControl(object):
                 logger.info("Changed %s to %r", versionfile, version)
                 return
 
-        good_version = "version = '%s'" % version
         line_number = 0
-        setup_lines, encoding = utils.read_text_file('setup.py')
-        setup_lines = setup_lines.split('\n')
-        for line_number, line in enumerate(setup_lines):
-            if VERSION_PATTERN.search(line):
-                logger.debug("Matching version line found: %r", line)
-                if line.startswith(' '):
-                    # oh, probably '    version = 1.0,' line.
-                    indentation = line.split('version')[0]
-                    # Note: no spaces around the '='.
-                    good_version = indentation + "version='%s'," % version
-                setup_lines[line_number] = good_version
-                utils.write_text_file(
-                    'setup.py', '\n'.join(setup_lines), encoding)
-                logger.info("Set setup.py's version to %r", version)
-                return
-            if UPPERCASE_VERSION_PATTERN.search(line):
-                # This one only occurs in the first column, so no need to
-                # handle indentation.
-                logger.debug("Matching version line found: %r", line)
-                good_version = good_version.upper()
-                setup_lines[line_number] = good_version
-                utils.write_text_file(
-                    'setup.py', '\n'.join(setup_lines), encoding)
-                logger.info("Set setup.py's version to %r", version)
-                return
+
+        if any(self._replace_in_file(setup_version, version, filename)
+               for filename in ["setup.py", "setup.cfg"]):
+            return
 
         logger.error(
             "We could read a version from setup.py, but could not write it "

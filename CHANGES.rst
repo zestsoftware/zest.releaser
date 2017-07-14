@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.12.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Write version in ``setup.cfg``. [ewjoachim]
 
 
 6.12.2 (2017-07-13)
