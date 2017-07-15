@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.12.4 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Also support version in setup.cfg. [ewjoachim]
 
 
 6.12.3 (2017-08-16)
