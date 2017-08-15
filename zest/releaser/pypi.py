@@ -423,30 +423,44 @@ class PypiConfig(object):
             return default
         return result
 
-    def tag_format(self):
-        """Return the string format for the tag name used in the release.
+    _tag_format_deprecated_message = "\n".join(line.strip() for line in """
+    `tag-format` contains deprecated `%%(version)s` format. Please change to:
+    
+    [zest.releaser]
+    tag-format = %s
+    """.strip().splitlines())
 
-        Override the default ``%(version)s`` in ~/.pypirc or setup.cfg using
-        a ``tag-format`` option::
+    def tag_format(self, version):
+        """Return the formatted tag that should be used in the release.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-format`` option::
 
             [zest.releaser]
-            tag-format = v%(version)s
+            tag-format = v{version}
 
-        Returns default of ``%(version)s`` when nothing has been configured.
+        ``tag-format`` must contain exaclty one formatting instruction: for the
+        ``version`` key.
+
+        Accepts also ``%(version)s`` format for backward compatibility.
+
+        The default format, when nothing has been configured, is ``{version}``.
         """
-        default = '%(version)s'
-        if self.config is None:
-            return default
-        try:
-            result = self.config.get(
-                'zest.releaser', 'tag-format')
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        # test the formatter
-        if not re.search('%\(version\)s', result):
-            print("%%(version)s needs to be part of 'tag-format': %s" % result)
-            sys.exit(1)
-        return result
+        fmt = '{version}'
+        if self.config is not None:
+            try:
+                fmt = self.config.get('zest.releaser', 'tag-format', raw=True)
+            except (NoSectionError, NoOptionError, ValueError):
+                pass
+
+        if '{version}' in fmt:
+            return fmt.format(version=version)
+        # BBB:
+        if '%(version)s' in fmt:
+            proposed_fmt = fmt.replace("%(version)s", "{version}")
+            print(self._tag_format_deprecated_message % proposed_fmt)
+            return fmt % {'version': version}
+        print("{version} needs to be part of 'tag-format': %s" % fmt)
+        sys.exit(1)
 
     def date_format(self):
         """Return the string format for the date used in the changelog.

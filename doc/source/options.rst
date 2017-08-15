@@ -137,9 +137,10 @@ development-marker = a string
     This is what gets appended to the version in postrelease.
 
 tag-format = a string
-    Default: ``%(version)s``
+    Default: ``{version}``
     This is a formatter that changes the name of the tag.
-    It needs to contain ``%(version)s``
+    It needs to contain ``{version}``.
+    For backward compatibility, it can contain ``%(version)s`` instead.
 
 date-format = a string
     Default: ``%%Y-%%m-%%d``
