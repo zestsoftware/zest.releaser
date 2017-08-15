@@ -9,6 +9,7 @@ dist
 eggs
 include
 lib
+/local
 parts
 zest.releaser.egg-info
 .coverage
