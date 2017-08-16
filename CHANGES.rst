@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.12.3 (unreleased)
+6.12.3 (2017-08-16)
 -------------------
 
 - Allows ``{version}`` format for ``tag-format``.
