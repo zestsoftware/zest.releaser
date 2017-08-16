@@ -62,8 +62,7 @@ class Releaser(baserelease.Basereleaser):
     def prepare(self):
         """Collect some data needed for releasing"""
         self._grab_version()
-        self.data['tag'] = self.pypiconfig.tag_format() % (
-            {'version': self.data['version']})
+        self.data['tag'] = self.pypiconfig.tag_format(self.data['version'])
         self._check_if_tag_already_exists()
 
     def execute(self):
