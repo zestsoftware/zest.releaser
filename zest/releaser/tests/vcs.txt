@@ -245,3 +245,18 @@ Setup.py with an uppercase VERSION:
     from setuptools import setup
     VERSION = '1.2'
     setup(name='urgh', version=VERSION)
+
+version in setup.cfg:
+
+    >>> setupcfgproject = os.path.join(tempdir, 'setupcfg')
+    >>> os.mkdir(setupcfgproject)
+    >>> os.chdir(setupcfgproject)
+    >>> lines = [
+    ...     "[metadata]",
+    ...     "version = 1.0"]
+    >>> writeto('setup.cfg', '\n'.join(lines))
+    >>> writeto('setup.py', '')
+    >>> checkout.version = '1.2'
+    >>> print(open('setup.cfg').read())
+    [metadata]
+    version = 1.2
