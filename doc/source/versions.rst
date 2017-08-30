@@ -5,7 +5,7 @@ Where does the version come from?
 ---------------------------------
 
 A version number is essentially what zest.releaser cannot do without. A
-version number can come from three different locations:
+version number can come from four different locations:
 
 - The ``setup.py`` file. Two styles are supported::
 
@@ -20,6 +20,12 @@ version number can come from three different locations:
     def setup(
         version='1.0',
         name='...
+
+- The ``setup.cfg`` file. zest.releaser will look for something like::
+
+    [metadata]
+    name = ...
+    version = 1.0
 
 - If no ``setup.py`` is found, zest.releaser looks for a ``version.txt``
   file. It should contain just a version number (a newline at the end is OK).
@@ -45,7 +51,7 @@ version number can come from three different locations:
 Where is the version number being set?
 --------------------------------------
 
-Of those three locations where the version can come from, only the first one
+Of those four locations where the version can come from, only the first one
 found is also set to the new value again. Zest.releaser assumes that there's
 only *one* location.
 
@@ -54,8 +60,8 @@ only *one* location.
 have **one** source and all the others should be derived from it.
 
 
-Using the version number in ``setup.py`` and as ``__version__``
----------------------------------------------------------------
+Using the version number in ``setup.py`` or ``setup.cfg`` as ``__version__``
+----------------------------------------------------------------------------
 
 Here are opinionated suggestions from the zest.releaser main authors about how
 to use the version information. For some other ideas, see the `zest.releaser

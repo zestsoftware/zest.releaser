@@ -15,7 +15,7 @@ VERSION_PATTERN = re.compile(r"""
 ^                # Start of line
 \s*              # Indentation
 version\s*=\s*   # 'version =  ' with possible whitespace
-['"]             # String literal begins
+['"]?            # String literal begins
 \d               # Some digit, start of version.
 """, re.VERBOSE)
 UPPERCASE_VERSION_PATTERN = re.compile(r"""
@@ -269,6 +269,22 @@ class BaseVersionControl(object):
                 utils.write_text_file(
                     'setup.py', '\n'.join(setup_lines), encoding)
                 logger.info("Set setup.py's version to %r", version)
+                return
+
+        good_version = "version = %s" % version
+        setup_cfg_lines, encoding = utils.read_text_file('setup.cfg')
+        setup_cfg_lines = setup_cfg_lines.split('\n')
+        for line_number, line in enumerate(setup_cfg_lines):
+            if VERSION_PATTERN.search(line):
+                logger.debug("Matching version line found: %r", line)
+                if line.startswith(' '):
+                    indentation = line.split('version')[0]
+
+                    good_version = indentation + good_version
+                setup_cfg_lines[line_number] = good_version
+                utils.write_text_file(
+                    'setup.cfg', '\n'.join(setup_cfg_lines), encoding)
+                logger.info("Set setup.cfg's version to %r", version)
                 return
 
         logger.error(

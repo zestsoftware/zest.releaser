@@ -14,11 +14,15 @@ fit :-)
   your project. The ``version.txt`` has a single line with the version number
   (newline optional). The ``setup.py`` should have a single ``version =
   '0.3'`` line somewhere. You can also have it in the actual ``setup()`` call,
-  on its own line still, as `` version = '0.3',``. Indentation and the comma
-  are preserved.  If you need something special, you can always do a
-  ``version=version`` and put the actual version statement in a
-  zest.releaser-friendly format near the top of the file. Reading (in Plone
-  products) a version.txt into setup.py works great, too.
+  on its own line still, as `` version = '0.3',``. Indentation and comma are
+  preserved. If your ``setup.py`` actually reads the version from your
+  ``setup.cfg`` (as `it does automatically
+  <https://setuptools.readthedocs.io/en/latest/setuptools.html#configuring-
+  setup-using-setup-cfg-files>`_ using ``setuptools`` since version 30.3.0),
+  then the version will be modified there too. If you need something special,
+  you can always do a ``version=version`` and put the actual version statement
+  in a zest.releaser- friendly format near the top of the file. Reading (in
+  Plone products) a version.txt into setup.py works great, too.
 
 - The history/changes file restriction is probably the most severe at the
   moment. zest.releaser searches for a restructuredtext header with
