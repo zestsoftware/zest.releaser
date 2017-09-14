@@ -597,6 +597,11 @@ def run_hooks(setup_cfg, which_releaser, when, data):
         hook_names = config.get('zest.releaser', hook_group).split()
         hooks = []
 
+        # Hooks that can't be imported are skipped, unless the
+        # ``skip_missing_hooks`` option is set to False.
+        skip_missing = config.getboolean('zest.releaser', 'skip_missing_hooks',
+                                         fallback='yes')
+
         # The following code is adapted from the 'packaging' package being
         # developed for Python's stdlib:
 
@@ -619,6 +624,8 @@ def run_hooks(setup_cfg, which_releaser, when, data):
                 try:
                     hooks.append(resolve_name(hook_name))
                 except ImportError as e:
+                    if not skip_missing:
+                        raise
                     logger.warning('cannot find %s hook: %s; skipping...',
                                    hook_name, e.args[0])
             for hook in hooks:

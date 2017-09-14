@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.12.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add ``skip-missing-hooks`` option in ``setup.cfg`` to control whether the
+  release process should should fail when specified hooks cannot be imported.
 
 
 6.12.4 (2017-08-30)
