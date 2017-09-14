@@ -599,8 +599,10 @@ def run_hooks(setup_cfg, which_releaser, when, data):
 
         # Hooks that can't be imported are skipped, unless the
         # ``skip_missing_hooks`` option is set to False.
-        skip_missing = config.getboolean('zest.releaser', 'skip_missing_hooks',
-                                         fallback='yes')
+        skip_missing = True
+        if config.has_option('zest.releaser', 'skip_missing_hooks'):
+            skip_missing = config.getboolean('zest.releaser',
+                                             'skip_missing_hooks')
 
         # The following code is adapted from the 'packaging' package being
         # developed for Python's stdlib:
