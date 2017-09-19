@@ -150,11 +150,6 @@ date-format = a string
     Note: the % signs should be doubled for compatibility with other tools
     (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
 
-skip-missing-hooks = yes / no
-    Default: yes
-    When set to ``no``, the release process will fail if a specified hook
-    cannot be imported.
-
 
 Per project options
 -------------------
