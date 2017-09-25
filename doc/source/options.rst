@@ -151,7 +151,6 @@ date-format = a string
     (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
 
 
-
 Per project options
 -------------------
 

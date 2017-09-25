@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.12.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Release process will now fail when specified hooks cannot be imported.
+  (`PR #236 <https://github.com/zestsoftware/zest.releaser/pulls/236>`_)
 
 
 6.12.4 (2017-08-30)
