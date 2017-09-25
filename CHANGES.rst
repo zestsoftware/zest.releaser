@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.12.5 (unreleased)
 -------------------
 
+- Sorting uploadable filenames so that wheels are uploaded first. (For most
+  filesystems this happened automatically, but the order on OSX' new
+  filesystem is non-deterministic, so we added sorting.)
+  [reinout]
+
 - Release process will now fail when specified hooks cannot be imported.
   (`PR #236 <https://github.com/zestsoftware/zest.releaser/pulls/236>`_)
 

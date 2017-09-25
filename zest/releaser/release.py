@@ -136,8 +136,9 @@ class Releaser(baserelease.Basereleaser):
         self._run_hooks('before_upload')
 
         # Get list of all files to upload.
-        files_in_dist = [
+        files_in_dist = sorted([
             os.path.join('dist', filename) for filename in os.listdir('dist')]
+        )
 
         # Get servers/repositories.
         servers = self.pypiconfig.distutils_servers()
