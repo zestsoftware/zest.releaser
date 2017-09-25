@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.12.5 (unreleased)
+6.12.5 (2017-09-25)
 -------------------
 
 - Sorting uploadable filenames so that wheels are uploaded first. (For most
