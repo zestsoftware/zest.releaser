@@ -24,6 +24,9 @@ before_install:
   - hg --version
   - svn --version
   - pip install -U setuptools
+matrix:
+  allow_failures:
+  - python: pypy
 notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
