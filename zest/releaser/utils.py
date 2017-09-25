@@ -616,11 +616,9 @@ def run_hooks(setup_cfg, which_releaser, when, data):
 
         try:
             for hook_name in hook_names:
-                try:
-                    hooks.append(resolve_name(hook_name))
-                except ImportError as e:
-                    logger.warning('cannot find %s hook: %s; skipping...',
-                                   hook_name, e.args[0])
+                # Resolve the hook or fail with ImportError.
+                hooks.append(resolve_name(hook_name))
+
             for hook in hooks:
                 hook(data)
         finally:
