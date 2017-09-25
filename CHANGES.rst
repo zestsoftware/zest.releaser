@@ -4,7 +4,10 @@ Changelog for zest.releaser
 6.12.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Sorting uploadable filenames so that wheels are uploaded first. (For most
+  filesystems this happened automatically, but the order on OSX' new
+  filesystem is non-deterministic, so we added sorting.)
+  [reinout]
 
 
 6.12.4 (2017-08-30)
