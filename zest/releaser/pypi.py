@@ -462,6 +462,24 @@ class PypiConfig(object):
         print("{version} needs to be part of 'tag-format': %s" % fmt)
         sys.exit(1)
 
+    def tag_signing(self):
+        """Return whether the tag should be signed.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-signing`` option::
+
+            [zest.releaser]
+            tag-signing = yes
+
+        ``tag-signing`` must contain exaclty one word which will be
+        converted to a boolean. Currently are accepted (case
+        insensitively): 0, false, no, off for False, and 1, true, yes,
+        on for True).
+
+        The default when this option has not been set is False.
+
+        """
+        return self._get_boolean('zest.releaser', 'tag-signing', default=False)
+
     def date_format(self):
         """Return the string format for the date used in the changelog.
 

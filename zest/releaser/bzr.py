@@ -53,7 +53,11 @@ class Bzr(BaseVersionControl):
     def cmd_log_since_tag(self, version):
         return "bzr log -r tag:%s..-1" % version
 
-    def cmd_create_tag(self, version):
+    def cmd_create_tag(self, version, sign=False):
+        if sign:
+            logger.error("bzr does not support signing tags, sorry. "
+                         "Please check your configuration in 'setup.cfg'.")
+            sys.exit(20)
         return 'bzr tag %s' % version
 
     def cmd_checkout_from_tag(self, version, checkout_dir):

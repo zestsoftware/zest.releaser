@@ -142,6 +142,13 @@ tag-format = a string
     It needs to contain ``{version}``.
     For backward compatibility, it can contain ``%(version)s`` instead.
 
+tag-signing = yes / no
+    Default: no.
+    When set to true, tags are signed using the signing feature of the
+    respective vcs. Currently tag-signing is only supported for git.
+    Note: When you enable it, everyone releasing the project is
+    required to have git tag signing set up correctly.
+
 date-format = a string
     Default: ``%%Y-%%m-%%d``
     This is the format string for the release date to be mentioned in the
