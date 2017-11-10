@@ -159,6 +159,9 @@ today
 tag
     Tag we're releasing
 
+tag-signing
+    Sign tag using gpg or pgp
+
 tag_already_exists
     Internal detail, don't touch this :-)
 
