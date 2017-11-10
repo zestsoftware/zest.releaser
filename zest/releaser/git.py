@@ -78,9 +78,11 @@ class Git(BaseVersionControl):
         """
         return "git log %s..HEAD" % version
 
-    def cmd_create_tag(self, version):
+    def cmd_create_tag(self, version, sign=False):
         msg = "Tagging %s" % (version,)
         cmd = 'git tag %s -m "%s"' % (version, msg)
+        if sign:
+            cmd += " --sign"
         if os.path.isdir('.git/svn'):
             print("\nEXPERIMENTAL support for git-svn tagging!\n")
             with open('.git/HEAD') as f:

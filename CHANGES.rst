@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.12.6 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add support for signing tags (option ``tag-signing``). [htgoebel]
 
 
 6.12.5 (2017-09-25)

@@ -338,7 +338,7 @@ class BaseVersionControl(object):
         """
         raise NotImplementedError()
 
-    def cmd_create_tag(self, version):
+    def cmd_create_tag(self, version, sign=False):
         "Create a tag from a version name."
         raise NotImplementedError()
 

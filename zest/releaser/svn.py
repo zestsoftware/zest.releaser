@@ -183,7 +183,11 @@ class Subversion(BaseVersionControl):
             sys.exit(1)
         return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
 
-    def cmd_create_tag(self, version):
+    def cmd_create_tag(self, version, sign=False):
+        if sign:
+            logger.error("svn does not support signing tags, sorry. "
+                         "Please check your configuration in 'setup.cfg'.")
+            sys.exit(20)
         url = self._branch_url_from_svn()
         tag_url = self.tag_url(version)
         return 'svn cp --non-interactive %s %s -m "Tagging %s"' % (

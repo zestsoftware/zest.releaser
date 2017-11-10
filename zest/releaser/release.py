@@ -31,6 +31,7 @@ DATA.update({
     checkout is done.''',
     'version': "Version we're releasing",
     'tag': "Tag we're releasing",
+    'tag-signing': "Sign tag using gpg or pgp",
 })
 
 logger = logging.getLogger(__name__)
@@ -63,6 +64,7 @@ class Releaser(baserelease.Basereleaser):
         """Collect some data needed for releasing"""
         self._grab_version()
         self.data['tag'] = self.pypiconfig.tag_format(self.data['version'])
+        self.data['tag-signing'] = self.pypiconfig.tag_signing()
         self._check_if_tag_already_exists()
 
     def execute(self):
@@ -90,7 +92,7 @@ class Releaser(baserelease.Basereleaser):
         tag = self.data['tag']
         if self.data['tag_already_exists']:
             return
-        cmds = self.vcs.cmd_create_tag(tag)
+        cmds = self.vcs.cmd_create_tag(tag, self.data['tag-signing'])
         if not isinstance(cmds, list):
             cmds = [cmds]
         if len(cmds) == 1:
