@@ -375,6 +375,33 @@ Notice, however, that a ``setup.cfg`` like the one above doesn't work for
 distutils, as ``ConfigParser`` tries to recursively interpolate all
 ``%(values)s`` until there are none left. Which is why we emmit a warning.
 
+Formatting release tag messages
+-----------------------------------
+
+The commit message to be used when tagging can be customized by the
+``tag-message`` setting.
+
+By default the tag message is ``Tagging`` plus the version:
+
+    >>> version = '1.2.3'
+    >>> os.remove(pypi.SETUP_CONFIG_FILE)
+    >>> pypiconfig = pypi.PypiConfig()
+    >>> pypiconfig.tag_message(version)
+    'Tagging 1.2.3'
+
+But it can be customized with a message string, as long as it contains
+the string ``{version}``:
+
+    >>> SETUP_CFG = """
+    ... [zest.releaser]
+    ... tag-message = Creating v{version} tag.
+    ... """
+    >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
+    ...     _ = f.write(SETUP_CFG)
+    >>> pypiconfig = pypi.PypiConfig()
+    >>> pypiconfig.tag_message(version)
+    'Creating v1.2.3 tag.'
+
 
 No-input mode
 -------------

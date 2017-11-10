@@ -142,6 +142,14 @@ tag-format = a string
     It needs to contain ``{version}``.
     For backward compatibility, it can contain ``%(version)s`` instead.
 
+tag-messgae = a string
+    Default: ``Tagging {version}``
+    This formatter defines the commit message passed to the ``tag``
+    command of the VCS.
+    Please not that not all VCSes (e.g. `bzr`) support passing
+    messages when tagging.
+    It must to contain ``{version}``.
+
 tag-signing = yes / no
     Default: no.
     When set to true, tags are signed using the signing feature of the

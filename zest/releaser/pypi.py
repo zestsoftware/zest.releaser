@@ -462,6 +462,31 @@ class PypiConfig(object):
         print("{version} needs to be part of 'tag-format': %s" % fmt)
         sys.exit(1)
 
+    def tag_message(self, version):
+        """Return the commit message to be used when tagging.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-message``
+        option::
+
+            [zest.releaser]
+            tag-message = Creating v{version} tag.
+
+        ``tag-message`` must contain exaclty one formatting
+        instruction: for the ``version`` key.
+
+        The default format is ``Tagging {version}``.
+        """
+        fmt = 'Tagging {version}'
+        if self.config:
+            try:
+                fmt = self.config.get('zest.releaser', 'tag-message', raw=True)
+            except (NoSectionError, NoOptionError, ValueError):
+                pass
+        if not '{version}' in fmt:
+            print("{version} needs to be part of 'tag-message': %r" % fmt)
+            sys.exit(1)
+        return fmt.format(version=version)
+
     def tag_signing(self):
         """Return whether the tag should be signed.
 

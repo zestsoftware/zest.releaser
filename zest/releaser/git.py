@@ -78,9 +78,8 @@ class Git(BaseVersionControl):
         """
         return ['git', 'log', '%s..HEAD' % version]
 
-    def cmd_create_tag(self, version, sign=False):
-        msg = "Tagging %s" % (version,)
-        cmd = ['git', 'tag', version, '-m', msg]
+    def cmd_create_tag(self, version, message, sign=False):
+        cmd = ['git', 'tag', version, '-m', message]
         if sign:
             cmd.append["--sign"]
         if os.path.isdir('.git/svn'):
@@ -117,7 +116,7 @@ class Git(BaseVersionControl):
                 # dcommit before local tagging
                 cmd.insert(0, ['git', 'svn', 'dcommit'])
             # create tag in svn
-            cmd.append(['git', 'svn', 'tag', '-m', msg, version])
+            cmd.append(['git', 'svn', 'tag', '-m', message, version])
         return cmd
 
     def cmd_checkout_from_tag(self, version, checkout_dir):

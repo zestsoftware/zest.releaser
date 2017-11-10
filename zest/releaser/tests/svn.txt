@@ -78,11 +78,11 @@ The name of the /tags directory (so: a plural) is succesfully detected:
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd = checkout.cmd_create_tag('0.1', 'Creating tag 0.1')
     >>> cmd
     ['svn', 'cp', '--non-interactive',
      'file://TESTREPO/tha.example/trunk',
-     'file://TESTREPO/tha.example/tags/0.1', '-m', 'Tagging 0.1']
+     'file://TESTREPO/tha.example/tags/0.1', '-m', 'Creating tag 0.1']
     >>> dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1']
@@ -319,11 +319,11 @@ Tag and checkout commands also use the singular:
     ['svn', 'co', '--non-interactive',
      'file://TESTREPO/singular/tag/0.1',
      'TMPDIR/somename...']
-    >>> cmd = singular_checkout.cmd_create_tag('0.1')
+    >>> cmd = singular_checkout.cmd_create_tag('0.1', 'Creating tag 0.1')
     >>> cmd
     ['svn', 'cp', '--non-interactive',
      'file://TESTREPO/singular/trunk',
-     'file://TESTREPO/singular/tag/0.1', '-m', 'Tagging 0.1']
+     'file://TESTREPO/singular/tag/0.1', '-m', 'Creating tag 0.1']
 
 If we have branch checkout, the base url is still extracted correctly, even if
 the singular /tag and /branch is used:

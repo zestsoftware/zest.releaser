@@ -108,6 +108,7 @@ tag command:
     >>> releaser.data['tag_already_exists'] = False
     >>> releaser.data['version'] = '0.1'
     >>> releaser.data['tag'] = '0.1'
+    >>> releaser.data['tag-message'] = 'Tagging {version}'
     >>> releaser.data['tag-signing'] = False
     >>> utils.test_answer_book.set_answers(['n'])
     >>> releaser._make_tag()
