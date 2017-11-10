@@ -449,7 +449,7 @@ Running commands
 
 We can run commands.
 
-    >>> print(utils.execute_command('echo "E.T. phone home."'))
+    >>> print(utils.execute_command(['echo', "E.T. phone home."]))
     E.T. phone home.
 
 We want to discover errors and show them in red.
@@ -458,13 +458,18 @@ We want to discover errors and show them in red.
     '\x1b[31m'
     >>> Fore.MAGENTA
     '\x1b[35m'
-    >>> utils.execute_command('ls some-non-existing-file')
+    >>> utils.execute_command(['ls', 'some-non-existing-file'])
     '\x1b[31mls...'
 
 Warnings may also end up in the error output.  That may be unwanted.
+Note: Setting ``__command_is_string__`` is a special hack implemented
+only for this test-case.  It makes ``utils._execute_command()`` to
+accept a command-string and execute it via a shell.
 
     >>> warning = "warning: no previously-included files matching '*.pyc' found anywhere in distribution."
+    >>> utils.__command_is_string__ = True
     >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
+    >>> utils.__command_is_string__ = False
     >>> result.startswith(Fore.RED)
     False
     >>> result.startswith(Fore.MAGENTA)
@@ -476,7 +481,9 @@ One similar harmless warning by distutils does not get the 'warning:'
 prefixed, so we handle it explicitly:
 
     >>> warning = "no previously-included directories found matching devsrc"
+    >>> utils.__command_is_string__ = True
     >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
+    >>> utils.__command_is_string__ = False
     >>> result.startswith(Fore.RED)
     False
     >>> result.startswith(Fore.MAGENTA)
@@ -490,7 +497,9 @@ Let's do a combination:
     ... Warn: What is the answer to life, the universe and everything?
     ...
     ... 41"""
+    >>> utils.__command_is_string__ = True
     >>> result = utils.execute_command('echo "%s" > /dev/stderr' % message)
+    >>> utils.__command_is_string__ = False
     >>> result
     '\x1b[35mWarn: What is the answer to life, the universe and everything?\n\n\x1b[31m41'
     >>> print(result)
@@ -517,7 +526,7 @@ significantly on different systems, so we do not check the exact line.
 The user can choose to quit:
 
     >>> utils.test_answer_book.set_answers(['q'])
-    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     Traceback (most recent call last):
     ...
     zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
@@ -525,7 +534,7 @@ The user can choose to quit:
 The user can choose to not retry and just continue:
 
     >>> utils.test_answer_book.set_answers(['n'])
-    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> result = utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     RED ls...
     RED There were errors or warnings.
     Question: Retry this command? [Yes/no/quit/?]
@@ -536,7 +545,7 @@ The user can choose to not retry and just continue:
 And there is the retry.  In the end you do have to choose something:
 
     >>> utils.test_answer_book.set_answers(['y', 'y', 'n'])
-    >>> result = utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> result = utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     RED ls...
     RED There were errors or warnings.
     Question: Retry this command? [Yes/no/quit/?]
@@ -552,7 +561,7 @@ And there is the retry.  In the end you do have to choose something:
     >>> print(result)
     RED ls...
     >>> utils.test_answer_book.set_answers(['y', 'y', 'q'])
-    >>> utils.execute_command('ls some-non-existing-file', allow_retry=True)
+    >>> utils.execute_command(['ls', 'some-non-existing-file'], allow_retry=True)
     Traceback (most recent call last):
     ...
     zest.releaser.utils.CommandException: Command failed: 'ls some-non-existing-file'
@@ -672,9 +681,10 @@ Safe setup.py running
 ``setup_py()`` returns the ``python setup.py xyz`` command line by using
 sys.executable.
 
-    >>> cmd = utils.setup_py('cook a cow')
-    >>> print(cmd.replace(sys.executable, 'python'))  # test normalization
-    python setup.py cook a cow
+    >>> cmd = utils.setup_py('cook', 'a', 'cow')
+    >>> cmd[0] = cmd[0].replace(sys.executable, 'python')  # test normalization
+    >>> print(repr(cmd))
+    ['python', 'setup.py', 'cook', 'a', 'cow']
 
 When the setup.py arguments include arguments that indicate pypi interaction,
 we refuse to work, because this should be done with twine now:

@@ -23,7 +23,6 @@ from pkg_resources import parse_version
 import six
 from six.moves import input  # noqa
 
-
 logger = logging.getLogger(__name__)
 
 WRONG_IN_VERSION = ['svn', 'dev', '(']
@@ -513,15 +512,13 @@ def show_interesting_lines(result):
         print(line)
 
 
-def setup_py(rest_of_cmdline):
+def setup_py(*rest_of_cmdline):
     """Return 'python setup.py' command."""
-    executable = sys.executable
     for unsafe in ['upload', 'register']:
         if unsafe in rest_of_cmdline:
             logger.error('Must not use setup.py %s. Use twine instead', unsafe)
             sys.exit(1)
-
-    return '%s setup.py %s' % (executable, rest_of_cmdline)
+    return [sys.executable, 'setup.py'] + list(rest_of_cmdline)
 
 
 def is_data_documented(data, documentation=None):
@@ -664,12 +661,36 @@ KNOWN_WARNINGS = [
 KNOWN_WARNINGS = [w.lower() for w in KNOWN_WARNINGS]
 
 
+def format_command(command):
+    # THIS IS INSECURE! DO NOT USE except for directly printing the
+    # result.
+    # Poor man's argument qouting, sufficient for user information.
+    # Used since shlex.quote() does not exist in Python 2.7.
+    args = []
+    for arg in command:
+        if " " in arg:
+            arg = repr(arg)
+        args.append(arg)
+    return " ".join(args)
+
+
+# USE WITH CAUTION: If True, allow the command to be a string instead
+# of a list of arguments. The command-string will be executed via a
+# shell. This should only be used in the test-suite for testing
+# redirects.
+__command_is_string__ = False
+
+
 def _execute_command(command, input_value=''):
     """commands.getoutput() replacement that also works on windows"""
-    logger.debug("Running command: %r", command)
-    if command.startswith(sys.executable):
+    # Enforce the command to be a list or arguments, except if
+    # ``__command_is_string__`` is string is set, which is meant to be
+    # used by the test-suite only (see above).
+    assert isinstance(command, (list, tuple)) or __command_is_string__
+    logger.debug("Running command: %r", format_command(command))
+    if command[0].startswith(sys.executable):
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        if ' upload ' in command or ' register ' in command:
+        if 'upload' in command or 'register' in command:
             # We really do want to see the stderr here, otherwise a
             # failed upload does not even show up in the output.
             show_stderr = True
@@ -679,7 +700,7 @@ def _execute_command(command, input_value=''):
         env = None
         show_stderr = True
     p = subprocess.Popen(command,
-                         shell=True,
+                         shell=not isinstance(command, (list, tuple)),
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
@@ -709,7 +730,7 @@ def _execute_command(command, input_value=''):
         result = stdout_output
         if stderr_output:
             logger.debug("Stderr of running command '%s':\n%s",
-                         command, stderr_output)
+                         format_command(command), stderr_output)
     o.close()
     e.close()
     return result
@@ -779,10 +800,22 @@ def execute_command(command, allow_retry=False, fail_message=""):
         print(Fore.RED + fail_message)
     retry = retry_yes_no(command)
     if retry:
-        logger.info("Retrying command: %r", command)
+        logger.info("Retrying command: %r", format_command(command))
         return execute_command(command, allow_retry=True)
     # Accept the error, continue with the program.
     return result
+
+
+def execute_commands(commands, allow_retry=False, fail_message=""):
+    assert isinstance(commands, (list, tuple))
+    if not isinstance(commands[0], (list, tuple)):
+        commands = [commands]
+    result = []
+    for cmd in commands:
+        assert isinstance(cmd, (list, tuple))
+        result.append(execute_command(cmd, allow_retry=allow_retry,
+                                      fail_message=fail_message))
+    return '\n'.join(result)
 
 
 def retry_yes_no(command):
@@ -812,13 +845,13 @@ def retry_yes_no(command):
         if input_value:
             input_value = input_value.lower()
             if input_value == 'y' or input_value == 'yes':
-                logger.info("Retrying command: %r", command)
+                logger.info("Retrying command: %r", format_command(command))
                 return True
             if input_value == 'n' or input_value == 'no':
                 # Accept the error, continue with the program.
                 return False
             if input_value == 'q' or input_value == 'quit':
-                raise CommandException("Command failed: %r" % command)
+                raise CommandException("Command failed: %r" % format_command(command))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.

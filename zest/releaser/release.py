@@ -82,7 +82,7 @@ class Releaser(baserelease.Basereleaser):
                  "if there are differences?" % version)
             if utils.ask(q):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(tag)
-                print(diff_command)
+                print(utils.format_command(diff_command))
                 print(execute_command(diff_command))
         else:
             self.data['tag_already_exists'] = False
@@ -93,12 +93,13 @@ class Releaser(baserelease.Basereleaser):
         if self.data['tag_already_exists']:
             return
         cmds = self.vcs.cmd_create_tag(tag, self.data['tag-signing'])
-        if not isinstance(cmds, list):
+        assert isinstance(cmds, (list, tuple)) # transitional guard
+        if not isinstance(cmds[0], (list, tuple)):
             cmds = [cmds]
         if len(cmds) == 1:
             print("Tag needed to proceed, you can use the following command:")
         for cmd in cmds:
-            print(cmd)
+            print(utils.format_command(cmd))
             if utils.ask("Run this command"):
                 print(execute_command(cmd))
             else:

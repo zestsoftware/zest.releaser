@@ -19,7 +19,7 @@ class Subversion(BaseVersionControl):
     def _svn_info(self):
         """Return svn url"""
         if not hasattr(self, '_cached_url'):
-            our_info = execute_command('svn info')
+            our_info = execute_command(['svn', 'info'])
             url = [line for line in our_info.split('\n')
                    if line.startswith('URL')][0]
             # In English, you have 'URL:', in French 'URL :'
@@ -87,14 +87,14 @@ class Subversion(BaseVersionControl):
                             "W160013",
                             ]
         base = self._base_from_svn()
-        tag_info = execute_command('svn list %s%s' % (base, default_plural))
+        tag_info = execute_command(['svn', 'list', '%s%s' % (base, default_plural)])
         # Look for one of the failure messages:
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
             return default_plural
         logger.debug("tags dir does not exist at %s%s", base, default_plural)
 
-        tag_info = execute_command('svn list %s%s' % (base, fallback_singular))
+        tag_info = execute_command(['svn', 'list', '%s%s' % (base, fallback_singular)])
         # Look for one of the failure messages:
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
@@ -118,7 +118,8 @@ class Subversion(BaseVersionControl):
             # Suggest to create a tags dir with the default plural /tags name.
             print("tags dir does not exist at %s" % base + 'tags')
             if utils.ask("Shall I create it"):
-                cmd = 'svn mkdir %stags -m "Creating tags directory."' % (base)
+                cmd = ['svn', 'mkdir', base + 'tags',
+                       '-m', "Creating tags directory."]
                 logger.info("Running %r", cmd)
                 print(execute_command(cmd))
                 tags_name = self._tags_name
@@ -127,7 +128,7 @@ class Subversion(BaseVersionControl):
                 sys.exit(1)
 
         tag_info = execute_command(
-            'svn list --non-interactive %s%s' % (base, tags_name))
+            ['svn', 'list', '--non-interactive', base + tags_name])
         network_errors = [
             'Could not resolve hostname',
             'E670008',
@@ -154,15 +155,15 @@ class Subversion(BaseVersionControl):
         return base + self._tags_name + '/' + version
 
     def cmd_diff(self):
-        return 'svn diff --non-interactive'
+        return ['svn', 'diff', '--non-interactive']
 
     def cmd_commit(self, message):
-        return 'svn commit --non-interactive -m "%s"' % message
+        return ['svn', 'commit', '--non-interactive', '-m', message]
 
     def cmd_diff_last_commit_against_tag(self, version):
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        return "svn --non-interactive diff %s %s" % (tag_url, url)
+        return ['svn', '--non-interactive', 'diff', tag_url, url]
 
     def cmd_log_since_tag(self, version):
         """Return log since a tagged version till the last commit of
@@ -170,7 +171,7 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = execute_command('svn info --non-interactive %s' % tag_url)
+        tag_info = execute_command(['svn', 'info', '--non-interactive', tag_url])
         # Search for: Last Changed Rev: 42761
         revision = None
         for line in tag_info.split('\n'):
@@ -181,7 +182,7 @@ class Subversion(BaseVersionControl):
             logger.error('Could not find revision when tag was made: %s',
                          tag_info)
             sys.exit(1)
-        return "svn --non-interactive log -r%s:HEAD %s" % (revision, url)
+        return ['svn', '--non-interactive', 'log', '-r%s:HEAD' % revision, url]
 
     def cmd_create_tag(self, version, sign=False):
         if sign:
@@ -190,12 +191,12 @@ class Subversion(BaseVersionControl):
             sys.exit(20)
         url = self._branch_url_from_svn()
         tag_url = self.tag_url(version)
-        return 'svn cp --non-interactive %s %s -m "Tagging %s"' % (
-            url, tag_url, version)
+        return ['svn', 'cp', '--non-interactive', url, tag_url,
+                '-m', 'Tagging %s' % version]
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         tag_url = self.tag_url(version)
-        return 'svn co --non-interactive %s %s' % (tag_url, checkout_dir)
+        return ['svn', 'co', '--non-interactive', tag_url, checkout_dir]
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
@@ -212,4 +213,4 @@ class Subversion(BaseVersionControl):
     def list_files(self):
         """List files in version control."""
         return execute_command(
-            'svn ls --non-interactive --recursive').splitlines()
+            ['svn', 'ls', '--non-interactive', '--recursive']).splitlines()

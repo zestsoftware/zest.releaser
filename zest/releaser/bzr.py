@@ -26,7 +26,7 @@ class Bzr(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = execute_command('bzr tags')
+        tag_info = execute_command(['bzr', 'tags'])
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         logger.debug("Available tags: %r", tags)
@@ -42,28 +42,29 @@ class Bzr(BaseVersionControl):
         return version
 
     def cmd_diff(self):
-        return 'bzr diff'
+        return ['bzr', 'diff']
 
     def cmd_commit(self, message):
-        return 'bzr commit -v -m "%s"' % message
+        return ['bzr', 'commit', '-v', '-m', message]
 
     def cmd_diff_last_commit_against_tag(self, version):
-        return "bzr diff -r tag:%s..-1" % version
+        return ["bzr", "diff", "-r", "tag:%s..-1" % version]
 
     def cmd_log_since_tag(self, version):
-        return "bzr log -r tag:%s..-1" % version
+        return ["bzr", "log", "-r", "tag:%s..-1" % version]
 
     def cmd_create_tag(self, version, sign=False):
         if sign:
             logger.error("bzr does not support signing tags, sorry. "
                          "Please check your configuration in 'setup.cfg'.")
             sys.exit(20)
-        return 'bzr tag %s' % version
+        return ["bzr", "tag", version]
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         source = self.reporoot
         target = checkout_dir
-        return 'bzr checkout -r tag:%s %s %s' % (version, source, target)
+        return ["bzr", "checkout", "-r", "tag:%s" % version,
+                source, target]
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
@@ -77,11 +78,11 @@ class Bzr(BaseVersionControl):
         status' and see what we get.
         """
         # Check for changes to versioned files.
-        if execute_command('bzr status --versioned'):
+        if execute_command(['bzr', 'status', '--versioned']):
             # Local changes.
             return False
         return True
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('bzr ls --recursive').splitlines()
+        return execute_command(['bzr', 'ls', '--recursive']).splitlines()
