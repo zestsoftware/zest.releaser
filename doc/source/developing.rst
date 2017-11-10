@@ -10,6 +10,9 @@ zest.releaser checkout, do this::
 
   $ python bootstrap.py  # Or a different python version.
   $ bin/buildout
+  $ export LC_ALL=LANG=en_US.UTF-8
+  $ export LANG=LANG=en_US.UTF-8
+  $ export LANGUAGE=LANG=en_US.UTF-8
   $ bin/test
 
 
