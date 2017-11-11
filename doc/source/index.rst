@@ -26,7 +26,7 @@ bugs and fixing the code:
 .. toctree::
    :maxdepth: 1
 
-   project
+   Improving zest.releaser <project>
    developing
    changelog
    credits
