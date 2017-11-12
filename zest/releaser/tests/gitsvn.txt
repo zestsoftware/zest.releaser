@@ -41,7 +41,7 @@ Make a change:
     ...     _ = f.write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
-    'git diff'
+    ['git', 'diff']
     >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
@@ -58,7 +58,7 @@ Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
-    'git commit -a -m "small tweak"'
+    ['git', 'commit', '-a', '-m', 'small tweak']
 
 In some cases we get this output:
 ``[master ...] small tweak``
@@ -88,9 +88,9 @@ Create a tag and it will show up (master diverges from trunk):
     Your local master diverges from trunk.
     <BLANKLINE>
     >>> cmds
-    ['git svn dcommit',
-     'git tag 0.1 -m "Tagging 0.1"',
-     'git svn tag -m "Tagging 0.1" 0.1']
+    [['git', 'svn', 'dcommit'],
+     ['git', 'tag', '0.1', '-m', 'Tagging 0.1'],
+     ['git', 'svn', 'tag', '-m', 'Tagging 0.1', '0.1']]
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
@@ -104,8 +104,8 @@ Create a tag and it will show up (master == trunk):
     <BLANKLINE>
     You are on branch master.
     >>> cmds
-    ['git tag 0.2 -m "Tagging 0.2"',
-     'git svn tag -m "Tagging 0.2" 0.2']
+    [['git', 'tag', '0.2', '-m', 'Tagging 0.2'],
+     ['git', 'svn', 'tag', '-m', 'Tagging 0.2', '0.2']]
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
@@ -113,7 +113,7 @@ Create a tag and it will show up (master == trunk):
 
 Work on a branch different from master (unsupported):
 
-    >>> dontcare = execute_command('git checkout -b foo')
+    >>> dontcare = execute_command(['git', 'checkout', '-b', 'foo'])
     >>> cmds = checkout.cmd_create_tag('0.3')
     Traceback (most recent call last):
     ...

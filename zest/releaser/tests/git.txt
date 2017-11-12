@@ -8,7 +8,7 @@ Detailed tests of git.py
 Some initial imports:
 
     >>> from zest.releaser import git
-    >>> from zest.releaser.utils import execute_command
+    >>> from zest.releaser.utils import execute_command, execute_commands
     >>> import os
 
 Project name
@@ -41,7 +41,7 @@ Make a change:
     ...    _ = f.write('\na = 2\n')
     >>> cmd = checkout.cmd_diff()
     >>> cmd
-    'git diff'
+    ['git', 'diff']
     >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
@@ -58,7 +58,7 @@ Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
-    'git commit -a -m "small tweak"'
+    ['git', 'commit', '-a', '-m', 'small tweak']
 
 In some cases we get this output:
 ``[master ...] small tweak``
@@ -82,7 +82,7 @@ Create a tag and it will show up:
 
     >>> cmd = checkout.cmd_create_tag('0.1')
     >>> cmd
-    'git tag 0.1 -m "Tagging 0.1"'
+    ['git', 'tag', '0.1', '-m', 'Tagging 0.1']
     >>> dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1']
@@ -106,7 +106,7 @@ Now we can request the changes since a specific tag:
 
     >>> cmd = checkout.cmd_diff_last_commit_against_tag('0.1')
     >>> cmd
-    'git diff 0.1'
+    ['git', 'diff', '0.1']
     >>> print(execute_command(cmd))
     diff --git a/setup.py b/setup.py
     index 9c14143..54fa3b9 100644
@@ -138,7 +138,7 @@ other version control systems too.
 So we first switch back to the tag.
 
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', gitsourcedir)
-    >>> print(execute_command(cmd))
+    >>> print(execute_commands(cmd))
     RED Note: ...0.1...
     RED HEAD is now at ... small tweak
 
@@ -172,8 +172,9 @@ though we are already at the correct tag.
     >>> os.chdir(temp)
     >>> cmd = checkout.cmd_checkout_from_tag('0.1', temp)
     >>> cmd
-    'git checkout 0.1 && git submodule update --init --recursive'
-    >>> print(execute_command(cmd))
+    [['git', 'checkout', '0.1'],
+     ['git', 'submodule', 'update', '--init', '--recursive']]
+    >>> print(execute_commands(cmd))
     RED HEAD is now at ... small tweak
 
 The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
@@ -186,8 +187,9 @@ The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
 Change back to the source directory and return to the master branch.
 
     >>> os.chdir(gitsourcedir)
-    >>> cmd = 'git checkout master && git submodule update --init --recursive'
-    >>> print(execute_command(cmd))
+    >>> cmd = [['git', 'checkout', 'master'],
+    ... ['git', 'submodule', 'update', '--init', '--recursive']]
+    >>> print(execute_commands(cmd))
     RED Previous HEAD position was ... small tweak
     RED Switched to branch 'master'
 
@@ -197,4 +199,4 @@ Pushing changes
 For git, committing isn't enough. We need to push changes to the server:
 
     >>> checkout.push_commands()
-    ['git push', 'git push --tags']
+    [['git', 'push'], ['git', 'push', '--tags']]

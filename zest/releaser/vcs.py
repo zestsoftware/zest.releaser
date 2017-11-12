@@ -348,7 +348,7 @@ class BaseVersionControl(object):
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)
-        print(utils.execute_command(cmd))
+        print(utils.execute_commands(cmd))
 
     def is_clean_checkout(self):
         "Is this a clean checkout?"

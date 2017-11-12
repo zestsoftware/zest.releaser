@@ -28,7 +28,7 @@ class Hg(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = execute_command('hg tags')
+        tag_info = execute_command(['hg', 'tags'])
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         tags.remove('tip')  # Not functional for us
@@ -45,24 +45,24 @@ class Hg(BaseVersionControl):
         return version
 
     def cmd_diff(self):
-        return 'hg diff'
+        return ['hg', 'diff']
 
     def cmd_commit(self, message):
-        return 'hg commit -v -m "%s"' % message
+        return ['hg', 'commit', '-v', '-m', message]
 
     def cmd_diff_last_commit_against_tag(self, version):
-        current_revision = execute_command('hg identify')
+        current_revision = execute_command(['hg', 'identify'])
         current_revision = current_revision.split(' ')[0]
         # + at the end of the revision denotes uncommitted changes
         current_revision = current_revision.rstrip('+')
-        return "hg diff -r %s -r %s" % (version, current_revision)
+        return ['hg', 'diff', '-r', version, '-r', current_revision]
 
     def cmd_log_since_tag(self, version):
-        current_revision = execute_command('hg identify')
+        current_revision = execute_command(['hg', 'identify'])
         current_revision = current_revision.split(' ')[0]
         # + at the end of the revision denotes uncommitted changes
         current_revision = current_revision.rstrip('+')
-        return "hg log -r %s -r %s" % (version, current_revision)
+        return ['hg', 'log', '-r', version, '-r', current_revision]
 
     def cmd_create_tag(self, version, sign=False):
         if sign:
@@ -71,12 +71,12 @@ class Hg(BaseVersionControl):
                 "Please check your configuration in 'setup.cfg'.")
             sys.exit(21)
         # Note: place the '-m' before the argument for hg 1.1 support.
-        return 'hg tag -m "Tagging %s" %s' % (version, version)
+        return ['hg', 'tag', '-m', 'Tagging %s' % version, version]
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         source = self.reporoot
         target = checkout_dir
-        return 'hg clone -r %s %s %s' % (version, source, target)
+        return ['hg', 'clone', '-r', version, source, target]
 
     def checkout_from_tag(self, version):
         package = self.name
@@ -93,15 +93,15 @@ class Hg(BaseVersionControl):
         """
         # The --quiet option ignores untracked (unknown and ignored)
         # files, which seems reasonable.
-        if execute_command('hg status --quiet'):
+        if execute_command(['hg', 'status', '--quiet']):
             # Local changes.
             return False
         return True
 
     def push_commands(self):
         """Return commands to push changes to the server."""
-        return ['hg push']
+        return [['hg', 'push']]
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('hg locate --fullpath').splitlines()
+        return execute_command(['hg', 'locate', '--fullpath']).splitlines()

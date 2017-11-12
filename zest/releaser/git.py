@@ -38,7 +38,7 @@ class Git(BaseVersionControl):
         return dir_name
 
     def available_tags(self):
-        tag_info = execute_command('git tag')
+        tag_info = execute_command(['git', 'tag'])
         tags = [line for line in tag_info.split('\n') if line]
         logger.debug("Available tags: %r", tags)
         return tags
@@ -49,11 +49,11 @@ class Git(BaseVersionControl):
         temp = tempfile.mkdtemp(prefix=prefix)
         cwd = os.getcwd()
         os.chdir(temp)
-        cmd = 'git clone --depth 1 "file://%s" %s' % (self.reporoot, 'gitclone')
+        cmd = ['git', 'clone', '--depth', '1', self.reporoot, 'gitclone']
         logger.debug(execute_command(cmd))
         clonedir = os.path.join(temp, 'gitclone')
         os.chdir(clonedir)
-        cmd = 'git submodule update --init --recursive'
+        cmd = ['git', 'submodule', 'update', '--init', '--recursive']
         logger.debug(execute_command(cmd))
         os.chdir(cwd)
         return clonedir
@@ -64,25 +64,25 @@ class Git(BaseVersionControl):
         return version
 
     def cmd_diff(self):
-        return 'git diff'
+        return ['git', 'diff']
 
     def cmd_commit(self, message):
-        return 'git commit -a -m "%s"' % message
+        return ['git', 'commit', '-a', '-m', message]
 
     def cmd_diff_last_commit_against_tag(self, version):
-        return "git diff %s" % version
+        return ['git', 'diff', version]
 
     def cmd_log_since_tag(self, version):
         """Return log since a tagged version till the last commit of
         the working copy.
         """
-        return "git log %s..HEAD" % version
+        return ['git', 'log', '%s..HEAD' % version]
 
     def cmd_create_tag(self, version, sign=False):
         msg = "Tagging %s" % (version,)
-        cmd = 'git tag %s -m "%s"' % (version, msg)
+        cmd = ['git', 'tag', version, '-m', msg]
         if sign:
-            cmd += " --sign"
+            cmd.append["--sign"]
         if os.path.isdir('.git/svn'):
             print("\nEXPERIMENTAL support for git-svn tagging!\n")
             with open('.git/HEAD') as f:
@@ -115,9 +115,9 @@ class Git(BaseVersionControl):
             if local_head != trunk:
                 print("Your local master diverges from trunk.\n")
                 # dcommit before local tagging
-                cmd.insert(0, 'git svn dcommit')
+                cmd.insert(0, ['git', 'svn', 'dcommit'])
             # create tag in svn
-            cmd.append('git svn tag -m "%s" %s' % (msg, version))
+            cmd.append(['git', 'svn', 'tag', '-m', msg, version])
         return cmd
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
@@ -127,28 +127,30 @@ class Git(BaseVersionControl):
             # to work.
             logger.warn("We haven't been chdir'ed to %s", checkout_dir)
             sys.exit(1)
-        return 'git checkout %s && git submodule update --init --recursive' % \
-            version
+        return [['git', 'checkout', version],
+                ['git', 'submodule', 'update', '--init', '--recursive']]
 
     def is_clean_checkout(self):
         """Is this a clean checkout?
         """
-        head = execute_command('git symbolic-ref --quiet HEAD')
+        head = execute_command(['git', 'symbolic-ref', '--quiet', 'HEAD'])
         # This returns something like 'refs/heads/maurits-warn-on-tag'
         # or nothing.  Nothing would be bad as that indicates a
         # detached head: likely a tag checkout
         if not head:
             # Greetings from Nearly Headless Nick.
             return False
-        if execute_command('git status --short --untracked-files=no'):
+        if execute_command(['git', 'status', '--short', '--untracked-files=no']):
             # Uncommitted changes in files that are tracked.
             return False
         return True
 
     def push_commands(self):
         """Push changes to the server."""
-        return ['git push', 'git push --tags']
+        return [['git', 'push'],
+                ['git', 'push', '--tags']]
 
     def list_files(self):
         """List files in version control."""
-        return execute_command('git ls-tree -r HEAD --name-only').splitlines()
+        return execute_command(
+            ['git', 'ls-tree', '-r', 'HEAD', '--name-only']).splitlines()
