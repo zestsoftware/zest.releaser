@@ -17,6 +17,7 @@ documentation on *using* zest.releaser:
    versions
    uploading
    assumptions
+   entrypoints
    further_reading
 
 And documentation on zest.releaser as a project; for instance for reporting
@@ -25,7 +26,7 @@ bugs and fixing the code:
 .. toctree::
    :maxdepth: 1
 
-   project
+   Improving zest.releaser <project>
    developing
-   entrypoints
    changelog
+   credits
