@@ -186,6 +186,9 @@ today
 tag
     Tag we're releasing
 
+tag-message
+    Commit message for the tag
+
 tag-signing
     Sign tag using gpg or pgp
 
