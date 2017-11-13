@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.13.1 (2017-11-13)
+6.13.1 (unreleased)
 -------------------
 
 - Add tag message formatting (option ``tag-message``). [htgoebel]
