@@ -64,14 +64,14 @@ class Hg(BaseVersionControl):
         current_revision = current_revision.rstrip('+')
         return ['hg', 'log', '-r', version, '-r', current_revision]
 
-    def cmd_create_tag(self, version, sign=False):
+    def cmd_create_tag(self, version, message, sign=False):
         if sign:
             logger.error(
                 "Signing tags with mercurial is not yet implemented, sorry. "
                 "Please check your configuration in 'setup.cfg'.")
             sys.exit(21)
         # Note: place the '-m' before the argument for hg 1.1 support.
-        return ['hg', 'tag', '-m', 'Tagging %s' % version, version]
+        return ['hg', 'tag', '-m', message, version]
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
         source = self.reporoot

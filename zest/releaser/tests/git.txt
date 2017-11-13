@@ -80,9 +80,9 @@ Originally there are no tags:
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd = checkout.cmd_create_tag('0.1', 'Creating tag 0.1')
     >>> cmd
-    ['git', 'tag', '0.1', '-m', 'Tagging 0.1']
+    ['git', 'tag', '0.1', '-m', 'Creating tag 0.1']
     >>> dont_care = execute_command(cmd)
     >>> checkout.available_tags()
     ['0.1']

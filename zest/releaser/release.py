@@ -31,6 +31,7 @@ DATA.update({
     checkout is done.''',
     'version': "Version we're releasing",
     'tag': "Tag we're releasing",
+    'tag-message': "Commit message for the tag",
     'tag-signing': "Sign tag using gpg or pgp",
 })
 
@@ -64,6 +65,7 @@ class Releaser(baserelease.Basereleaser):
         """Collect some data needed for releasing"""
         self._grab_version()
         self.data['tag'] = self.pypiconfig.tag_format(self.data['version'])
+        self.data['tag-message'] = self.pypiconfig.tag_message(self.data['version'])
         self.data['tag-signing'] = self.pypiconfig.tag_signing()
         self._check_if_tag_already_exists()
 
@@ -92,7 +94,8 @@ class Releaser(baserelease.Basereleaser):
         tag = self.data['tag']
         if self.data['tag_already_exists']:
             return
-        cmds = self.vcs.cmd_create_tag(tag, self.data['tag-signing'])
+        cmds = self.vcs.cmd_create_tag(tag, self.data['tag-message'],
+                                       self.data['tag-signing'])
         assert isinstance(cmds, (list, tuple)) # transitional guard
         if not isinstance(cmds[0], (list, tuple)):
             cmds = [cmds]

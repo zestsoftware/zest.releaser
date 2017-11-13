@@ -76,7 +76,7 @@ Originally there are no tags (the default 'tip' tag is filtered out):
 
 Create a tag and it will show up:
 
-    >>> cmd = checkout.cmd_create_tag('0.1')
+    >>> cmd = checkout.cmd_create_tag('0.1', 'Creating tag 0.1')
     >>> cmd
     ['bzr', 'tag', '0.1']
     >>> dont_care = execute_command(cmd)

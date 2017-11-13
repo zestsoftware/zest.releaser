@@ -80,7 +80,7 @@ Originally there are no tags:
 
 Create a tag and it will show up (master diverges from trunk):
 
-    >>> cmds = checkout.cmd_create_tag('0.1')
+    >>> cmds = checkout.cmd_create_tag('0.1', 'Creating tag 0.1')
     <BLANKLINE>
     EXPERIMENTAL support for git-svn tagging!
     <BLANKLINE>
@@ -89,8 +89,8 @@ Create a tag and it will show up (master diverges from trunk):
     <BLANKLINE>
     >>> cmds
     [['git', 'svn', 'dcommit'],
-     ['git', 'tag', '0.1', '-m', 'Tagging 0.1'],
-     ['git', 'svn', 'tag', '-m', 'Tagging 0.1', '0.1']]
+     ['git', 'tag', '0.1', '-m', 'Creating tag 0.1'],
+     ['git', 'svn', 'tag', '-m', 'Creating tag 0.1', '0.1']]
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
@@ -98,14 +98,14 @@ Create a tag and it will show up (master diverges from trunk):
 
 Create a tag and it will show up (master == trunk):
 
-    >>> cmds = checkout.cmd_create_tag('0.2')
+    >>> cmds = checkout.cmd_create_tag('0.2', 'Creating tag 0.2')
     <BLANKLINE>
     EXPERIMENTAL support for git-svn tagging!
     <BLANKLINE>
     You are on branch master.
     >>> cmds
-    [['git', 'tag', '0.2', '-m', 'Tagging 0.2'],
-     ['git', 'svn', 'tag', '-m', 'Tagging 0.2', '0.2']]
+    [['git', 'tag', '0.2', '-m', 'Creating tag 0.2'],
+     ['git', 'svn', 'tag', '-m', 'Creating tag 0.2', '0.2']]
     >>> for cmd in cmds:
     ...     dont_care = execute_command(cmd)
     >>> checkout.available_tags()
@@ -114,7 +114,7 @@ Create a tag and it will show up (master == trunk):
 Work on a branch different from master (unsupported):
 
     >>> dontcare = execute_command(['git', 'checkout', '-b', 'foo'])
-    >>> cmds = checkout.cmd_create_tag('0.3')
+    >>> cmds = checkout.cmd_create_tag('0.3', 'Creating tag 0.3')
     Traceback (most recent call last):
     ...
     RuntimeError: SYSTEM EXIT (code=1)

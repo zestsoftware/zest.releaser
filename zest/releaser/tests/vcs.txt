@@ -57,7 +57,7 @@ Methods that must be implemented in subclasses
     Traceback (most recent call last):
     ...
     NotImplementedError
-    >>> checkout.cmd_create_tag('arg')
+    >>> checkout.cmd_create_tag('arg', 'message')
     Traceback (most recent call last):
     ...
     NotImplementedError
