@@ -1,5 +1,5 @@
-Information for developers
-==========================
+Information for developers of zest.releaser itself
+===================================================
 
 Running tests
 -------------
