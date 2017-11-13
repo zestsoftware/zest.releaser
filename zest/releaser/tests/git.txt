@@ -87,6 +87,14 @@ Create a tag and it will show up:
     >>> checkout.available_tags()
     ['0.1']
 
+We could have signed the tag, too (though we won't execute the actual command
+as it would need gpg setup on the test machine):
+
+    >>> cmd = checkout.cmd_create_tag('0.1', 'Creating tag 0.1', sign=True)
+    >>> cmd
+    ['git', 'tag', '0.1', '-m', 'Creating tag 0.1', '--sign']
+
+
 A specific tag url is important for subversion, but nonsensical for
 git.  We just return the version as-is:
 
