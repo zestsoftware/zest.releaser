@@ -75,3 +75,20 @@ And the same for git, so you should do::
 For release testing we expected a functioning .pypirc file in your
 home dir, with an old-style configuration, but the tests now use an
 own config file.
+
+
+Building the documentation locally
+-------------------------------------
+
+If you worked on the documentation, we suggest you verify the markup
+and the result by building the documentation locally and view your
+results.
+
+For building the documentation simply run::
+
+    $ bin/sphinx
+
+For viewing the documentation open :file:`doc/build/html/index.html`
+in your browser, e.g. by running::
+
+    $ xdg-open doc/build/html/index.html
