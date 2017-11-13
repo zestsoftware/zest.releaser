@@ -341,8 +341,8 @@ By default the tag format is just the version itself:
     >>> pypiconfig.tag_format(version)
     '1.2.3'
 
-But it can be customized with a format string, as long as it contains either
-an ``str.format()`` format:
+But it can be customized with a format string, as long as it contains
+the string ``{version}``:
 
     >>> SETUP_CFG = """
     ... [zest.releaser]
