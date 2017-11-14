@@ -142,7 +142,7 @@ tag-format = a string
     It needs to contain ``{version}``.
     For backward compatibility, it can contain ``%(version)s`` instead.
 
-tag-messgae = a string
+tag-message = a string
     Default: ``Tagging {version}``
     This formatter defines the commit message passed to the ``tag``
     command of the VCS.
