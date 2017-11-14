@@ -146,9 +146,9 @@ tag-message = a string
     Default: ``Tagging {version}``
     This formatter defines the commit message passed to the ``tag``
     command of the VCS.
-    Please not that not all VCSes (e.g. `bzr`) support passing
+    Please note that not all VCSes (e.g. `bzr`) support passing
     messages when tagging.
-    It must to contain ``{version}``.
+    It must contain ``{version}``.
 
 tag-signing = yes / no
     Default: no.
