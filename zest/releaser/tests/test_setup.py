@@ -101,6 +101,9 @@ checker = renormalizing.RENormalizing([
     # svn 1.9 prints 'Committing transaction...'
     (re.compile('Committing transaction...'), ''),
     (re.compile('FileNotFoundError'), 'IOError'),
+    # mercurial 4.4.1 includes an extra line in checkout_from_tag, e.g.:
+    # new changesets 234567890abc:234567890abc
+    (re.compile('new changesets [0-9a-f]{12}:[0-9a-f]{12}'), ''),
 ] + ([
 
 ] if six.PY3 else [

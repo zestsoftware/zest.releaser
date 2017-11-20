@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.13.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed tests with mercurial 4.4+.  [maurits]
 
 
 6.13.1 (2017-11-13)
