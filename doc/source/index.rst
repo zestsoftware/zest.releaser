@@ -30,3 +30,6 @@ bugs and fixing the code:
    developing
    changelog
    credits
+   
+print "hello world"
+ 
