@@ -71,7 +71,7 @@ def write_text_file(filename, contents, encoding=None):
         # We might have added something to the contents (a changelog entry)
         # that does not fit the detected encoding.  So we try a few encodings.
         orig_encoding = encoding
-        encodings = set([orig_encoding, OUTPUT_ENCODING, 'utf-8'])
+        encodings = [orig_encoding, OUTPUT_ENCODING, 'utf-8']
         for encoding in encodings:
             try:
                 contents = contents.encode(encoding)
