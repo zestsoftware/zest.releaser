@@ -6,6 +6,8 @@ Changelog for zest.releaser
 
 - Fixed tests with mercurial 4.4+.  [maurits]
 
+- Fixed writing of files in original encoding. [mgedmin]
+
 
 6.13.1 (2017-11-13)
 -------------------
