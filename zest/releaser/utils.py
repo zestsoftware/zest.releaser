@@ -75,6 +75,7 @@ def write_text_file(filename, contents, encoding=None):
         for encoding in encodings:
             try:
                 contents = contents.encode(encoding)
+                logger.debug("Encoding we actually used: %s", encoding)
                 break
             except UnicodeEncodeError:
                 pass
