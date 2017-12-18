@@ -10,7 +10,8 @@ from requests import codes
 from six.moves.urllib.error import HTTPError
 from six.moves.urllib import request as urllib2
 from twine.repository import Repository
-from twine.package import PackageFile
+import twine.cli
+import requests
 
 from zest.releaser import baserelease
 from zest.releaser import pypi
@@ -168,10 +169,8 @@ class Releaser(baserelease.Basereleaser):
                 if register:
                     logger.info("Registering...")
                     # We only need the first file, it has all the needed info
-                    self._retry_twine('register', server, files_in_dist[0])
-                for filename in files_in_dist:
-                    self._retry_twine('upload', server, filename)
-        self._close_all_repositories()
+                    self._retry_twine('register', server, files_in_dist[:1])
+                self._retry_twine('upload', server, files_in_dist)
 
     def _get_repository(self, server):
         if server not in self._repositories:
@@ -186,40 +185,22 @@ class Releaser(baserelease.Basereleaser):
     def _drop_repository(self, server):
         self._repositories.pop(server, None)
 
-    def _retry_twine(self, twine_command, server, filename):
-        repository = self._get_repository(server)
-        package_file = PackageFile.from_filename(filename, comment=None)
+    def _retry_twine(self, twine_command, server, filenames):
+        twine_args = (twine_command, '-r', server)
         if twine_command == 'register':
-            # Register the package.
-            twine_function = repository.register
-            twine_args = (package_file, )
+            pass
         elif twine_command == 'upload':
-            try:
-                already_uploaded = repository.package_is_uploaded(package_file)
-            except ValueError:
-                # For a new package, the call fails, at least with twine 1.8.1.
-                # This is the same as when calling `twine --skip-existing` on
-                # the command line.  See
-                # https://github.com/pypa/twine/issues/220
-                logger.warning('Error calling package_is_uploaded from twine. '
-                               'Probably new project. Will try uploading.')
-                already_uploaded = False
-            if already_uploaded:
-                logger.warning(
-                    'A file %s has already been uploaded. Ignoring.', filename)
-                return
-            twine_function = repository.upload
-            twine_args = (package_file, )
+            twine_args += ('--skip-existing', )
         else:
             print(Fore.RED + "Unknown twine command: %s" % twine_command)
             sys.exit(1)
-        response = twine_function(*twine_args)
-        if response is not None and response.status_code == codes.OK:
+        twine_args += tuple(filenames)
+        try:
+            twine.cli.dispatch(twine_args)
             return
-        # Something went wrong.  Close repository.
-        repository.close()
-        self._drop_repository(server)
-        if response is not None:
+        except requests.HTTPError as e:
+            # Something went wrong.  Close repository.
+            response = e.response
             # Some errors reported by PyPI after register or upload may be
             # fine.  The register command is not really needed anymore with the
             # new PyPI.  See https://github.com/pypa/twine/issues/200
