@@ -9,7 +9,6 @@ from colorama import Fore
 from requests import codes
 from six.moves.urllib.error import HTTPError
 from six.moves.urllib import request as urllib2
-from twine.repository import Repository
 import twine.cli
 import requests
 
@@ -55,8 +54,6 @@ class Releaser(baserelease.Basereleaser):
 
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
-        # dictionary for holding twine repository information
-        self._repositories = {}
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
             # Nothing yet
@@ -172,19 +169,6 @@ class Releaser(baserelease.Basereleaser):
                     self._retry_twine('register', server, files_in_dist[:1])
                 self._retry_twine('upload', server, files_in_dist)
 
-    def _get_repository(self, server):
-        if server not in self._repositories:
-            self._repositories[server] = Repository(
-                **self.pypiconfig.get_server_config(server))
-        return self._repositories[server]
-
-    def _close_all_repositories(self):
-        for repository in self._repositories.values():
-            repository.close()
-
-    def _drop_repository(self, server):
-        self._repositories.pop(server, None)
-
     def _retry_twine(self, twine_command, server, filenames):
         twine_args = (twine_command, '-r', server)
         if twine_command == 'register':
@@ -217,9 +201,6 @@ class Releaser(baserelease.Basereleaser):
         retry = utils.retry_yes_no(['twine', twine_command])
         if retry:
             logger.info("Retrying.")
-            # Reload the pypi config so changes that the user has made to
-            # influence the retry can take effect.
-            self.pypiconfig.reload()
             return self._retry_twine(twine_command, server, filename)
 
     def _release(self):

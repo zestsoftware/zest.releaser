@@ -207,29 +207,6 @@ class PypiConfig(BaseConfig):
             return False
         return len(self.distutils_servers()) > 0
 
-    def get_server_config(self, server):
-        """Get url, username, password for server.
-        """
-        repository_url = DEFAULT_REPOSITORY
-        username = None
-        password = None
-        if self.config.has_section(server):
-            if self.config.has_option(server, 'repository'):
-                repository_url = self._get_text(server, 'repository')
-            if self.config.has_option(server, 'username'):
-                username = self._get_text(server, 'username')
-            if self.config.has_option(server, 'password'):
-                password = self._get_text(server, 'password', raw=True)
-        if not username and self.config.has_option('server-login', 'username'):
-            username = self._get_text('server-login', 'username')
-        if not password and self.config.has_option('server-login', 'password'):
-            password = self._get_text('server-login', 'password', raw=True)
-        return {
-            'repository_url': repository_url,
-            'username': username,
-            'password': password,
-        }
-
     def distutils_servers(self):
         """Return a list of known distutils servers.
 
