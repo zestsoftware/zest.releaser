@@ -151,10 +151,6 @@ class Releaser(baserelease.Basereleaser):
 
         register = self.pypiconfig.register_package()
         for server in servers:
-            if register:
-                question = "Register and upload"
-            else:
-                question = "Upload"
             default = True
             exact = False
             if server == 'pypi' and not package_in_pypi(package):
@@ -164,6 +160,9 @@ class Releaser(baserelease.Basereleaser):
                 # package we default to False here.
                 default = False
                 exact = True
+            question = "Upload"
+            if register:
+                question = "Register and upload"
             if utils.ask("%s to %s" % (question, server),
                          default=default, exact=exact):
                 if register:
