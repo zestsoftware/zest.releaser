@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.13.3 (unreleased)
+6.13.3 (2017-12-19)
 -------------------
 
 - Fixed writing of files in original encoding on python3, too. [andreparames]
