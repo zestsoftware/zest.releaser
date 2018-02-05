@@ -272,20 +272,21 @@ class BaseVersionControl(object):
                 return
 
         good_version = "version = %s" % version
-        setup_cfg_lines, encoding = utils.read_text_file('setup.cfg')
-        setup_cfg_lines = setup_cfg_lines.split('\n')
-        for line_number, line in enumerate(setup_cfg_lines):
-            if VERSION_PATTERN.search(line):
-                logger.debug("Matching version line found: %r", line)
-                if line.startswith(' '):
-                    indentation = line.split('version')[0]
+        if os.path.exists('setup.cfg'):
+            setup_cfg_lines, encoding = utils.read_text_file('setup.cfg')
+            setup_cfg_lines = setup_cfg_lines.split('\n')
+            for line_number, line in enumerate(setup_cfg_lines):
+                if VERSION_PATTERN.search(line):
+                    logger.debug("Matching version line found: %r", line)
+                    if line.startswith(' '):
+                        indentation = line.split('version')[0]
 
-                    good_version = indentation + good_version
-                setup_cfg_lines[line_number] = good_version
-                utils.write_text_file(
-                    'setup.cfg', '\n'.join(setup_cfg_lines), encoding)
-                logger.info("Set setup.cfg's version to %r", version)
-                return
+                        good_version = indentation + good_version
+                    setup_cfg_lines[line_number] = good_version
+                    utils.write_text_file(
+                        'setup.cfg', '\n'.join(setup_cfg_lines), encoding)
+                    logger.info("Set setup.cfg's version to %r", version)
+                    return
 
         logger.error(
             "We could read a version from setup.py, but could not write it "
