@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.13.4 (unreleased)
+6.13.4 (2018-02-05)
 -------------------
 
 - Fixed IOError when ``setup.cfg`` is missing and no version is found.
