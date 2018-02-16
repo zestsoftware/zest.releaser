@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.13.5 (unreleased)
+6.13.5 (2018-02-16)
 -------------------
 
 - Quit in ``postrelease`` when we cannot find a version.
