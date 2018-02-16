@@ -17,3 +17,7 @@ htmlcov
 doc/build/
 
 .tox/
+
+lib-python/
+lib_pypy/
+site-packages/
