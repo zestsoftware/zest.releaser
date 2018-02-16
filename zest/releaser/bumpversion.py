@@ -76,7 +76,7 @@ class BumpVersion(baserelease.Basereleaser):
         """
         original_version = self.vcs.version
         logger.debug("Extracted version: %s", original_version)
-        if original_version is None:
+        if not original_version:
             logger.critical('No version found.')
             sys.exit(1)
         suggestion = new_version = self.data.get('new_version')

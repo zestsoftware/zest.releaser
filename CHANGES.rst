@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.13.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Quit in ``postrelease`` when we cannot find a version.
+  Fixes `issue #262 <https://github.com/zestsoftware/zest.releaser/issues/262>`.
+  [maurits]
 
 
 6.13.4 (2018-02-05)

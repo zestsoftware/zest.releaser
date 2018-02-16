@@ -78,7 +78,7 @@ class Prereleaser(baserelease.Basereleaser):
         """
         original_version = self.vcs.version
         logger.debug("Extracted version: %s", original_version)
-        if original_version is None:
+        if not original_version:
             logger.critical('No version found.')
             sys.exit(1)
         suggestion = utils.cleanup_version(original_version)
