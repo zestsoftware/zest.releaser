@@ -61,6 +61,10 @@ class Postreleaser(baserelease.Basereleaser):
     def _ask_for_new_dev_version(self):
         """Ask for and store a new dev version string."""
         current = self.vcs.version
+        logger.debug("Extracted version: %s", current)
+        if not current:
+            logger.critical('No version found.')
+            sys.exit(1)
         # Clean it up to a non-development version.
         current = utils.cleanup_version(current)
         suggestion = utils.suggest_version(
