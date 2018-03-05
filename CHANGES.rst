@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Test compatibility with Python 2.7, 3.4, 3.5. 3.6.
+  We test PyPy2 as well, but it intermittently fails.  [maurits]
 
 
 6.13.5 (2018-02-16)
