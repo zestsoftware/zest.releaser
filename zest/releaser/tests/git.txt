@@ -163,7 +163,7 @@ The checked out clone is really a clone and not an empty directory.
     >>> sorted(os.listdir(temp))
     ['.git', '.gitignore', 'CHANGES.txt', ...]
     >>> with open(os.path.join(temp, 'setup.py')) as f:
-    ...     print(f).read())
+    ...     print(f.read())
     from setuptools import setup, find_packages
     ...
     a = 2
@@ -189,7 +189,7 @@ though we are already at the correct tag.
 The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
 
     >>> with open(os.path.join(temp, 'setup.py')) as f:
-    ...     print(f).read())
+    ...     print(f.read())
     from setuptools import setup, find_packages
     ...
     a = 2
