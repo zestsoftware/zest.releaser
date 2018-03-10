@@ -191,7 +191,7 @@ def strip_last_number(value):
     """
     if not value:
         return value
-    match = re.search('\d+$', value)
+    match = re.search(r'\d+$', value)
     if not match:
         return value
     return value[:-len(match.group())]
