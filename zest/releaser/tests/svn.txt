@@ -46,7 +46,7 @@ Make a change:
     Index: ...
     --- setup.py      (revision 3)
     +++ setup.py      (working copy)
-    @@ -36,3 +36,5 @@
+    @@ -42,3 +42,5 @@
                'console_scripts': [
                ]},
            )
@@ -116,7 +116,7 @@ post-commit hooks:
     ===================================================================
     --- setup.py      (.../tags/0.1)  (revision 7)
     +++ setup.py      (.../trunk)     (revision 7)
-    @@ -38,3 +38,5 @@
+    @@ -44,3 +44,5 @@
            )
     <BLANKLINE>
      a = 2

@@ -47,7 +47,7 @@ Make a change:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -36,3 +36,5 @@ setup(name='tha.example',
+    @@ -42,3 +42,5 @@ setup(name='tha.example',
                'console_scripts': [
                ]},
            )
