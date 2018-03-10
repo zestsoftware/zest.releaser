@@ -15,7 +15,6 @@ except ImportError:
     detect_encoding = None
 try:
     import chardet
-
     HAVE_CHARDET = True
 except ImportError:
     HAVE_CHARDET = False
