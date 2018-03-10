@@ -674,7 +674,7 @@ def format_command(command):
     args = []
     for arg in command:
         if " " in arg:
-            arg = repr(arg)
+            arg = "'{}'".format(arg)
         args.append(arg)
     return " ".join(args)
 
