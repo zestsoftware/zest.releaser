@@ -5,6 +5,7 @@ import os
 import sys
 
 import pkg_resources
+from six import text_type
 from six.moves.configparser import ConfigParser
 from six.moves.configparser import NoSectionError
 from six.moves.configparser import NoOptionError
@@ -258,7 +259,7 @@ class PypiConfig(object):
         if self.config is None:
             return default
         try:
-            result = self.config.get('zest.releaser', 'extra-message')
+            result = self._get_text('zest.releaser', 'extra-message')
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -539,4 +540,19 @@ class PypiConfig(object):
                 result = self.config.getboolean(section, key)
             except (NoSectionError, NoOptionError, ValueError):
                 return result
+        return result
+
+    def _get_text(self, section, key, default=''):
+        """Get a text from the config.
+
+        We want unicode.
+        """
+        result = default
+        if self.config is not None:
+            try:
+                result = self.config.get(section, key)
+            except (NoSectionError, NoOptionError, ValueError):
+                return result
+            if not isinstance(result, text_type):
+                result = result.decode('utf-8')
         return result
