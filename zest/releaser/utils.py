@@ -265,8 +265,8 @@ def suggest_version(current, feature=False, breaking=False,
             last = int(current[target]) + 1
             suggestion = current[:target] + str(last)
         except (ValueError, IndexError):
-            logger.warn("Version does not end with a number, so we can't "
-                        "calculate a suggestion for a next version.")
+            logger.warning("Version does not end with a number, so we can't "
+                           "calculate a suggestion for a next version.")
             return None
     # Maybe add a few zeroes: turn 2 into 2.0.0 if 3 levels is the goal.
     goal = max(original_levels, levels)

@@ -113,15 +113,15 @@ class Basereleaser(object):
         history_file = self.vcs.history_file(location=default_location)
         self.data['history_file'] = history_file
         if not history_file:
-            logger.warn("No history file found")
+            logger.warning("No history file found")
             return
         logger.debug("Checking %s", history_file)
         history_lines, history_encoding = read_text_file(history_file)
         history_lines = history_lines.split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not headings:
-            logger.warn("No detectable version heading in the history "
-                        "file %s", history_file)
+            logger.warning("No detectable version heading in the history "
+                           "file %s", history_file)
             return
         self.data['history_lines'] = history_lines
         self.data['history_encoding'] = history_encoding

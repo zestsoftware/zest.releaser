@@ -145,16 +145,18 @@ class BaseVersionControl(object):
                 if not os.path.exists(fullpath):
                     # Strange.  It at least happens in the tests when
                     # we deliberately remove a CHANGES.txt file.
-                    logger.warn("Found file %s in version control but not on "
-                                "file execute_command.", fullpath)
+                    logger.warning(
+                        "Found file %s in version control but not on "
+                        "file execute_command.", fullpath)
                     continue
                 found.append(fullpath)
         if not found:
             return
         if len(found) > 1:
             found.sort(key=len)
-            logger.warn("Found more than one file, picked the shortest one to "
-                        "change: %s", ', '.join(found))
+            logger.warning(
+                "Found more than one file, picked the shortest one to "
+                "change: %s", ', '.join(found))
         return found[0]
 
     def history_file(self, location=None):
@@ -165,8 +167,8 @@ class BaseVersionControl(object):
             if os.path.exists(location):
                 return location
             else:
-                logger.warn("The specified history file %s doesn't exist",
-                            location)
+                logger.warning("The specified history file %s doesn't exist",
+                               location)
         filenames = []
         for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
             filenames.append(base)

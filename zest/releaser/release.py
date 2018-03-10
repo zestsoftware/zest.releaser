@@ -203,11 +203,11 @@ class Releaser(baserelease.Basereleaser):
                 # This is the same as when calling `twine --skip-existing` on
                 # the command line.  See
                 # https://github.com/pypa/twine/issues/220
-                logger.warn('Error calling package_is_uploaded from twine. '
-                            'Probably new project. Will try uploading.')
+                logger.warning('Error calling package_is_uploaded from twine. '
+                               'Probably new project. Will try uploading.')
                 already_uploaded = False
             if already_uploaded:
-                logger.warn(
+                logger.warning(
                     'A file %s has already been uploaded. Ignoring.', filename)
                 return
             twine_function = repository.upload
