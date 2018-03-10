@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
+- Print commands in a nicer way.
+  You could get ugly output like this, especially on Python 2.7:
+  ``INFO: The '[u'git', u'diff']':``
+  [maurits]
+
 - Test compatibility with Python 2.7, 3.4, 3.5. 3.6.
   We test PyPy2 as well, but it intermittently fails.  [maurits]
 

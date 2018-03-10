@@ -249,7 +249,7 @@ class BaseVersionControl(object):
         setup_lines = setup_lines.split('\n')
         for line_number, line in enumerate(setup_lines):
             if VERSION_PATTERN.search(line):
-                logger.debug("Matching version line found: %r", line)
+                logger.debug("Matching version line found: '%s'", line)
                 if line.startswith(' '):
                     # oh, probably '    version = 1.0,' line.
                     indentation = line.split('version')[0]
@@ -258,17 +258,17 @@ class BaseVersionControl(object):
                 setup_lines[line_number] = good_version
                 utils.write_text_file(
                     'setup.py', '\n'.join(setup_lines), encoding)
-                logger.info("Set setup.py's version to %r", version)
+                logger.info("Set setup.py's version to '%s'", version)
                 return
             if UPPERCASE_VERSION_PATTERN.search(line):
                 # This one only occurs in the first column, so no need to
                 # handle indentation.
-                logger.debug("Matching version line found: %r", line)
+                logger.debug("Matching version line found: '%s'", line)
                 good_version = good_version.upper()
                 setup_lines[line_number] = good_version
                 utils.write_text_file(
                     'setup.py', '\n'.join(setup_lines), encoding)
-                logger.info("Set setup.py's version to %r", version)
+                logger.info("Set setup.py's version to '%s'", version)
                 return
 
         good_version = "version = %s" % version
@@ -277,7 +277,7 @@ class BaseVersionControl(object):
             setup_cfg_lines = setup_cfg_lines.split('\n')
             for line_number, line in enumerate(setup_cfg_lines):
                 if VERSION_PATTERN.search(line):
-                    logger.debug("Matching version line found: %r", line)
+                    logger.debug("Matching version line found: '%s'", line)
                     if line.startswith(' '):
                         indentation = line.split('version')[0]
 
