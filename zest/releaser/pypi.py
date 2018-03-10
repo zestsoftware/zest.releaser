@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-import codecs
 import logging
 import os
 import sys
@@ -49,8 +48,7 @@ class SetupConfig(object):
             self.config = None
             return
         self.config = ConfigParser()
-        with codecs.open(self.config_filename, 'r', 'utf8') as fp:
-            self.config.readfp(fp)
+        self.config.read(self.config_filename)
 
     def has_bad_commands(self):
         if self.config is None:
@@ -160,9 +158,7 @@ class PypiConfig(object):
             self.config = None
             return
         self.config = ConfigParser()
-        for filename in files:
-            with codecs.open(filename, 'r', 'utf8') as fp:
-                self.config.readfp(fp)
+        self.config.read(files)
 
     def is_pypi_configured(self):
         # Do we have configuration for releasing to at least one

@@ -379,7 +379,8 @@ Or, for backward compatibility, a Python % interpolation format:
 
 Notice, however, that a ``setup.cfg`` like the one above doesn't work for
 distutils, as ``ConfigParser`` tries to recursively interpolate all
-``%(values)s`` until there are none left. Which is why we emmit a warning.
+``%(values)s`` until there are none left. Which is why we emit a warning.
+
 
 Formatting release tag messages
 -----------------------------------
