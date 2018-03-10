@@ -105,7 +105,8 @@ Setting the version works also with version.txt files (the setup.py scenario
 is tested in the other tests).
 
     >>> checkout.version = '1.1'
-    >>> print(open('version.txt').read())
+    >>> with open('version.txt') as f:
+    ...     print(f.read())
     1.1
 
 In old Plone products, the setup.py often reads the version.txt and uses that
@@ -114,7 +115,9 @@ version.txt and the setup.py must be left unmolested.
 
     >>> lines = [
     ...     "from setuptools import setup",
-    ...     "setup(name='urgh', version=open('version.txt').read().strip())"]
+    ...     "with open('version.txt') as f:"
+    ...     "    version = f.read().strip()"
+    ...     "setup(name='urgh', version=version)"]
     >>> writeto('setup.py', '\n'.join(lines))
     >>> checkout.version = '1.2'
     >>> print(open('version.txt').read())
