@@ -718,3 +718,31 @@ We print a warning when something is undocumented:
     >>> utils.is_data_documented(data, documentation)
     Checking data dict
     Internal detail: key(s) ['version'] are not documented
+
+
+Formatting commands
+-------------------
+
+You should give a list or tuple as input.
+But let's see what happens with strings:
+
+    >>> print(utils.format_command(''))
+    >>> print(utils.format_command('xyz'))
+    x y z
+
+Do real strings or tuples:
+
+    >>> print(utils.format_command(['x']))
+    x
+    >>> print(utils.format_command(['x', 'y', 'zet']))
+    x y zet
+    >>> print(utils.format_command(('x', 'y', 'zet')))
+    x y zet
+
+Show some real action.
+This should not contain a literal u'...' in the output on Python 2.7,
+but that is hard to test, as we normalize the output to not show it:
+
+    >>> cmd = ['git', 'tag', '1.0', '-m', u'Possibly unicode']
+    >>> print(utils.format_command(cmd))
+    git tag 1.0 -m 'Possibly unicode'

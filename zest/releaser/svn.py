@@ -122,7 +122,7 @@ class Subversion(BaseVersionControl):
             if utils.ask("Shall I create it"):
                 cmd = ['svn', 'mkdir', base + 'tags',
                        '-m', "Creating tags directory."]
-                logger.info("Running %r", cmd)
+                logger.info("Running %r", utils.format_command(cmd))
                 print(execute_command(cmd))
                 tags_name = self._tags_name
                 assert tags_name == 'tags'
