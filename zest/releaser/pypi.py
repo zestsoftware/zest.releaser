@@ -23,7 +23,45 @@ DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
 logger = logging.getLogger(__name__)
 
 
-class SetupConfig(object):
+class BaseConfig(object):
+    """Base config class with a few helper methods."""
+
+    def __init__(self):
+        self.config = None
+
+    def _get_boolean(self, section, key, default=False):
+        """Get a boolean from the config.
+
+        Standard config rules apply, so you can use upper or lower or
+        mixed case and specify 0, false, no or off for boolean False,
+        and 1, on, true or yes for boolean True.
+        """
+        result = default
+        if self.config is not None:
+            try:
+                result = self.config.getboolean(section, key)
+            except (NoSectionError, NoOptionError, ValueError):
+                return result
+        return result
+
+    def _get_text(self, section, key, default=None, raw=False):
+        """Get a text from the config.
+
+        We want unicode, also on Python 2.
+        In Python 3 this is already the case.
+        """
+        result = default
+        if self.config is not None:
+            try:
+                result = self.config.get(section, key, raw=raw)
+            except (NoSectionError, NoOptionError, ValueError):
+                return result
+            if not isinstance(result, text_type):
+                result = result.decode('utf-8')
+        return result
+
+
+class SetupConfig(BaseConfig):
     """Wrapper around the setup.cfg file if available.
 
     One reason is to cleanup setup.cfg from these settings::
@@ -61,7 +99,7 @@ class SetupConfig(object):
         # Check 1.
         if self.config.has_option('egg_info', 'tag_build'):
             # Might still be empty.
-            value = self.config.get('egg_info', 'tag_build')
+            value = self._get_text('egg_info', 'tag_build')
             if value:
                 logger.warning("%s has [egg_info] tag_build set to %r",
                                self.config_filename, value)
@@ -69,7 +107,7 @@ class SetupConfig(object):
         # Check 2.
         if self.config.has_option('egg_info', 'tag_svn_revision'):
             if self.config.getboolean('egg_info', 'tag_svn_revision'):
-                value = self.config.get('egg_info', 'tag_svn_revision')
+                value = self._get_text('egg_info', 'tag_svn_revision')
                 logger.warning("%s has [egg_info] tag_svn_revision set to %r",
                                self.config_filename, value)
                 bad = True
@@ -107,15 +145,16 @@ class SetupConfig(object):
         if self.config is None:
             return default
         try:
-            result = self.config.get(
+            result = self._get_text(
                 'zest.releaser',
-                'python-file-with-version')
+                'python-file-with-version',
+                default=default)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
 
 
-class PypiConfig(object):
+class PypiConfig(BaseConfig):
     """Wrapper around the pypi config file"""
 
     def __init__(self, config_filename=DIST_CONFIG_FILE, use_setup_cfg=True):
@@ -176,15 +215,15 @@ class PypiConfig(object):
         password = None
         if self.config.has_section(server):
             if self.config.has_option(server, 'repository'):
-                repository_url = self.config.get(server, 'repository')
+                repository_url = self._get_text(server, 'repository')
             if self.config.has_option(server, 'username'):
-                username = self.config.get(server, 'username')
+                username = self._get_text(server, 'username')
             if self.config.has_option(server, 'password'):
-                password = self.config.get(server, 'password')
+                password = self._get_text(server, 'password')
         if not username and self.config.has_option('server-login', 'username'):
-            username = self.config.get('server-login', 'username')
+            username = self._get_text('server-login', 'username')
         if not password and self.config.has_option('server-login', 'password'):
-            password = self.config.get('server-login', 'password')
+            password = self._get_text('server-login', 'password')
         return {
             'repository_url': repository_url,
             'username': username,
@@ -198,8 +237,8 @@ class PypiConfig(object):
         server from the list.
         """
         try:
-            index_servers = self.config.get(
-                'distutils', 'index-servers').split()
+            index_servers = self._get_text(
+                'distutils', 'index-servers', default='').split()
         except (NoSectionError, NoOptionError):
             index_servers = []
         if not index_servers:
@@ -259,7 +298,8 @@ class PypiConfig(object):
         if self.config is None:
             return default
         try:
-            result = self._get_text('zest.releaser', 'extra-message')
+            result = self._get_text(
+                'zest.releaser', 'extra-message', default=default)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -348,8 +388,8 @@ class PypiConfig(object):
         if self.config is None:
             return default
         try:
-            result = self.config.get(
-                'zest.releaser', 'development-marker')
+            result = self._get_text(
+                'zest.releaser', 'development-marker', default=default)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -446,10 +486,10 @@ class PypiConfig(object):
         fmt = '{version}'
         if self.config is not None:
             try:
-                fmt = self.config.get('zest.releaser', 'tag-format', raw=True)
+                fmt = self._get_text(
+                    'zest.releaser', 'tag-format', default=fmt, raw=True)
             except (NoSectionError, NoOptionError, ValueError):
                 pass
-
         if '{version}' in fmt:
             return fmt.format(version=version)
         # BBB:
@@ -477,7 +517,8 @@ class PypiConfig(object):
         fmt = 'Tagging {version}'
         if self.config:
             try:
-                fmt = self.config.get('zest.releaser', 'tag-message', raw=True)
+                fmt = self._get_text(
+                    'zest.releaser', 'tag-message', default=fmt, raw=True)
             except (NoSectionError, NoOptionError, ValueError):
                 pass
         if '{version}' not in fmt:
@@ -521,38 +562,9 @@ class PypiConfig(object):
         if self.config is None:
             return default
         try:
-            result = self.config.get(
-                'zest.releaser', 'date-format').replace('%%', '%')
+            result = self._get_text(
+                'zest.releaser', 'date-format', default=default
+            ).replace('%%', '%')
         except (NoSectionError, NoOptionError, ValueError):
             return default
-        return result
-
-    def _get_boolean(self, section, key, default=False):
-        """Get a boolean from the config.
-
-        Standard config rules apply, so you can use upper or lower or
-        mixed case and specify 0, false, no or off for boolean False,
-        and 1, on, true or yes for boolean True.
-        """
-        result = default
-        if self.config is not None:
-            try:
-                result = self.config.getboolean(section, key)
-            except (NoSectionError, NoOptionError, ValueError):
-                return result
-        return result
-
-    def _get_text(self, section, key, default=''):
-        """Get a text from the config.
-
-        We want unicode.
-        """
-        result = default
-        if self.config is not None:
-            try:
-                result = self.config.get(section, key)
-            except (NoSectionError, NoOptionError, ValueError):
-                return result
-            if not isinstance(result, text_type):
-                result = result.decode('utf-8')
         return result
