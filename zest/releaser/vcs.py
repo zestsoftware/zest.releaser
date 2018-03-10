@@ -96,7 +96,7 @@ class BaseVersionControl(object):
             filenames.append('.'.join(['version', extension]))
         version_file = self.filefind(filenames)
         if version_file:
-            with open(version_file, 'r') as f:
+            with open(version_file) as f:
                 version = f.read()
             return utils.strip_version(version)
 
