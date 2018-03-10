@@ -4,6 +4,10 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
+- Prevent unclosed files.  Python 3.6 warned about them,
+  and PyPy may have more problems with it.
+  Fixed several other DeprecationWarnings.  [maurits]
+
 - Test compatibility with Python 2.7, 3.4, 3.5. 3.6.
   We test PyPy2 as well, but it intermittently fails.  [maurits]
 
