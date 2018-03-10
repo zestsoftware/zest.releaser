@@ -90,7 +90,8 @@ class SetupConfig(object):
         finally:
             new_setup.close()
         logger.info("New setup.cfg contents:")
-        print(''.join(open(self.config_filename).readlines()))
+        with open(self.config_filename) as config_file:
+            print(''.join(config_file.readlines()))
 
     def python_file_with_version(self):
         """Return Python filename with ``__version__`` marker, if configured.
