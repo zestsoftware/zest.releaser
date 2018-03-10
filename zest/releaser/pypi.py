@@ -4,7 +4,6 @@ import codecs
 import logging
 import os
 import sys
-import re
 
 import pkg_resources
 from six.moves.configparser import ConfigParser
@@ -289,7 +288,8 @@ class PypiConfig(object):
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        create_setting = self._get_boolean('zest.releaser', 'create-wheel', None)
+        create_setting = self._get_boolean(
+            'zest.releaser', 'create-wheel', None)
         if create_setting is not None:
             # User specified this setting, it overrides
             # inferring from bdist_wheel
@@ -425,7 +425,7 @@ class PypiConfig(object):
 
     _tag_format_deprecated_message = "\n".join(line.strip() for line in """
     `tag-format` contains deprecated `%%(version)s` format. Please change to:
-    
+
     [zest.releaser]
     tag-format = %s
     """.strip().splitlines())
@@ -482,7 +482,7 @@ class PypiConfig(object):
                 fmt = self.config.get('zest.releaser', 'tag-message', raw=True)
             except (NoSectionError, NoOptionError, ValueError):
                 pass
-        if not '{version}' in fmt:
+        if '{version}' not in fmt:
             print("{version} needs to be part of 'tag-message': %r" % fmt)
             sys.exit(1)
         return fmt.format(version=version)

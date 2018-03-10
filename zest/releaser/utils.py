@@ -8,12 +8,14 @@ import re
 import subprocess
 import sys
 import textwrap
+
 try:
     from tokenize import detect_encoding
 except ImportError:
     detect_encoding = None
 try:
     import chardet
+
     HAVE_CHARDET = True
 except ImportError:
     HAVE_CHARDET = False
@@ -64,13 +66,15 @@ def write_text_file(filename, contents, encoding=None):
             # Python 2 unicode needs to be encoded.
             if encoding is None:
                 encoding = OUTPUT_ENCODING
-                logger.debug("Writing to %s with the default output encoding %s",
-                             filename, encoding)
+                logger.debug(
+                    "Writing to %s with the default output encoding %s",
+                    filename, encoding)
             else:
                 logger.debug("Writing to %s with its original encoding %s",
                              filename, encoding)
             # We might have added something to the contents (a changelog entry)
-            # that does not fit the detected encoding.  So we try a few encodings.
+            # that does not fit the detected encoding.
+            # So we try a few encodings.
             orig_encoding = encoding
             encodings = [orig_encoding, OUTPUT_ENCODING, 'utf-8']
             for encoding in encodings:
@@ -324,6 +328,7 @@ class AnswerBook(object):
 
     def get_next_answer(self):
         return self.answers.pop(0)
+
 
 test_answer_book = AnswerBook()
 
@@ -856,7 +861,8 @@ def retry_yes_no(command):
                 # Accept the error, continue with the program.
                 return False
             if input_value == 'q' or input_value == 'quit':
-                raise CommandException("Command failed: %r" % format_command(command))
+                raise CommandException(
+                    "Command failed: %r" % format_command(command))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.
@@ -944,7 +950,7 @@ You may want to quit and fix this.
 """
         if not vcs.is_setuptools_helper_package_installed():
             q += "Installing %s may help too.\n" % \
-                vcs.setuptools_helper_package
+                 vcs.setuptools_helper_package
         # We could ask, but simply printing it is nicer.  Well, okay,
         # let's avoid some broken eggs on PyPI, per
         # https://github.com/zestsoftware/zest.releaser/issues/10

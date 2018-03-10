@@ -139,7 +139,8 @@ class Git(BaseVersionControl):
         if not head:
             # Greetings from Nearly Headless Nick.
             return False
-        if execute_command(['git', 'status', '--short', '--untracked-files=no']):
+        if execute_command(
+                ['git', 'status', '--short', '--untracked-files=no']):
             # Uncommitted changes in files that are tracked.
             return False
         return True

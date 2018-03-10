@@ -65,7 +65,8 @@ class Releaser(baserelease.Basereleaser):
         """Collect some data needed for releasing"""
         self._grab_version()
         self.data['tag'] = self.pypiconfig.tag_format(self.data['version'])
-        self.data['tag-message'] = self.pypiconfig.tag_message(self.data['version'])
+        self.data['tag-message'] = self.pypiconfig.tag_message(
+            self.data['version'])
         self.data['tag-signing'] = self.pypiconfig.tag_signing()
         self._check_if_tag_already_exists()
 
@@ -96,7 +97,7 @@ class Releaser(baserelease.Basereleaser):
             return
         cmds = self.vcs.cmd_create_tag(tag, self.data['tag-message'],
                                        self.data['tag-signing'])
-        assert isinstance(cmds, (list, tuple)) # transitional guard
+        assert isinstance(cmds, (list, tuple))  # transitional guard
         if not isinstance(cmds[0], (list, tuple)):
             cmds = [cmds]
         if len(cmds) == 1:

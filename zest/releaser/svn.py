@@ -87,14 +87,16 @@ class Subversion(BaseVersionControl):
                             "W160013",
                             ]
         base = self._base_from_svn()
-        tag_info = execute_command(['svn', 'list', '%s%s' % (base, default_plural)])
+        tag_info = execute_command(
+            ['svn', 'list', '%s%s' % (base, default_plural)])
         # Look for one of the failure messages:
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
             return default_plural
         logger.debug("tags dir does not exist at %s%s", base, default_plural)
 
-        tag_info = execute_command(['svn', 'list', '%s%s' % (base, fallback_singular)])
+        tag_info = execute_command(
+            ['svn', 'list', '%s%s' % (base, fallback_singular)])
         # Look for one of the failure messages:
         found = [1 for mess in failure_messages if mess in tag_info]
         if not found:
@@ -171,7 +173,8 @@ class Subversion(BaseVersionControl):
         """
         url = self._svn_info()
         tag_url = self.tag_url(version)
-        tag_info = execute_command(['svn', 'info', '--non-interactive', tag_url])
+        tag_info = execute_command(
+            ['svn', 'info', '--non-interactive', tag_url])
         # Search for: Last Changed Rev: 42761
         revision = None
         for line in tag_info.split('\n'):
