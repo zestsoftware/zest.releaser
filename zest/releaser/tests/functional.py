@@ -61,8 +61,8 @@ def setup(test):
     # Extract example project
     example_tar = pkg_resources.resource_filename(
         'zest.releaser.tests', 'example.tar')
-    tf = tarfile.TarFile(example_tar)
-    tf.extractall(path=test.tempdir)
+    with tarfile.TarFile(example_tar) as tf:
+        tf.extractall(path=test.tempdir)
     sourcedir = os.path.join(test.tempdir, 'tha.example')
 
     # Init svn repo.
@@ -82,7 +82,7 @@ def setup(test):
     execute_command(
         ['svn', 'mkdir', '%s/tha.example' % repo_url, '-m', 'mkdir'])
     execute_command(
-        ['svn', 'mkdir', '%s/tha.example/tags'  % repo_url, '-m', 'mkdir'])
+        ['svn', 'mkdir', '%s/tha.example/tags' % repo_url, '-m', 'mkdir'])
     execute_command(
         ['svn', 'import', sourcedir, '%s/tha.example/trunk' % repo_url,
          '-m', 'import'])
