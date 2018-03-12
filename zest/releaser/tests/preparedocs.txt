@@ -46,7 +46,8 @@ When the name *is* zest.releaser, we generate documentation.
 The lines above the marker interface are still intact, the line below it has
 been replaced by the generated documentation:
 
-    >>> print(open(docfile).read())
+    >>> with open(docfile) as f:
+    ...     print(f.read())
     <BLANKLINE>
     line1
     line2

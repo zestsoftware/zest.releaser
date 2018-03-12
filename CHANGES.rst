@@ -4,6 +4,10 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
+- Prevent unclosed files.  Python 3.6 warned about them,
+  and PyPy may have more problems with it.
+  Fixed several other DeprecationWarnings.  [maurits]
+
 - Print commands in a nicer way.
   You could get ugly output like this, especially on Python 2.7:
   ``INFO: The '[u'git', u'diff']':``

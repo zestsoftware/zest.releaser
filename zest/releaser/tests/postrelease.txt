@@ -183,7 +183,8 @@ If there's an empty history file, it gets a fresh header.
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> postrelease.main()
     Current ...
-    >>> print(open('CHANGES.txt', 'r').read())
+    >>> with open('CHANGES.txt') as f:
+    ...     print(f.read())
     1.1 (unreleased)
     ----------------
     <BLANKLINE>
@@ -202,7 +203,8 @@ created:
     Traceback (most recent call last):
     ...
     RuntimeError: SYSTEM EXIT (code=1)
-    >>> open('CHANGES.txt') # Nope, doesn't exist.
+    >>> with open('CHANGES.txt') as f:  # Nope, doesn't exist.
+    ...     print(f.read())
     Traceback (most recent call last):
     ...
     FileNotFoundError: [Errno 2] No such file or directory: 'CHANGES.txt'
@@ -221,7 +223,8 @@ Re-instate the history file again, but omit the restructuredtext header line:
 No errors are raised and an ``----`` underline is assumed for the new header.
 The old one is left untouched:
 
-    >>> print(open('CHANGES.txt').read())
+    >>> with open('CHANGES.txt') as f:
+    ...     print(f.read())
     1.4 (unreleased)
     ----------------
     <BLANKLINE>

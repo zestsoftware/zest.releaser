@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 import tempfile
 import os
+import sys
 
 from zest.releaser.utils import fs_to_text
 from zest.releaser.utils import execute_command

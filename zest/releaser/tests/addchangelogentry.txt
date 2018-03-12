@@ -47,7 +47,8 @@ commit::
 
 The changelog and setup.py are at 0.1 and have the message::
 
-    >>> contents = (open('CHANGES.txt').read())
+    >>> with open('CHANGES.txt') as f:
+    ...     contents = f.read()
     >>> print(contents)
     Changelog of tha.example
     ========================
@@ -70,7 +71,8 @@ dashed.  Add multiple lines in one go.
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> print(open('CHANGES.txt').read())
+    >>> with open('CHANGES.txt') as f:
+    ...     print(f.read())
     Changelog of tha.example
     ========================
     <BLANKLINE>
@@ -92,7 +94,8 @@ Try non ascii for loads of fun:::
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> contents = (open('CHANGES.txt').read())
+    >>> with open('CHANGES.txt') as f:
+    ...     contents = f.read()
     >>> print(contents)
     Changelog of tha.example
     ========================

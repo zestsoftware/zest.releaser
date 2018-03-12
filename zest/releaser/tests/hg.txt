@@ -46,7 +46,7 @@ Make a change:
     diff -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
-    @@ -36,3 +36,5 @@
+    @@ -42,3 +42,5 @@
                'console_scripts': [
                ]},
            )
@@ -109,7 +109,7 @@ Now we can request the changes since a specific tag:
     diff -r 234567890abc -r 234567890abc setup.py
     --- a/setup.py    ...
     +++ b/setup.py    ...
-    @@ -38,3 +38,5 @@
+    @@ -44,3 +44,5 @@
            )
     <BLANKLINE>
      a = 2

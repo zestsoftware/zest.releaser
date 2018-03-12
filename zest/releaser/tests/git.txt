@@ -47,7 +47,7 @@ Make a change:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -36,3 +36,5 @@ setup(name='tha.example',
+    @@ -42,3 +42,5 @@ setup(name='tha.example',
                'console_scripts': [
                ]},
            )
@@ -120,7 +120,7 @@ Now we can request the changes since a specific tag:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -38,3 +38,5 @@ setup(name='tha.example',
+    @@ -44,3 +44,5 @@ setup(name='tha.example',
            )
     <BLANKLINE>
      a = 2
@@ -162,7 +162,8 @@ The checked out clone is really a clone and not an empty directory.
 
     >>> sorted(os.listdir(temp))
     ['.git', '.gitignore', 'CHANGES.txt', ...]
-    >>> print(open(os.path.join(temp, 'setup.py')).read())
+    >>> with open(os.path.join(temp, 'setup.py')) as f:
+    ...     print(f.read())
     from setuptools import setup, find_packages
     ...
     a = 2
@@ -187,7 +188,8 @@ though we are already at the correct tag.
 
 The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
 
-    >>> print(open(os.path.join(temp, 'setup.py')).read())
+    >>> with open(os.path.join(temp, 'setup.py')) as f:
+    ...     print(f.read())
     from setuptools import setup, find_packages
     ...
     a = 2

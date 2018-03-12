@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 import textwrap
+
 try:
     from tokenize import detect_encoding
 except ImportError:
@@ -64,13 +65,15 @@ def write_text_file(filename, contents, encoding=None):
             # Python 2 unicode needs to be encoded.
             if encoding is None:
                 encoding = OUTPUT_ENCODING
-                logger.debug("Writing to %s with the default output encoding %s",
-                             filename, encoding)
+                logger.debug(
+                    "Writing to %s with the default output encoding %s",
+                    filename, encoding)
             else:
                 logger.debug("Writing to %s with its original encoding %s",
                              filename, encoding)
             # We might have added something to the contents (a changelog entry)
-            # that does not fit the detected encoding.  So we try a few encodings.
+            # that does not fit the detected encoding.
+            # So we try a few encodings.
             orig_encoding = encoding
             encodings = [orig_encoding, OUTPUT_ENCODING, 'utf-8']
             for encoding in encodings:
@@ -187,7 +190,7 @@ def strip_last_number(value):
     """
     if not value:
         return value
-    match = re.search('\d+$', value)
+    match = re.search(r'\d+$', value)
     if not match:
         return value
     return value[:-len(match.group())]
@@ -261,8 +264,8 @@ def suggest_version(current, feature=False, breaking=False,
             last = int(current[target]) + 1
             suggestion = current[:target] + str(last)
         except (ValueError, IndexError):
-            logger.warn("Version does not end with a number, so we can't "
-                        "calculate a suggestion for a next version.")
+            logger.warning("Version does not end with a number, so we can't "
+                           "calculate a suggestion for a next version.")
             return None
     # Maybe add a few zeroes: turn 2 into 2.0.0 if 3 levels is the goal.
     goal = max(original_levels, levels)
@@ -324,6 +327,7 @@ class AnswerBook(object):
 
     def get_next_answer(self):
         return self.answers.pop(0)
+
 
 test_answer_book = AnswerBook()
 
@@ -686,31 +690,7 @@ def format_command(command):
 __command_is_string__ = False
 
 
-def _execute_command(command, input_value=''):
-    """commands.getoutput() replacement that also works on windows"""
-    # Enforce the command to be a list or arguments, except if
-    # ``__command_is_string__`` is string is set, which is meant to be
-    # used by the test-suite only (see above).
-    assert isinstance(command, (list, tuple)) or __command_is_string__
-    logger.debug("Running command: %r", format_command(command))
-    if command[0].startswith(sys.executable):
-        env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        if 'upload' in command or 'register' in command:
-            # We really do want to see the stderr here, otherwise a
-            # failed upload does not even show up in the output.
-            show_stderr = True
-        else:
-            show_stderr = False
-    else:
-        env = None
-        show_stderr = True
-    p = subprocess.Popen(command,
-                         shell=not isinstance(command, (list, tuple)),
-                         stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE,
-                         close_fds=MUST_CLOSE_FDS,
-                         env=env)
+def _subprocess_open(p, command, input_value, show_stderr):
     i, o, e = (p.stdin, p.stdout, p.stderr)
     if input_value:
         i.write(input_value.encode(INPUT_ENCODING))
@@ -738,6 +718,46 @@ def _execute_command(command, input_value=''):
                          format_command(command), stderr_output)
     o.close()
     e.close()
+    return result
+
+
+def _execute_command(command, input_value=''):
+    """commands.getoutput() replacement that also works on windows"""
+    # Enforce the command to be a list or arguments, except if
+    # ``__command_is_string__`` is string is set, which is meant to be
+    # used by the test-suite only (see above).
+    assert isinstance(command, (list, tuple)) or __command_is_string__
+    logger.debug("Running command: %r", format_command(command))
+    if command[0].startswith(sys.executable):
+        env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
+        if 'upload' in command or 'register' in command:
+            # We really do want to see the stderr here, otherwise a
+            # failed upload does not even show up in the output.
+            show_stderr = True
+        else:
+            show_stderr = False
+    else:
+        env = None
+        show_stderr = True
+    # On Python 3, subprocess.Popen can and should be used as context
+    # manager, to avoid unclosed files.  On Python 2 this is not possible.
+    process_kwargs = {
+        'shell': not isinstance(command, (list, tuple)),
+        'stdin': subprocess.PIPE,
+        'stdout': subprocess.PIPE,
+        'stderr': subprocess.PIPE,
+        'close_fds': MUST_CLOSE_FDS,
+        'env': env,
+    }
+    if hasattr(subprocess.Popen, '__exit__'):
+        # Python 3
+        with subprocess.Popen(command, **process_kwargs) as process:
+            result = _subprocess_open(
+                process, command, input_value, show_stderr)
+    else:
+        # Python 2
+        process = subprocess.Popen(command, **process_kwargs)
+        result = _subprocess_open(process, command, input_value, show_stderr)
     return result
 
 
@@ -856,7 +876,8 @@ def retry_yes_no(command):
                 # Accept the error, continue with the program.
                 return False
             if input_value == 'q' or input_value == 'quit':
-                raise CommandException("Command failed: %r" % format_command(command))
+                raise CommandException(
+                    "Command failed: %r" % format_command(command))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.
@@ -944,7 +965,7 @@ You may want to quit and fix this.
 """
         if not vcs.is_setuptools_helper_package_installed():
             q += "Installing %s may help too.\n" % \
-                vcs.setuptools_helper_package
+                 vcs.setuptools_helper_package
         # We could ask, but simply printing it is nicer.  Well, okay,
         # let's avoid some broken eggs on PyPI, per
         # https://github.com/zestsoftware/zest.releaser/issues/10

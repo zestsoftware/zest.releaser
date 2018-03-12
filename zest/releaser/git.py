@@ -124,7 +124,7 @@ class Git(BaseVersionControl):
                 os.path.realpath(checkout_dir)):
             # Specific to git: we need to be in that directory for the command
             # to work.
-            logger.warn("We haven't been chdir'ed to %s", checkout_dir)
+            logger.warning("We haven't been chdir'ed to %s", checkout_dir)
             sys.exit(1)
         return [['git', 'checkout', version],
                 ['git', 'submodule', 'update', '--init', '--recursive']]
@@ -139,7 +139,8 @@ class Git(BaseVersionControl):
         if not head:
             # Greetings from Nearly Headless Nick.
             return False
-        if execute_command(['git', 'status', '--short', '--untracked-files=no']):
+        if execute_command(
+                ['git', 'status', '--short', '--untracked-files=no']):
             # Uncommitted changes in files that are tracked.
             return False
         return True

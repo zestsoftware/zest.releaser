@@ -65,7 +65,8 @@ class Releaser(baserelease.Basereleaser):
         """Collect some data needed for releasing"""
         self._grab_version()
         self.data['tag'] = self.pypiconfig.tag_format(self.data['version'])
-        self.data['tag-message'] = self.pypiconfig.tag_message(self.data['version'])
+        self.data['tag-message'] = self.pypiconfig.tag_message(
+            self.data['version'])
         self.data['tag-signing'] = self.pypiconfig.tag_signing()
         self._check_if_tag_already_exists()
 
@@ -96,7 +97,7 @@ class Releaser(baserelease.Basereleaser):
             return
         cmds = self.vcs.cmd_create_tag(tag, self.data['tag-message'],
                                        self.data['tag-signing'])
-        assert isinstance(cmds, (list, tuple)) # transitional guard
+        assert isinstance(cmds, (list, tuple))  # transitional guard
         if not isinstance(cmds[0], (list, tuple)):
             cmds = [cmds]
         if len(cmds) == 1:
@@ -202,11 +203,11 @@ class Releaser(baserelease.Basereleaser):
                 # This is the same as when calling `twine --skip-existing` on
                 # the command line.  See
                 # https://github.com/pypa/twine/issues/220
-                logger.warn('Error calling package_is_uploaded from twine. '
-                            'Probably new project. Will try uploading.')
+                logger.warning('Error calling package_is_uploaded from twine. '
+                               'Probably new project. Will try uploading.')
                 already_uploaded = False
             if already_uploaded:
-                logger.warn(
+                logger.warning(
                     'A file %s has already been uploaded. Ignoring.', filename)
                 return
             twine_function = repository.upload
