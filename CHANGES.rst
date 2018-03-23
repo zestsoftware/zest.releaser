@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
+- When determining encoding, first look for coding hints in the file itself.
+  Only when that fails, we try ``tokenize`` or ``chardet``.
+  Fixes `issue 264 <https://github.com/zestsoftware/zest.releaser/issues/264>`_.
+  [maurits]
+
 - Prevent unclosed files.  Python 3.6 warned about them,
   and PyPy may have more problems with it.
   Fixed several other DeprecationWarnings.  [maurits]
