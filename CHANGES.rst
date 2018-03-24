@@ -13,6 +13,11 @@ Changelog for zest.releaser
   Fixes `issue 264 <https://github.com/zestsoftware/zest.releaser/issues/264>`_.
   [maurits]
 
+- Get PyPI password raw, without interpolation.
+  If you had a password with a percentage sign, you could get an error.
+  Fixes `issue 271 <https://github.com/zestsoftware/zest.releaser/issues/271>`_.
+  [maurits]
+
 - Prevent unclosed files.  Python 3.6 warned about them,
   and PyPy may have more problems with it.
   Fixed several other DeprecationWarnings.  [maurits]

@@ -219,11 +219,11 @@ class PypiConfig(BaseConfig):
             if self.config.has_option(server, 'username'):
                 username = self._get_text(server, 'username')
             if self.config.has_option(server, 'password'):
-                password = self._get_text(server, 'password')
+                password = self._get_text(server, 'password', raw=True)
         if not username and self.config.has_option('server-login', 'username'):
             username = self._get_text('server-login', 'username')
         if not password and self.config.has_option('server-login', 'password'):
-            password = self._get_text('server-login', 'password')
+            password = self._get_text('server-login', 'password', raw=True)
         return {
             'repository_url': repository_url,
             'username': username,
