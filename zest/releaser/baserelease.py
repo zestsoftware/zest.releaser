@@ -218,6 +218,27 @@ class Basereleaser(object):
         if self.data['history_file'] is None:
             return
         insert = self.data['history_insert_line_here']
+        # Hopefully the inserted data matches the existing encoding.
+        orig_encoding = self.data['history_encoding']
+        try:
+            message.encode(orig_encoding)
+        except UnicodeEncodeError:
+            logger.warning(
+                'Changelog entry does not have the same encoding (%s) as '
+                'the existing file. This might give problems.', orig_encoding
+            )
+            if orig_encoding == 'ascii':
+                try:
+                    message.encode('utf-8')
+                except UnicodeEncodeError:
+                    # Let's continue. There might be a chance that it works.
+                    logger.warning(
+                        'Changelog entry is also not utf-8. '
+                        'This will probably fail in a moment.',
+                    )
+                else:
+                    logger.debug('Forcing new history_encoding utf-8.')
+                    self.data['history_encoding'] = 'utf-8'
         lines = []
         prefix = utils.get_list_item(self.data['history_lines'])
         for index, line in enumerate(message.splitlines()):
