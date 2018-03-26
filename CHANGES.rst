@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.13.6 (unreleased)
+6.14.0 (unreleased)
 -------------------
 
 - Advertise ``setup.cfg`` option ``[zest.releaser] history-file``.
