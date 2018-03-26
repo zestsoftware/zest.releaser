@@ -51,9 +51,9 @@ And... we're automatically being tested by Travis and Landscape:
 Compatibility / Dependencies
 ----------------------------
 
-``zest.releaser`` works on Python 2.7.  Python 2.6 is not officially
-supported anymore since version 4.0: it may still work, but we are no
-longer testing against it.  Python 3.3+ is supported.
+``zest.releaser`` works on Python 2.7.
+Python 3.4+ is supported.
+PyPy2 is supported.
 
 To be sure: the packages that you release with ``zest.releaser`` may
 very well work on other Python versions: that totally depends on your

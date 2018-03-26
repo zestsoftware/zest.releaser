@@ -42,8 +42,7 @@ Changelog for zest.releaser
   ``Command failed: u"t w i n e ' ' u p l o a d"``.
   [maurits]
 
-- Test compatibility with Python 2.7, 3.4, 3.5. 3.6.
-  We test PyPy2 as well, but it intermittently fails.  [maurits]
+- Test compatibility with Python 2.7, 3.4, 3.5, 3.6, PyPy2.  [maurits]
 
 
 6.13.5 (2018-02-16)
