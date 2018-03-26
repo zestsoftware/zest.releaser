@@ -38,7 +38,8 @@ Changelog for zest.releaser
 
 - Print commands in a nicer way.
   You could get ugly output like this, especially on Python 2.7:
-  ``INFO: The '[u'git', u'diff']':``
+  ``INFO: The '[u'git', u'diff']':`` or worse:
+  ``Command failed: u"t w i n e ' ' u p l o a d"``.
   [maurits]
 
 - Test compatibility with Python 2.7, 3.4, 3.5. 3.6.

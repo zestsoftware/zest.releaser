@@ -22,7 +22,7 @@ def main():
         found = utils.get_last_tag(vcs)
     name = vcs.name
     full_tag = vcs.tag_url(found)
-    logger.debug("Picked tag %r for %s (currently at %r).",
+    logger.debug("Picked tag '%s' for %s (currently at '%s').",
                  full_tag, name, vcs.version)
     logger.info("Showing log since tag %s and the last commit.",
                 full_tag)

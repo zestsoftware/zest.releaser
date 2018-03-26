@@ -116,7 +116,7 @@ class BaseVersionControl(object):
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
             if match:
-                logger.debug("Matching __version__ line found: %r", line)
+                logger.debug("Matching __version__ line found: '%s'", line)
                 line = line.lstrip('__version__').strip()
                 line = line.lstrip('=').strip()
                 line = line.replace('"', '').replace("'", "")
@@ -223,7 +223,7 @@ class BaseVersionControl(object):
                 lines[index] = "__version__ = '%s'" % version
         contents = '\n'.join(lines)
         utils.write_text_file(filename, contents, encoding)
-        logger.info("Set __version__ in %s to %r", filename, version)
+        logger.info("Set __version__ in %s to '%s'", filename, version)
 
     def _update_version(self, version):
         """Find out where to change the version and change it.
@@ -249,7 +249,7 @@ class BaseVersionControl(object):
                                      self.get_version_txt_version()):
                 with open(versionfile, 'w') as f:
                     f.write(version + '\n')
-                logger.info("Changed %s to %r", versionfile, version)
+                logger.info("Changed %s to '%s'", versionfile, version)
                 return
 
         good_version = "version = '%s'" % version
@@ -300,7 +300,7 @@ class BaseVersionControl(object):
                     setup_cfg_lines[line_number] = good_version
                     utils.write_text_file(
                         'setup.cfg', '\n'.join(setup_cfg_lines), encoding)
-                    logger.info("Set setup.cfg's version to %r", version)
+                    logger.info("Set setup.cfg's version to '%s'", version)
                     return
 
         logger.error(
