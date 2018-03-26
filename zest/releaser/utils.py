@@ -185,7 +185,7 @@ def cleanup_version(version):
         if version.find(w) != -1:
             logger.debug("Version indicates development: %s.", version)
             version = version[:version.find(w)].strip()
-            logger.debug("Removing debug indicators: %r", version)
+            logger.debug("Removing debug indicators: '%s'", version)
         version = version.rstrip('.')  # 1.0.dev0 -> 1.0. -> 1.0
     return version
 
@@ -487,13 +487,13 @@ def extract_headings_from_history(history_lines):
                       'version': match.group('version').strip(),
                       'date': match.group('date'.strip())}
             headings.append(result)
-            logger.debug("Found heading: %r", result)
+            logger.debug("Found heading: '%s'", result)
         if alt_match:
             result = {'line': line_number,
                       'version': alt_match.group('version').strip(),
                       'date': alt_match.group('date'.strip())}
             headings.append(result)
-            logger.debug("Found alternative heading: %r", result)
+            logger.debug("Found alternative heading: '%s'", result)
         line_number += 1
     return headings
 
@@ -681,7 +681,7 @@ KNOWN_WARNINGS = [w.lower() for w in KNOWN_WARNINGS]
 def format_command(command):
     # THIS IS INSECURE! DO NOT USE except for directly printing the
     # result.
-    # Poor man's argument qouting, sufficient for user information.
+    # Poor man's argument quoting, sufficient for user information.
     # Used since shlex.quote() does not exist in Python 2.7.
     args = []
     for arg in command:
@@ -735,7 +735,7 @@ def _execute_command(command, input_value=''):
     # ``__command_is_string__`` is string is set, which is meant to be
     # used by the test-suite only (see above).
     assert isinstance(command, (list, tuple)) or __command_is_string__
-    logger.debug("Running command: %r", format_command(command))
+    logger.debug("Running command: '%s'", format_command(command))
     if command[0].startswith(sys.executable):
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
         if 'upload' in command or 'register' in command:
@@ -833,7 +833,7 @@ def execute_command(command, allow_retry=False, fail_message=""):
         print(Fore.RED + fail_message)
     retry = retry_yes_no(command)
     if retry:
-        logger.info("Retrying command: %r", format_command(command))
+        logger.info("Retrying command: '%s'", format_command(command))
         return execute_command(command, allow_retry=True)
     # Accept the error, continue with the program.
     return result
@@ -878,14 +878,14 @@ def retry_yes_no(command):
         if input_value:
             input_value = input_value.lower()
             if input_value == 'y' or input_value == 'yes':
-                logger.info("Retrying command: %r", format_command(command))
+                logger.info("Retrying command: '%s'", format_command(command))
                 return True
             if input_value == 'n' or input_value == 'no':
                 # Accept the error, continue with the program.
                 return False
             if input_value == 'q' or input_value == 'quit':
                 raise CommandException(
-                    "Command failed: %r" % format_command(command))
+                    "Command failed: '%s'" % format_command(command))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.

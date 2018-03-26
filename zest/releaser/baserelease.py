@@ -203,11 +203,11 @@ class Basereleaser(object):
         else:
             # edit current line
             history_lines[inject_location] = good_heading
-            logger.debug("Set heading from %r to %r.", previous, good_heading)
+            logger.debug("Set heading from '%s' to '%s'.", previous, good_heading)
             history_lines[underline_line] = utils.fix_rst_heading(
                 heading=good_heading,
                 below=history_lines[underline_line])
-            logger.debug("Set line below heading to %r",
+            logger.debug("Set line below heading to '%s'",
                          history_lines[underline_line])
         # Setting history_lines is not needed, except when we have replaced the
         # original instead of changing it.  So just set it.

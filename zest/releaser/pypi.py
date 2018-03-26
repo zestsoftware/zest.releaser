@@ -101,14 +101,14 @@ class SetupConfig(BaseConfig):
             # Might still be empty.
             value = self._get_text('egg_info', 'tag_build')
             if value:
-                logger.warning("%s has [egg_info] tag_build set to %r",
+                logger.warning("%s has [egg_info] tag_build set to '%s'",
                                self.config_filename, value)
                 bad = True
         # Check 2.
         if self.config.has_option('egg_info', 'tag_svn_revision'):
             if self.config.getboolean('egg_info', 'tag_svn_revision'):
                 value = self._get_text('egg_info', 'tag_svn_revision')
-                logger.warning("%s has [egg_info] tag_svn_revision set to %r",
+                logger.warning("%s has [egg_info] tag_svn_revision set to '%s'",
                                self.config_filename, value)
                 bad = True
         return bad
@@ -522,7 +522,7 @@ class PypiConfig(BaseConfig):
             except (NoSectionError, NoOptionError, ValueError):
                 pass
         if '{version}' not in fmt:
-            print("{version} needs to be part of 'tag-message': %r" % fmt)
+            print("{version} needs to be part of 'tag-message': '%s'" % fmt)
             sys.exit(1)
         return fmt.format(version=version)
 
