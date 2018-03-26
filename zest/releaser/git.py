@@ -40,7 +40,7 @@ class Git(BaseVersionControl):
     def available_tags(self):
         tag_info = execute_command(['git', 'tag'])
         tags = [line for line in tag_info.split('\n') if line]
-        logger.debug("Available tags: '%s'", ' '.join(tags))
+        logger.debug("Available tags: '%s'", ', '.join(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):

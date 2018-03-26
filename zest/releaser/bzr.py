@@ -30,7 +30,7 @@ class Bzr(BaseVersionControl):
         tag_info = execute_command(['bzr', 'tags'])
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
-        logger.debug("Available tags: '%s'", ' '.join(tags))
+        logger.debug("Available tags: '%s'", ', '.join(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):

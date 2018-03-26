@@ -145,7 +145,7 @@ class Subversion(BaseVersionControl):
         tags = [line.replace('/', '').strip()
                 for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]  # filter empty ones
-        logger.debug("Available tags: '%s'", ' '.join(tags))
+        logger.debug("Available tags: '%s'", ', '.join(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):

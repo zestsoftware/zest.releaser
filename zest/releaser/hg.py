@@ -33,7 +33,7 @@ class Hg(BaseVersionControl):
         tags = [line[:line.find(' ')] for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]
         tags.remove('tip')  # Not functional for us
-        logger.debug("Available tags: '%s'", ' '.join(tags))
+        logger.debug("Available tags: '%s'", ', '.join(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):
