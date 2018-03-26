@@ -122,7 +122,7 @@ class Subversion(BaseVersionControl):
             if utils.ask("Shall I create it"):
                 cmd = ['svn', 'mkdir', base + 'tags',
                        '-m', "Creating tags directory."]
-                logger.info("Running %r", utils.format_command(cmd))
+                logger.info("Running '%s'", utils.format_command(cmd))
                 print(execute_command(cmd))
                 tags_name = self._tags_name
                 assert tags_name == 'tags'
@@ -145,7 +145,7 @@ class Subversion(BaseVersionControl):
         tags = [line.replace('/', '').strip()
                 for line in tag_info.split('\n')]
         tags = [tag for tag in tags if tag]  # filter empty ones
-        logger.debug("Available tags: %r", tags)
+        logger.debug("Available tags: '%s'", ' '.join(tags))
         return tags
 
     def prepare_checkout_dir(self, prefix):

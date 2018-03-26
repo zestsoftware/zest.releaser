@@ -235,7 +235,7 @@ class Releaser(baserelease.Basereleaser):
             print(Fore.RED + "Reason: %s" % response.reason)
         print(Fore.RED + "There were errors or warnings.")
         logger.exception("Package %s has failed.", twine_command)
-        retry = utils.retry_yes_no('twine %s' % twine_command)
+        retry = utils.retry_yes_no(['twine', twine_command])
         if retry:
             logger.info("Retrying.")
             # Reload the pypi config so changes that the user has made to
