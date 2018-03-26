@@ -104,60 +104,68 @@ def read_text_file(filename, encoding=None):
     The standard Python 'open' method uses the default system encoding
     to read text files in Python 3 or falls back to utf-8.
 
+    We first look for coding hints in the file itself.
+
     On Python 3 we can use tokenize to detect the encoding.
 
     On Python 2 we can use chardet to detect the encoding.
 
     """
+    with open(filename, 'rb') as filehandler:
+        data = filehandler.read()
+
+    if encoding is not None:
+        # The simple case.
+        return data.decode(encoding), encoding
+
     # Only if the encoding is not manually specified, we may try to
     # detect it.
-    if encoding is None and detect_encoding is not None:
+
+    # Look for hints, PEP263-style
+    if data[:3] == b'\xef\xbb\xbf':
+        encoding = 'utf-8'
+        logger.debug(
+            "Detected encoding of %s, standard 3 opening chars: %s",
+            filename, encoding)
+        return data.decode(encoding), encoding
+
+    data_len = len(data)
+    for canary in ENCODING_HINTS:
+        if canary not in data:
+            continue
+        pos = data.index(canary)
+        if pos > 1 and data[pos - 1] not in (b' ', b'\n', b'\r'):
+            continue
+        pos += len(canary)
+        coding = b''
+        while pos < data_len and data[pos] not in (b' ', b'\n'):
+            coding += data[pos]
+            pos += 1
+        encoding = coding.decode('ascii').strip()
+        try:
+            result = data.decode(encoding)
+            logger.debug("Detected encoding of %s because of '%s': %s",
+                         filename, canary, encoding)
+            return result, encoding
+        except (LookupError, UnicodeError):
+            # Try the next one
+            pass
+
+    if detect_encoding is not None:
+        # This is Python 3 with tokenize.
         with open(filename, 'rb') as filehandler:
             encoding = detect_encoding(filehandler.readline)[0]
             logger.debug("Detected encoding of %s with tokenize: %s",
                          filename, encoding)
 
-    with open(filename, 'rb') as filehandler:
-        data = filehandler.read()
-
-    if encoding is not None:
-        return data.decode(encoding), encoding
-
     if HAVE_CHARDET:
+        # This is Python 2 with chardet.
         encoding_result = chardet.detect(data)
         if encoding_result and encoding_result['encoding'] is not None:
             encoding = encoding_result['encoding']
             logger.debug("Detected encoding of %s with chardet: %s",
                          filename, encoding)
             return data.decode(encoding), encoding
-
-    # Look for hints, PEP263-style
-    if data[:3] == b'\xef\xbb\xbf':
-        encoding = 'utf-8'
-        logger.debug("Detected encoding of %s, standard 3 opening chars: %s",
-                     filename, encoding)
-        return data.decode(encoding), encoding
-
-    data_len = len(data)
-    for canary in ENCODING_HINTS:
-        if canary in data:
-            pos = data.index(canary)
-            if pos > 1 and data[pos - 1] not in (b' ', b'\n', b'\r'):
-                continue
-            pos += len(canary)
-            coding = b''
-            while pos < data_len and data[pos] not in (b' ', b'\n'):
-                coding += data[pos]
-                pos += 1
-            encoding = coding.decode('ascii').strip()
-            try:
-                result = data.decode(encoding)
-                logger.debug("Detected encoding of %s because of '%s': %s",
-                             filename, canary, encoding)
-                return result, encoding
-            except (LookupError, UnicodeError):
-                # Try the next one
-                pass
 
     # Fall back to utf-8
     encoding = 'utf-8'
