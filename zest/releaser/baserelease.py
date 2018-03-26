@@ -106,10 +106,7 @@ class Basereleaser(object):
         self.data['headings'] = []
         self.data['history_last_release'] = ''
         self.data['history_insert_line_here'] = 0
-        default_location = None
-        config = self.setup_cfg.config
-        if config and config.has_option('zest.releaser', 'history_file'):
-            default_location = config.get('zest.releaser', 'history_file')
+        default_location = self.pypiconfig.history_file()
         fallback_encoding = self.pypiconfig.encoding()
         history_file = self.vcs.history_file(location=default_location)
         self.data['history_file'] = history_file

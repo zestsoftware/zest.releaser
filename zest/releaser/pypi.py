@@ -304,6 +304,37 @@ class PypiConfig(BaseConfig):
             return default
         return result
 
+    def history_file(self):
+        """Return path of history file.
+
+        Usually zest.releaser can find the correct one on its own.
+        But sometimes it may not find anything, or it finds multiple
+        and selects the wrong one.
+
+        Configure this by adding a ``history-file`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            history-file = deep/down/historie.doc
+        """
+        default = ''
+        if self.config is None:
+            return default
+        marker = object()
+        try:
+            result = self._get_text(
+                'zest.releaser', 'history-file', default=marker)
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        if result == marker:
+            # We were reading an underscore instead of a dash at first.
+            try:
+                result = self._get_text(
+                    'zest.releaser', 'history_file', default=default)
+            except (NoSectionError, NoOptionError, ValueError):
+                return default
+        return result
+
     def encoding(self):
         """Return encoding to use for text files.
 

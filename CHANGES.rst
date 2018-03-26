@@ -4,6 +4,14 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
+- Advertise ``setup.cfg`` option ``[zest.releaser] history-file``.
+  Usually zest.releaser can find the correct history or changelog file on its own.
+  But sometimes it may not find anything, or it finds multiple files and selects the wrong one.
+  Then you can set a path here.
+  A ``history_file`` option with an underscore was already read, but not documented.
+  Now we try both a dash and an underscore for good measure.
+  [maurits]
+
 - Use new ``setup.cfg`` option ``[zest.releaser] encoding``.
   Set this to, for example, ``utf-8`` when the encoding of your ``CHANGES.rst``
   file is not determined correctly.

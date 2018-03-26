@@ -165,6 +165,12 @@ date-format = a string
     Note: the % signs should be doubled for compatibility with other tools
     (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
 
+history-file = a string
+    Default: empty
+    Usually zest.releaser can find the correct history or changelog file on its own.
+    But sometimes it may not find anything, or it finds multiple files and selects the wrong one.
+    Then you can set a path here.
+
 encoding = a string
   Default: empty.
   Set this to, for example, ``utf-8`` when the encoding of your ``CHANGES.rst``
