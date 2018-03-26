@@ -93,10 +93,16 @@ def write_text_file(filename, contents, encoding=None):
             f.write(contents)
 
 
-def read_text_file(filename, encoding=None):
+def read_text_file(filename, encoding=None, fallback_encoding=None):
     """Read text file.
 
     Give back the contents, and the encoding we used.
+
+    If encoding is specified, we use that encoding.
+
+    If fallback_encoding is specified, we use that encoding if needed
+    and not overridden by other logic.  This will come from the
+    'encoding' setting in setup.cfg/.pypirc.
 
     Unless specified manually, We have no way of knowing what text
     encoding this file may be in.
@@ -106,9 +112,13 @@ def read_text_file(filename, encoding=None):
 
     We first look for coding hints in the file itself.
 
-    On Python 3 we can use tokenize to detect the encoding.
+    Otherwise we use the fallback_encoding if set.
 
-    On Python 2 we can use chardet to detect the encoding.
+    Lastly we try to detect the encoding:
+
+    - On Python 3 we can use tokenize.
+
+    - On Python 2 we can use chardet.
 
     """
     with open(filename, 'rb') as filehandler:
@@ -116,7 +126,18 @@ def read_text_file(filename, encoding=None):
 
     if encoding is not None:
         # The simple case.
+        logger.debug('Decoding file %s from encoding %s from argument.',
+                     filename, encoding)
         return data.decode(encoding), encoding
+
+    # If the file contains only ascii, it seems fine to simply use that.
+    encoding = 'ascii'
+    try:
+        logger.debug('Decoding file %s from encoding %s.', filename, encoding)
+        return data.decode(encoding), encoding
+    except UnicodeDecodeError:
+        logger.debug('File %s is not ascii.', filename)
+        pass
 
     # Only if the encoding is not manually specified, we may try to
     # detect it.
@@ -150,6 +171,20 @@ def read_text_file(filename, encoding=None):
         except (LookupError, UnicodeError):
             # Try the next one
             pass
+
+    if fallback_encoding:
+        encoding = fallback_encoding
+        try:
+            logger.debug('Decoding file %s from encoding %s from setup.cfg.',
+                         filename, encoding)
+            return data.decode(encoding), encoding
+        except UnicodeDecodeError:
+            logger.warning(
+                'setup.cfg has zest.releaser encoding option %r, '
+                'but this fails for file %s. '
+                'Consider changing the file or the option.',
+                encoding, filename,
+            )
 
     if detect_encoding is not None:
         # This is Python 3 with tokenize.

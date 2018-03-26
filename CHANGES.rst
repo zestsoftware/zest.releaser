@@ -4,6 +4,12 @@ Changelog for zest.releaser
 6.13.6 (unreleased)
 -------------------
 
+- Use new ``setup.cfg`` option ``[zest.releaser] encoding``.
+  Set this to, for example, ``utf-8`` when the encoding of your ``CHANGES.rst``
+  file is not determined correctly.
+  Fixes `issue 264 <https://github.com/zestsoftware/zest.releaser/issues/264>`_.
+  [maurits]
+
 - When inserting changelog entry, check that it conforms to the existing encoding.
   Try to recover if there is a difference, especially when the changelog file
   was ascii and we insert utf-8.  [maurits]

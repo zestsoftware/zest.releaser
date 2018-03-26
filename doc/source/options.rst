@@ -165,6 +165,11 @@ date-format = a string
     Note: the % signs should be doubled for compatibility with other tools
     (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
 
+encoding = a string
+  Default: empty.
+  Set this to, for example, ``utf-8`` when the encoding of your ``CHANGES.rst``
+  file is not determined correctly.
+
 
 Per project options
 -------------------
