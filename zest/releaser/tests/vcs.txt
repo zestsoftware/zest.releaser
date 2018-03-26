@@ -162,23 +162,29 @@ source. If a ``__version__`` marker file is specified, that's where we'll look
 and otherwise not.
 
 Create a Python file with ``__version__`` without configuring it. This won't
-change a thing:
+change a thing. We test with a fresh checkout:
 
+    >>> checkout = vcs.BaseVersionControl()
+    >>> checkout.internal_filename = '.marker'
     >>> lines = [
     ...     "import something",
     ...     "__version__ = '2.0'",
     ...     "print('something.else')"]
     >>> writeto('some_file.py', '\n'.join(lines))
+    >>> checkout = vcs.BaseVersionControl()
+    >>> checkout.internal_filename = '.marker'
     >>> checkout.version
     '1.4'
 
 Add a ``setup.cfg`` with a pointer at the Python file and its version gets
-picked up:
+picked up. We need a fresh checkout to pick up the change:
 
     >>> lines = [
     ...     "[zest.releaser]",
     ...     "python-file-with-version = some_file.py"]
     >>> writeto('setup.cfg', '\n'.join(lines))
+    >>> checkout = vcs.BaseVersionControl()
+    >>> checkout.internal_filename = '.marker'
     >>> checkout.get_python_file_version()
     '2.0'
     >>> checkout.version

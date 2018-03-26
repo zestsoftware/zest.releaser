@@ -53,6 +53,9 @@ class BaseVersionControl(object):
             # Determine relative path from root of repo.
             self.relative_path_in_repo = os.path.relpath(
                 self.workingdir, reporoot)
+        self.setup_cfg = pypi.SetupConfig()
+        pypi_cfg = pypi.PypiConfig()
+        self.fallback_encoding = pypi_cfg.encoding()
 
     def __repr__(self):
         return '<{0} at {1} {2}>'.format(
@@ -101,11 +104,13 @@ class BaseVersionControl(object):
             return utils.strip_version(version)
 
     def get_python_file_version(self):
-        setup_cfg = pypi.SetupConfig()
-        if not setup_cfg.python_file_with_version():
+        python_version_file = self.setup_cfg.python_file_with_version()
+        if not python_version_file:
             return
         lines, encoding = utils.read_text_file(
-            setup_cfg.python_file_with_version())
+            python_version_file,
+            fallback_encoding=self.fallback_encoding,
+        )
         encoding  # noqa, unused variable
         lines = lines.splitlines()
         for line in lines:
@@ -206,9 +211,11 @@ class BaseVersionControl(object):
                 self.get_version_txt_version())
 
     def _update_python_file_version(self, version):
-        setup_cfg = pypi.SetupConfig()
-        filename = setup_cfg.python_file_with_version()
-        lines, encoding = utils.read_text_file(filename)
+        filename = self.setup_cfg.python_file_with_version()
+        lines, encoding = utils.read_text_file(
+            filename,
+            fallback_encoding=self.fallback_encoding,
+        )
         lines = lines.split('\n')
         for index, line in enumerate(lines):
             match = UNDERSCORED_VERSION_PATTERN.search(line)
@@ -247,7 +254,10 @@ class BaseVersionControl(object):
 
         good_version = "version = '%s'" % version
         line_number = 0
-        setup_lines, encoding = utils.read_text_file('setup.py')
+        setup_lines, encoding = utils.read_text_file(
+            'setup.py',
+            fallback_encoding=self.fallback_encoding,
+        )
         setup_lines = setup_lines.split('\n')
         for line_number, line in enumerate(setup_lines):
             if VERSION_PATTERN.search(line):
@@ -275,7 +285,10 @@ class BaseVersionControl(object):
 
         good_version = "version = %s" % version
         if os.path.exists('setup.cfg'):
-            setup_cfg_lines, encoding = utils.read_text_file('setup.cfg')
+            setup_cfg_lines, encoding = utils.read_text_file(
+                'setup.cfg',
+                fallback_encoding=self.fallback_encoding,
+            )
             setup_cfg_lines = setup_cfg_lines.split('\n')
             for line_number, line in enumerate(setup_cfg_lines):
                 if VERSION_PATTERN.search(line):

@@ -106,17 +106,18 @@ class Basereleaser(object):
         self.data['headings'] = []
         self.data['history_last_release'] = ''
         self.data['history_insert_line_here'] = 0
-        default_location = None
-        config = self.setup_cfg.config
-        if config and config.has_option('zest.releaser', 'history_file'):
-            default_location = config.get('zest.releaser', 'history_file')
+        default_location = self.pypiconfig.history_file()
+        fallback_encoding = self.pypiconfig.encoding()
         history_file = self.vcs.history_file(location=default_location)
         self.data['history_file'] = history_file
         if not history_file:
             logger.warning("No history file found")
             return
         logger.debug("Checking %s", history_file)
-        history_lines, history_encoding = read_text_file(history_file)
+        history_lines, history_encoding = read_text_file(
+            history_file,
+            fallback_encoding=fallback_encoding,
+        )
         history_lines = history_lines.split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not headings:
@@ -227,18 +228,33 @@ class Basereleaser(object):
                 'Changelog entry does not have the same encoding (%s) as '
                 'the existing file. This might give problems.', orig_encoding
             )
-            if orig_encoding == 'ascii':
+            config = self.setup_cfg.config
+            fallback_encodings = []
+            if config.has_option('zest.releaser', 'encoding'):
+                encoding = config.get('zest.releaser', 'encoding')
+                if encoding != orig_encoding:
+                    fallback_encodings.append(encoding)
+            encoding = 'utf-8'
+            if encoding != orig_encoding:
+                fallback_encodings.append(encoding)
+            for encoding in fallback_encodings:
                 try:
-                    message.encode('utf-8')
+                    # Note: we do not change the message at this point,
+                    # we only check if an encoding can work.
+                    message.encode(encoding)
                 except UnicodeEncodeError:
                     # Let's continue. There might be a chance that it works.
                     logger.warning(
-                        'Changelog entry is also not utf-8. '
-                        'This will probably fail in a moment.',
-                    )
+                        'Changelog entry is also not %s. ', encoding)
                 else:
-                    logger.debug('Forcing new history_encoding utf-8.')
-                    self.data['history_encoding'] = 'utf-8'
+                    logger.debug('Forcing new history_encoding %s', encoding)
+                    self.data['history_encoding'] = encoding
+                    break
+            else:
+                logger.warning(
+                    'No correct encoding could be determined for writing. '
+                    'This will probably fail in a moment.'
+                )
         lines = []
         prefix = utils.get_list_item(self.data['history_lines'])
         for index, line in enumerate(message.splitlines()):
