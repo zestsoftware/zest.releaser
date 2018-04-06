@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.14.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Declared ``requests`` dependency.
+  Declared ``zope.testing`` test dependency.
+  [maurits]
 
 
 6.14.0 (2018-03-26)
