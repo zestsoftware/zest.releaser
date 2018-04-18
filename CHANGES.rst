@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.14.1 (unreleased)
 -------------------
 
+- Added key ``update_history`` in prerelease and postrelease data.
+  Plugins can use this to tell ``zest.releaser`` (and other plugins)
+  to not touch the history, presumably because the plugin handles it.
+  [maurits]
+
 - Declared ``requests`` dependency.
   Declared ``zope.testing`` test dependency.
   [maurits]
