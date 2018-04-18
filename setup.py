@@ -67,6 +67,8 @@ setup(name='zest.releaser',
               'check-manifest',
               'pyroma',
               'readme_renderer',
+              'toml',
+              'towncrier',
               'wheel',
               ],
           'test': [
@@ -91,6 +93,8 @@ setup(name='zest.releaser',
           # our entry point implementation.
           'zest.releaser.prereleaser.middle': [
               'datacheck = zest.releaser.prerelease:datacheck',
+              # Call towncrier to update the changelog with newsfragments:
+              'call_towncrier = zest.releaser.towncrier_hooks:call_towncrier',
               ],
           'zest.releaser.releaser.middle': [
               'datacheck = zest.releaser.release:datacheck',
@@ -108,7 +112,16 @@ setup(name='zest.releaser',
           'zest.releaser.prereleaser.before': [
               'preparedocs = ' +
               'zest.releaser.preparedocs:prepare_entrypoint_documentation',
+              # Check if towncrier is available and configured:
+              'check_towncrier = zest.releaser.towncrier_hooks:check_towncrier',
+              ],
+          'zest.releaser.postreleaser.before': [
+              # Towncrier for news.
+              # We only need to check if towncrier is available and
+              # configured for this project.
+              # Then the history should not be changed.
+              'check_towncrier = zest.releaser.towncrier_hooks:check_towncrier',
               ],
 
-          },
+      },
       )

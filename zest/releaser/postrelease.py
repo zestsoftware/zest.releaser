@@ -22,6 +22,8 @@ DATA.update({
     'dev_version_template': 'Template for development version number',
     'development_marker': 'String to be appended to version after postrelease',
     'new_version': 'New version, without development marker (so 1.1)',
+    'update_history': 'Should zest.releaser update the history file?',
+    'update_version': 'Should zest.releaser update the version file?',
 })
 
 
@@ -40,6 +42,8 @@ class Postreleaser(baserelease.Basereleaser):
             dev_version_template=DEV_VERSION_TEMPLATE,
             development_marker=self.pypiconfig.development_marker(),
             history_header=HISTORY_HEADER,
+            update_history=True,
+            update_version=True,
         ))
 
     def prepare(self):
@@ -52,9 +56,12 @@ class Postreleaser(baserelease.Basereleaser):
 
     def execute(self):
         """Make the changes and offer a commit"""
-        self._write_version()
-        self._change_header(add=True)
-        self._write_history()
+        if self.data['update_version']:
+            self._write_version()
+        if self.data['update_history']:
+            self._change_header(add=True)
+            self._write_history()
+        # Always ask to commit, because an entrypoint may have made changes.
         self._diff_and_commit()
         self._push()
 
