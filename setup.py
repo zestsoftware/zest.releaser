@@ -110,5 +110,5 @@ setup(name='zest.releaser',
               'zest.releaser.preparedocs:prepare_entrypoint_documentation',
               ],
 
-          },
+      },
       )

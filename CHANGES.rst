@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.14.1 (unreleased)
 -------------------
 
+- Added keys ``update_history`` and ``update_version`` in prerelease
+  and postrelease data.  Add-ons can use this to tell ``zest.releaser``
+  (and other add-ons) to not touch the history or the version number.
+  [maurits]
+
 - Declared ``requests`` dependency.
   Declared ``zope.testing`` test dependency.
   [maurits]

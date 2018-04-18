@@ -580,8 +580,9 @@ def is_data_documented(data, documentation=None):
     if TESTMODE:
         # Hack for testing to prove entry point is being called.
         print("Checking data dict")
-    undocumented = [key for key in data
-                    if key not in documentation]
+    undocumented = [
+        key for key in data
+        if key not in documentation and not key.startswith('_')]
     if undocumented:
         print('Internal detail: key(s) %s are not documented' % undocumented)
 
