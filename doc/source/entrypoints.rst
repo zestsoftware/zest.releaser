@@ -180,6 +180,9 @@ workingdir
 today
     Date string used in history header
 
+update_history
+    Should zest.releaser update the history file?
+
 ``release`` data dict items
 ---------------------------
 
@@ -222,6 +225,9 @@ development_marker
 
 new_version
     New version, without development marker (so 1.1)
+
+update_history
+    Should zest.releaser update the history file?
 
 ``addchangelogentry`` data dict items
 -------------------------------------
