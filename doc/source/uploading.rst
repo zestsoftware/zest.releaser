@@ -7,7 +7,7 @@ zest.releaser basically executes the command ``python setup.py sdist`` and does 
 ``python setup.py sdist upload``.
 
 For safety reasons zest.releaser will *only* offer to upload your package to
-https://pypi.python.org when the package is already registered there.  If this
+https://pypi.org when the package is already registered there.  If this
 is not the case yet, you get a confirmation question whether you want to
 register a new package with ``twine register``.
 
@@ -26,17 +26,10 @@ has your pypi login credentials.  This may contain alternative servers too::
   [distutils]
   index-servers =
     pypi
-    warehouse
     local
 
   [pypi]
-  # default repository is pypi.python.org
-  username:maurits
-  password:secret
-
-  [warehouse]
-  # This is the successor for PyPI, which you can/should already use.
-  repository:https://upload.pypi.org/legacy/
+  # default repository is pypi.org/legacy/
   username:maurits
   password:secret
 
@@ -71,7 +64,7 @@ tag for tweaks or pypi/distutils server upload.  We could add some extra
 checks to see if that is really needed, but someone who does not have
 index-servers listed, may still want to use an entry point like
 `gocept.zestreleaser.customupload
-<http://pypi.python.org/pypi/gocept.zestreleaser.customupload>`_ to do
+<http://pypi.org/project/gocept.zestreleaser.customupload>`_ to do
 uploading, or do some manual steps first before uploading.
 
 Since version 6.8, zest.releaser by default no longer *registers* a new package, but only uploads it.
@@ -101,7 +94,7 @@ Package Index, because it is safer: it uses ``https`` for uploading.
 Since version 4.0 we already prefered it if it was available, but it
 is now a core dependency, installed automatically.
 
-.. _twine: https://pypi.python.org/pypi/twine
+.. _twine: https://pypi.org/project/twine
 
 Since version 6.6.6 we use it in a way that should work with ``twine``
 1.6.0 and higher, including future versions.
@@ -221,7 +214,7 @@ In general, if you are missing files in the uploaded package, the best
 is to put a proper ``MANIFEST.in`` file next to your ``setup.py``.
 See `zest.pocompile`_ for an example.
 
-.. _`zest.pocompile`: http://pypi.python.org/pypi/zest.pocompile
+.. _`zest.pocompile`: http://pypi.org/project/zest.pocompile
 
 
 Running automatically without input

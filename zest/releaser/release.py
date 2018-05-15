@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
-    url = 'https://pypi.python.org/simple/%s' % package
+    url = 'https://pypi.org/simple/%s' % package
     try:
         urllib2.urlopen(url)
         return True
