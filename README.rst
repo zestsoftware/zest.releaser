@@ -32,7 +32,7 @@ First the three most important links:
 - The full documentation is at `zestreleaser.readthedocs.io
   <http://zestreleaser.readthedocs.io>`_.
 
-- We're `on PyPI <http://pypi.python.org/pypi/zest.releaser>`_, so we're only
+- We're `on PyPI <https://pypi.org/project/zest.releaser>`_, so we're only
   an ``pip install zest.releaser`` away from installation on your computer.
 
 - The code is at `github.com/zestsoftware/zest.releaser
@@ -106,12 +106,12 @@ of ``zest.releaser`` users:
 - twine_ for secure uploading via https to pypi. Plain setuptools doesn't
   support this.
 
-.. _wheel: https://pypi.python.org/pypi/wheel
-.. _`check-manifest`: https://pypi.python.org/pypi/check-manifest
-.. _pyroma: https://pypi.python.org/pypi/pyroma
-.. _chardet: https://pypi.python.org/pypi/chardet
-.. _readme: https://pypi.python.org/pypi/readme
-.. _twine: https://pypi.python.org/pypi/twine
+.. _wheel: https://pypi.org/project/wheel
+.. _`check-manifest`: https://pypi.org/project/check-manifest
+.. _pyroma: https://pypi.org/project/pyroma
+.. _chardet: https://pypi.org/project/chardet
+.. _readme: https://pypi.org/project/readme
+.. _twine: https://pypi.org/project/twine
 
 
 Installation

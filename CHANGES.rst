@@ -4,6 +4,10 @@ Changelog for zest.releaser
 6.14.1 (unreleased)
 -------------------
 
+- Use pypi.org, especially when checking if a package is on PyPI.
+  Fixes `issue #281 <https://github.com/zestsoftware/zest.releaser/issues/281>`_.
+  [maurits]
+
 - Added key ``update_history`` in prerelease and postrelease data.
   Plugins can use this to tell ``zest.releaser`` (and other plugins)
   to not touch the history, presumably because the plugin handles it.
@@ -594,4 +598,4 @@ Fixes:
 
 .. # Note: for older changes see ``doc/sources/changelog.rst``.
 
-.. _twine: https://pypi.python.org/pypi/twine
+.. _twine: https://pypi.org/project/twine
