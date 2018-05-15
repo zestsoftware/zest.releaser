@@ -29,7 +29,7 @@ has your pypi login credentials.  This may contain alternative servers too::
     local
 
   [pypi]
-  # default repository is pypi.org/legacy/
+  # default repository is https://upload.pypi.org/legacy/
   username:maurits
   password:secret
 
@@ -64,7 +64,7 @@ tag for tweaks or pypi/distutils server upload.  We could add some extra
 checks to see if that is really needed, but someone who does not have
 index-servers listed, may still want to use an entry point like
 `gocept.zestreleaser.customupload
-<http://pypi.org/project/gocept.zestreleaser.customupload>`_ to do
+<https://pypi.org/project/gocept.zestreleaser.customupload>`_ to do
 uploading, or do some manual steps first before uploading.
 
 Since version 6.8, zest.releaser by default no longer *registers* a new package, but only uploads it.
@@ -214,7 +214,7 @@ In general, if you are missing files in the uploaded package, the best
 is to put a proper ``MANIFEST.in`` file next to your ``setup.py``.
 See `zest.pocompile`_ for an example.
 
-.. _`zest.pocompile`: http://pypi.org/project/zest.pocompile
+.. _`zest.pocompile`: https://pypi.org/project/zest.pocompile
 
 
 Running automatically without input

@@ -32,7 +32,7 @@ First the three most important links:
 - The full documentation is at `zestreleaser.readthedocs.io
   <http://zestreleaser.readthedocs.io>`_.
 
-- We're `on PyPI <http://pypi.org/project/zest.releaser>`_, so we're only
+- We're `on PyPI <https://pypi.org/project/zest.releaser>`_, so we're only
   an ``pip install zest.releaser`` away from installation on your computer.
 
 - The code is at `github.com/zestsoftware/zest.releaser

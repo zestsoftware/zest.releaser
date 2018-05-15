@@ -51,7 +51,7 @@ like this should do the trick::
             return
         ...
 
-.. _`gocept.zestreleaser.customupload`: http://pypi.org/project/gocept.zestreleaser.customupload
+.. _`gocept.zestreleaser.customupload`: https://pypi.org/project/gocept.zestreleaser.customupload
 
 
 Entry point specification
