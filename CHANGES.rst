@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.15.0 (unreleased)
+6.15.0 (2018-05-15)
 -------------------
 
 - Use pypi.org, especially when checking if a package is on PyPI.
