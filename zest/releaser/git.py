@@ -79,7 +79,7 @@ class Git(BaseVersionControl):
         return ['git', 'log', '%s..HEAD' % version]
 
     def cmd_create_tag(self, version, message, sign=False):
-        cmd = ['git', 'tag', version, '-m', message]
+        cmd = ['git', 'tag', version, '-a', '-m', message]
         if sign:
             cmd.append("--sign")
         if os.path.isdir('.git/svn'):
