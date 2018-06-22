@@ -4,7 +4,12 @@ Changelog for zest.releaser
 6.15.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix for #286: removed the confusing word "register" from the info message
+  you got when a package wasn't available yet on pypi.
+
+  Registering isn't used anymore on pypi, but it was still in our textual
+  message.
+  [reinout]
 
 
 6.15.0 (2018-05-15)
