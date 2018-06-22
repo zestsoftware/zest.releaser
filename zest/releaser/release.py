@@ -159,7 +159,7 @@ class Releaser(baserelease.Basereleaser):
             default = True
             exact = False
             if server == 'pypi' and not package_in_pypi(package):
-                logger.info("This package is NOT registered on PyPI.")
+                logger.info("This package does NOT exist yet on PyPI.")
                 # We are not yet on pypi.  To avoid an 'Oops...,
                 # sorry!' when registering and uploading an internal
                 # package we default to False here.
