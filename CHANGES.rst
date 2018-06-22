@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.15.1 (unreleased)
+6.15.1 (2018-06-22)
 -------------------
 
 - Fix for #286: removed the confusing word "register" from the info message
