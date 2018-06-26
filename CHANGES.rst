@@ -40,7 +40,8 @@ Changelog for zest.releaser
 
 - Advertise ``setup.cfg`` option ``[zest.releaser] history-file``.
   Usually zest.releaser can find the correct history or changelog file on its own.
-  But sometimes it may not find anything, or it finds multiple files and selects the wrong one.
+  But sometimes it may not find anything, or it finds multiple files and
+  selects the wrong one.
   Then you can set a path here.
   A ``history_file`` option with an underscore was already read, but not documented.
   Now we try both a dash and an underscore for good measure.
