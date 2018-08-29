@@ -64,31 +64,30 @@ class Releaser(baserelease.Basereleaser):
     def prepare(self):
         """Collect some data needed for releasing"""
         self._grab_version()
-        self.data['tag'] = self.pypiconfig.tag_format(self.data['version'])
+        tag = self.pypiconfig.tag_format(self.data['version'])
+        self.data['tag'] = tag
         self.data['tag-message'] = self.pypiconfig.tag_message(
             self.data['version'])
         self.data['tag-signing'] = self.pypiconfig.tag_signing()
-        self._check_if_tag_already_exists()
+        self.data['tag_already_exists'] = self.vcs.tag_exists(tag)
 
     def execute(self):
         """Do the actual releasing"""
+        self._info_if_tag_already_exists()
         self._make_tag()
         self._release()
 
-    def _check_if_tag_already_exists(self):
-        """Check if tag already exists and show the difference if so"""
-        version = self.data['version']
-        tag = self.data['tag']
-        if self.vcs.tag_exists(tag):
-            self.data['tag_already_exists'] = True
+    def _info_if_tag_already_exists(self):
+        if self.data['tag_already_exists']:
+            # Safety feature.
+            version = self.data['version']
+            tag = self.data['tag']
             q = ("There is already a tag %s, show "
                  "if there are differences?" % version)
             if utils.ask(q):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(tag)
                 print(utils.format_command(diff_command))
                 print(execute_command(diff_command))
-        else:
-            self.data['tag_already_exists'] = False
 
     def _make_tag(self):
         version = self.data['version']

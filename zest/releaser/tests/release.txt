@@ -65,7 +65,7 @@ If, by some weird twist of fate, there's no release: we exit.
 Check tag existence
 -------------------
 
-We check if a tag already exists.  First set the version to 0.1:
+We automatically check if a tag already exists.  First set the version to 0.1:
 
     >>> releaser = release.Releaser()
     >>> releaser.vcs.version = '0.1'
@@ -73,28 +73,26 @@ We check if a tag already exists.  First set the version to 0.1:
     >>> releaser.data['tag_already_exists']
     False
 
-Mock that the tag exists and check again:
+If the tag doesn't exist yet, no safety question is asked:
 
-    >>> orig = releaser.vcs.tag_exists
-    >>> releaser.vcs.tag_exists = lambda x: True
+    >>> releaser._info_if_tag_already_exists()
+
+Mock that the tag exists and we get a question:
+
+    >>> releaser.data['tag_already_exists'] = True
     >>> utils.test_answer_book.set_answers(['n'])
     >>> utils.AUTO_RESPONSE
     False
-    >>> releaser._check_if_tag_already_exists()
+    >>> releaser._info_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: n
-    >>> releaser.data['tag_already_exists']
-    True
     >>> utils.test_answer_book.set_answers(['y'])
-    >>> releaser._check_if_tag_already_exists()
+    >>> releaser._info_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: y
     svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk
     ...
     >>> # ^^^ The diff itself fails as we mocked its existence
-    >>> releaser.data['tag_already_exists']
-    True
-    >>> releaser.vcs.tag_exists = orig # Revert mock
 
 
 Making tags
