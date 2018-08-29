@@ -30,7 +30,7 @@ Most important URLs
 First the three most important links:
 
 - The full documentation is at `zestreleaser.readthedocs.io
-  <http://zestreleaser.readthedocs.io>`_.
+  <https://zestreleaser.readthedocs.io>`_.
 
 - We're `on PyPI <https://pypi.org/project/zest.releaser>`_, so we're only
   an ``pip install zest.releaser`` away from installation on your computer.

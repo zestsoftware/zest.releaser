@@ -286,7 +286,7 @@ Changelog for zest.releaser
 - Updated the documentation on uploading.  [mgedmin, maurits]
 
 - Replaced http://zestreleaser.readthedocs.org with
-  http://zestreleaser.readthedocs.io.  This is the new canonical
+  https://zestreleaser.readthedocs.io.  This is the new canonical
   domain since 28 April 2016.  [maurits]
 
 
