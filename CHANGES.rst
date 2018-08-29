@@ -4,7 +4,13 @@ Changelog for zest.releaser
 6.15.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- If a tag already exists, zest.releaser asks a safety question. The location
+  where the question gets asked was moved slightly to help a program that uses
+  zest.releaser as a library.
+  [reinout]
+
+- Switched our readthedocs urls to https.
+  [reinout]
 
 
 6.15.1 (2018-06-22)
