@@ -143,7 +143,7 @@
 - Added ``--no-input`` commandline option for running automatically without
   asking for input. Useful when started from some build tool. See the
   documentation at the end of
-  http://zestreleaser.readthedocs.io/en/latest/uploading.html .
+  https://zestreleaser.readthedocs.io/en/latest/uploading.html .
   [reinout, based upon a patch by j-san]
 
 
@@ -200,7 +200,7 @@
 -----------------
 
 - Documentation update! Started sphinx documentation at
-  `zestreleaser.readthedocs.io <http://zestreleaser.readthedocs.io>`_.
+  `zestreleaser.readthedocs.io <https://zestreleaser.readthedocs.io>`_.
   Removed documentation from the README and put it into sphinx.
 
 - Actually ask if the user wants to continue with the release when
