@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.15.2 (unreleased)
+6.15.2 (2018-08-30)
 -------------------
 
 - If a tag already exists, zest.releaser asks a safety question. The location
