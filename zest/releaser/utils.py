@@ -159,8 +159,8 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
             continue
         pos += len(canary)
         coding = b''
-        while pos < data_len and data[pos] not in (b' ', b'\n'):
-            coding += data[pos]
+        while pos < data_len and data[pos:pos + 1] not in (b' ', b'\n'):
+            coding += data[pos:pos + 1]
             pos += 1
         encoding = coding.decode('ascii').strip()
         try:
