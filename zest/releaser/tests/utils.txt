@@ -754,6 +754,7 @@ Reading text files
 When reading text files, reliable encoding handling is a pain. Did anyone say
 "corner cases"?
 
+
 There once was a bug with python 3. ``b'example'[0] gives back an integer
 instead of an ``b'e'``. We had to compensate for that so that the following
 example works:
