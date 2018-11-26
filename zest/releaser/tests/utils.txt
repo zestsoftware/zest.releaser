@@ -763,7 +763,7 @@ example works:
     >>> import tempfile
     >>> _, example_filename = tempfile.mkstemp()
     >>> _ = open(example_filename, 'wb').write(
-    ...     '# -*- coding: utf-8 -*-\nblaá'.encode('utf-8'))
+    ...     '# -*- coding: utf-8 -*-\nbla\xc3\xa1'.encode('utf-8'))
     >>> contents, encoding = utils.read_text_file(example_filename)
     >>> 'bla' in contents
     True
