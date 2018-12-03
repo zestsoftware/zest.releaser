@@ -2,7 +2,6 @@ sudo: false
 language: python
 python:
   - 2.7
-  - 3.4
   - 3.5
   - 3.6
   - pypy
@@ -25,9 +24,6 @@ before_install:
   - hg --version
   - svn --version
   - pip install -U setuptools
-matrix:
-  allow_failures:
-  - python: pypy
 notifications:
   irc:
     channels: "irc.freenode.org#vanrees"
