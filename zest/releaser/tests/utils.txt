@@ -746,3 +746,27 @@ but that is hard to test, as we normalize the output to not show it:
     >>> cmd = ['git', 'tag', '1.0', '-m', u'Possibly unicode']
     >>> print(utils.format_command(cmd))
     git tag 1.0 -m 'Possibly unicode'
+
+
+Reading text files
+------------------
+
+When reading text files, reliable encoding handling is a pain. Did anyone say
+"corner cases"?
+
+
+There once was a bug with python 3. ``b'example'[0] gives back an integer
+instead of an ``b'e'``. We had to compensate for that so that the following
+example works:
+
+    >>> import os
+    >>> import tempfile
+    >>> _, example_filename = tempfile.mkstemp()
+    >>> with open(example_filename, 'wb') as f:
+    ...     _ = f.write(u'# -*- coding: utf-8 -*-\nblaá'.encode('utf-8'))
+    >>> contents, encoding = utils.read_text_file(example_filename)
+    >>> 'bla' in contents
+    True
+    >>> encoding
+    'utf-8'
+    >>> os.remove(example_filename)  # cleanup
