@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.15.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix for `issue #297 <https://github.com/zestsoftware/zest.releaser/issues/297>`_:
+  bytes+int problem on python 3 when detecting encodings.
+  [reinout]
 
 
 6.15.2 (2018-08-30)
