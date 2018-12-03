@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.15.3 (unreleased)
+6.15.3 (2018-12-03)
 -------------------
 
 - Fix for `issue #297 <https://github.com/zestsoftware/zest.releaser/issues/297>`_:
