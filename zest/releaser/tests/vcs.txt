@@ -280,3 +280,27 @@ version in setup.cfg:
     ...     print(f.read())
     [metadata]
     version = 1.2
+
+Setup.py with a double-quoted version, as prefered by the 'black' code
+formatter:
+
+    >>> doublequotedversionproject = os.path.join(tempdir, 'dqv')
+    >>> os.mkdir(doublequotedversionproject)
+    >>> os.chdir(doublequotedversionproject)
+    >>> lines = [
+    ...     "from setuptools import setup",
+    ...     "setup(name='urgh',",
+    ...     "      version=\"1.0\",",
+    ...     ")"]
+    >>> writeto('setup.py', '\n'.join(lines))
+    >>> checkout.version = '1.2'
+
+The version line should have retained its double quotes, otherwise black would
+have to change it back again:
+
+    >>> with open('setup.py') as f:
+    ...     print(f.read())
+    from setuptools import setup
+    setup(name='urgh',
+          version="1.2",
+    )
