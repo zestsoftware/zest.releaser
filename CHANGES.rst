@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.15.4 (unreleased)
+6.15.4 (2019-01-11)
 -------------------
 
 - We retain the existing quoting style for the ``version='1.0'`` in
