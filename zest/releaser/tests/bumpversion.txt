@@ -38,23 +38,23 @@ error is ugly, but in practice it looks fine, saying no bump is needed.
 So first run the fullrelease:
 
     >>> from zest.releaser import fullrelease
-    >>> utils.test_answer_book.set_answers(['', '', '', '2.3.4', '', '', '', '', '', '', ''])
+    >>> utils.test_answer_book.set_answers(['', '', '', '2.9.4', '', '', '', '', '', '', ''])
     >>> fullrelease.main()
     Question...
     Question: Enter version [0.1]:
-    Our reply: 2.3.4
+    Our reply: 2.9.4
     ...
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
     ========================
     <BLANKLINE>
-    2.3.5 (unreleased)
+    2.9.5 (unreleased)
     ------------------
     >>> svnhead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '2.3.5.dev0'
+    version = '2.9.5.dev0'
 
 Try bumpversion again.  The first time we again get an error because
 no version bump is needed: our current version is already higher than
@@ -72,9 +72,9 @@ Now a feature bump::
     >>> sys.argv[1:] = ['--feature']
     >>> bumpversion.main()
     Checking version bump for feature release.
-    Last tag: 2.3.4
-    Current version: 2.3.5.dev0
-    Question: Enter version [2.4.0.dev0]:
+    Last tag: 2.9.4
+    Current version: 2.9.5.dev0
+    Question: Enter version [2.10.0.dev0]:
     Our reply: <ENTER>
     Checking data dict
     Question: OK to commit this (Y/n)?
@@ -83,13 +83,13 @@ Now a feature bump::
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
-    version = '2.4.0.dev0'
+    version = '2.10.0.dev0'
     >>> svnhead('CHANGES.txt')
     Changelog of tha.example
     ========================
     <BLANKLINE>
-    2.4.0 (unreleased)
-    ------------------
+    2.10.0 (unreleased)
+    -------------------
 
 Now a breaking bump, and for this test we explicitly remove the dev marker::
 
@@ -97,8 +97,8 @@ Now a breaking bump, and for this test we explicitly remove the dev marker::
     >>> sys.argv[1:] = ['--breaking']
     >>> bumpversion.main()
     Checking version bump for breaking release.
-    Last tag: 2.3.4
-    Current version: 2.4.0.dev0
+    Last tag: 2.9.4
+    Current version: 2.10.0.dev0
     Question: Enter version [3.0.0.dev0]:
     Our reply: 3.0.0
     Checking data dict

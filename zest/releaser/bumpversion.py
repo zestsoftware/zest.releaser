@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import logging
 import sys
 
+from pkg_resources import parse_version
 from zest.releaser import baserelease
 from zest.releaser import utils
 
@@ -102,7 +103,8 @@ class BumpVersion(baserelease.Basereleaser):
             )
             minimum_version = utils.suggest_version(
                 last_tag_version, **params)
-            if minimum_version <= original_version:
+            if parse_version(minimum_version) <= parse_version(
+                    utils.cleanup_version(original_version)):
                 print("No version bump needed.")
                 sys.exit(0)
             # A bump is needed.  Get suggestion for next version.
