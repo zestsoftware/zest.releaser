@@ -7,6 +7,12 @@ Changelog for zest.releaser
 - We retain the existing quoting style for the ``version='1.0'`` in
   ``setup.py`` files. The "black" code formatting prefers double quotes and
   zest.releaser by default wrote single quotes.
+  [reinout]
+
+- Fix for `issue #299 <https://github.com/zestsoftware/zest.releaser/issues/299>`_:
+  bumpversion now also compares versions numerically instead of as a string,
+  so ``2.9 < 2.10`` is now true.
+  [reinout]
 
 
 6.15.3 (2018-12-03)
