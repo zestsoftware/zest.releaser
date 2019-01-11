@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.15.4 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- We retain the existing quoting style for the ``version='1.0'`` in
+  ``setup.py`` files. The "black" code formatting prefers double quotes and
+  zest.releaser by default wrote single quotes.
 
 
 6.15.3 (2018-12-03)

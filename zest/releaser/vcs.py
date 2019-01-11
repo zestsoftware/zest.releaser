@@ -267,6 +267,8 @@ class BaseVersionControl(object):
                     indentation = line.split('version')[0]
                     # Note: no spaces around the '='.
                     good_version = indentation + "version='%s'," % version
+                if '"' in line:
+                    good_version = good_version.replace("'", '"')
                 setup_lines[line_number] = good_version
                 utils.write_text_file(
                     'setup.py', '\n'.join(setup_lines), encoding)
@@ -277,6 +279,8 @@ class BaseVersionControl(object):
                 # handle indentation.
                 logger.debug("Matching version line found: '%s'", line)
                 good_version = good_version.upper()
+                if '"' in line:
+                    good_version = good_version.replace("'", '"')
                 setup_lines[line_number] = good_version
                 utils.write_text_file(
                     'setup.py', '\n'.join(setup_lines), encoding)
