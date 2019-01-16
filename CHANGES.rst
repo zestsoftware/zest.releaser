@@ -4,7 +4,10 @@ Changelog for zest.releaser
 6.15.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix for `issue #259 <https://github.com/zestsoftware/zest.releaser/issues/259>`_:
+  using zest.releaser on windows no longer can result in accidental extra
+  ``\r`` (carriage return) characters in the changelog and your ``setup.py``.
+  [reinout]
 
 
 6.15.4 (2019-01-11)
