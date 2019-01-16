@@ -59,6 +59,14 @@ def loglevel():
     return logging.INFO
 
 
+def splitlines_with_trailing(content):
+    """Return .splitlines() lines, but with a trailing newline if needed"""
+    lines = content.splitlines()
+    if content.endswith('\n'):
+        lines.append('')
+    return lines
+
+
 def write_text_file(filename, contents, encoding=None):
     if six.PY2:
         if isinstance(contents, six.text_type):
@@ -126,13 +134,13 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
         # The simple case.
         logger.debug('Decoding file %s from encoding %s from argument.',
                      filename, encoding)
-        return data.decode(encoding).splitlines(), encoding
+        return splitlines_with_trailing(data.decode(encoding)), encoding
 
     # If the file contains only ascii, it seems fine to simply use that.
     encoding = 'ascii'
     try:
         logger.debug('Decoding file %s from encoding %s.', filename, encoding)
-        return data.decode(encoding).splitlines(), encoding
+        return splitlines_with_trailing(data.decode(encoding)), encoding
     except UnicodeDecodeError:
         logger.debug('File %s is not ascii.', filename)
         pass
@@ -146,7 +154,7 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
         logger.debug(
             "Detected encoding of %s, standard 3 opening chars: %s",
             filename, encoding)
-        return data.decode(encoding).splitlines(), encoding
+        return splitlines_with_trailing(data.decode(encoding)), encoding
 
     data_len = len(data)
     for canary in ENCODING_HINTS:
@@ -162,7 +170,7 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
             pos += 1
         encoding = coding.decode('ascii').strip()
         try:
-            result = data.decode(encoding).splitlines()
+            result = splitlines_with_trailing(data.decode(encoding))
             logger.debug("Detected encoding of %s because of '%s': %s",
                          filename, canary, encoding)
             return result, encoding
@@ -175,7 +183,7 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
         try:
             logger.debug('Decoding file %s from encoding %s from setup.cfg.',
                          filename, encoding)
-            return data.decode(encoding).splitlines(), encoding
+            return splitlines_with_trailing(data.decode(encoding)), encoding
         except UnicodeDecodeError:
             logger.warning(
                 'setup.cfg has zest.releaser encoding option %r, '
@@ -198,13 +206,13 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
             encoding = encoding_result['encoding']
             logger.debug("Detected encoding of %s with chardet: %s",
                          filename, encoding)
-            return data.decode(encoding).splitlines(), encoding
+            return splitlines_with_trailing(data.decode(encoding)), encoding
 
     # Fall back to utf-8
     encoding = 'utf-8'
     logger.debug("No encoding detected for %s, falling back to %s",
                  filename, encoding)
-    return data.decode(encoding).splitlines(), encoding
+    return splitlines_with_trailing(data.decode(encoding)), encoding
 
 
 def strip_version(version):
