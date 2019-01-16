@@ -118,7 +118,6 @@ class Basereleaser(object):
             history_file,
             fallback_encoding=fallback_encoding,
         )
-        history_lines = history_lines.split('\n')
         headings = utils.extract_headings_from_history(history_lines)
         if not headings:
             logger.warning("No detectable version heading in the history "

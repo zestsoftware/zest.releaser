@@ -764,8 +764,8 @@ example works:
     >>> _, example_filename = tempfile.mkstemp()
     >>> with open(example_filename, 'wb') as f:
     ...     _ = f.write(u'# -*- coding: utf-8 -*-\nblaá'.encode('utf-8'))
-    >>> contents, encoding = utils.read_text_file(example_filename)
-    >>> 'bla' in contents
+    >>> lines, encoding = utils.read_text_file(example_filename)
+    >>> 'bla' in lines[1]
     True
     >>> encoding
     'utf-8'
