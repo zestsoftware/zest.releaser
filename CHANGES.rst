@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.15.5 (unreleased)
+6.16.0 (unreleased)
 -------------------
 
 - Fix for `issue #259 <https://github.com/zestsoftware/zest.releaser/issues/259>`_:
