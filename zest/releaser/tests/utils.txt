@@ -754,7 +754,6 @@ Reading text files
 When reading text files, reliable encoding handling is a pain. Did anyone say
 "corner cases"?
 
-
 There once was a bug with python 3. ``b'example'[0] gives back an integer
 instead of an ``b'e'``. We had to compensate for that so that the following
 example works:
@@ -764,9 +763,28 @@ example works:
     >>> _, example_filename = tempfile.mkstemp()
     >>> with open(example_filename, 'wb') as f:
     ...     _ = f.write(u'# -*- coding: utf-8 -*-\nblaá'.encode('utf-8'))
-    >>> contents, encoding = utils.read_text_file(example_filename)
-    >>> 'bla' in contents
+    >>> lines, encoding = utils.read_text_file(example_filename)
+    >>> 'bla' in lines[1]
     True
     >>> encoding
     'utf-8'
     >>> os.remove(example_filename)  # cleanup
+
+By using `.splitlines()`, we reliably handle different lineendings now.
+A problem is that a newline at the end of the file is often desireable.
+`.splitlines()` removes that. So we have our own variant.
+
+    >>> example = "line 1\nline 2\n"
+    >>> lines = example.splitlines()
+    >>> len(lines)
+    2
+    >>> '\n'.join(lines)
+    'line 1\nline 2'
+
+The above misses the newline. Here's the correct version:
+
+    >>> lines = utils.splitlines_with_trailing(example)
+    >>> len(lines)
+    3
+    >>> '\n'.join(lines)
+    'line 1\nline 2\n'

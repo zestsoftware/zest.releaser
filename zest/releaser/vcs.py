@@ -112,7 +112,6 @@ class BaseVersionControl(object):
             fallback_encoding=self.fallback_encoding,
         )
         encoding  # noqa, unused variable
-        lines = lines.splitlines()
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
             if match:
@@ -216,7 +215,6 @@ class BaseVersionControl(object):
             filename,
             fallback_encoding=self.fallback_encoding,
         )
-        lines = lines.split('\n')
         for index, line in enumerate(lines):
             match = UNDERSCORED_VERSION_PATTERN.search(line)
             if match:
@@ -258,7 +256,6 @@ class BaseVersionControl(object):
             'setup.py',
             fallback_encoding=self.fallback_encoding,
         )
-        setup_lines = setup_lines.split('\n')
         for line_number, line in enumerate(setup_lines):
             if VERSION_PATTERN.search(line):
                 logger.debug("Matching version line found: '%s'", line)
@@ -293,7 +290,6 @@ class BaseVersionControl(object):
                 'setup.cfg',
                 fallback_encoding=self.fallback_encoding,
             )
-            setup_cfg_lines = setup_cfg_lines.split('\n')
             for line_number, line in enumerate(setup_cfg_lines):
                 if VERSION_PATTERN.search(line):
                     logger.debug("Matching version line found: '%s'", line)
