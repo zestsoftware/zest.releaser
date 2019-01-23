@@ -201,7 +201,7 @@ class Releaser(baserelease.Basereleaser):
         retry = utils.retry_yes_no(['twine', twine_command])
         if retry:
             logger.info("Retrying.")
-            return self._retry_twine(twine_command, server, filename)
+            return self._retry_twine(twine_command, server, filenames)
 
     def _release(self):
         """Upload the release, when desired"""
