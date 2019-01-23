@@ -6,7 +6,6 @@ import os
 import sys
 
 from colorama import Fore
-from requests import codes
 from six.moves.urllib.error import HTTPError
 from six.moves.urllib import request as urllib2
 import twine.cli
