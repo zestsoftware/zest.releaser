@@ -72,6 +72,7 @@ And the new format that allows multiple uploads:
     [zest.releaser]
     extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
+    >>> from pprint import pprint
     >>> pprint(sorted(pypiconfig.distutils_servers()))
     ['mycompany', 'plone.org', 'pypi']
 

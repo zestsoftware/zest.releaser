@@ -33,4 +33,4 @@ install:
   - python bootstrap.py
   - bin/buildout
 script:
-  - bin/test
+  - bin/test -v
