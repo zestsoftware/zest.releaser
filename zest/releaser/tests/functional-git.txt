@@ -111,8 +111,7 @@ known on PyPI:
     removing 'tha.example-0.1' ...
     Question: Upload to pypi (y/N)?
     Our reply: yes
-    ...
-    MOCK twine upload dist/tha.example-0.1.tar.gz
+    MOCK twine dispatch upload ... dist/tha.example-0.1.tar.gz
 
 There is now a tag:
 

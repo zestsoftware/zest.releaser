@@ -1,44 +1,22 @@
 from __future__ import unicode_literals
 
-import re
-import tempfile
-
 from colorama import Fore
-import six
-import z3c.testsetup
-import requests
 from zope.testing import renormalizing
-from twine.repository import Repository
+
+import re
+import six
+import tempfile
+import twine.cli
+import z3c.testsetup
 
 
-successful_response = requests.Response()
-successful_response.status_code = requests.codes.OK
+def mock_dispatch(*args):
+    print('MOCK twine dispatch {}'.format(' '.join(*args)))
+    return True
 
 
-def mock_package_is_uploaded(self, package, bypass_cache=False):
-    """Replacement for twine repository package_is_uploaded command.
-    """
-    return False
-
-
-def mock_register(self, package):
-    """Replacement for twine repository register command.
-    """
-    print('MOCK twine register {}'.format(package.filename))
-    return successful_response
-
-
-def mock_upload(self, package, max_redirects=5):
-    """Replacement for twine repository upload command.
-    """
-    print('MOCK twine upload {}'.format(package.filename))
-    return successful_response
-
-
-print('Mocking several twine repository methods.')
-Repository.package_is_uploaded = mock_package_is_uploaded
-Repository.register = mock_register
-Repository.upload = mock_upload
+print('Mocking twine.cli.dispatch...')
+twine.cli.dispatch = mock_dispatch
 
 checker = renormalizing.RENormalizing([
     # Date formatting
