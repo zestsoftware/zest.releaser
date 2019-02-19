@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.16.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Let bumpversion respect the ``update_history`` data.
+  Fixes `issue 310 <https://github.com/zestsoftware/zest.releaser/issues/310>`_.
+  [maurits]
 
 
 6.16.0 (2019-01-17)

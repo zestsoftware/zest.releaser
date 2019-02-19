@@ -47,6 +47,7 @@ class BumpVersion(baserelease.Basereleaser):
             feature=feature,
             history_header=HISTORY_HEADER,
             release=release,
+            update_history=True,
         ))
 
     def prepare(self):
@@ -63,9 +64,11 @@ class BumpVersion(baserelease.Basereleaser):
 
     def execute(self):
         """Make the changes and offer a commit"""
-        self._change_header()
+        if self.data['update_history']:
+            self._change_header()
         self._write_version()
-        self._write_history()
+        if self.data['update_history']:
+            self._write_history()
         self._diff_and_commit()
 
     def _grab_version(self, initial=False):
