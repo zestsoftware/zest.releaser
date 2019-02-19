@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 # all commands.
 DATA = {
     'commit_msg': 'Message template used when committing',
+    'has_unreleased_header': 'Latest header is for an unreleased version',
     'headings': 'Extracted headings from the history file',
     'history_encoding': 'The detected encoding of the history file',
     'history_file': 'Filename of history/changelog file (when found)',
@@ -137,6 +138,11 @@ class Basereleaser(object):
             end = len(history_lines)
         history_last_release = '\n'.join(history_lines[start:end])
         self.data['history_last_release'] = history_last_release
+        # Does the latest release header have 'unreleased' in it?
+        # This is useful to know, especially when using tools like towncrier
+        # to handle the changelog.
+        unreleased = 'unreleased' in headings[0]['date']
+        self.data['has_unreleased_header'] = unreleased
 
         # Add line number where an extra changelog entry can be inserted.  Can
         # be useful for entry points.  'start' is the header, +1 is the
@@ -155,12 +161,33 @@ class Basereleaser(object):
         Change the version number and the release date or development status.
 
         @add:
-        - False: edit current header (prerelease)
+        - False: edit current header (prerelease or bumpversion)
         - True: add header (postrelease)
+
+        But in some cases it may not be wanted to change a header,
+        especially when towncrier is used to handle the history.
+        Otherwise we could be changing a date of an already existing release.
+        What we want to avoid:
+        - change a.b.c (1999-12-32) to x.y.z (unreleased) [bumpversion]
+        - change a.b.c (1999-12-32) to x.y.z (today) [prerelease]
+        But this is fine:
+        - change a.b.c (unreleased) to x.y.z (unreleased) [bumpversion]
+        - change a.b.c (unreleased) to a.b.c (today) [prerelease]
+        - change a.b.c (unreleased) to x.y.z (today) [prerelease]
         """
         if self.data['history_file'] is None:
             return
         good_heading = self.data['history_header'] % self.data
+        if not add and not self.data.get('has_unreleased_header'):
+            # So we are editing a line, but it does not have
+            # 'unreleased' in it.
+            logger.warning(
+                'Refused to edit history header, because it may be from an '
+                'already released version. At least it misses "unreleased" '
+                'in it. Would have wanted to set this header: %s',
+                good_heading
+            )
+            return
         # ^^^ history_header is a string with %(abc)s replacements.
         headings = self.data['headings']
         history_lines = self.data['history_lines']
