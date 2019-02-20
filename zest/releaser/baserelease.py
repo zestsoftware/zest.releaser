@@ -184,8 +184,8 @@ class Basereleaser(object):
         if not add and self.data.get('has_released_header'):
             # So we are editing a line, but it already has a release date.
             logger.warning(
-                'Refused to edit history header, because it looks to be from '
-                'an already released version with a date. '
+                'Refused to edit the first history heading, because it looks '
+                'to be from an already released version with a date. '
                 'Would have wanted to set this header: %s',
                 good_heading
             )
