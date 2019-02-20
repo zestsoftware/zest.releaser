@@ -4,6 +4,11 @@ Changelog for zest.releaser
 6.16.1 (unreleased)
 -------------------
 
+- Refuse to edit history header when it looks to be from an already released version.
+  We look for a date in it (like 2019-02-20).  Give a warning when this happens.
+  Fixes `issue 311 <https://github.com/zestsoftware/zest.releaser/issues/311>`_.
+  [maurits]
+
 - Better support for ``zestreleaser.towncrier`` (and similar extensions):
   the update_history setting is now also respected by the ``bumpversion`` command.
   Fixes `issue 310 <https://github.com/zestsoftware/zest.releaser/issues/310>`_.
