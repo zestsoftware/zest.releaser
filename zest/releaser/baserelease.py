@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import logging
 import pkg_resources
+import re
 import six
 import sys
 
@@ -15,7 +16,7 @@ from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
 
 logger = logging.getLogger(__name__)
-
+DATE_PATTERN = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!  This
@@ -24,7 +25,8 @@ logger = logging.getLogger(__name__)
 # all commands.
 DATA = {
     'commit_msg': 'Message template used when committing',
-    'has_unreleased_header': 'Latest header is for an unreleased version',
+    'has_released_header': (
+        'Latest header is for a released version with a date'),
     'headings': 'Extracted headings from the history file',
     'history_encoding': 'The detected encoding of the history file',
     'history_file': 'Filename of history/changelog file (when found)',
@@ -138,11 +140,11 @@ class Basereleaser(object):
             end = len(history_lines)
         history_last_release = '\n'.join(history_lines[start:end])
         self.data['history_last_release'] = history_last_release
-        # Does the latest release header have 'unreleased' in it?
+        # Does the latest release header have a release date in it?
         # This is useful to know, especially when using tools like towncrier
         # to handle the changelog.
-        unreleased = 'unreleased' in headings[0]['date']
-        self.data['has_unreleased_header'] = unreleased
+        released = DATE_PATTERN.match(headings[0]['date'])
+        self.data['has_released_header'] = released
 
         # Add line number where an extra changelog entry can be inserted.  Can
         # be useful for entry points.  'start' is the header, +1 is the
@@ -178,13 +180,12 @@ class Basereleaser(object):
         if self.data['history_file'] is None:
             return
         good_heading = self.data['history_header'] % self.data
-        if not add and not self.data.get('has_unreleased_header'):
-            # So we are editing a line, but it does not have
-            # 'unreleased' in it.
+        if not add and self.data.get('has_released_header'):
+            # So we are editing a line, but it already has a release date.
             logger.warning(
-                'Refused to edit history header, because it may be from an '
-                'already released version. At least it misses "unreleased" '
-                'in it. Would have wanted to set this header: %s',
+                'Refused to edit history header, because it looks to be from '
+                'an already released version with a date. '
+                'Would have wanted to set this header: %s',
                 good_heading
             )
             return
