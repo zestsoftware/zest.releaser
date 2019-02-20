@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.17.0 (unreleased)
+6.17.0 (2019-02-20)
 -------------------
 
 - Refuse to edit history header when it looks to be from an already released version.
