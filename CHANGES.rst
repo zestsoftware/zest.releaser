@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.16.1 (unreleased)
 -------------------
 
-- Let bumpversion respect the ``update_history`` data.
+- Better support for ``zestreleaser.towncrier`` (and similar extensions):
+  the update_history setting is now also respected by the ``bumpversion`` command.
   Fixes `issue 310 <https://github.com/zestsoftware/zest.releaser/issues/310>`_.
   [maurits]
 
