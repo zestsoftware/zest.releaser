@@ -44,6 +44,7 @@ DATA = {
         'Text that must be present in the changelog. Can be a string or a '
         'list, for example ["New:", "Fixes:"]. For a list, only one of them '
         'needs to be present.'),
+    'update_history': 'Should zest.releaser update the history file?',
     'workingdir': 'Original working directory',
 }
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
