@@ -132,6 +132,9 @@ These items are shared among all commands.
 commit_msg
     Message template used when committing
 
+has_released_header
+    Latest header is for a released version with a date
+
 headings
     Extracted headings from the history file
 
@@ -171,6 +174,9 @@ reporoot
 required_changelog_text
     Text that must be present in the changelog. Can be a string or a list, for example ["New:", "Fixes:"]. For a list, only one of them needs to be present.
 
+update_history
+    Should zest.releaser update the history file?
+
 workingdir
     Original working directory
 
@@ -179,9 +185,6 @@ workingdir
 
 today
     Date string used in history header
-
-update_history
-    Should zest.releaser update the history file?
 
 ``release`` data dict items
 ---------------------------
@@ -225,9 +228,6 @@ development_marker
 
 new_version
     New version, without development marker (so 1.1)
-
-update_history
-    Should zest.releaser update the history file?
 
 ``addchangelogentry`` data dict items
 -------------------------------------
