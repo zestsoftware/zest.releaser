@@ -4,7 +4,12 @@ Changelog for zest.releaser
 6.17.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- When ``bdist_wheel`` is in ``setup.cfg``, release a wheel.
+  No longer check if this should be a universal wheel or not.
+  That is handled automatically when calling ``python setup.py bdist_wheel``.
+  You can still set ``[zest.releaser] create-wheel = no`` to prevent creating a wheel.
+  Fixes `issue 315 <https://github.com/zestsoftware/zest.releaser/issues/315>`_.
+  [maurits]
 
 
 6.17.0 (2019-02-20)
