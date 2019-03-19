@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.17.1 (unreleased)
+6.17.1 (2019-03-19)
 -------------------
 
 - Also accept 201 as valid statuscode when uploading using twine
