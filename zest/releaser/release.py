@@ -215,7 +215,8 @@ class Releaser(baserelease.Basereleaser):
             print(Fore.RED + "Unknown twine command: %s" % twine_command)
             sys.exit(1)
         response = twine_function(*twine_args)
-        if response is not None and response.status_code == codes.OK:
+        ok_status_codes = [codes.OK, codes.CREATED]
+        if response is not None and response.status_code in ok_status_codes:
             return
         # Something went wrong.  Close repository.
         repository.close()
