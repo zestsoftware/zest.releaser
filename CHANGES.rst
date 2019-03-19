@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.17.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Also accept 201 as valid statuscode when uploading using twine
+  Fixes `issue 318 <https://github.com/zestsoftware/zest.releaser/issues/318>`_
+  [fRiSi]
 
 
 6.17.0 (2019-02-20)
