@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.17.2 (unreleased)
+6.17.2 (2019-03-25)
 -------------------
 
 - When ``bdist_wheel`` is in ``setup.cfg``, release a wheel.
