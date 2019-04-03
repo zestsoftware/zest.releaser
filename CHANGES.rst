@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.17.3 (unreleased)
+6.18.0 (2019-04-03)
 -------------------
 
 - Calling twine in a more generic way to let it automatically do the right
