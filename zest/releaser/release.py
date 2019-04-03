@@ -8,8 +8,16 @@ import sys
 from colorama import Fore
 from six.moves.urllib.error import HTTPError
 from six.moves.urllib import request as urllib2
-import twine.cli
 import requests
+
+try:
+    from twine.cli import dispatch as twine_dispatch
+except ImportError:
+    print("twine.cli.dispatch apparently cannot be imported anymore")
+    print("See https://github.com/zestsoftware/zest.releaser/pull/309/")
+    print("Try a newer zest.releaser or an older twine (and warn us ")
+    print("by reacting in that pull request, please).")
+    raise
 
 from zest.releaser import baserelease
 from zest.releaser import pypi
@@ -179,7 +187,7 @@ class Releaser(baserelease.Basereleaser):
             sys.exit(1)
         twine_args += tuple(filenames)
         try:
-            twine.cli.dispatch(twine_args)
+            twine_dispatch(twine_args)
             return
         except requests.HTTPError as e:
             # Something went wrong.  Close repository.
