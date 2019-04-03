@@ -43,22 +43,6 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     >>> pypiconfig.distutils_servers()
     ['pypi']
 
-With ``get_server_config`` we get the settings that we pass to ``twine``:
-
-    >>> from pprint import pprint
-    >>> pprint(pypiconfig.get_server_config('pypi'))
-    {'password': 'asjemenou',
-     'repository_url': 'https://upload.pypi.org/legacy/',
-     'username': 'pipo_de_clown'}
-
-As fallback, the server-login settings and the default url are also
-used when getting the config of a server that does not exist:
-
-    >>> pprint(pypiconfig.get_server_config('nothing'))
-    {'password': 'asjemenou',
-     'repository_url': 'https://upload.pypi.org/legacy/',
-     'username': 'pipo_de_clown'}
-
 And the new format that allows multiple uploads:
 
     >>> pypirc_new = pkg_resources.resource_filename(
@@ -88,20 +72,9 @@ And the new format that allows multiple uploads:
     [zest.releaser]
     extra-message = [ci skip]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
+    >>> from pprint import pprint
     >>> pprint(sorted(pypiconfig.distutils_servers()))
     ['mycompany', 'plone.org', 'pypi']
-    >>> pprint(pypiconfig.get_server_config('mycompany'))
-    {'password': 'password',
-     'repository_url': 'http://my.company/products',
-     'username': 'user'}
-    >>> pprint(pypiconfig.get_server_config('plone.org'))
-    {'password': 'password',
-     'repository_url': 'http://plone.org/products',
-     'username': 'ploneuser'}
-    >>> pprint(pypiconfig.get_server_config('pypi'))
-    {'password': 'password',
-     'repository_url': 'https://upload.pypi.org/legacy/',
-     'username': 'user'}
 
 A file with both is also possible.  The old server-login section is
 used to contain the username and password that are shared among
@@ -130,14 +103,6 @@ servers.  Any servers that have no corresponding section are ignored:
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
     >>> pprint(sorted(pypiconfig.distutils_servers()))
     ['local', 'pypi']
-    >>> pprint(pypiconfig.get_server_config('local'))
-    {'password': 'secret',
-     'repository_url': 'http://localhost:8080/test/products',
-     'username': 'knight'}
-    >>> pprint(pypiconfig.get_server_config('pypi'))
-    {'password': 'verysecret',
-     'repository_url': 'https://upload.pypi.org/legacy/',
-     'username': 'bdfl'}
 
 A simple file with just a pypi section is also possible:
 
@@ -151,14 +116,6 @@ A simple file with just a pypi section is also possible:
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_simple)
     >>> pprint(sorted(pypiconfig.distutils_servers()))
     ['pypi']
-    >>> pprint(pypiconfig.get_server_config('pypi'))
-    {'password': 'secret',
-     'repository_url': 'https://upload.pypi.org/legacy/',
-     'username': 'bdfl'}
-    >>> pprint(pypiconfig.get_server_config('nothing'))
-    {'password': None,
-     'repository_url': 'https://upload.pypi.org/legacy/',
-     'username': None}
 
 
 Asking for making a release or not
