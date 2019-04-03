@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.17.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Calling twine in a more generic way to let it automatically do the right
+  thing. This saves us a lot of code and lets twine do what it's good at.
+  [htgoebel,reinout]
 
 
 6.17.2 (2019-03-25)
