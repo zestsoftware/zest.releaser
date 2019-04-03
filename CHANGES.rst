@@ -1,10 +1,43 @@
 Changelog for zest.releaser
 ===========================
 
-6.16.1 (unreleased)
+6.17.3 (unreleased)
 -------------------
 
 - Nothing changed yet.
+
+
+6.17.2 (2019-03-25)
+-------------------
+
+- When ``bdist_wheel`` is in ``setup.cfg``, release a wheel.
+  No longer check if this should be a universal wheel or not.
+  That is handled automatically when calling ``python setup.py bdist_wheel``.
+  You can still set ``[zest.releaser] create-wheel = no`` to prevent creating a wheel.
+  Fixes `issue 315 <https://github.com/zestsoftware/zest.releaser/issues/315>`_.
+  [maurits]
+
+
+6.17.1 (2019-03-19)
+-------------------
+
+- Also accept 201 as valid statuscode when uploading using twine
+  Fixes `issue 318 <https://github.com/zestsoftware/zest.releaser/issues/318>`_
+  [fRiSi]
+
+
+6.17.0 (2019-02-20)
+-------------------
+
+- Refuse to edit history header when it looks to be from an already released version.
+  We look for a date in it (like 2019-02-20).  Give a warning when this happens.
+  Fixes `issue 311 <https://github.com/zestsoftware/zest.releaser/issues/311>`_.
+  [maurits]
+
+- Better support for ``zestreleaser.towncrier`` (and similar extensions):
+  the update_history setting is now also respected by the ``bumpversion`` command.
+  Fixes `issue 310 <https://github.com/zestsoftware/zest.releaser/issues/310>`_.
+  [maurits]
 
 
 6.16.0 (2019-01-17)

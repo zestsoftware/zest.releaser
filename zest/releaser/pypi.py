@@ -347,13 +347,16 @@ class PypiConfig(BaseConfig):
         [zest.releaser]
         create-wheel = yes
 
-        If there is no setting for ``create-wheel``, then if universal
-        wheels are specified as in the following example, it is treated as if
-        ``create-wheel`` was true:
+        If there is no setting for ``create-wheel``, then if there is a
+        ``[bdist_wheel]`` section, it is treated as if
+        ``create-wheel`` was true.  We used to look at the value of
+        the ``universal`` option, but that no longer matters.
+        This will still create a wheel:
 
         [bdist_wheel]
-        universal = 1
+        universal = 0
 
+        See https://github.com/zestsoftware/zest.releaser/issues/315
         """
         if not USE_WHEEL:
             # If the wheel package is not available, we obviously
@@ -367,7 +370,7 @@ class PypiConfig(BaseConfig):
             return create_setting
         # No zest.releaser setting, are they asking for a universal wheel?
         # Then they want wheels in general.
-        return self._get_boolean('bdist_wheel', 'universal')
+        return self.config.has_section('bdist_wheel')
 
     def register_package(self):
         """Should we try to register this package with a package server?

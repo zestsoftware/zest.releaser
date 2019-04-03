@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import logging
 import pkg_resources
+import re
 import six
 import sys
 
@@ -15,7 +16,7 @@ from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
 
 logger = logging.getLogger(__name__)
-
+DATE_PATTERN = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!  This
@@ -24,6 +25,8 @@ logger = logging.getLogger(__name__)
 # all commands.
 DATA = {
     'commit_msg': 'Message template used when committing',
+    'has_released_header': (
+        'Latest header is for a released version with a date'),
     'headings': 'Extracted headings from the history file',
     'history_encoding': 'The detected encoding of the history file',
     'history_file': 'Filename of history/changelog file (when found)',
@@ -44,6 +47,7 @@ DATA = {
         'Text that must be present in the changelog. Can be a string or a '
         'list, for example ["New:", "Fixes:"]. For a list, only one of them '
         'needs to be present.'),
+    'update_history': 'Should zest.releaser update the history file?',
     'workingdir': 'Original working directory',
 }
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
@@ -137,6 +141,11 @@ class Basereleaser(object):
             end = len(history_lines)
         history_last_release = '\n'.join(history_lines[start:end])
         self.data['history_last_release'] = history_last_release
+        # Does the latest release header have a release date in it?
+        # This is useful to know, especially when using tools like towncrier
+        # to handle the changelog.
+        released = DATE_PATTERN.match(headings[0]['date'])
+        self.data['has_released_header'] = released
 
         # Add line number where an extra changelog entry can be inserted.  Can
         # be useful for entry points.  'start' is the header, +1 is the
@@ -155,12 +164,32 @@ class Basereleaser(object):
         Change the version number and the release date or development status.
 
         @add:
-        - False: edit current header (prerelease)
+        - False: edit current header (prerelease or bumpversion)
         - True: add header (postrelease)
+
+        But in some cases it may not be wanted to change a header,
+        especially when towncrier is used to handle the history.
+        Otherwise we could be changing a date of an already existing release.
+        What we want to avoid:
+        - change a.b.c (1999-12-32) to x.y.z (unreleased) [bumpversion]
+        - change a.b.c (1999-12-32) to x.y.z (today) [prerelease]
+        But this is fine:
+        - change a.b.c (unreleased) to x.y.z (unreleased) [bumpversion]
+        - change a.b.c (unreleased) to a.b.c (today) [prerelease]
+        - change a.b.c (unreleased) to x.y.z (today) [prerelease]
         """
         if self.data['history_file'] is None:
             return
         good_heading = self.data['history_header'] % self.data
+        if not add and self.data.get('has_released_header'):
+            # So we are editing a line, but it already has a release date.
+            logger.warning(
+                'Refused to edit the first history heading, because it looks '
+                'to be from an already released version with a date. '
+                'Would have wanted to set this header: %s',
+                good_heading
+            )
+            return
         # ^^^ history_header is a string with %(abc)s replacements.
         headings = self.data['headings']
         history_lines = self.data['history_lines']

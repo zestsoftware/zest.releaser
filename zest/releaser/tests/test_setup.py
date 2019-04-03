@@ -56,11 +56,11 @@ checker = renormalizing.RENormalizing([
     # Harmless line when using subversion 1.7:
     (re.compile('unrecognized .svn/entries format in'), ''),
     # git before 1.7.9.2 reported 0 deletions when committing:
-    (re.compile(', 0 deletions\(-\)'), ''),
+    (re.compile(r', 0 deletions\(-\)'), ''),
     # Change in git 1.7.9.2: '1 files changed':
     (re.compile(' 1 files changed'), ' 1 file changed'),
     # Change in git 1.8.0:
-    (re.compile('nothing to commit \(working directory clean\)'),
+    (re.compile(r'nothing to commit \(working directory clean\)'),
      'nothing to commit, working directory clean'),
     # Change in git 2.9.1:
     (re.compile('nothing to commit, working directory clean'),

@@ -19,7 +19,6 @@ PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
 DATA = baserelease.DATA.copy()
 DATA.update({
     'today': 'Date string used in history header',
-    'update_history': 'Should zest.releaser update the history file?',
 })
 
 
