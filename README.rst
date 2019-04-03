@@ -165,7 +165,7 @@ are:
   version minus a 'dev' or so), updates the setup.py or version.txt and the
   CHANGES/HISTORY/CHANGELOG file (with either .rst/.txt/.md/.markdown or no
   extension) with this new version number and offers to commit those changes
-  to subversion (or bzr or hg or git)
+  to subversion (or bzr or hg or git).
 
 - **release**: copies the the trunk or branch of the current checkout and
   creates a version control tag of it.  Makes a checkout of the tag in a
@@ -185,6 +185,9 @@ are:
   local hg/git repository and not on the server.
 
 - **fullrelease**: all of the above in order.
+
+Note: markdown files should use the "underline" style of headings, not the
+"atx" style where you prefix the headers with ``#`` signs.
 
 There are some additional tools:
 

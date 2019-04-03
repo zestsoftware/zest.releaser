@@ -42,3 +42,7 @@ fit :-)
     - Reinout was born.
 
   That's just the style we started with.  Pretty clear and useful.
+
+  If you use markdown for the changelog, you should use the "underline" style
+  of headings, not the "atx" style where you prefix the headers with ``#``
+  signs.
