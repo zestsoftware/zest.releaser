@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.18.1 (unreleased)
+6.18.1 (2019-04-04)
 -------------------
 
 - Document that we only support underline-style headings for markdown.
