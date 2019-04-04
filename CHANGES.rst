@@ -8,6 +8,10 @@ Changelog for zest.releaser
   Fixes `issue 317 <https://github.com/zestsoftware/zest.releaser/issues/317>`_.
   [reinout]
 
+- Using simply ``git ls-files`` to list files in a git repo instead of an
+  older much longer command. (Suggestion by @mgedmin).
+  [reinout]
+
 
 6.18.0 (2019-04-03)
 -------------------
