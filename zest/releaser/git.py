@@ -153,4 +153,4 @@ class Git(BaseVersionControl):
     def list_files(self):
         """List files in version control."""
         return execute_command(
-            ['git', 'ls-tree', '-r', 'HEAD', '--name-only']).splitlines()
+            ['git', 'ls-files']).splitlines()
