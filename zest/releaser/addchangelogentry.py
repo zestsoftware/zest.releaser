@@ -30,11 +30,11 @@ class AddChangelogEntry(baserelease.Basereleaser):
 
     """
 
-    def __init__(self, vcs=None, message=''):
+    def __init__(self, vcs=None, message='', commit_msg=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(dict(
-            commit_msg=COMMIT_MSG,
+            commit_msg=commit_msg,
             message=message.strip(),
         ))
 
@@ -73,8 +73,14 @@ def main():
     parser.add_argument(
         "message",
         help="Text of changelog entry")
+    parser.add_argument(
+        "--commit_msg",
+        help="Message template used when committing.",
+        default=COMMIT_MSG)
     options = utils.parse_options(parser)
     utils.configure_logging()
     addchangelogentry = AddChangelogEntry(
-        message=utils.fs_to_text(options.message))
+        message=utils.fs_to_text(options.message),
+        commit_msg=utils.fs_to_text(options.commit_msg),
+    )
     addchangelogentry.run()
