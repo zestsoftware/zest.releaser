@@ -48,9 +48,21 @@ class AddChangelogEntry(baserelease.Basereleaser):
 
     def execute(self):
         """Make the changes and offer a commit"""
+        self._remove_nothing_changed()
         self._insert_changelog_entry(self.data['message'])
         self._write_history()
         self._diff_and_commit()
+
+    def _remove_nothing_changed(self):
+        """Remove nothing_changed_yet line from hitory lines"""
+        nothing_changed = self.data['nothing_changed_yet']
+        if nothing_changed in self.data['history_last_release']:
+            nc_pos = self.data['history_lines'].index(nothing_changed)
+            if nc_pos == self.data['history_insert_line_here']:
+                self.data['history_lines'] = (
+                    self.data['history_lines'][:nc_pos] +
+                    self.data['history_lines'][nc_pos+2:]
+                )
 
     def _get_message(self):
         """Get changelog message and commit message."""
