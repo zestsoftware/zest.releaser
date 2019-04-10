@@ -4,7 +4,7 @@ Changelog for zest.releaser
 6.18.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Remove nothing_changed_yet line from history lines in unreleased section. [kleschenko]
 
 
 6.18.1 (2019-04-04)
