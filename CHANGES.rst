@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.19.0 (unreleased)
+6.19.0 (2019-06-03)
 -------------------
 
 - Do not go to the root of the repo by default.
