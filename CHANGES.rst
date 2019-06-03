@@ -4,7 +4,10 @@ Changelog for zest.releaser
 6.18.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Do not go to the root of the repo by default.
+  When you were not in the root of a repo, ``zest.releaser`` already asked if you wanted to go there.
+  The default answer has now changed from yes to no.
+  Issue `#326 <https://github.com/zestsoftware/zest.releaser/issues/326>`_.  [maurits]
 
 
 6.18.2 (2019-04-10)

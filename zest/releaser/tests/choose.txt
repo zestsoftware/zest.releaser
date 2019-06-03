@@ -44,12 +44,12 @@ It works when we are in a sub directory too:
     >>> os.chdir('src')
     >>> utils.test_answer_book.set_answers(['n'])
     >>> choose.version_control()
-    Question: You are NOT in the root of the repository. Do you want to go there? (Y/n)?
+    Question: You are NOT in the root of the repository. Do you want to go there? (y/N)?
     Our reply: n
     <Git at TESTTEMP/tha.example-git src>
     >>> utils.test_answer_book.set_answers(['y'])
     >>> choose.version_control()
-    Question: You are NOT in the root of the repository. Do you want to go there? (Y/n)?
+    Question: You are NOT in the root of the repository. Do you want to go there? (y/N)?
     Our reply: y
     <Git at TESTTEMP/tha.example-git .>
 
