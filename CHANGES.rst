@@ -7,6 +7,7 @@ Changelog for zest.releaser
 - Nothing changed yet.
 
 
+
 6.19.0 (2019-06-03)
 -------------------
 
