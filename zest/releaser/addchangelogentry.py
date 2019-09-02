@@ -72,7 +72,8 @@ class AddChangelogEntry(baserelease.Basereleaser):
             message = utils.get_input(q)
         self.data['message'] = message
         if not self.data['commit_msg']:
-            message = message.replace("%", "%%")  # Safety valve.
+            # The commit message does %-replacement, so escape any %'s.
+            message = message.replace("%", "%%")
             self.data['commit_msg'] = message
 
 
