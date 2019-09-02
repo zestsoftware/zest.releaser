@@ -112,3 +112,31 @@ Try non ascii for loads of fun:::
     <BLANKLINE>
       * Initial library skeleton created by thaskel.  [your name]
     <BLANKLINE>
+
+Corner case: a percent sign also works
+
+    >>> sys.argv[1:] = ['100% perfect.']
+    >>> addchangelogentry.main()
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> with open('CHANGES.txt') as f:
+    ...     contents = f.read()
+    >>> print(contents)
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.1 (unreleased)
+    ----------------
+    <BLANKLINE>
+      * 100% perfect.
+    <BLANKLINE>
+      * F...r Elise
+    <BLANKLINE>
+      * My longer message.
+         On two lines.
+    <BLANKLINE>
+      * My message.
+    <BLANKLINE>
+      * Initial library skeleton created by thaskel.  [your name]
+    <BLANKLINE>
