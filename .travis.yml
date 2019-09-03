@@ -10,7 +10,7 @@ python:
 before_install:
 # We need these git, bzr, subversion and mercurial too, but they are already
 # installed by default:
-  - sudo apt-get remove git
+  - sudo apt-get remove git git-man
   - sudo add-apt-repository --remove --yes ppa:git-core/ppa
   - sudo apt-get update
   - sudo apt-get install --yes git git-svn
