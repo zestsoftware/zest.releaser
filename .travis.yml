@@ -10,7 +10,7 @@ python:
 before_install:
 # We need these git, bzr, subversion and mercurial too, but they are already
 # installed by default:
-  - sudo apt-get install -y --allow-downgrades git-svn
+  - sudo apt-get install -y --fix-broken --allow-downgrades git-svn
 # Configure git and bazaar:
   - git config --global user.name "Temp user"
   - git config --global user.email "temp@example.com"
