@@ -11,7 +11,7 @@ before_install:
 # We need these git, bzr, subversion and mercurial too, but they are already
 # installed by default:
   - sudo apt-get update
-  - sudo apt-get install -y --fix-broken --allow-downgrades git git-svn
+  - sudo apt-get install -t xenial -y --fix-broken --allow-downgrades git git-svn
 # Configure git and bazaar:
   - git config --global user.name "Temp user"
   - git config --global user.email "temp@example.com"
