@@ -54,7 +54,7 @@ class AddChangelogEntry(baserelease.Basereleaser):
         self._diff_and_commit()
 
     def _remove_nothing_changed(self):
-        """Remove nothing_changed_yet line from hitory lines"""
+        """Remove nothing_changed_yet line from history lines"""
         nothing_changed = self.data['nothing_changed_yet']
         if nothing_changed in self.data['history_last_release']:
             nc_pos = self.data['history_lines'].index(nothing_changed)
@@ -72,6 +72,8 @@ class AddChangelogEntry(baserelease.Basereleaser):
             message = utils.get_input(q)
         self.data['message'] = message
         if not self.data['commit_msg']:
+            # The commit message does %-replacement, so escape any %'s.
+            message = message.replace("%", "%%")
             self.data['commit_msg'] = message
 
 

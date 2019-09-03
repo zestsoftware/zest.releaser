@@ -458,8 +458,9 @@ We want to discover errors and show them in red.
     '\x1b[31m'
     >>> Fore.MAGENTA
     '\x1b[35m'
-    >>> utils.execute_command(['ls', 'some-non-existing-file'])
-    '\x1b[31mls...'
+    >>> output = utils.execute_command(['ls', 'some-non-existing-file'])
+    >>> output.startswith(Fore.RED)
+    True
 
 Warnings may also end up in the error output.  That may be unwanted.
 Note: Setting ``__command_is_string__`` is a special hack implemented
