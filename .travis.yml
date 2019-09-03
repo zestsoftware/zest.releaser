@@ -12,6 +12,7 @@ before_install:
 # installed by default:
   - sudo apt-get remove git
   - sudo add-apt-repository --remove --yes ppa:git-core/ppa
+  - sudo apt-get update
   - sudo apt-get install --yes git git-svn
 # Configure git and bazaar:
   - git config --global user.name "Temp user"
