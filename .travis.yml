@@ -9,9 +9,10 @@ python:
 addons:
   apt:
     packages:
-    - git-svn
+      - git
+      - git-svn
 # We need these too, but they are already installed by default:
-# git bzr mercurial subversion
+# bzr mercurial subversion
 before_install:
 # Configure git and bazaar:
   - git config --global user.name "Temp user"
