@@ -11,8 +11,8 @@ before_install:
 # We need these git, bzr, subversion and mercurial too, but they are already
 # installed by default:
   - sudo apt-get remove git
-  - sudo add-apt-repository --remove ppa:git-core/ppa
-  - sudo apt-get install -y git git-svn
+  - sudo add-apt-repository --remove --yes ppa:git-core/ppa
+  - sudo apt-get install --yes git git-svn
 # Configure git and bazaar:
   - git config --global user.name "Temp user"
   - git config --global user.email "temp@example.com"
