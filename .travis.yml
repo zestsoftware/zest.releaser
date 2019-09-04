@@ -6,15 +6,18 @@ python:
   - 3.6
   - pypy
 # Note: pypy3 fails at starting the bin/test script.
+addons:
+  apt:
+    sources:
+      - git-core
+    packages:
+      # git, bzr, subversion and mercurial are already installed by default,
+      # we only need to install git-svn (but from the git-core PPA, as travis
+      # uses that)
+      - git-svn
+    update: true
 
 before_install:
-  # git, bzr, subversion and mercurial are already installed by default. As
-  # extra, we need git-svn. To install that, we first have to clean travis'
-  # git-core PPA as it interferes with installing git-svn.
-  - sudo apt-get remove git git-man
-  - sudo add-apt-repository --remove --yes ppa:git-core/ppa
-  - sudo apt-get update
-  - sudo apt-get install --yes git git-svn
   # Configure git and bazaar:
   - git config --global user.name "Temp user"
   - git config --global user.email "temp@example.com"
