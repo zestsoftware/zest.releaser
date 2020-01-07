@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.19.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Zest.releaser now sets an environment variable ``ZESTRELEASER`` so that
+  tools that we call on the command line can detect us. Don't depend on the
+  variable's textual content, just on the variable's name.
 
 
 6.19.1 (2019-09-03)
