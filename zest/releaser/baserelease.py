@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 import pkg_resources
 import re
 import six
@@ -56,6 +57,9 @@ NOTHING_CHANGED_YET = '- Nothing changed yet.'
 class Basereleaser(object):
 
     def __init__(self, vcs=None):
+        os.environ["ZESTRELEASER"] = "We are called from within zest.releaser"
+        # ^^^ Env variable so called tools can detect us. Don't depend on the
+        # actual text, just on the variable's name.
         if vcs is None:
             self.vcs = choose.version_control()
         else:
