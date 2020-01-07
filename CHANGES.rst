@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.20.0 (unreleased)
+6.20.0 (2020-01-07)
 -------------------
 
 - Zest.releaser now sets an environment variable ``ZESTRELEASER`` so that
