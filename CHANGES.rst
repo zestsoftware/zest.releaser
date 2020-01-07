@@ -1,6 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
+6.20.1 (unreleased)
+-------------------
+
+- Nothing changed yet.
+
+
 6.20.0 (2020-01-07)
 -------------------
 
