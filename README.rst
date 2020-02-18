@@ -67,6 +67,9 @@ We depend on:
 
 - ``six`` for python2/python3 compatibility.
 
+- ``twine`` for secure uploading via https to pypi. Plain setuptools doesn't
+  support this.
+
 Since version 4.0 there is a ``recommended`` extra that you can get by
 installing ``zest.releaser[recommended]`` instead of ``zest.releaser``.  It
 contains a few trusted add-ons that we feel are useful for the great majority
@@ -103,15 +106,11 @@ of ``zest.releaser`` users:
   unformatted restructured text on your pypi page just because there was a
   small error somewhere. Handy.
 
-- twine_ for secure uploading via https to pypi. Plain setuptools doesn't
-  support this.
-
 .. _wheel: https://pypi.org/project/wheel
 .. _`check-manifest`: https://pypi.org/project/check-manifest
 .. _pyroma: https://pypi.org/project/pyroma
 .. _chardet: https://pypi.org/project/chardet
 .. _readme: https://pypi.org/project/readme
-.. _twine: https://pypi.org/project/twine
 
 
 Installation
