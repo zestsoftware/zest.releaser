@@ -51,6 +51,8 @@ And... we're automatically being tested by Travis and Landscape:
 Compatibility / Dependencies
 ----------------------------
 
+.. image:: https://img.shields.io/pypi/pyversions/zest.releaser?   :alt: PyPI - Python Version
+
 ``zest.releaser`` works on Python 2.7.
 Python 3.4+ is supported.
 PyPy2 is supported.
