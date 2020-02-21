@@ -1,6 +1,34 @@
 Information for developers of zest.releaser itself
 ===================================================
 
+**Note:** the whole test setup is quite elaborate and hard to get right.
+There is a solution however: docker. See the next section on this page. It is
+still work-in-progress, we'll probably add a docker-compose file, for
+example. And support for testing different python versions with docker. (3.8
+is used now).
+
+So: for easy testing, use the docker commands . The rest of the document
+explains the original test setup requirements.
+
+
+Testing with docker
+-------------------
+
+If you have docker installed, all you need to do to run the tests is::
+
+  $ docker build . -t zest:dev
+  $ docker run --rm zest:dev
+
+The "build" step runs bootstrap and buildout. Re-run it periodically to get
+the latest versions of if you've changed the buildout config.
+
+The "run" command runs the tests. It uses the code copied into the dockerfile
+in the build step, but you probably want to test your current version. For
+that, mount the code directory into the docker::
+
+  $ docker run --rm -v $(pwd):/zest.releaser/ zest:dev
+
+
 Running tests
 -------------
 
@@ -15,24 +43,9 @@ zest.releaser checkout, do this::
   $ export LANGUAGE=$LANG
   $ bin/test
 
+Do note the "necessary programs" and "configuration" sections below as you'll
+get test errors otherwise.
 
-Running tests in docker
-***********************
-
-All you need is installed docker. ::
-
-    docker build . -t zest:dev
-    docker run --rm zest:dev
-
-
-Or if you want to test each change, you can use volume mounting::
-
-    docker build . -t zest:dev
-    docker run --rm -v $(pwd):/zest.releaser/ zest:dev python bootstrap.py
-    docker run --rm -v $(pwd):/zest.releaser/ zest:dev bin/buildout
-    docker run --rm -v $(pwd):/zest.releaser/ zest:dev
-
-Run last command each time you need to run tests.
 
 Python versions
 ---------------
