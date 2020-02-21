@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.20.1 (unreleased)
+6.20.1 (2020-02-21)
 -------------------
 
 - Added ``Dockerfile`` for much easier testing. See `the developer
