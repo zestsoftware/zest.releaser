@@ -4,7 +4,11 @@ Changelog for zest.releaser
 6.20.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added ``Dockerfile`` for much easier testing. See `the developer
+  documentation
+  <https://zestreleaser.readthedocs.io/en/latest/developing.html>`_. Previously,
+  getting the tests to run reliably locally was hard, now it is easy.
+  [Behoston]
 
 
 6.20.0 (2020-01-07)
