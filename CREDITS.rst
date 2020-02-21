@@ -5,7 +5,7 @@ Credits
   original author. He's still maintaining it, together with Maurits.
 
 * `Maurits van Rees <http://maurits.vanrees.org>`_ (Zest Software) added
-  a heapload of improvements and is the maintainer together with Reinout.
+  a heapload of improvements and is the maintainer, together with Reinout.
 
 * `Kevin Teague <http://bud.ca>`_ (Canada's Michael Smith Genome Sciences
   Center) added support for multiple version control systems, most notable
