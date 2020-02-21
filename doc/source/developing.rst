@@ -16,6 +16,24 @@ zest.releaser checkout, do this::
   $ bin/test
 
 
+Running tests in docker
+***********************
+
+All you need is installed docker. ::
+
+    docker build . -t zest:dev
+    docker run --rm zest:dev
+
+
+Or if you want to test each change, you can use volume mounting::
+
+    docker build . -t zest:dev
+    docker run --rm -v $(pwd):/zest.releaser/ zest:dev python bootstrap.py
+    docker run --rm -v $(pwd):/zest.releaser/ zest:dev bin/buildout
+    docker run --rm -v $(pwd):/zest.releaser/ zest:dev
+
+Run last command each time you need to run tests.
+
 Python versions
 ---------------
 
