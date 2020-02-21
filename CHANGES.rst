@@ -18,7 +18,7 @@ Changelog for zest.releaser
 6.19.1 (2019-09-03)
 -------------------
 
-- Percent signs (%) don't crash addchangelogentry anymore
+- Percent signs (%) don't crash addchangelogentry anymore.
 
 
 6.19.0 (2019-06-03)
