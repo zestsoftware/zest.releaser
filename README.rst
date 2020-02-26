@@ -52,6 +52,7 @@ Compatibility / Dependencies
 ----------------------------
 
 .. image:: https://img.shields.io/pypi/pyversions/zest.releaser?   :alt: PyPI - Python Version
+.. image:: https://img.shields.io/pypi/implementation/zest.releaser?   :alt: PyPI - Implementation
 
 ``zest.releaser`` works on Python 2.7.
 Python 3.5+ is supported.
