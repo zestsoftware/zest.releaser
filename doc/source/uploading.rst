@@ -59,6 +59,12 @@ setup.cfg, you will not be asked to upload to any server::
   [distutils]
   index-servers =
 
+Or restrict the index servers, for example::
+
+  [distutils]
+  index-servers =
+      internal-pypi-customer1
+
 Note that after creating the tag we still ask you if you want to checkout that
 tag for tweaks or pypi/distutils server upload.  We could add some extra
 checks to see if that is really needed, but someone who does not have
