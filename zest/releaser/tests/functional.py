@@ -131,6 +131,8 @@ def setup(test):
         ["git", "svn", "clone", "-s", "%s/tha.example" % repo_url,
          gitsvnsourcedir])
     os.chdir(test.orig_dir)
+    if test.name == 'gitsvn.txt' and not os.path.exists(gitsvnsourcedir):
+        raise AssertionError("Setting up git svn tests failed. Is git-svn not installed?")
 
     def svnhead(*filename_parts):
         filename = os.path.join(svnsourcedir, *filename_parts)
