@@ -200,11 +200,19 @@ class PypiConfig(BaseConfig):
         self.config = ConfigParser()
         self.config.read(files)
 
+    def twine_repository(self):
+        """Gets the repository from Twine environment variables."""
+        twine_repository = os.getenv("TWINE_REPOSITORY")
+        twine_repository_url = os.getenv("TWINE_REPOSITORY_URL")
+
+        return twine_repository or twine_repository_url
+
     def is_pypi_configured(self):
-        # Do we have configuration for releasing to at least one
-        # pypi-compatible server?
-        if self.config is None:
-            return False
+        """Determine if we're configured to publish to 1+ PyPi server.
+
+        PyPi is considered to be 'configued' if we have a Twine repository,
+        or if we have a config which contains at least 1 PyPi server.
+        """
         return len(self.distutils_servers()) > 0
 
     def distutils_servers(self):
@@ -213,6 +221,15 @@ class PypiConfig(BaseConfig):
         If the config has an old pypi config, remove the default pypi
         server from the list.
         """
+        twine_repository = self.twine_repository()
+
+        if twine_repository:
+            return [twine_repository]
+
+        # If we don't have a config we can't continue
+        if not self.config:
+            return []
+
         try:
             index_servers = self._get_text(
                 'distutils', 'index-servers', default='').split()
