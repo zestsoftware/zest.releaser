@@ -202,18 +202,21 @@ class PypiConfig(BaseConfig):
 
     def twine_repository(self):
         """Gets the repository from Twine environment variables."""
-        twine_repository = os.getenv("TWINE_REPOSITORY")
-        twine_repository_url = os.getenv("TWINE_REPOSITORY_URL")
+        return os.getenv("TWINE_REPOSITORY")
 
-        return twine_repository or twine_repository_url
+    def twine_repository_url(self):
+        """Gets the repository URL from Twine environment variables."""
+        return os.getenv("TWINE_REPOSITORY_URL")
 
     def is_pypi_configured(self):
         """Determine if we're configured to publish to 1+ PyPi server.
 
-        PyPi is considered to be 'configued' if we have a Twine repository,
+        PyPi is considered to be 'configued' if the TWINE_REPOSITORY_URL is set,
         or if we have a config which contains at least 1 PyPi server.
         """
-        return len(self.distutils_servers()) > 0
+        servers = len(self.distutils_servers()) > 0
+        twine_url = self.twine_repository_url() is not None
+        return any((servers, twine_url))
 
     def distutils_servers(self):
         """Return a list of known distutils servers.
@@ -223,8 +226,12 @@ class PypiConfig(BaseConfig):
         """
         twine_repository = self.twine_repository()
 
-        if twine_repository:
-            return [twine_repository]
+        if twine_repository and self.config:
+            # If there is no section we can't upload there
+            if self.config.has_section(twine_repository):
+                return [twine_repository]
+            else:
+                return []
 
         # If we don't have a config we can't continue
         if not self.config:
