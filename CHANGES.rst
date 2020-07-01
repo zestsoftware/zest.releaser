@@ -5,6 +5,9 @@ Changelog for zest.releaser
 -------------------
 
 - Added support for Twine environment variables.
+  Especially, setting ``TWINE_REPOSITORY`` and ``TWINE_REPOSITORY_URL`` had no effect previously.
+  Fixes `issue #353 <https://github.com/zestsoftware/zest.releaser/issues/353>`_.
+  [mctwynne]
 
 
 6.20.1 (2020-02-21)
