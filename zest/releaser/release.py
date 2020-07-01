@@ -151,33 +151,73 @@ class Releaser(baserelease.Basereleaser):
             os.path.join('dist', filename) for filename in os.listdir('dist')]
         )
 
-        # Get servers/repositories.
+        register = self.pypiconfig.register_package()
+
+        # If TWINE_REPOSITORY_URL is set, use it.
+        if self.pypiconfig.twine_repository_url():
+            if not self._ask_upload(package,
+                                    self.pypiconfig.twine_repository_url(),
+                                    register):
+                return
+
+            if register:
+                self._retry_twine("register", None, files_in_dist[:1])
+
+            self._retry_twine("upload", None, files_in_dist)
+            # Only upload to the server specified in the environment
+            return
+
+        # Upload to the repository in the environment or .pypirc
         servers = self.pypiconfig.distutils_servers()
 
-        register = self.pypiconfig.register_package()
         for server in servers:
-            default = True
-            exact = False
-            if server == 'pypi' and not package_in_pypi(package):
-                logger.info("This package does NOT exist yet on PyPI.")
-                # We are not yet on pypi.  To avoid an 'Oops...,
-                # sorry!' when registering and uploading an internal
-                # package we default to False here.
-                default = False
-                exact = True
-            question = "Upload"
+            if not self._ask_upload(package, server, register):
+                return
+
             if register:
-                question = "Register and upload"
-            if utils.ask("%s to %s" % (question, server),
-                         default=default, exact=exact):
-                if register:
-                    logger.info("Registering...")
-                    # We only need the first file, it has all the needed info
-                    self._retry_twine('register', server, files_in_dist[:1])
-                self._retry_twine('upload', server, files_in_dist)
+                logger.info("Registering...")
+                # We only need the first file, it has all the needed info
+                self._retry_twine('register', server, files_in_dist[:1])
+            self._retry_twine('upload', server, files_in_dist)
+
+    def _ask_upload(self, package, server, register):
+        """Ask if the package should be registered and/or uploaded.
+
+        Args:
+            package (str): The name of the package.
+            server (str): The distutils server name or URL.
+            register (bool): Whether or not the package should be registered.
+        """
+        default = True
+        exact = False
+        if server == 'pypi' and not package_in_pypi(package):
+            logger.info("This package does NOT exist yet on PyPI.")
+            # We are not yet on pypi.  To avoid an 'Oops...,
+            # sorry!' when registering and uploading an internal
+            # package we default to False here.
+            default = False
+            exact = True
+        question = "Upload"
+        if register:
+            question = "Register and upload"
+        return utils.ask("%s to %s" % (question, server),
+                     default=default, exact=exact)
 
     def _retry_twine(self, twine_command, server, filenames):
-        twine_args = (twine_command, '-r', server)
+        """Attempt to execute a Twine command.
+
+        Args:
+            twine_command: The Twine command to use (eg. register, upload).
+            server: The distutils server name from a `.pipyrc` config file.
+                If this is `None` the TWINE_REPOSITORY_URL environment variable
+                will be used instead of a distutils server name.
+            filenames: A list of files which will be uploaded.
+        """
+        twine_args = (twine_command,)
+
+        if server is not None:
+            twine_args += ('-r', server)
+
         if twine_command == 'register':
             pass
         elif twine_command == 'upload':
