@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.20.2 (unreleased)
+6.21.0 (unreleased)
 -------------------
 
 - Added support for Twine environment variables.
