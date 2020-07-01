@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.21.0 (unreleased)
+6.21.0 (2020-07-01)
 -------------------
 
 - Added support for Twine environment variables.
