@@ -172,7 +172,7 @@ class Releaser(baserelease.Basereleaser):
 
         for server in servers:
             if not self._ask_upload(package, server, register):
-                return
+                continue
 
             if register:
                 logger.info("Registering...")
