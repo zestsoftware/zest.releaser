@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.21.1 (unreleased)
+6.21.1 (2020-08-07)
 -------------------
 
 - Fixed uploading to multiple servers if we do not want to upload to the first server.
