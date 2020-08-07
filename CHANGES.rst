@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.21.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed uploading to multiple servers if we do not want to upload to the first server.
+  Fixes `issue #357 <https://github.com/zestsoftware/zest.releaser/issues/357>`_.
+  [maurits]
 
 
 6.21.0 (2020-07-01)
