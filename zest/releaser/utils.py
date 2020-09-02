@@ -745,8 +745,7 @@ def _subprocess_open(p, command, input_value, show_stderr):
     if input_value:
         i.write(input_value.encode(INPUT_ENCODING))
     i.close()
-    stdout_output = o.read()
-    stderr_output = e.read()
+    (stdout_output, stderr_output) = p.communicate()
     # We assume that the output from commands we're running is text.
     if not isinstance(stdout_output, six.text_type):
         stdout_output = stdout_output.decode(OUTPUT_ENCODING)
