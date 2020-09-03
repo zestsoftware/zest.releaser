@@ -4,7 +4,11 @@ Changelog for zest.releaser
 6.21.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed deadlock when communicating with git-lfs, or anything else that gives back lots of output.
+  [mcdeck]
+
+- Fixed TypeError setting unicode in environment on Python 2.7 on Windows.
+  [mcdeck]
 
 
 6.21.1 (2020-08-07)
