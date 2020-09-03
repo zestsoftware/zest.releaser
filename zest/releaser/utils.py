@@ -764,8 +764,6 @@ def _subprocess_open(p, command, input_value, show_stderr):
         if stderr_output:
             logger.debug("Stderr of running command '%s':\n%s",
                          format_command(command), stderr_output)
-    o.close()
-    e.close()
     return result
 
 
