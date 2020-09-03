@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.22.0 (unreleased)
+6.22.0 (2020-09-03)
 -------------------
 
 - Fixed deadlock when communicating with git-lfs, or anything else that gives back lots of output.
