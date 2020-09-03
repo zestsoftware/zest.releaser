@@ -57,7 +57,7 @@ NOTHING_CHANGED_YET = '- Nothing changed yet.'
 class Basereleaser(object):
 
     def __init__(self, vcs=None):
-        os.environ["ZESTRELEASER"] = "We are called from within zest.releaser"
+        os.environ[str("ZESTRELEASER")] = str("We are called from within zest.releaser")
         # ^^^ Env variable so called tools can detect us. Don't depend on the
         # actual text, just on the variable's name.
         if vcs is None:

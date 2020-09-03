@@ -741,12 +741,10 @@ __command_is_string__ = False
 
 
 def _subprocess_open(p, command, input_value, show_stderr):
-    i, o, e = (p.stdin, p.stdout, p.stderr)
     if input_value:
-        i.write(input_value.encode(INPUT_ENCODING))
-    i.close()
-    stdout_output = o.read()
-    stderr_output = e.read()
+        (stdout_output, stderr_output) = p.communicate(input_value.encode(INPUT_ENCODING))
+    else:
+        (stdout_output, stderr_output) = p.communicate()
     # We assume that the output from commands we're running is text.
     if not isinstance(stdout_output, six.text_type):
         stdout_output = stdout_output.decode(OUTPUT_ENCODING)
@@ -766,8 +764,6 @@ def _subprocess_open(p, command, input_value, show_stderr):
         if stderr_output:
             logger.debug("Stderr of running command '%s':\n%s",
                          format_command(command), stderr_output)
-    o.close()
-    e.close()
     return result
 
 
