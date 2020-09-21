@@ -199,6 +199,24 @@ Setting it sets it in the correct Python file:
     __version__ = '2.1'
     print('something.else')
 
+the Python file with double quotes:
+
+    >>> lines = [
+    ...     "import something",
+    ...     '__version__ = "2.0"',
+    ...     "print('something.else')"]
+    >>> writeto('some_file.py', '\n'.join(lines))
+
+The version line should have retained its double quotes, otherwise black would
+have to change it back again:
+
+    >>> checkout.version = '2.1'
+    >>> with open('some_file.py') as f:
+    ...     print(f.read())
+    import something
+    __version__ = "2.1"
+    print('something.else')
+
 
 Version corner cases
 --------------------
