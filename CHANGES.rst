@@ -4,7 +4,9 @@ Changelog for zest.releaser
 6.22.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- When replacing new version in ``__version__ = "1.0"``, keep the existing quote style.
+  We always replaced double with single quotes, but now we keep them.
+  [graingert]
 
 
 6.22.0 (2020-09-03)
