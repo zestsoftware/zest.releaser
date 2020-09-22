@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.22.1 (unreleased)
+6.22.1 (2020-09-22)
 -------------------
 
 - When replacing new version in ``__version__ = "1.0"``, keep the existing quote style.
