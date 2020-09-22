@@ -215,10 +215,15 @@ class BaseVersionControl(object):
             filename,
             fallback_encoding=self.fallback_encoding,
         )
+        good_version = "__version__ = '%s'" % version
         for index, line in enumerate(lines):
-            match = UNDERSCORED_VERSION_PATTERN.search(line)
-            if match:
-                lines[index] = "__version__ = '%s'" % version
+            if UNDERSCORED_VERSION_PATTERN.search(line):
+                lines[index] = (
+                    good_version.replace("'", '"')
+                    if '"' in line
+                    else good_version
+                )
+
         contents = '\n'.join(lines)
         utils.write_text_file(filename, contents, encoding)
         logger.info("Set __version__ in %s to '%s'", filename, version)
