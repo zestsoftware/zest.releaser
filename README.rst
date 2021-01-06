@@ -40,8 +40,8 @@ First the three most important links:
 
 And... we're automatically being tested by Travis and Landscape:
 
-.. image:: https://secure.travis-ci.org/zestsoftware/zest.releaser.png?branch=master
-   :target: https://travis-ci.org/#!/zestsoftware/zest.releaser
+.. image:: https://api.travis-ci.com/zestsoftware/zest.releaser.png?branch=master
+   :target: https://travis-ci.com/github/zestsoftware/zest.releaser
 
 .. image:: https://landscape.io/github/zestsoftware/zest.releaser/master/landscape.svg?style=flat
    :target: https://landscape.io/github/zestsoftware/zest.releaser/master
