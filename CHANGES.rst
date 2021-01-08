@@ -4,7 +4,8 @@ Changelog for zest.releaser
 6.22.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Migrate to `travis-ci.com <https://travis-ci.com/github/zestsoftware/zest.releaser>`_.
+  [maurits]
 
 
 6.22.1 (2020-09-22)
