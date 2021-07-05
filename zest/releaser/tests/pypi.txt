@@ -409,6 +409,26 @@ The option should be set to True here as well:
     True
 
 
+"tool:" prefix in setup.cfg
+---------------------------
+
+Currently, it is becoming common to use the "tool:" prefix for tools that use
+setup.cfg for their configuration. Let's support that, too:
+
+    >>> SETUP_CFG = """
+    ... [tool:zest.releaser]
+    ... no-input = yes
+    ... """
+    >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
+    ...     _ = f.write(SETUP_CFG)
+    >>> pypiconfig = pypi.PypiConfig()
+
+The option should be set to False here as well:
+
+    >>> pypiconfig.no_input()
+    True
+
+
 Python version file pointer
 ---------------------------
 
