@@ -37,7 +37,7 @@ notifications:
     on_success: change
 env: HGUSER=temp
 install:
-  - pip install setuptools zc.buildout
+  - pip install zc.buildout
   # Fix PyPy error in test functional-with-hooks.txt:
   # ContextualVersionConflict: (typing 3.6.6 (/home/travis/virtualenv/pypy2.7-7.1.1/site-packages), Requirement.parse('typing>=3.7.4'), set(['typing-extensions']))
   - if test $(python --version 2> /dev/stdout | grep -c PyPy) -ge 1; then pip install typing==3.7.4.3 typing-extensions==3.7.4.3; fi
