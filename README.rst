@@ -54,9 +54,8 @@ Compatibility / Dependencies
 .. image:: https://img.shields.io/pypi/pyversions/zest.releaser?   :alt: PyPI - Python Version
 .. image:: https://img.shields.io/pypi/implementation/zest.releaser?   :alt: PyPI - Implementation
 
-``zest.releaser`` works on Python 2.7.
-Python 3.5+ is supported.
-PyPy2 is supported.
+``zest.releaser`` works on Python 3.6+, including PyPy3.
+Tested until Python 3.8, but see ``tox.ini`` for the canonical place for that.
 
 To be sure: the packages that you release with ``zest.releaser`` may
 very well work on other Python versions: that totally depends on your
@@ -67,8 +66,6 @@ We depend on:
 - ``setuptools`` for the entrypoint hooks that we offer.
 
 - ``colorama`` for colorized output (some errors printed in red).
-
-- ``six`` for python2/python3 compatibility.
 
 - ``twine`` for secure uploading via https to pypi. Plain setuptools doesn't
   support this.
