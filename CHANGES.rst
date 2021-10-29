@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-6.22.2 (unreleased)
+6.22.2 (2021-10-29)
 -------------------
 
 - Migrate to `travis-ci.com <https://travis-ci.com/github/zestsoftware/zest.releaser>`_.
