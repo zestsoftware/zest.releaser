@@ -4,9 +4,9 @@
 import logging
 import os
 
+from zest.releaser import postrelease
 from zest.releaser import prerelease
 from zest.releaser import release
-from zest.releaser import postrelease
 from zest.releaser import utils
 
 logger = logging.getLogger(__name__)

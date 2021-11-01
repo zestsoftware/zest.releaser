@@ -3,13 +3,14 @@
 
 import logging
 import os
-import pkg_resources
 import re
 import sys
 
-from zest.releaser import utils
+import pkg_resources
+
 from zest.releaser import choose
 from zest.releaser import pypi
+from zest.releaser import utils
 from zest.releaser.utils import execute_command
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file

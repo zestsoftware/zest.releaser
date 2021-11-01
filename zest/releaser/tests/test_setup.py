@@ -1,10 +1,10 @@
-from colorama import Fore
-from zope.testing import renormalizing
-
 import re
 import tempfile
+
 import twine.cli
 import z3c.testsetup
+from colorama import Fore
+from zope.testing import renormalizing
 
 
 def mock_dispatch(*args):

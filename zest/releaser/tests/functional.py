@@ -5,12 +5,12 @@ import shutil
 import sys
 import tarfile
 import tempfile
-
-import pkg_resources
-from colorama import Fore
 from io import StringIO
 from urllib import request
 from urllib.error import HTTPError
+
+import pkg_resources
+from colorama import Fore
 
 from zest.releaser import choose
 from zest.releaser import utils

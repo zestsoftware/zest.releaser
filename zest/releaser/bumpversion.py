@@ -5,6 +5,7 @@ import logging
 import sys
 
 from pkg_resources import parse_version
+
 from zest.releaser import baserelease
 from zest.releaser import utils
 

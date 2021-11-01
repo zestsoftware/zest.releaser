@@ -1,12 +1,12 @@
 # Small utility methods.
 
-from argparse import ArgumentParser
 import logging
 import os
 import re
 import subprocess
 import sys
 import textwrap
+from argparse import ArgumentParser
 
 try:
     from tokenize import detect_encoding
@@ -17,8 +17,8 @@ try:
     HAVE_CHARDET = True
 except ImportError:
     HAVE_CHARDET = False
-from colorama import Fore
 import pkg_resources
+from colorama import Fore
 from pkg_resources import parse_version
 
 logger = logging.getLogger(__name__)

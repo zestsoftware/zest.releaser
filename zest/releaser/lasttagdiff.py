@@ -6,8 +6,8 @@ import logging
 import sys
 
 import zest.releaser.choose
-from zest.releaser.utils import execute_command
 from zest.releaser import utils
+from zest.releaser.utils import execute_command
 
 logger = logging.getLogger(__name__)
 
