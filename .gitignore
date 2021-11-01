@@ -11,6 +11,7 @@ include
 lib
 /local
 parts
+/pyvenv.cfg
 zest.releaser.egg-info
 .coverage
 htmlcov

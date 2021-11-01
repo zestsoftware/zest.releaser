@@ -95,12 +95,12 @@ If you worked on the documentation, we suggest you verify the markup
 and the result by building the documentation locally and view your
 results.
 
-For building the documentation for the moment you still need buildout (untested)::
+For building the documentation::
 
-    $ python3.8 -mvenv .
-    $ bin/pip install zc.buildout setuptools
-    $ bin/buildout install sphinx
-    $ bin/sphinx
+    $ python3.9 -mvenv .
+    $ bin/pip install sphinx sphinx_rtd_theme
+    $ bin/pip install -e .
+    $ bin/sphinx-build doc/source/ doc/build/
 
 For viewing the documentation open :file:`doc/build/html/index.html`
 in your browser, e.g. by running::
