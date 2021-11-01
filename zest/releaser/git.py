@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 import tempfile
 import os.path

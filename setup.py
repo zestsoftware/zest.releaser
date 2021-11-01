@@ -13,12 +13,12 @@ def read(filename):
         with codecs.open(filename, encoding='utf-8') as f:
             return unicode(f.read())
     except NameError:
-        with open(filename, 'r', encoding='utf-8') as f:
+        with open(filename, encoding='utf-8') as f:
             return f.read()
 
 
 
-long_description = u'\n\n'.join([read('README.rst'),
+long_description = '\n\n'.join([read('README.rst'),
                                  read('CREDITS.rst'),
                                  read('CHANGES.rst')])
 

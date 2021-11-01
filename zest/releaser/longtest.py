@@ -1,6 +1,5 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
-from __future__ import unicode_literals
 
 import io
 import logging

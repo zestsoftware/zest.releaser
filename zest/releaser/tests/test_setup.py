@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from colorama import Fore
 from zope.testing import renormalizing
 

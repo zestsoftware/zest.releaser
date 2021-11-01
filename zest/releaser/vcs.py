@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 import os
 import re
@@ -37,7 +35,7 @@ TXT_EXTENSIONS = ['rst', 'txt', 'markdown', 'md']
 logger = logging.getLogger(__name__)
 
 
-class BaseVersionControl(object):
+class BaseVersionControl:
     "Shared implementation between all version control systems"
 
     internal_filename = ''  # e.g. '.svn' or '.hg'
@@ -58,7 +56,7 @@ class BaseVersionControl(object):
         self.fallback_encoding = pypi_cfg.encoding()
 
     def __repr__(self):
-        return '<{0} at {1} {2}>'.format(
+        return '<{} at {} {}>'.format(
             self.__class__.__name__, self.reporoot, self.relative_path_in_repo)
 
     def is_setuptools_helper_package_installed(self):
@@ -132,7 +130,7 @@ class BaseVersionControl(object):
         a CHANGES.txt and a docs/HISTORY.txt, you want the top level
         CHANGES.txt to be found first.
         """
-        if isinstance(names, six.string_types):
+        if isinstance(names, str):
             names = [names]
         names = [name.lower() for name in names]
         files = self.list_files()
@@ -365,7 +363,7 @@ class BaseVersionControl(object):
 
     def checkout_from_tag(self, version):
         package = self.name
-        prefix = '%s-%s-' % (package, version)
+        prefix = '{}-{}-'.format(package, version)
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)

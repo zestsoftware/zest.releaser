@@ -1,7 +1,6 @@
 # GPL, (c) Reinout van Rees
 #
 # Script to show the log from the last relevant tag till now.
-from __future__ import unicode_literals
 
 import logging
 import sys

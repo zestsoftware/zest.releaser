@@ -1,5 +1,4 @@
 # GPL, (c) Reinout van Rees
-from __future__ import unicode_literals
 
 import logging
 import os
@@ -116,7 +115,7 @@ class Releaser(baserelease.Basereleaser):
                       (tag, version))
                 sys.exit(1)
         if not self.vcs.tag_exists(tag):
-            print("\nFailed to create tag %s!" % (tag,))
+            print("\nFailed to create tag {}!".format(tag))
             sys.exit(1)
 
     def _upload_distributions(self, package):
@@ -147,8 +146,8 @@ class Releaser(baserelease.Basereleaser):
         self._run_hooks('before_upload')
 
         # Get list of all files to upload.
-        files_in_dist = sorted([
-            os.path.join('dist', filename) for filename in os.listdir('dist')]
+        files_in_dist = sorted(
+            os.path.join('dist', filename) for filename in os.listdir('dist')
         )
 
         register = self.pypiconfig.register_package()
@@ -200,7 +199,7 @@ class Releaser(baserelease.Basereleaser):
         question = "Upload"
         if register:
             question = "Register and upload"
-        return utils.ask("%s to %s" % (question, server),
+        return utils.ask("{} to {}".format(question, server),
                      default=default, exact=exact)
 
     def _retry_twine(self, twine_command, server, filenames):

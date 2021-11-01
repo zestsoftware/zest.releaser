@@ -1,7 +1,6 @@
 # GPL, (c) Reinout van Rees
 #
 # Script to show the diff with the last relevant tag.
-from __future__ import unicode_literals
 
 import logging
 import sys

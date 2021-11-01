@@ -1,6 +1,5 @@
 """Provide a base for the three releasers"""
 
-from __future__ import unicode_literals
 
 import logging
 import os
@@ -54,10 +53,10 @@ DATA = {
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
 
 
-class Basereleaser(object):
+class Basereleaser:
 
     def __init__(self, vcs=None):
-        os.environ[str("ZESTRELEASER")] = str("We are called from within zest.releaser")
+        os.environ["ZESTRELEASER"] = "We are called from within zest.releaser"
         # ^^^ Env variable so called tools can detect us. Don't depend on the
         # actual text, just on the variable's name.
         if vcs is None:
@@ -331,7 +330,7 @@ class Basereleaser(object):
         required = self.data.get('required_changelog_text')
         if not required:
             return
-        if isinstance(required, six.string_types):
+        if isinstance(required, str):
             required = [required]
         history_last_release = self.data['history_last_release']
         for text in required:
