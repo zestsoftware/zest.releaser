@@ -90,10 +90,6 @@ class Basereleaser:
         between initially getting the current version, and later getting
         a suggested version or asking the user.
         """
-        # 'initial' is not used in this method, but may be used by sub classes.
-        # Mention it here so a check on landscape.io does not complain about an
-        # unused argument.
-        initial  # noqa
         version = self.vcs.version
         if not version:
             logger.critical("No version detected, so we can't do anything.")
