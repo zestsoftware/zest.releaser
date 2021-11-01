@@ -708,7 +708,7 @@ internally).  Because of the entry points, good documentation is necessary.
 So we can check whether all keys have attached documentation:
 
     >>> data = {'commit_msg': 'get me some booze'}
-    >>> documentation = {'commit_msg': 'Commit message for svn',
+    >>> documentation = {'commit_msg': 'Commit message for git',
     ...                  'target': 'Some other thingy'}
     >>> utils.is_data_documented(data, documentation)
     Checking data dict

@@ -5,7 +5,7 @@ Detailed tests of baserelease.py
 .. :setup: zest.releaser.tests.functional.setup
 .. :teardown: zest.releaser.tests.functional.teardown
 
-Change to an svn dir:
+Change to a git dir:
 
     >>> gitsourcedir
     'TESTTEMP/tha.example-git'

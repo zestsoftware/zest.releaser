@@ -132,10 +132,8 @@ Now we can request the changes since a specific tag:
 Making a tag checkout
 ---------------------
 
-For checking out a tag with subversion or mercurial, we first create a temp
-dir and afterwards do a checkout/clone of a tag.  With git, we immediately
-make a clone of the repository in a tempdir and afterwards switch ("checkout")
-that directory to the tag.
+With git, we make a clone of the repository in a tempdir and
+afterwards switch ("checkout") that directory to the tag.
 
 Since version 6.6.3 we create a shallow clone, which only contains the
 last commit.  And since 6.6.4 this works properly. :-) For that to

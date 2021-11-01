@@ -296,32 +296,6 @@ class Releaser(baserelease.Basereleaser):
                 # Fix the setup.cfg in the current working directory
                 # so the current release works well.
                 self.setup_cfg.fix_config()
-                # Now we may want to commit this.  Note that this is
-                # only really useful for subversion, as for example in
-                # git you are in a detached HEAD state, which is a
-                # place where a commit will be lost.
-                #
-                # Ah, in the case of bazaar doing a commit is actually
-                # harmful, as the commit ends up on the tip, instead
-                # of only being done on a tag or branch.
-                #
-                # So the summary is:
-                #
-                # - svn: NEEDED, not harmful
-                # - git: not needed, not harmful
-                # - hg: not needed, not harmful
-                # - bzr: not needed, HARMFUL
-                #
-                # So for clarity and safety we should only do this for
-                # subversion.
-                if self.vcs.internal_filename == '.svn':
-                    command = self.vcs.cmd_commit(
-                        "Fixed %s on tag for release" %
-                        self.setup_cfg.config_filename)
-                    print(execute_command(command))
-                else:
-                    logger.debug("Not committing in non-svn repository as "
-                                 "this is not needed or may be harmful.")
 
         # Run extra entry point
         self._run_hooks('after_checkout')
