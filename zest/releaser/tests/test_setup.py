@@ -2,7 +2,6 @@ from colorama import Fore
 from zope.testing import renormalizing
 
 import re
-import six
 import tempfile
 import twine.cli
 import z3c.testsetup

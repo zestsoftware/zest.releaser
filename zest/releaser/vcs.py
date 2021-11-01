@@ -3,8 +3,6 @@ import os
 import re
 import sys
 
-import six
-
 from zest.releaser import pypi
 from zest.releaser import utils
 

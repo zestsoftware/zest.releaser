@@ -20,7 +20,6 @@ except ImportError:
 from colorama import Fore
 import pkg_resources
 from pkg_resources import parse_version
-import six
 
 logger = logging.getLogger(__name__)
 

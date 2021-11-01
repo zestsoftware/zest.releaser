@@ -8,9 +8,9 @@ import tempfile
 
 import pkg_resources
 from colorama import Fore
-from six import StringIO
-from six.moves.urllib import request as urllib2
-from six.moves.urllib.error import HTTPError
+from io import StringIO
+from urllib import request
+from urllib.error import HTTPError
 
 from zest.releaser import choose
 from zest.releaser import utils
@@ -38,7 +38,7 @@ def setup(test):
     sys.exit = _exit
 
     # Monkey patch urllib for pypi access mocking.
-    test.orig_urlopen = urllib2.urlopen
+    test.orig_urlopen = request.urlopen
     test.mock_pypi_available = []
 
     def _make_mock_urlopen(mock_pypi_available):
@@ -56,7 +56,7 @@ def setup(test):
 
         return _mock_urlopen
 
-    urllib2.urlopen = _make_mock_urlopen(test.mock_pypi_available)
+    request.urlopen = _make_mock_urlopen(test.mock_pypi_available)
 
     # Extract example project
     example_tar = pkg_resources.resource_filename(
@@ -103,8 +103,7 @@ def setup(test):
             f.write(new_changes)
         commit_all_changes()
 
-    test.globs.update({'unicode_literals': unicode_literals,
-                       'tempdir': test.tempdir,
+    test.globs.update({'tempdir': test.tempdir,
                        'gitsourcedir': gitsourcedir,
                        'githead': githead,
                        'mock_pypi_available': test.mock_pypi_available,
@@ -115,7 +114,7 @@ def setup(test):
 
 def teardown(test):
     sys.exit = test.orig_exit
-    urllib2.urlopen = test.orig_urlopen
+    request.urlopen = test.orig_urlopen
     os.chdir(test.orig_dir)
     sys.argv[1:] = test.orig_argv
     shutil.rmtree(test.tempdir)

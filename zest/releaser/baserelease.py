@@ -5,7 +5,6 @@ import logging
 import os
 import pkg_resources
 import re
-import six
 import sys
 
 from zest.releaser import utils

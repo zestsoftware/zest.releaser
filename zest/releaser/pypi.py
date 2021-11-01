@@ -3,10 +3,9 @@ import os
 import sys
 
 import pkg_resources
-from six import text_type
-from six.moves.configparser import ConfigParser
-from six.moves.configparser import NoSectionError
-from six.moves.configparser import NoOptionError
+from configparser import ConfigParser
+from configparser import NoSectionError
+from configparser import NoOptionError
 
 try:
     pkg_resources.get_distribution('wheel')

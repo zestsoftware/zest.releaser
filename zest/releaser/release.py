@@ -5,8 +5,8 @@ import os
 import sys
 
 from colorama import Fore
-from six.moves.urllib.error import HTTPError
-from six.moves.urllib import request as urllib2
+from urllib.error import HTTPError
+from urllib import request
 import requests
 
 try:
@@ -48,7 +48,7 @@ def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
     url = 'https://pypi.org/simple/%s' % package
     try:
-        urllib2.urlopen(url)
+        request.urlopen(url)
         return True
     except HTTPError as e:
         logger.debug("Package not found on pypi: %s", e)
