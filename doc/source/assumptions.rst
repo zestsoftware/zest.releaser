@@ -6,10 +6,6 @@ are some assumptions build-in that might or might not fit you.  Lots of people
 are using it in various companies and open source projects, so it'll probably
 fit :-)
 
-- If you are using svn, your svn is structured with /trunk, /tags (or
-  /tag) and optionally /branches (or /branch).  Both a /trunk or a
-  /branches/something checkout is ok.
-
 - We absolutely need a version. There's a ``version.txt`` or ``setup.py`` in
   your project. The ``version.txt`` has a single line with the version number
   (newline optional). The ``setup.py`` should have a single ``version =
