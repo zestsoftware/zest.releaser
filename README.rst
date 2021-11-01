@@ -38,11 +38,6 @@ First the three most important links:
 - The code is at `github.com/zestsoftware/zest.releaser
   <https://github.com/zestsoftware/zest.releaser>`_.
 
-And... we're automatically being tested by Travis:
-
-.. image:: https://api.travis-ci.com/zestsoftware/zest.releaser.png?branch=master
-   :target: https://travis-ci.com/github/zestsoftware/zest.releaser
-
 
 Compatibility / Dependencies
 ----------------------------
@@ -51,7 +46,7 @@ Compatibility / Dependencies
 .. image:: https://img.shields.io/pypi/implementation/zest.releaser?   :alt: PyPI - Implementation
 
 ``zest.releaser`` works on Python 3.6+, including PyPy3.
-Tested until Python 3.8, but see ``tox.ini`` for the canonical place for that.
+Tested until Python 3.10, but see ``tox.ini`` for the canonical place for that.
 
 To be sure: the packages that you release with ``zest.releaser`` may
 very well work on other Python versions: that totally depends on your

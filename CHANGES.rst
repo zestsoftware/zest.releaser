@@ -14,5 +14,7 @@ Big cleanup to ease future development:
 
 - Tested with Python 3.6-3.10 plus PyPy3.
 
+- Switched from Travis to GitHub Actions.
+
 
 .. # Note: for older changes see ``doc/sources/changelog.rst``.
