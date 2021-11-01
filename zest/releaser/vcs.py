@@ -363,7 +363,7 @@ class BaseVersionControl:
 
     def checkout_from_tag(self, version):
         package = self.name
-        prefix = '{}-{}-'.format(package, version)
+        prefix = f'{package}-{version}-'
         tagdir = self.prepare_checkout_dir(prefix)
         os.chdir(tagdir)
         cmd = self.cmd_checkout_from_tag(version, tagdir)

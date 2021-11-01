@@ -613,7 +613,7 @@ def run_hooks(setup_cfg, which_releaser, when, data):
     when can be before, middle, after.
 
     """
-    hook_group = '{}.{}'.format(which_releaser, when)
+    hook_group = f'{which_releaser}.{when}'
     config = setup_cfg.config
 
     if config is not None and config.has_option('zest.releaser', hook_group):
@@ -662,7 +662,7 @@ def run_entry_points(which_releaser, when, data):
     when can be before, middle, after.
 
     """
-    group = 'zest.releaser.{}.{}'.format(which_releaser, when)
+    group = f'zest.releaser.{which_releaser}.{when}'
     for entrypoint in pkg_resources.iter_entry_points(group=group):
         # Grab the function that is the actual plugin.
         plugin = entrypoint.load()
@@ -697,7 +697,7 @@ def format_command(command):
     args = []
     for arg in command:
         if " " in arg:
-            arg = "'{}'".format(arg)
+            arg = f"'{arg}'"
         args.append(arg)
     return " ".join(args)
 

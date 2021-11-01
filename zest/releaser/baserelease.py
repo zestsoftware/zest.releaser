@@ -290,7 +290,7 @@ class Basereleaser:
         prefix = utils.get_list_item(self.data['history_lines'])
         for index, line in enumerate(message.splitlines()):
             if index == 0:
-                line = '{} {}'.format(prefix, line)
+                line = f'{prefix} {line}'
             else:
                 line = '{}  {}'.format(' ' * len(prefix), line)
             lines.append(line)
@@ -310,7 +310,7 @@ class Basereleaser:
             return
         # We want quotes around the text, but also want to avoid
         # printing text with a u'unicode marker' in front...
-        pretty_nothing_changed = '"{}"'.format(nothing_yet)
+        pretty_nothing_changed = f'"{nothing_yet}"'
         if not utils.ask(
                 "WARNING: Changelog contains {}. Are you sure you "
                 "want to release?".format(pretty_nothing_changed),

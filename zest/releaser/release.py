@@ -115,7 +115,7 @@ class Releaser(baserelease.Basereleaser):
                       (tag, version))
                 sys.exit(1)
         if not self.vcs.tag_exists(tag):
-            print("\nFailed to create tag {}!".format(tag))
+            print(f"\nFailed to create tag {tag}!")
             sys.exit(1)
 
     def _upload_distributions(self, package):
@@ -199,7 +199,7 @@ class Releaser(baserelease.Basereleaser):
         question = "Upload"
         if register:
             question = "Register and upload"
-        return utils.ask("{} to {}".format(question, server),
+        return utils.ask(f"{question} to {server}",
                      default=default, exact=exact)
 
     def _retry_twine(self, twine_command, server, filenames):
