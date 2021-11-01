@@ -84,7 +84,9 @@ def setup(test):
         with open(filename) as f:
             lines = f.readlines()
         for line in lines[:5]:
-            print(line.strip())
+            line = line.strip()
+            if line:
+                print(line)
 
     def commit_all_changes(message="Committing all changes"):
         # Get a clean checkout.

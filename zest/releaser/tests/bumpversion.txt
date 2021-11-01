@@ -33,7 +33,7 @@ error is ugly, but in practice it looks fine, saying no bump is needed.
 So first run the fullrelease:
 
     >>> from zest.releaser import fullrelease
-    >>> utils.test_answer_book.set_answers(['', '', '', '2.9.4', '', '', '', '', '', '', '', 'n'])
+    >>> utils.test_answer_book.set_answers(['', '', '2.9.4', '', '', '', '', '', '', '', 'n'])
     >>> fullrelease.main()
     Question...
     Question: Enter version [0.1]:
@@ -47,8 +47,6 @@ So first run the fullrelease:
     ------------------
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '2.9.5.dev0'
 
 Try bumpversion again.  The first time we again get an error because
@@ -76,8 +74,6 @@ Now a feature bump::
     Our reply: <ENTER>
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '2.10.0.dev0'
     >>> githead('CHANGES.txt')
     Changelog of tha.example
@@ -101,8 +97,6 @@ Now a breaking bump, and for this test we explicitly remove the dev marker::
     Our reply: <ENTER>
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '3.0.0'
     >>> githead('CHANGES.txt')
     Changelog of tha.example

@@ -18,8 +18,6 @@ The version is at 0.1.dev0:
 
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.1.dev0'
 
 Asking input on the prompt is not unittestable unless we use the prepared
@@ -50,6 +48,4 @@ The changelog and setup.py are at 0.1 and indicate a release date:
     ----------------
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.1'

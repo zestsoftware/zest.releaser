@@ -33,8 +33,6 @@ The version is at 0.1.dev0:
 
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.1.dev0'
 
 Asking input on the prompt is not unittestable unless we use the prepared
@@ -68,8 +66,6 @@ And the version number is just 0.1 and has lost its dev marker:
 
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.1'
 
 The release script tags the release and uploads it.  Note that in the
@@ -153,8 +149,6 @@ The changelog and setup.py are at 0.2 and indicate dev mode:
     ----------------
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.2.dev0'
 
 And there are no uncommitted changes:
