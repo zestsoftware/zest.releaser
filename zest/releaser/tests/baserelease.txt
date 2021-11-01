@@ -7,10 +7,10 @@ Detailed tests of baserelease.py
 
 Change to an svn dir:
 
-    >>> svnsourcedir
-    'TESTTEMP/tha.example-svn'
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
     >>> import os
-    >>> os.chdir(svnsourcedir)
+    >>> os.chdir(gitsourcedir)
 
 Init the Basereleaser, which is otherwise only used as a base class.
 
@@ -20,11 +20,11 @@ Init the Basereleaser, which is otherwise only used as a base class.
 The data dict is initialized.  And a vcs is chosen:
 
     >>> base.data['workingdir']
-    'TESTTEMP/tha.example-svn'
+    'TESTTEMP/tha.example-git'
     >>> base.data['name']
     'tha.example'
     >>> base.vcs
-    <Subversion at TESTTEMP/tha.example-svn .>
+    <Git at TESTTEMP/tha.example-git .>
 
 Two methods are unimplemented:
 

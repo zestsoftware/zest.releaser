@@ -10,7 +10,6 @@ Some initial imports:
     >>> from zest.releaser import release
     >>> from zest.releaser import utils
     >>> import os
-    >>> from zest.releaser import utils
     >>> utils.TESTMODE = True
 
 
@@ -44,7 +43,7 @@ Now search for an "existing" package:
 Version grabbing
 ----------------
 
-    >>> os.chdir(svnsourcedir)
+    >>> os.chdir(gitsourcedir)
     >>> releaser = release.Releaser()
 
 Grab the version:
@@ -90,9 +89,11 @@ Mock that the tag exists and we get a question:
     >>> releaser._info_if_tag_already_exists()
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: y
-    svn --non-interactive diff file://TESTREPO/tha.example/tags/0.1 file://TESTREPO/tha.example/trunk
+    git diff 0.1
+    RED fatal: ambiguous argument '0.1': unknown revision or path not in the working tree.
     ...
-    >>> # ^^^ The diff itself fails as we mocked its existence
+
+Note: the diff itself fails as we mocked its existence.
 
 
 Making tags

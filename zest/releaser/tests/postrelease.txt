@@ -7,26 +7,16 @@ Detailed tests of postrelease.py
 
 Several items are prepared for us.
 
-An svn repository:
+A git checkout of a project:
 
-    >>> repo_url
-    'file://TESTREPO'
-
-An svn checkout of a project:
-
-    >>> svnsourcedir
-    'TESTTEMP/tha.example-svn'
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
     >>> import os
-    >>> os.chdir(svnsourcedir)
-    >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command(["svn", "info", svnsourcedir]))
-    Path: ...
-    URL: file://TESTREPO/tha.example/trunk
-    ...
+    >>> os.chdir(gitsourcedir)
 
 The version is at 0.1.dev0:
 
-    >>> svnhead('setup.py')
+    >>> githead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
@@ -40,7 +30,7 @@ testing hack in utils.py:
 
 Run the postrelease script:
 
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is 0.1
@@ -49,16 +39,18 @@ Run the postrelease script:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
 
 The changelog and setup.py are at 0.2 and indicate dev mode:
 
-    >>> svnhead('CHANGES.txt')
+    >>> githead('CHANGES.txt')
     Changelog of tha.example
     ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
-    >>> svnhead('setup.py')
+    >>> githead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
@@ -68,19 +60,20 @@ Now we set the version to something that does not end in a number and
 is not recognized as development version (with setuptools 8 or higher
 the version is actually reported with a zero at the end):
 
-    >>> from zest.releaser.svn import Subversion
-    >>> vcs = Subversion()
+    >>> from zest.releaser.git import Git
+    >>> vcs = Git()
     >>> vcs.version
     '0.2.dev0'
     >>> vcs.version = '0.1b'
     >>> vcs.version
     '0.1b0'
+    >>> commit_all_changes()
 
 Run the postrelease script.  Since the version number does not end
 with a number, the script cannot make a suggestion, except when the
 number is normalized by setuptools already:
 
-    >>> utils.test_answer_book.set_answers(['0.2', ''])
+    >>> utils.test_answer_book.set_answers(['0.2', '', 'n'])
     >>> from zest.releaser import postrelease
     >>> postrelease.main()
     Current version is 0.1b0
@@ -89,16 +82,18 @@ number is normalized by setuptools already:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
 
 The changelog and setup.py are at 0.2 and indicate dev mode:
 
-    >>> svnhead('CHANGES.txt')
+    >>> githead('CHANGES.txt')
     Changelog of tha.example
     ========================
     <BLANKLINE>
     0.2 (unreleased)
     ----------------
-    >>> svnhead('setup.py')
+    >>> githead('setup.py')
     from setuptools import setup, find_packages
     import os.path
     <BLANKLINE>
@@ -122,7 +117,7 @@ but 0.2.20:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> postrelease.main()
     Current version is 0.2.19
     Question: Enter new development version ('.dev0' will be appended) [0.2.20]:
@@ -130,6 +125,8 @@ but 0.2.20:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
 
 Releases without numbers at the end should not fluster us even when we
 cannot suggest a reasonable number. We'll ask for a version until we get one:
@@ -143,7 +140,7 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.test_answer_book.set_answers(['0.3rc0', ''])
+    >>> utils.test_answer_book.set_answers(['0.3rc0', '', 'n'])
     >>> postrelease.main()
     Current version is 0.3b0
     Question: Enter new development version ('.dev0' will be appended) [0.3b1]:
@@ -151,6 +148,8 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
 
 Numbers and characters can be combined:
 
@@ -163,7 +162,7 @@ Numbers and characters can be combined:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> postrelease.main()
     Current version is 1.0a1
     Question: Enter new development version ('.dev0' will be appended) [1.0a2]:
@@ -171,6 +170,8 @@ Numbers and characters can be combined:
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
 
 If there's an empty history file, it gets a fresh header.
 
@@ -180,7 +181,8 @@ If there's an empty history file, it gets a fresh header.
     Question: ...
     >>> with open('CHANGES.txt', 'w') as f:
     ...     _ = f.write('')
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> commit_all_changes()
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> postrelease.main()
     Current ...
     >>> with open('CHANGES.txt') as f:
@@ -213,10 +215,11 @@ Re-instate the history file again, but omit the restructuredtext header line:
 
     >>> with open('CHANGES.txt', 'w') as f:
     ...    _ = f.write('1.0 (1972-12-25)\n\n- hello\n')
+    >>> commit_all_changes()
     >>> utils.test_answer_book.set_answers(['', '', '', '1.3', ''])
     >>> prerelease.main()
     Question: ...
-    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> postrelease.main()
     Current ...
 

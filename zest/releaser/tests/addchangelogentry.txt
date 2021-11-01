@@ -7,18 +7,13 @@ Detailed tests of addchangelogentry.py
 
 Several items are prepared for us.
 
-An svn repository:
+A git checkout of a project:
 
-    >>> repo_url
-    'file://TESTREPO'
-
-An svn checkout of a project:
-
-    >>> svnsourcedir
-    'TESTTEMP/tha.example-svn'
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
     >>> import os
     >>> import sys
-    >>> os.chdir(svnsourcedir)
+    >>> os.chdir(gitsourcedir)
 
 Asking input on the prompt is not unittestable unless we use the prepared
 testing hack in utils.py:
@@ -63,9 +58,13 @@ The changelog and setup.py are at 0.1 and have the message::
 
 Add some white space in front of the list items, to show that this is
 kept when adding a message.  Make the list items stars instead of
-dashed.  Add multiple lines in one go.
+dashes.  Commit the change so we have a clean checkout.
 
     >>> utils.write_text_file('CHANGES.txt', contents.replace('- ', '  * '))
+    >>> commit_all_changes()
+
+Add multiple lines in one go.
+
     >>> sys.argv[1:] = ['My longer message.\nOn two lines.']
     >>> addchangelogentry.main()
     Checking data dict

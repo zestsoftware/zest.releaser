@@ -18,12 +18,12 @@ handles some base cases and has a bunch of NotImplementedError methods.
 
 When started, it stores the current working directory:
 
-    >>> svnsourcedir
-    'TESTTEMP/tha.example-svn'
-    >>> os.chdir(svnsourcedir)
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
+    >>> os.chdir(gitsourcedir)
     >>> checkout = vcs.BaseVersionControl()
     >>> checkout.workingdir
-    'TESTTEMP/tha.example-svn'
+    'TESTTEMP/tha.example-git'
 
 
 Methods that must be implemented in subclasses
