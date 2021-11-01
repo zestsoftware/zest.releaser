@@ -123,25 +123,17 @@ project's buildout, by having a buildout configuration such as::
     eggs = zest.releaser[recommended]
 
 
-Version control systems: svn, hg, git, bzr
-------------------------------------------
+Version control systems: git
+----------------------------
 
-Of course you must have a version control system installed.  zest.releaser
-currently supports:
+Of course you must have a version control system installed.
+Since version 7, zest.releaser only supports git.
 
-- Subversion (svn).
-
-- Mercurial (hg).
-
-- Git (git).
-
-- Git-svn.
-
-- Bazaar (bzr).
-
-Others could be added if there are volunteers! Git and mercurial support
-have been contributed years ago when we were working with bzr and subversion,
-for instance.
+If you use Subversion (svn), Mercurial (hg), Git-svn, or Bazaar (bzr), please use version 6.
+If you really want, you can probably copy the relevant parts from the old code to a new package,
+and release this as an add-on package for zest.releaser.
+I suspect that currently it would only work with a monkey patch.
+If you are planning something, please open an issue, and we can see about making this part pluggable.
 
 
 Available commands
