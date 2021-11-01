@@ -10,7 +10,7 @@ version = "7.0.0a1.dev0"
 def read(filename):
     try:
         with codecs.open(filename, encoding="utf-8") as f:
-            return unicode(f.read())
+            return f.read()
     except NameError:
         with open(filename, encoding="utf-8") as f:
             return f.read()
