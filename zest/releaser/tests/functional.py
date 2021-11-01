@@ -75,8 +75,6 @@ def setup(test):
     execute_command(["git", "config", "--local", "user.email", "temp@example.com"])
     execute_command(["git", "config", "--local", "commit.gpgsign", "false"])
     execute_command(["git", "config", "--local", "tag.gpgsign", "false"])
-    with open(os.path.join(gitsourcedir, '.gitignore'), 'w') as f:
-        f.write('tha.example.egg-info\n*.pyc\n')
     execute_command(["git", "add", "."])
     execute_command(["git", "commit", "-a", "-m", "init"])
     os.chdir(test.orig_dir)
