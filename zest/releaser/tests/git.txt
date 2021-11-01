@@ -67,7 +67,8 @@ and in other this:
 
     >>> print('dummy %s' % execute_command(cmd))
     dummy...small tweak
-     1 files changed, 2 insertions(+), 0 deletions(-)
+     1 file changed, 2 insertions(+)
+
 
 
 Tags
@@ -108,7 +109,7 @@ Make and commit a small change:
     >>> cmd = checkout.cmd_commit('small second tweak')
     >>> print('dummy %s' % execute_command(cmd))
     dummy...small second tweak
-     1 files changed, 2 insertions(+), 0 deletions(-)
+     1 file changed, 2 insertions(+)
 
 Now we can request the changes since a specific tag:
 
