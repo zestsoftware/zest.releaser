@@ -17,9 +17,11 @@ PRERELEASE_COMMIT_MSG = 'Preparing release %(new_version)s'
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrassment-driven documentation!
 DATA = baserelease.DATA.copy()
-DATA.update({
-    'today': 'Date string used in history header',
-})
+DATA.update(
+    {
+        'today': 'Date string used in history header',
+    }
+)
 
 
 class Prereleaser(baserelease.Basereleaser):
@@ -33,12 +35,14 @@ class Prereleaser(baserelease.Basereleaser):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         date_format = self.pypiconfig.date_format()
-        self.data.update(dict(
-            commit_msg=PRERELEASE_COMMIT_MSG,
-            history_header=HISTORY_HEADER,
-            today=datetime.datetime.today().strftime(date_format),
-            update_history=True,
-        ))
+        self.data.update(
+            dict(
+                commit_msg=PRERELEASE_COMMIT_MSG,
+                history_header=HISTORY_HEADER,
+                today=datetime.datetime.today().strftime(date_format),
+                update_history=True,
+            )
+        )
 
     def prepare(self):
         """Prepare self.data by asking about new version etc."""
@@ -55,8 +59,9 @@ class Prereleaser(baserelease.Basereleaser):
         self._grab_history()
         if self.data['update_history']:
             # Print changelog for this release.
-            print("Changelog entries for version {}:\n".format(
-                self.data['new_version']))
+            print(
+                "Changelog entries for version {}:\n".format(self.data['new_version'])
+            )
             print(self.data.get('history_last_release'))
         # Grab and set new version.
         self._grab_version()
@@ -90,8 +95,7 @@ class Prereleaser(baserelease.Basereleaser):
         suggestion = utils.cleanup_version(original_version)
         new_version = None
         if not initial:
-            new_version = utils.ask_version(
-                "Enter version", default=suggestion)
+            new_version = utils.ask_version("Enter version", default=suggestion)
         if not new_version:
             new_version = suggestion
         self.data['original_version'] = original_version

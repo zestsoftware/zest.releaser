@@ -46,9 +46,13 @@ def setup(test):
             package = url.replace('https://pypi.org/simple/', '')
             if package not in mock_pypi_available:
                 raise HTTPError(
-                    url, 404,
+                    url,
+                    404,
                     'HTTP Error 404: Not Found (%s does not have any releases)'
-                    % package, None, None)
+                    % package,
+                    None,
+                    None,
+                )
             else:
                 answer = ' '.join(mock_pypi_available)
             return StringIO(answer)
@@ -58,8 +62,7 @@ def setup(test):
     request.urlopen = _make_mock_urlopen(test.mock_pypi_available)
 
     # Extract example project
-    example_tar = pkg_resources.resource_filename(
-        'zest.releaser.tests', 'example.tar')
+    example_tar = pkg_resources.resource_filename('zest.releaser.tests', 'example.tar')
     with tarfile.TarFile(example_tar) as tf:
         tf.extractall(path=test.tempdir)
     sourcedir = os.path.join(test.tempdir, 'tha.example')
@@ -96,19 +99,21 @@ def setup(test):
         # Replace '- Nothing changed yet.'  by a different entry.
         with open('CHANGES.txt') as f:
             orig_changes = f.read()
-        new_changes = orig_changes.replace(
-            NOTHING_CHANGED_YET, '- Brown bag release.')
+        new_changes = orig_changes.replace(NOTHING_CHANGED_YET, '- Brown bag release.')
         with open('CHANGES.txt', 'w') as f:
             f.write(new_changes)
         commit_all_changes()
 
-    test.globs.update({'tempdir': test.tempdir,
-                       'gitsourcedir': gitsourcedir,
-                       'githead': githead,
-                       'mock_pypi_available': test.mock_pypi_available,
-                       'add_changelog_entry': add_changelog_entry,
-                       'commit_all_changes': commit_all_changes,
-                       })
+    test.globs.update(
+        {
+            'tempdir': test.tempdir,
+            'gitsourcedir': gitsourcedir,
+            'githead': githead,
+            'mock_pypi_available': test.mock_pypi_available,
+            'add_changelog_entry': add_changelog_entry,
+            'commit_all_changes': commit_all_changes,
+        }
+    )
 
 
 def teardown(test):

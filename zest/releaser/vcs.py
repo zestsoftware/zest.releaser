@@ -7,26 +7,35 @@ import re
 import sys
 
 
-VERSION_PATTERN = re.compile(r"""
+VERSION_PATTERN = re.compile(
+    r"""
 ^                # Start of line
 \s*              # Indentation
 version\s*=\s*   # 'version =  ' with possible whitespace
 ['"]?            # String literal begins
 \d               # Some digit, start of version.
-""", re.VERBOSE)
-UPPERCASE_VERSION_PATTERN = re.compile(r"""
+""",
+    re.VERBOSE,
+)
+UPPERCASE_VERSION_PATTERN = re.compile(
+    r"""
 ^                # Start of line
 VERSION\s*=\s*   # 'VERSION =  ' with possible whitespace
 ['"]             # String literal begins
 \d               # Some digit, start of version.
-""", re.VERBOSE)
+""",
+    re.VERBOSE,
+)
 
-UNDERSCORED_VERSION_PATTERN = re.compile(r"""
+UNDERSCORED_VERSION_PATTERN = re.compile(
+    r"""
 ^                    # Start of line
 __version__\s*=\s*   # '__version__ =  ' with possible whitespace
 ['"]                 # String literal begins
 \d                   # Some digit, start of version.
-""", re.VERBOSE)
+""",
+    re.VERBOSE,
+)
 
 TXT_EXTENSIONS = ['rst', 'txt', 'markdown', 'md']
 
@@ -47,15 +56,15 @@ class BaseVersionControl:
         else:
             self.reporoot = reporoot
             # Determine relative path from root of repo.
-            self.relative_path_in_repo = os.path.relpath(
-                self.workingdir, reporoot)
+            self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
         self.setup_cfg = pypi.SetupConfig()
         pypi_cfg = pypi.PypiConfig()
         self.fallback_encoding = pypi_cfg.encoding()
 
     def __repr__(self):
         return '<{} at {} {}>'.format(
-            self.__class__.__name__, self.reporoot, self.relative_path_in_repo)
+            self.__class__.__name__, self.reporoot, self.relative_path_in_repo
+        )
 
     def is_setuptools_helper_package_installed(self):
         try:
@@ -70,8 +79,7 @@ class BaseVersionControl:
             # that otherwise end up in the extracted version, like
             # UserWarnings.
             utils.execute_command(utils.setup_py('egg_info'))
-            version = utils.execute_command(
-                utils.setup_py('--version')).splitlines()[0]
+            version = utils.execute_command(utils.setup_py('--version')).splitlines()[0]
             if 'Traceback' in version:
                 # Likely cause is for example forgetting to 'import
                 # os' when using 'os' in setup.py.
@@ -136,8 +144,8 @@ class BaseVersionControl:
         for fullpath in files:
             if fullpath.lower().endswith('debian/changelog'):
                 logger.debug(
-                    "Ignoring %s, unreadable (for us) debian changelog",
-                    fullpath)
+                    "Ignoring %s, unreadable (for us) debian changelog", fullpath
+                )
                 continue
             filename = os.path.basename(fullpath)
             if filename.lower() in names:
@@ -147,7 +155,9 @@ class BaseVersionControl:
                     # we deliberately remove a CHANGES.txt file.
                     logger.warning(
                         "Found file %s in version control but not on "
-                        "file execute_command.", fullpath)
+                        "file execute_command.",
+                        fullpath,
+                    )
                     continue
                 found.append(fullpath)
         if not found:
@@ -155,20 +165,19 @@ class BaseVersionControl:
         if len(found) > 1:
             found.sort(key=len)
             logger.warning(
-                "Found more than one file, picked the shortest one to "
-                "change: %s", ', '.join(found))
+                "Found more than one file, picked the shortest one to " "change: %s",
+                ', '.join(found),
+            )
         return found[0]
 
     def history_file(self, location=None):
-        """Return history file location.
-        """
+        """Return history file location."""
         if location:
             # Hardcoded location passed from the config file.
             if os.path.exists(location):
                 return location
             else:
-                logger.warning("The specified history file %s doesn't exist",
-                               location)
+                logger.warning("The specified history file %s doesn't exist", location)
         filenames = []
         for base in ['CHANGES', 'HISTORY', 'CHANGELOG']:
             filenames.append(base)
@@ -201,9 +210,11 @@ class BaseVersionControl:
         But if there's an explicitly configured Python file that has to be
         searched for a ``__version__`` attribute, use that one.
         """
-        return (self.get_python_file_version() or
-                self.get_setup_py_version() or
-                self.get_version_txt_version())
+        return (
+            self.get_python_file_version()
+            or self.get_setup_py_version()
+            or self.get_version_txt_version()
+        )
 
     def _update_python_file_version(self, version):
         filename = self.setup_cfg.python_file_with_version()
@@ -215,9 +226,7 @@ class BaseVersionControl:
         for index, line in enumerate(lines):
             if UNDERSCORED_VERSION_PATTERN.search(line):
                 lines[index] = (
-                    good_version.replace("'", '"')
-                    if '"' in line
-                    else good_version
+                    good_version.replace("'", '"') if '"' in line else good_version
                 )
 
         contents = '\n'.join(lines)
@@ -237,15 +246,15 @@ class BaseVersionControl:
             return
 
         version_filenames = ['version']
-        version_filenames.extend([
-            '.'.join(['version', extension]) for extension in TXT_EXTENSIONS])
+        version_filenames.extend(
+            ['.'.join(['version', extension]) for extension in TXT_EXTENSIONS]
+        )
         versionfile = self.filefind(version_filenames)
         if versionfile:
             # We have a version.txt file but does it match the setup.py
             # version (if any)?
             setup_version = self.get_setup_py_version()
-            if not setup_version or (setup_version ==
-                                     self.get_version_txt_version()):
+            if not setup_version or (setup_version == self.get_version_txt_version()):
                 with open(versionfile, 'w') as f:
                     f.write(version + '\n')
                 logger.info("Changed %s to '%s'", versionfile, version)
@@ -268,8 +277,7 @@ class BaseVersionControl:
                 if '"' in line:
                     good_version = good_version.replace("'", '"')
                 setup_lines[line_number] = good_version
-                utils.write_text_file(
-                    'setup.py', '\n'.join(setup_lines), encoding)
+                utils.write_text_file('setup.py', '\n'.join(setup_lines), encoding)
                 logger.info("Set setup.py's version to '%s'", version)
                 return
             if UPPERCASE_VERSION_PATTERN.search(line):
@@ -280,8 +288,7 @@ class BaseVersionControl:
                 if '"' in line:
                     good_version = good_version.replace("'", '"')
                 setup_lines[line_number] = good_version
-                utils.write_text_file(
-                    'setup.py', '\n'.join(setup_lines), encoding)
+                utils.write_text_file('setup.py', '\n'.join(setup_lines), encoding)
                 logger.info("Set setup.py's version to '%s'", version)
                 return
 
@@ -300,7 +307,8 @@ class BaseVersionControl:
                         good_version = indentation + good_version
                     setup_cfg_lines[line_number] = good_version
                     utils.write_text_file(
-                        'setup.cfg', '\n'.join(setup_cfg_lines), encoding)
+                        'setup.cfg', '\n'.join(setup_cfg_lines), encoding
+                    )
                     logger.info("Set setup.cfg's version to '%s'", version)
                     return
 
@@ -308,7 +316,8 @@ class BaseVersionControl:
             "We could read a version from setup.py, but could not write it "
             "back. See "
             "https://zestreleaser.readthedocs.io/en/latest/versions.html "
-            "for hints.")
+            "for hints."
+        )
         raise RuntimeError("Cannot set version")
 
     version = property(_extract_version, _update_version)

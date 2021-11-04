@@ -10,6 +10,7 @@ import webbrowser
 
 try:
     from readme_renderer.rst import render
+
     HAVE_README = True
 except ImportError:
     HAVE_README = False
@@ -36,7 +37,8 @@ def show_longdesc():
         logging.error(
             "To check the long description, we need the 'readme_renderer' "
             "package. "
-            "(It is included if you install `zest.releaser[recommended]`)")
+            "(It is included if you install `zest.releaser[recommended]`)"
+        )
         sys.exit(1)
 
     filename = tempfile.mktemp('.html')
@@ -46,8 +48,7 @@ def show_longdesc():
     warnings = io.StringIO()
     html = render(longdesc, warnings)
     if html is None:
-        logging.error(
-            'Error generating html. Invalid ReST.')
+        logging.error('Error generating html. Invalid ReST.')
         rst_filename = tempfile.mktemp('.rst')
         with open(rst_filename, 'wb') as rst_file:
             rst_file.write(longdesc.encode('utf-8'))

@@ -99,15 +99,21 @@ class SetupConfig(BaseConfig):
             # Might still be empty.
             value = self._get_text('egg_info', 'tag_build')
             if value:
-                logger.warning("%s has [egg_info] tag_build set to '%s'",
-                               self.config_filename, value)
+                logger.warning(
+                    "%s has [egg_info] tag_build set to '%s'",
+                    self.config_filename,
+                    value,
+                )
                 bad = True
         # Check 2.
         if self.config.has_option('egg_info', 'tag_svn_revision'):
             if self.config.getboolean('egg_info', 'tag_svn_revision'):
                 value = self._get_text('egg_info', 'tag_svn_revision')
-                logger.warning("%s has [egg_info] tag_svn_revision set to '%s'",
-                               self.config_filename, value)
+                logger.warning(
+                    "%s has [egg_info] tag_svn_revision set to '%s'",
+                    self.config_filename,
+                    value,
+                )
                 bad = True
         return bad
 
@@ -144,9 +150,8 @@ class SetupConfig(BaseConfig):
             return default
         try:
             result = self._get_text(
-                'zest.releaser',
-                'python-file-with-version',
-                default=default)
+                'zest.releaser', 'python-file-with-version', default=default
+            )
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -237,7 +242,8 @@ class PypiConfig(BaseConfig):
 
         try:
             index_servers = self._get_text(
-                'distutils', 'index-servers', default='').split()
+                'distutils', 'index-servers', default=''
+            ).split()
         except (NoSectionError, NoOptionError):
             index_servers = []
         if not index_servers:
@@ -250,8 +256,7 @@ class PypiConfig(BaseConfig):
             # https://github.com/zestsoftware/zest.releaser/issues/199
             index_servers = ['pypi']
         # The servers all need to have a section in the config file.
-        return [server for server in index_servers
-                if self.config.has_section(server)]
+        return [server for server in index_servers if self.config.has_section(server)]
 
     def want_release(self):
         """Does the user normally want to release this package.
@@ -297,8 +302,7 @@ class PypiConfig(BaseConfig):
         if self.config is None:
             return default
         try:
-            result = self._get_text(
-                'zest.releaser', 'extra-message', default=default)
+            result = self._get_text('zest.releaser', 'extra-message', default=default)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -321,15 +325,15 @@ class PypiConfig(BaseConfig):
             return default
         marker = object()
         try:
-            result = self._get_text(
-                'zest.releaser', 'history-file', default=marker)
+            result = self._get_text('zest.releaser', 'history-file', default=marker)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         if result == marker:
             # We were reading an underscore instead of a dash at first.
             try:
                 result = self._get_text(
-                    'zest.releaser', 'history_file', default=default)
+                    'zest.releaser', 'history_file', default=default
+                )
             except (NoSectionError, NoOptionError, ValueError):
                 return default
         return result
@@ -354,7 +358,8 @@ class PypiConfig(BaseConfig):
             return default
         try:
             result = self._get_text(
-                'zest.releaser', 'encoding', default=default, raw=True)
+                'zest.releaser', 'encoding', default=default, raw=True
+            )
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -384,8 +389,7 @@ class PypiConfig(BaseConfig):
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        create_setting = self._get_boolean(
-            'zest.releaser', 'create-wheel', None)
+        create_setting = self._get_boolean('zest.releaser', 'create-wheel', None)
         if create_setting is not None:
             # User specified this setting, it overrides
             # inferring from bdist_wheel
@@ -447,7 +451,8 @@ class PypiConfig(BaseConfig):
             return default
         try:
             result = self._get_text(
-                'zest.releaser', 'development-marker', default=default)
+                'zest.releaser', 'development-marker', default=default
+            )
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -519,12 +524,15 @@ class PypiConfig(BaseConfig):
             return default
         return result
 
-    _tag_format_deprecated_message = "\n".join(line.strip() for line in """
+    _tag_format_deprecated_message = "\n".join(
+        line.strip()
+        for line in """
     `tag-format` contains deprecated `%%(version)s` format. Please change to:
 
     [zest.releaser]
     tag-format = %s
-    """.strip().splitlines())
+    """.strip().splitlines()
+    )
 
     def tag_format(self, version):
         """Return the formatted tag that should be used in the release.
@@ -545,7 +553,8 @@ class PypiConfig(BaseConfig):
         if self.config is not None:
             try:
                 fmt = self._get_text(
-                    'zest.releaser', 'tag-format', default=fmt, raw=True)
+                    'zest.releaser', 'tag-format', default=fmt, raw=True
+                )
             except (NoSectionError, NoOptionError, ValueError):
                 pass
         if '{version}' in fmt:
@@ -576,7 +585,8 @@ class PypiConfig(BaseConfig):
         if self.config:
             try:
                 fmt = self._get_text(
-                    'zest.releaser', 'tag-message', default=fmt, raw=True)
+                    'zest.releaser', 'tag-message', default=fmt, raw=True
+                )
             except (NoSectionError, NoOptionError, ValueError):
                 pass
         if '{version}' not in fmt:

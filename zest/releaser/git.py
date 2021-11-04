@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class Git(BaseVersionControl):
     """Command proxy for Git"""
+
     internal_filename = '.git'
     setuptools_helper_package = 'setuptools-git'
 
@@ -84,18 +85,18 @@ class Git(BaseVersionControl):
         return cmd
 
     def cmd_checkout_from_tag(self, version, checkout_dir):
-        if not (os.path.realpath(os.getcwd()) ==
-                os.path.realpath(checkout_dir)):
+        if not (os.path.realpath(os.getcwd()) == os.path.realpath(checkout_dir)):
             # Specific to git: we need to be in that directory for the command
             # to work.
             logger.warning("We haven't been chdir'ed to %s", checkout_dir)
             sys.exit(1)
-        return [['git', 'checkout', version],
-                ['git', 'submodule', 'update', '--init', '--recursive']]
+        return [
+            ['git', 'checkout', version],
+            ['git', 'submodule', 'update', '--init', '--recursive'],
+        ]
 
     def is_clean_checkout(self):
-        """Is this a clean checkout?
-        """
+        """Is this a clean checkout?"""
         head = execute_command(['git', 'symbolic-ref', '--quiet', 'HEAD'])
         # This returns something like 'refs/heads/maurits-warn-on-tag'
         # or nothing.  Nothing would be bad as that indicates a
@@ -103,18 +104,15 @@ class Git(BaseVersionControl):
         if not head:
             # Greetings from Nearly Headless Nick.
             return False
-        if execute_command(
-                ['git', 'status', '--short', '--untracked-files=no']):
+        if execute_command(['git', 'status', '--short', '--untracked-files=no']):
             # Uncommitted changes in files that are tracked.
             return False
         return True
 
     def push_commands(self):
         """Push changes to the server."""
-        return [['git', 'push'],
-                ['git', 'push', '--tags']]
+        return [['git', 'push'], ['git', 'push', '--tags']]
 
     def list_files(self):
         """List files in version control."""
-        return execute_command(
-            ['git', 'ls-files']).splitlines()
+        return execute_command(['git', 'ls-files']).splitlines()

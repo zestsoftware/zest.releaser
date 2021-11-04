@@ -28,19 +28,21 @@ from zest.releaser.utils import execute_command
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!
 DATA = baserelease.DATA.copy()
-DATA.update({
-    'tag_already_exists': "Internal detail, don't touch this :-)",
-    'tagdir': '''Directory where the tag checkout is placed (*if* a tag
+DATA.update(
+    {
+        'tag_already_exists': "Internal detail, don't touch this :-)",
+        'tagdir': '''Directory where the tag checkout is placed (*if* a tag
     checkout has been made)''',
-    'tagworkingdir': '''Working directory inside the tag checkout. This is
+        'tagworkingdir': '''Working directory inside the tag checkout. This is
     the same, except when you make a release from within a sub directory.
     We then make sure you end up in the same relative directory after a
     checkout is done.''',
-    'version': "Version we're releasing",
-    'tag': "Tag we're releasing",
-    'tag-message': "Commit message for the tag",
-    'tag-signing': "Sign tag using gpg or pgp",
-})
+        'version': "Version we're releasing",
+        'tag': "Tag we're releasing",
+        'tag-message': "Commit message for the tag",
+        'tag-signing': "Sign tag using gpg or pgp",
+    }
+)
 
 logger = logging.getLogger(__name__)
 
@@ -62,17 +64,18 @@ class Releaser(baserelease.Basereleaser):
     def __init__(self, vcs=None):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
-        self.data.update(dict(
-            # Nothing yet
-        ))
+        self.data.update(
+            dict(
+                # Nothing yet
+            )
+        )
 
     def prepare(self):
         """Collect some data needed for releasing"""
         self._grab_version()
         tag = self.pypiconfig.tag_format(self.data['version'])
         self.data['tag'] = tag
-        self.data['tag-message'] = self.pypiconfig.tag_message(
-            self.data['version'])
+        self.data['tag-message'] = self.pypiconfig.tag_message(self.data['version'])
         self.data['tag-signing'] = self.pypiconfig.tag_signing()
         self.data['tag_already_exists'] = self.vcs.tag_exists(tag)
 
@@ -87,8 +90,7 @@ class Releaser(baserelease.Basereleaser):
             # Safety feature.
             version = self.data['version']
             tag = self.data['tag']
-            q = ("There is already a tag %s, show "
-                 "if there are differences?" % version)
+            q = "There is already a tag %s, show " "if there are differences?" % version
             if utils.ask(q):
                 diff_command = self.vcs.cmd_diff_last_commit_against_tag(tag)
                 print(utils.format_command(diff_command))
@@ -99,8 +101,9 @@ class Releaser(baserelease.Basereleaser):
         tag = self.data['tag']
         if self.data['tag_already_exists']:
             return
-        cmds = self.vcs.cmd_create_tag(tag, self.data['tag-message'],
-                                       self.data['tag-signing'])
+        cmds = self.vcs.cmd_create_tag(
+            tag, self.data['tag-message'], self.data['tag-signing']
+        )
         assert isinstance(cmds, (list, tuple))  # transitional guard
         if not isinstance(cmds[0], (list, tuple)):
             cmds = [cmds]
@@ -112,8 +115,9 @@ class Releaser(baserelease.Basereleaser):
                 print(execute_command(cmd))
             else:
                 # all commands are needed in order to proceed normally
-                print("Please create a tag %s for %s yourself and rerun." %
-                      (tag, version))
+                print(
+                    "Please create a tag %s for %s yourself and rerun." % (tag, version)
+                )
                 sys.exit(1)
         if not self.vcs.tag_exists(tag):
             print(f"\nFailed to create tag {tag}!")
@@ -125,21 +129,24 @@ class Releaser(baserelease.Basereleaser):
         # And for twine, who will just upload the created files.
         logger.info(
             "Making a source distribution of a fresh tag checkout (in %s).",
-            self.data['tagworkingdir'])
+            self.data['tagworkingdir'],
+        )
         result = utils.execute_command(utils.setup_py('sdist'))
         utils.show_interesting_lines(result)
         if self.pypiconfig.create_wheel():
-            logger.info("Making a wheel of a fresh tag checkout (in %s).",
-                        self.data['tagworkingdir'])
+            logger.info(
+                "Making a wheel of a fresh tag checkout (in %s).",
+                self.data['tagworkingdir'],
+            )
             result = utils.execute_command(utils.setup_py('bdist_wheel'))
         utils.show_interesting_lines(result)
         if not self.pypiconfig.is_pypi_configured():
             logger.error(
                 "You must have a properly configured %s file in "
                 "your home dir to upload to a Python package index.",
-                pypi.DIST_CONFIG_FILE)
-            if utils.ask("Do you want to continue without uploading?",
-                         default=False):
+                pypi.DIST_CONFIG_FILE,
+            )
+            if utils.ask("Do you want to continue without uploading?", default=False):
                 return
             sys.exit(1)
 
@@ -155,9 +162,9 @@ class Releaser(baserelease.Basereleaser):
 
         # If TWINE_REPOSITORY_URL is set, use it.
         if self.pypiconfig.twine_repository_url():
-            if not self._ask_upload(package,
-                                    self.pypiconfig.twine_repository_url(),
-                                    register):
+            if not self._ask_upload(
+                package, self.pypiconfig.twine_repository_url(), register
+            ):
                 return
 
             if register:
@@ -200,8 +207,7 @@ class Releaser(baserelease.Basereleaser):
         question = "Upload"
         if register:
             question = "Register and upload"
-        return utils.ask(f"{question} to {server}",
-                     default=default, exact=exact)
+        return utils.ask(f"{question} to {server}", default=default, exact=exact)
 
     def _retry_twine(self, twine_command, server, filenames):
         """Attempt to execute a Twine command.
@@ -221,7 +227,7 @@ class Releaser(baserelease.Basereleaser):
         if twine_command == 'register':
             pass
         elif twine_command == 'upload':
-            twine_args += ('--skip-existing', )
+            twine_args += ('--skip-existing',)
         else:
             print(Fore.RED + "Unknown twine command: %s" % twine_command)
             sys.exit(1)
@@ -236,9 +242,11 @@ class Releaser(baserelease.Basereleaser):
             # fine.  The register command is not really needed anymore with the
             # new PyPI.  See https://github.com/pypa/twine/issues/200
             # This might change, but for now the register command fails.
-            if (twine_command == 'register'
-                    and response.reason == 'This API is no longer supported, '
-                    'instead simply upload the file.'):
+            if (
+                twine_command == 'register'
+                and response.reason == 'This API is no longer supported, '
+                'instead simply upload the file.'
+            ):
                 return
             # Show the error.
             print(Fore.RED + "Response status code: %s" % response.status_code)
@@ -265,8 +273,10 @@ class Releaser(baserelease.Basereleaser):
         else:
             default_answer = self.pypiconfig.want_release()
 
-        if not utils.ask("Check out the tag (for tweaks or pypi/distutils "
-                         "server upload)", default=default_answer):
+        if not utils.ask(
+            "Check out the tag (for tweaks or pypi/distutils " "server upload)",
+            default=default_answer,
+        ):
             return
 
         package = self.vcs.name
@@ -281,11 +291,14 @@ class Releaser(baserelease.Basereleaser):
             # the release, so we go to the same relative sub
             # directory.
             tagworkingdir = os.path.realpath(
-                os.path.join(os.getcwd(), self.vcs.relative_path_in_repo))
+                os.path.join(os.getcwd(), self.vcs.relative_path_in_repo)
+            )
             os.chdir(tagworkingdir)
             self.data['tagworkingdir'] = tagworkingdir
-            logger.info("Changing to sub directory in tag checkout: %s",
-                        self.data['tagworkingdir'])
+            logger.info(
+                "Changing to sub directory in tag checkout: %s",
+                self.data['tagworkingdir'],
+            )
         else:
             # The normal case.
             self.data['tagworkingdir'] = self.data['tagdir']
@@ -293,8 +306,11 @@ class Releaser(baserelease.Basereleaser):
         # Possibly fix setup.cfg.
         if self.setup_cfg.has_bad_commands():
             logger.info("This is not advisable for a release.")
-            if utils.ask("Fix %s (and commit to tag if possible)" %
-                         self.setup_cfg.config_filename, default=True):
+            if utils.ask(
+                "Fix %s (and commit to tag if possible)"
+                % self.setup_cfg.config_filename,
+                default=True,
+            ):
                 # Fix the setup.cfg in the current working directory
                 # so the current release works well.
                 self.setup_cfg.fix_config()

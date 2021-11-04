@@ -17,12 +17,14 @@ COMMIT_MSG = 'Bumped version for %(release)s release.'
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!
 DATA = baserelease.DATA.copy()
-DATA.update({
-    'breaking': 'True if we handle a breaking (major) change',
-    'clean_new_version': 'Clean new version (say 1.1)',
-    'feature': 'True if we handle a feature (minor) change',
-    'release': 'Type of release: breaking, feature, normal',
-})
+DATA.update(
+    {
+        'breaking': 'True if we handle a breaking (major) change',
+        'clean_new_version': 'Clean new version (say 1.1)',
+        'feature': 'True if we handle a feature (minor) change',
+        'release': 'Type of release: breaking, feature, normal',
+    }
+)
 
 
 class BumpVersion(baserelease.Basereleaser):
@@ -41,19 +43,20 @@ class BumpVersion(baserelease.Basereleaser):
             release = 'feature'
         else:
             release = 'normal'
-        self.data.update(dict(
-            breaking=breaking,
-            commit_msg=COMMIT_MSG,
-            feature=feature,
-            history_header=HISTORY_HEADER,
-            release=release,
-            update_history=True,
-        ))
+        self.data.update(
+            dict(
+                breaking=breaking,
+                commit_msg=COMMIT_MSG,
+                feature=feature,
+                history_header=HISTORY_HEADER,
+                release=release,
+                update_history=True,
+            )
+        )
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
-        print('Checking version bump for {} release.'.format(
-            self.data['release']))
+        print('Checking version bump for {} release.'.format(self.data['release']))
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
@@ -104,18 +107,16 @@ class BumpVersion(baserelease.Basereleaser):
                 levels=self.pypiconfig.version_levels(),
                 dev_marker=self.pypiconfig.development_marker(),
             )
-            minimum_version = utils.suggest_version(
-                last_tag_version, **params)
+            minimum_version = utils.suggest_version(last_tag_version, **params)
             if parse_version(minimum_version) <= parse_version(
-                    utils.cleanup_version(original_version)):
+                utils.cleanup_version(original_version)
+            ):
                 print("No version bump needed.")
                 sys.exit(0)
             # A bump is needed.  Get suggestion for next version.
-            suggestion = utils.suggest_version(
-                original_version, **params)
+            suggestion = utils.suggest_version(original_version, **params)
         if not initial:
-            new_version = utils.ask_version(
-                "Enter version", default=suggestion)
+            new_version = utils.ask_version("Enter version", default=suggestion)
         if not new_version:
             new_version = suggestion
         self.data['original_version'] = original_version
@@ -135,18 +136,19 @@ def main():
         action="store_true",
         dest="feature",
         default=False,
-        help="Bump for feature release (increase minor version)")
+        help="Bump for feature release (increase minor version)",
+    )
     parser.add_argument(
         "--breaking",
         action="store_true",
         dest="breaking",
         default=False,
-        help="Bump for breaking release (increase major version)")
+        help="Bump for breaking release (increase major version)",
+    )
     options = utils.parse_options(parser)
     if options.breaking and options.feature:
         print('Cannot have both breaking and feature options.')
         sys.exit(1)
     utils.configure_logging()
-    bumpversion = BumpVersion(
-        breaking=options.breaking, feature=options.feature)
+    bumpversion = BumpVersion(breaking=options.breaking, feature=options.feature)
     bumpversion.run()

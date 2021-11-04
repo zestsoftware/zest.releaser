@@ -16,6 +16,7 @@ except ImportError:
     detect_encoding = None
 try:
     import chardet
+
     HAVE_CHARDET = True
 except ImportError:
     HAVE_CHARDET = False
@@ -44,8 +45,7 @@ ENCODING_HINTS = (b'# coding=', b'# -*- coding: ', b'# vim: set fileencoding=')
 
 def fs_to_text(fs_name):
     if not isinstance(fs_name, str):
-        fs_name = fs_name.decode(sys.getfilesystemencoding(),
-                                 'surrogateescape')
+        fs_name = fs_name.decode(sys.getfilesystemencoding(), 'surrogateescape')
     return fs_name
 
 
@@ -104,8 +104,9 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
 
     if encoding is not None:
         # The simple case.
-        logger.debug('Decoding file %s from encoding %s from argument.',
-                     filename, encoding)
+        logger.debug(
+            'Decoding file %s from encoding %s from argument.', filename, encoding
+        )
         return splitlines_with_trailing(data.decode(encoding)), encoding
 
     # If the file contains only ascii, it seems fine to simply use that.
@@ -124,8 +125,8 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
     if data[:3] == b'\xef\xbb\xbf':
         encoding = 'utf-8'
         logger.debug(
-            "Detected encoding of %s, standard 3 opening chars: %s",
-            filename, encoding)
+            "Detected encoding of %s, standard 3 opening chars: %s", filename, encoding
+        )
         return splitlines_with_trailing(data.decode(encoding)), encoding
 
     data_len = len(data)
@@ -137,14 +138,18 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
             continue
         pos += len(canary)
         coding = b''
-        while pos < data_len and data[pos:pos + 1] not in (b' ', b'\n'):
-            coding += data[pos:pos + 1]
+        while pos < data_len and data[pos : pos + 1] not in (b' ', b'\n'):
+            coding += data[pos : pos + 1]
             pos += 1
         encoding = coding.decode('ascii').strip()
         try:
             result = splitlines_with_trailing(data.decode(encoding))
-            logger.debug("Detected encoding of %s because of '%s': %s",
-                         filename, canary, encoding)
+            logger.debug(
+                "Detected encoding of %s because of '%s': %s",
+                filename,
+                canary,
+                encoding,
+            )
             return result, encoding
         except (LookupError, UnicodeError):
             # Try the next one
@@ -153,37 +158,38 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
     if fallback_encoding:
         encoding = fallback_encoding
         try:
-            logger.debug('Decoding file %s from encoding %s from setup.cfg.',
-                         filename, encoding)
+            logger.debug(
+                'Decoding file %s from encoding %s from setup.cfg.', filename, encoding
+            )
             return splitlines_with_trailing(data.decode(encoding)), encoding
         except UnicodeDecodeError:
             logger.warning(
                 'setup.cfg has zest.releaser encoding option %r, '
                 'but this fails for file %s. '
                 'Consider changing the file or the option.',
-                encoding, filename,
+                encoding,
+                filename,
             )
 
     if detect_encoding is not None:
         # This is Python 3 with tokenize.
         with open(filename, 'rb') as filehandler:
             encoding = detect_encoding(filehandler.readline)[0]
-            logger.debug("Detected encoding of %s with tokenize: %s",
-                         filename, encoding)
+            logger.debug(
+                "Detected encoding of %s with tokenize: %s", filename, encoding
+            )
 
     if HAVE_CHARDET:
         # This is Python 2 with chardet.
         encoding_result = chardet.detect(data)
         if encoding_result and encoding_result['encoding'] is not None:
             encoding = encoding_result['encoding']
-            logger.debug("Detected encoding of %s with chardet: %s",
-                         filename, encoding)
+            logger.debug("Detected encoding of %s with chardet: %s", filename, encoding)
             return splitlines_with_trailing(data.decode(encoding)), encoding
 
     # Fall back to utf-8
     encoding = 'utf-8'
-    logger.debug("No encoding detected for %s, falling back to %s",
-                 filename, encoding)
+    logger.debug("No encoding detected for %s, falling back to %s", filename, encoding)
     return splitlines_with_trailing(data.decode(encoding)), encoding
 
 
@@ -197,7 +203,7 @@ def cleanup_version(version):
     for w in WRONG_IN_VERSION:
         if version.find(w) != -1:
             logger.debug("Version indicates development: %s.", version)
-            version = version[:version.find(w)].strip()
+            version = version[: version.find(w)].strip()
             logger.debug("Removing debug indicators: '%s'", version)
         version = version.rstrip('.')  # 1.0.dev0 -> 1.0. -> 1.0
     return version
@@ -214,12 +220,17 @@ def strip_last_number(value):
     match = re.search(r'\d+$', value)
     if not match:
         return value
-    return value[:-len(match.group())]
+    return value[: -len(match.group())]
 
 
-def suggest_version(current, feature=False, breaking=False,
-                    less_zeroes=False, levels=0,
-                    dev_marker='.dev0'):
+def suggest_version(
+    current,
+    feature=False,
+    breaking=False,
+    less_zeroes=False,
+    levels=0,
+    dev_marker='.dev0',
+):
     """Suggest new version.
 
     Try to make sure that the suggestion for next version after
@@ -285,8 +296,10 @@ def suggest_version(current, feature=False, breaking=False,
             last = int(current[target]) + 1
             suggestion = current[:target] + str(last)
         except (ValueError, IndexError):
-            logger.warning("Version does not end with a number, so we can't "
-                           "calculate a suggestion for a next version.")
+            logger.warning(
+                "Version does not end with a number, so we can't "
+                "calculate a suggestion for a next version."
+            )
             return None
     # Maybe add a few zeroes: turn 2 into 2.0.0 if 3 levels is the goal.
     goal = max(original_levels, levels)
@@ -310,14 +323,16 @@ def base_option_parser():
         action="store_true",
         dest="auto_response",
         default=False,
-        help="Don't ask questions, just use the default values")
+        help="Don't ask questions, just use the default values",
+    )
     parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
         dest="verbose",
         default=False,
-        help="Verbose mode")
+        help="Verbose mode",
+    )
     return parser
 
 
@@ -337,7 +352,6 @@ TESTMODE = False
 
 
 class AnswerBook:
-
     def __init__(self):
         self.answers = []
 
@@ -373,9 +387,11 @@ def get_input(question):
 def ask_version(question, default=None):
     if AUTO_RESPONSE:
         if default is None:
-            msg = ("We cannot determine a default version, but "
-                   "we're running in --no-input mode. The original "
-                   "question: %s")
+            msg = (
+                "We cannot determine a default version, but "
+                "we're running in --no-input mode. The original "
+                "question: %s"
+            )
             msg = msg % question
             raise RuntimeError(msg)
         logger.info(question)
@@ -409,8 +425,10 @@ def ask(question, default=True, exact=False):
     """
     if AUTO_RESPONSE:
         if default is None:
-            msg = ("The question '%s' requires a manual answer, but "
-                   "we're running in --no-input mode.")
+            msg = (
+                "The question '%s' requires a manual answer, but "
+                "we're running in --no-input mode."
+            )
             msg = msg % question
             raise RuntimeError(msg)
         logger.info(question)
@@ -431,8 +449,7 @@ def ask(question, default=True, exact=False):
         if not answer and default is not None:
             return default
         if exact and answer.lower() not in ('yes', 'no'):
-            print("Please explicitly answer yes/no in full "
-                  "(or accept the default)")
+            print("Please explicitly answer yes/no in full " "(or accept the default)")
             continue
         if answer:
             answer = answer[0].lower()
@@ -455,8 +472,7 @@ def fix_rst_heading(heading, below):
     first = below[0]
     if first not in '-=`~':
         return below
-    if not len(below) == len([char for char in below
-                              if char == first]):
+    if not len(below) == len([char for char in below if char == first]):
         # The line is not uniformly the same character
         return below
     below = first * len(heading)
@@ -476,35 +492,45 @@ def extract_headings_from_history(history_lines):
     Note that new headers that zest.releaser sets are in our preferred
     form (so 'version (date)').
     """
-    pattern = re.compile(r"""
+    pattern = re.compile(
+        r"""
     (?P<version>.+)  # Version string
     \(               # Opening (
     (?P<date>.+)     # Date
     \)               # Closing )
     \W*$             # Possible whitespace at end of line.
-    """, re.VERBOSE)
-    alt_pattern = re.compile(r"""
+    """,
+        re.VERBOSE,
+    )
+    alt_pattern = re.compile(
+        r"""
     ^                # Start of line
     (?P<version>.+)  # Version string
     \ [-~]\          # space dash/twiggle space
     (?P<date>.+)     # Date
     \W*$             # Possible whitespace at end of line.
-    """, re.VERBOSE)
+    """,
+        re.VERBOSE,
+    )
     headings = []
     line_number = 0
     for line in history_lines:
         match = pattern.search(line)
         alt_match = alt_pattern.search(line)
         if match:
-            result = {'line': line_number,
-                      'version': match.group('version').strip(),
-                      'date': match.group('date'.strip())}
+            result = {
+                'line': line_number,
+                'version': match.group('version').strip(),
+                'date': match.group('date'.strip()),
+            }
             headings.append(result)
             logger.debug("Found heading: '%s'", result)
         if alt_match:
-            result = {'line': line_number,
-                      'version': alt_match.group('version').strip(),
-                      'date': alt_match.group('date'.strip())}
+            result = {
+                'line': line_number,
+                'version': alt_match.group('version').strip(),
+                'date': alt_match.group('date'.strip()),
+            }
             headings.append(result)
             logger.debug("Found alternative heading: '%s'", result)
         line_number += 1
@@ -521,8 +547,9 @@ def show_interesting_lines(result):
         # warnings/errors, print complete result.
         print(result)
         if not ask(
-                "There were errors or warnings. Are you sure "
-                "you want to continue?", default=False):
+            "There were errors or warnings. Are you sure " "you want to continue?",
+            default=False,
+        ):
             sys.exit(1)
         # User has seen everything and wants to continue.
         return
@@ -559,8 +586,8 @@ def is_data_documented(data, documentation=None):
         # Hack for testing to prove entry point is being called.
         print("Checking data dict")
     undocumented = [
-        key for key in data
-        if key not in documentation and not key.startswith('_')]
+        key for key in data if key not in documentation and not key.startswith('_')
+    ]
     if undocumented:
         print('Internal detail: key(s) %s are not documented' % undocumented)
 
@@ -714,7 +741,9 @@ __command_is_string__ = False
 
 def _subprocess_open(p, command, input_value, show_stderr):
     if input_value:
-        (stdout_output, stderr_output) = p.communicate(input_value.encode(INPUT_ENCODING))
+        (stdout_output, stderr_output) = p.communicate(
+            input_value.encode(INPUT_ENCODING)
+        )
     else:
         (stdout_output, stderr_output) = p.communicate()
     # We assume that the output from commands we're running is text.
@@ -734,8 +763,11 @@ def _subprocess_open(p, command, input_value, show_stderr):
         # numbers and so.
         result = stdout_output
         if stderr_output:
-            logger.debug("Stderr of running command '%s':\n%s",
-                         format_command(command), stderr_output)
+            logger.debug(
+                "Stderr of running command '%s':\n%s",
+                format_command(command),
+                stderr_output,
+            )
     return result
 
 
@@ -770,8 +802,7 @@ def _execute_command(command, input_value=''):
     if hasattr(subprocess.Popen, '__exit__'):
         # Python 3
         with subprocess.Popen(command, **process_kwargs) as process:
-            result = _subprocess_open(
-                process, command, input_value, show_stderr)
+            result = _subprocess_open(process, command, input_value, show_stderr)
     else:
         # Python 2
         process = subprocess.Popen(command, **process_kwargs)
@@ -856,14 +887,14 @@ def execute_commands(commands, allow_retry=False, fail_message=""):
     result = []
     for cmd in commands:
         assert isinstance(cmd, (list, tuple))
-        result.append(execute_command(cmd, allow_retry=allow_retry,
-                                      fail_message=fail_message))
+        result.append(
+            execute_command(cmd, allow_retry=allow_retry, fail_message=fail_message)
+        )
     return '\n'.join(result)
 
 
 def retry_yes_no(command):
-    """Ask the user to maybe retry a command.
-    """
+    """Ask the user to maybe retry a command."""
     explanation = """
     You have these options for retrying (first character is enough):
     Yes:   Retry. Do this if it looks like a temporary Internet or PyPI outage.
@@ -876,8 +907,10 @@ def retry_yes_no(command):
     explanation = textwrap.dedent(explanation)
     question = "Retry this command? [Yes/no/quit/?]"
     if AUTO_RESPONSE:
-        msg = ("The question '%s' requires a manual answer, but "
-               "we're running in --no-input mode.")
+        msg = (
+            "The question '%s' requires a manual answer, but "
+            "we're running in --no-input mode."
+        )
         msg = msg % question
         raise RuntimeError(msg)
     while True:
@@ -894,8 +927,7 @@ def retry_yes_no(command):
                 # Accept the error, continue with the program.
                 return False
             if input_value == 'q' or input_value == 'quit':
-                raise CommandException(
-                    "Command failed: '%s'" % format_command(command))
+                raise CommandException("Command failed: '%s'" % format_command(command))
             # We could print the help/explanation only if the input is
             # '?', or maybe 'h', but if the user input has any other
             # content, it makes sense to explain the options anyway.
@@ -937,8 +969,7 @@ def get_last_tag(vcs, allow_missing=False):
             found = tag
             logger.debug("Found exact match: %s", found)
             break
-        if (parsed_tag >= parsed_found and
-                parsed_tag < parsed_version):
+        if parsed_tag >= parsed_found and parsed_tag < parsed_version:
             logger.debug("Found possible lower match: %s", tag)
             found = tag
     return found
@@ -952,9 +983,11 @@ def sanity_check(vcs):
     Returns True when all is fine.
     """
     if not vcs.is_clean_checkout():
-        q = ("This is NOT a clean checkout. You are on a tag or you have "
-             "local changes.\n"
-             "Are you sure you want to continue?")
+        q = (
+            "This is NOT a clean checkout. You are on a tag or you have "
+            "local changes.\n"
+            "Are you sure you want to continue?"
+        )
         if not ask(q, default=False):
             return False
     return True
@@ -982,8 +1015,7 @@ global-exclude *.pyc
 You may want to quit and fix this.
 """
         if not vcs.is_setuptools_helper_package_installed():
-            q += "Installing %s may help too.\n" % \
-                 vcs.setuptools_helper_package
+            q += "Installing %s may help too.\n" % vcs.setuptools_helper_package
         # We could ask, but simply printing it is nicer.  Well, okay,
         # let's avoid some broken eggs on PyPI, per
         # https://github.com/zestsoftware/zest.releaser/issues/10
@@ -996,11 +1028,10 @@ You may want to quit and fix this.
 
 def configure_logging():
     logging.addLevelName(
-        logging.WARNING, Fore.MAGENTA + logging.getLevelName(logging.WARNING))
-    logging.addLevelName(
-        logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
-    logging.basicConfig(level=loglevel(),
-                        format="%(levelname)s: %(message)s")
+        logging.WARNING, Fore.MAGENTA + logging.getLevelName(logging.WARNING)
+    )
+    logging.addLevelName(logging.ERROR, Fore.RED + logging.getLevelName(logging.ERROR))
+    logging.basicConfig(level=loglevel(), format="%(levelname)s: %(message)s")
 
 
 def get_list_item(lines):
