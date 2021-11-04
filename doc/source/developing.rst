@@ -97,7 +97,7 @@ results.
 
 For building the documentation::
 
-    $ python3.9 -mvenv .
+    $ python3.9 -m venv .
     $ bin/pip install sphinx sphinx_rtd_theme
     $ bin/pip install -e .
     $ bin/sphinx-build doc/source/ doc/build/
