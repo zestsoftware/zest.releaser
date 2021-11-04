@@ -24,7 +24,7 @@ def setup(test):
 
     partstestdir = os.getcwd()  # Buildout's test run in parts/test
     test.orig_dir = partstestdir
-    test.tempdir = tempfile.mkdtemp(prefix='testtemp')
+    test.tempdir = tempfile.mkdtemp(prefix="testtemp")
     test.orig_argv = sys.argv[1:]
     sys.argv[1:] = []
     # Monkey patch sys.exit
@@ -43,18 +43,18 @@ def setup(test):
     def _make_mock_urlopen(mock_pypi_available):
         def _mock_urlopen(url):
             # print "Mock opening", url
-            package = url.replace('https://pypi.org/simple/', '')
+            package = url.replace("https://pypi.org/simple/", "")
             if package not in mock_pypi_available:
                 raise HTTPError(
                     url,
                     404,
-                    'HTTP Error 404: Not Found (%s does not have any releases)'
+                    "HTTP Error 404: Not Found (%s does not have any releases)"
                     % package,
                     None,
                     None,
                 )
             else:
-                answer = ' '.join(mock_pypi_available)
+                answer = " ".join(mock_pypi_available)
             return StringIO(answer)
 
         return _mock_urlopen
@@ -62,13 +62,13 @@ def setup(test):
     request.urlopen = _make_mock_urlopen(test.mock_pypi_available)
 
     # Extract example project
-    example_tar = pkg_resources.resource_filename('zest.releaser.tests', 'example.tar')
+    example_tar = pkg_resources.resource_filename("zest.releaser.tests", "example.tar")
     with tarfile.TarFile(example_tar) as tf:
         tf.extractall(path=test.tempdir)
-    sourcedir = os.path.join(test.tempdir, 'tha.example')
+    sourcedir = os.path.join(test.tempdir, "tha.example")
 
     # Git initialization
-    gitsourcedir = os.path.join(test.tempdir, 'tha.example-git')
+    gitsourcedir = os.path.join(test.tempdir, "tha.example-git")
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
     execute_command(["git", "init"])
@@ -97,21 +97,21 @@ def setup(test):
 
     def add_changelog_entry():
         # Replace '- Nothing changed yet.'  by a different entry.
-        with open('CHANGES.txt') as f:
+        with open("CHANGES.txt") as f:
             orig_changes = f.read()
-        new_changes = orig_changes.replace(NOTHING_CHANGED_YET, '- Brown bag release.')
-        with open('CHANGES.txt', 'w') as f:
+        new_changes = orig_changes.replace(NOTHING_CHANGED_YET, "- Brown bag release.")
+        with open("CHANGES.txt", "w") as f:
             f.write(new_changes)
         commit_all_changes()
 
     test.globs.update(
         {
-            'tempdir': test.tempdir,
-            'gitsourcedir': gitsourcedir,
-            'githead': githead,
-            'mock_pypi_available': test.mock_pypi_available,
-            'add_changelog_entry': add_changelog_entry,
-            'commit_all_changes': commit_all_changes,
+            "tempdir": test.tempdir,
+            "gitsourcedir": gitsourcedir,
+            "githead": githead,
+            "mock_pypi_available": test.mock_pypi_available,
+            "add_changelog_entry": add_changelog_entry,
+            "commit_all_changes": commit_all_changes,
         }
     )
 

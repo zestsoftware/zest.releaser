@@ -9,13 +9,13 @@ import sys
 
 
 try:
-    pkg_resources.get_distribution('wheel')
+    pkg_resources.get_distribution("wheel")
 except pkg_resources.DistributionNotFound:
     USE_WHEEL = False
 else:
     USE_WHEEL = True
-DIST_CONFIG_FILE = '.pypirc'
-SETUP_CONFIG_FILE = 'setup.cfg'
+DIST_CONFIG_FILE = ".pypirc"
+SETUP_CONFIG_FILE = "setup.cfg"
 DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ class BaseConfig:
             except (NoSectionError, NoOptionError, ValueError):
                 return result
             if not isinstance(result, str):
-                result = result.decode('utf-8')
+                result = result.decode("utf-8")
         return result
 
 
@@ -90,14 +90,14 @@ class SetupConfig(BaseConfig):
     def has_bad_commands(self):
         if self.config is None:
             return False
-        if not self.config.has_section('egg_info'):
+        if not self.config.has_section("egg_info"):
             # bail out early as the main section is not there
             return False
         bad = False
         # Check 1.
-        if self.config.has_option('egg_info', 'tag_build'):
+        if self.config.has_option("egg_info", "tag_build"):
             # Might still be empty.
-            value = self._get_text('egg_info', 'tag_build')
+            value = self._get_text("egg_info", "tag_build")
             if value:
                 logger.warning(
                     "%s has [egg_info] tag_build set to '%s'",
@@ -106,9 +106,9 @@ class SetupConfig(BaseConfig):
                 )
                 bad = True
         # Check 2.
-        if self.config.has_option('egg_info', 'tag_svn_revision'):
-            if self.config.getboolean('egg_info', 'tag_svn_revision'):
-                value = self._get_text('egg_info', 'tag_svn_revision')
+        if self.config.has_option("egg_info", "tag_svn_revision"):
+            if self.config.getboolean("egg_info", "tag_svn_revision"):
+                value = self._get_text("egg_info", "tag_svn_revision")
                 logger.warning(
                     "%s has [egg_info] tag_svn_revision set to '%s'",
                     self.config_filename,
@@ -121,18 +121,18 @@ class SetupConfig(BaseConfig):
         if not self.has_bad_commands():
             logger.warning("Cannot fix already fine %s.", self.config_filename)
             return
-        if self.config.has_option('egg_info', 'tag_build'):
-            self.config.set('egg_info', 'tag_build', '')
-        if self.config.has_option('egg_info', 'tag_svn_revision'):
-            self.config.set('egg_info', 'tag_svn_revision', 'false')
-        new_setup = open(self.config_filename, 'w')
+        if self.config.has_option("egg_info", "tag_build"):
+            self.config.set("egg_info", "tag_build", "")
+        if self.config.has_option("egg_info", "tag_svn_revision"):
+            self.config.set("egg_info", "tag_svn_revision", "false")
+        new_setup = open(self.config_filename, "w")
         try:
             self.config.write(new_setup)
         finally:
             new_setup.close()
         logger.info("New setup.cfg contents:")
         with open(self.config_filename) as config_file:
-            print(''.join(config_file.readlines()))
+            print("".join(config_file.readlines()))
 
     def python_file_with_version(self):
         """Return Python filename with ``__version__`` marker, if configured.
@@ -150,7 +150,7 @@ class SetupConfig(BaseConfig):
             return default
         try:
             result = self._get_text(
-                'zest.releaser', 'python-file-with-version', default=default
+                "zest.releaser", "python-file-with-version", default=default
             )
         except (NoSectionError, NoOptionError, ValueError):
             return default
@@ -191,11 +191,11 @@ class PypiConfig(BaseConfig):
         """
         rc = self.config_filename
         if not os.path.isabs(rc):
-            rc = os.path.join(os.path.expanduser('~'), self.config_filename)
+            rc = os.path.join(os.path.expanduser("~"), self.config_filename)
         filenames = [rc]
         if use_setup_cfg:
             # If there is a setup.cfg in the package, parse it
-            filenames.append('setup.cfg')
+            filenames.append("setup.cfg")
         files = [f for f in filenames if os.path.exists(f)]
         if not files:
             self.config = None
@@ -242,19 +242,19 @@ class PypiConfig(BaseConfig):
 
         try:
             index_servers = self._get_text(
-                'distutils', 'index-servers', default=''
+                "distutils", "index-servers", default=""
             ).split()
         except (NoSectionError, NoOptionError):
             index_servers = []
         if not index_servers:
             # If no distutils index-servers have been given, 'pypi' should be
             # the default.  This is what twine does.
-            if self.config.has_option('server-login', 'username'):
+            if self.config.has_option("server-login", "username"):
                 # We have a username, so upload to pypi should work fine, even
                 # when no explicit pypi section is in the file.
-                return ['pypi']
+                return ["pypi"]
             # https://github.com/zestsoftware/zest.releaser/issues/199
-            index_servers = ['pypi']
+            index_servers = ["pypi"]
         # The servers all need to have a section in the config file.
         return [server for server in index_servers if self.config.has_section(server)]
 
@@ -283,7 +283,7 @@ class PypiConfig(BaseConfig):
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        return self._get_boolean('zest.releaser', 'release', default=True)
+        return self._get_boolean("zest.releaser", "release", default=True)
 
     def extra_message(self):
         """Return extra text to be added to commit messages.
@@ -298,11 +298,11 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             extra-message = [ci skip]
         """
-        default = ''
+        default = ""
         if self.config is None:
             return default
         try:
-            result = self._get_text('zest.releaser', 'extra-message', default=default)
+            result = self._get_text("zest.releaser", "extra-message", default=default)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
@@ -320,19 +320,19 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             history-file = deep/down/historie.doc
         """
-        default = ''
+        default = ""
         if self.config is None:
             return default
         marker = object()
         try:
-            result = self._get_text('zest.releaser', 'history-file', default=marker)
+            result = self._get_text("zest.releaser", "history-file", default=marker)
         except (NoSectionError, NoOptionError, ValueError):
             return default
         if result == marker:
             # We were reading an underscore instead of a dash at first.
             try:
                 result = self._get_text(
-                    'zest.releaser', 'history_file', default=default
+                    "zest.releaser", "history_file", default=default
                 )
             except (NoSectionError, NoOptionError, ValueError):
                 return default
@@ -353,12 +353,12 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             encoding = utf-8
         """
-        default = ''
+        default = ""
         if self.config is None:
             return default
         try:
             result = self._get_text(
-                'zest.releaser', 'encoding', default=default, raw=True
+                "zest.releaser", "encoding", default=default, raw=True
             )
         except (NoSectionError, NoOptionError, ValueError):
             return default
@@ -389,14 +389,14 @@ class PypiConfig(BaseConfig):
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        create_setting = self._get_boolean('zest.releaser', 'create-wheel', None)
+        create_setting = self._get_boolean("zest.releaser", "create-wheel", None)
         if create_setting is not None:
             # User specified this setting, it overrides
             # inferring from bdist_wheel
             return create_setting
         # No zest.releaser setting, are they asking for a universal wheel?
         # Then they want wheels in general.
-        return self.config.has_section('bdist_wheel')
+        return self.config.has_section("bdist_wheel")
 
     def register_package(self):
         """Should we try to register this package with a package server?
@@ -421,7 +421,7 @@ class PypiConfig(BaseConfig):
         option is used for all of them.  There is no way to register and
         upload to server A, and only upload to server B.
         """
-        return self._get_boolean('zest.releaser', 'register')
+        return self._get_boolean("zest.releaser", "register")
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
@@ -433,7 +433,7 @@ class PypiConfig(BaseConfig):
 
         The default when this option has not been set is False.
         """
-        return self._get_boolean('zest.releaser', 'no-input')
+        return self._get_boolean("zest.releaser", "no-input")
 
     def development_marker(self):
         """Return development marker to be appended in postrelease.
@@ -446,12 +446,12 @@ class PypiConfig(BaseConfig):
 
         Returns default of ``.dev0`` when nothing has been configured.
         """
-        default = '.dev0'
+        default = ".dev0"
         if self.config is None:
             return default
         try:
             result = self._get_text(
-                'zest.releaser', 'development-marker', default=default
+                "zest.releaser", "development-marker", default=default
             )
         except (NoSectionError, NoOptionError, ValueError):
             return default
@@ -467,7 +467,7 @@ class PypiConfig(BaseConfig):
 
         The default when this option has not been set is True.
         """
-        return self._get_boolean('zest.releaser', 'push-changes', default=True)
+        return self._get_boolean("zest.releaser", "push-changes", default=True)
 
     def less_zeroes(self):
         """Return whether the user prefers less zeroes at the end of a version.
@@ -487,7 +487,7 @@ class PypiConfig(BaseConfig):
         In the postrelease command we read this option too,
         but with the current logic it has no effect there.
         """
-        return self._get_boolean('zest.releaser', 'less-zeroes')
+        return self._get_boolean("zest.releaser", "less-zeroes")
 
     def version_levels(self):
         """How many levels does the user prefer in a version number?
@@ -517,7 +517,7 @@ class PypiConfig(BaseConfig):
         if self.config is None:
             return default
         try:
-            result = self.config.getint('zest.releaser', 'version-levels')
+            result = self.config.getint("zest.releaser", "version-levels")
         except (NoSectionError, NoOptionError, ValueError):
             return default
         if result < 0:
@@ -549,21 +549,21 @@ class PypiConfig(BaseConfig):
 
         The default format, when nothing has been configured, is ``{version}``.
         """
-        fmt = '{version}'
+        fmt = "{version}"
         if self.config is not None:
             try:
                 fmt = self._get_text(
-                    'zest.releaser', 'tag-format', default=fmt, raw=True
+                    "zest.releaser", "tag-format", default=fmt, raw=True
                 )
             except (NoSectionError, NoOptionError, ValueError):
                 pass
-        if '{version}' in fmt:
+        if "{version}" in fmt:
             return fmt.format(version=version)
         # BBB:
-        if '%(version)s' in fmt:
+        if "%(version)s" in fmt:
             proposed_fmt = fmt.replace("%(version)s", "{version}")
             print(self._tag_format_deprecated_message % proposed_fmt)
-            return fmt % {'version': version}
+            return fmt % {"version": version}
         print("{version} needs to be part of 'tag-format': %s" % fmt)
         sys.exit(1)
 
@@ -581,15 +581,15 @@ class PypiConfig(BaseConfig):
 
         The default format is ``Tagging {version}``.
         """
-        fmt = 'Tagging {version}'
+        fmt = "Tagging {version}"
         if self.config:
             try:
                 fmt = self._get_text(
-                    'zest.releaser', 'tag-message', default=fmt, raw=True
+                    "zest.releaser", "tag-message", default=fmt, raw=True
                 )
             except (NoSectionError, NoOptionError, ValueError):
                 pass
-        if '{version}' not in fmt:
+        if "{version}" not in fmt:
             print("{version} needs to be part of 'tag-message': '%s'" % fmt)
             sys.exit(1)
         return fmt.format(version=version)
@@ -610,7 +610,7 @@ class PypiConfig(BaseConfig):
         The default when this option has not been set is False.
 
         """
-        return self._get_boolean('zest.releaser', 'tag-signing', default=False)
+        return self._get_boolean("zest.releaser", "tag-signing", default=False)
 
     def date_format(self):
         """Return the string format for the date used in the changelog.
@@ -626,13 +626,13 @@ class PypiConfig(BaseConfig):
 
         Returns default of ``%Y-%m-%d`` when nothing has been configured.
         """
-        default = '%Y-%m-%d'
+        default = "%Y-%m-%d"
         if self.config is None:
             return default
         try:
             result = self._get_text(
-                'zest.releaser', 'date-format', default=default
-            ).replace('%%', '%')
+                "zest.releaser", "date-format", default=default
+            ).replace("%%", "%")
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result

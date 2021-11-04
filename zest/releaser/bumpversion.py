@@ -11,18 +11,18 @@ import sys
 
 logger = logging.getLogger(__name__)
 
-HISTORY_HEADER = '%(clean_new_version)s (unreleased)'
-COMMIT_MSG = 'Bumped version for %(release)s release.'
+HISTORY_HEADER = "%(clean_new_version)s (unreleased)"
+COMMIT_MSG = "Bumped version for %(release)s release."
 
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!
 DATA = baserelease.DATA.copy()
 DATA.update(
     {
-        'breaking': 'True if we handle a breaking (major) change',
-        'clean_new_version': 'Clean new version (say 1.1)',
-        'feature': 'True if we handle a feature (minor) change',
-        'release': 'Type of release: breaking, feature, normal',
+        "breaking": "True if we handle a breaking (major) change",
+        "clean_new_version": "Clean new version (say 1.1)",
+        "feature": "True if we handle a feature (minor) change",
+        "release": "Type of release: breaking, feature, normal",
     }
 )
 
@@ -38,11 +38,11 @@ class BumpVersion(baserelease.Basereleaser):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         if breaking:
-            release = 'breaking'
+            release = "breaking"
         elif feature:
-            release = 'feature'
+            release = "feature"
         else:
-            release = 'normal'
+            release = "normal"
         self.data.update(
             dict(
                 breaking=breaking,
@@ -56,7 +56,7 @@ class BumpVersion(baserelease.Basereleaser):
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
-        print('Checking version bump for {} release.'.format(self.data['release']))
+        print("Checking version bump for {} release.".format(self.data["release"]))
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
@@ -67,10 +67,10 @@ class BumpVersion(baserelease.Basereleaser):
 
     def execute(self):
         """Make the changes and offer a commit"""
-        if self.data['update_history']:
+        if self.data["update_history"]:
             self._change_header()
         self._write_version()
-        if self.data['update_history']:
+        if self.data["update_history"]:
             self._write_history()
         self._diff_and_commit()
 
@@ -84,13 +84,13 @@ class BumpVersion(baserelease.Basereleaser):
         original_version = self.vcs.version
         logger.debug("Extracted version: %s", original_version)
         if not original_version:
-            logger.critical('No version found.')
+            logger.critical("No version found.")
             sys.exit(1)
-        suggestion = new_version = self.data.get('new_version')
+        suggestion = new_version = self.data.get("new_version")
         if not new_version:
             # Get a suggestion.
-            breaking = self.data['breaking']
-            feature = self.data['feature']
+            breaking = self.data["breaking"]
+            feature = self.data["feature"]
             # Compare the suggestion for the last tag with the current version.
             # The wanted version bump may already have been done.
             last_tag_version = utils.get_last_tag(self.vcs, allow_missing=True)
@@ -119,9 +119,9 @@ class BumpVersion(baserelease.Basereleaser):
             new_version = utils.ask_version("Enter version", default=suggestion)
         if not new_version:
             new_version = suggestion
-        self.data['original_version'] = original_version
-        self.data['new_version'] = new_version
-        self.data['clean_new_version'] = utils.cleanup_version(new_version)
+        self.data["original_version"] = original_version
+        self.data["new_version"] = new_version
+        self.data["clean_new_version"] = utils.cleanup_version(new_version)
 
 
 def datacheck(data):
@@ -147,7 +147,7 @@ def main():
     )
     options = utils.parse_options(parser)
     if options.breaking and options.feature:
-        print('Cannot have both breaking and feature options.')
+        print("Cannot have both breaking and feature options.")
         sys.exit(1)
     utils.configure_logging()
     bumpversion = BumpVersion(breaking=options.breaking, feature=options.feature)

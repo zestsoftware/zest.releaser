@@ -10,19 +10,19 @@ import sys
 
 logger = logging.getLogger(__name__)
 
-HISTORY_HEADER = '%(new_version)s (unreleased)'
-COMMIT_MSG = 'Back to development: %(new_version)s'
-DEV_VERSION_TEMPLATE = '%(new_version)s%(development_marker)s'
+HISTORY_HEADER = "%(new_version)s (unreleased)"
+COMMIT_MSG = "Back to development: %(new_version)s"
+DEV_VERSION_TEMPLATE = "%(new_version)s%(development_marker)s"
 
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!
 DATA = baserelease.DATA.copy()
 DATA.update(
     {
-        'dev_version': 'New version with development marker (so 1.1.dev0)',
-        'dev_version_template': 'Template for development version number',
-        'development_marker': 'String to be appended to version after postrelease',
-        'new_version': 'New version, without development marker (so 1.1)',
+        "dev_version": "New version with development marker (so 1.1.dev0)",
+        "dev_version_template": "Template for development version number",
+        "development_marker": "String to be appended to version after postrelease",
+        "new_version": "New version, without development marker (so 1.1)",
     }
 )
 
@@ -58,7 +58,7 @@ class Postreleaser(baserelease.Basereleaser):
     def execute(self):
         """Make the changes and offer a commit"""
         self._write_version()
-        if self.data['update_history']:
+        if self.data["update_history"]:
             self._change_header(add=True)
             self._write_history()
         self._diff_and_commit()
@@ -69,7 +69,7 @@ class Postreleaser(baserelease.Basereleaser):
         current = self.vcs.version
         logger.debug("Extracted version: %s", current)
         if not current:
-            logger.critical('No version found.')
+            logger.critical("No version found.")
             sys.exit(1)
         # Clean it up to a non-development version.
         current = utils.cleanup_version(current)
@@ -91,14 +91,14 @@ class Postreleaser(baserelease.Basereleaser):
             logger.error("No version entered.")
             sys.exit(1)
 
-        self.data['new_version'] = version
-        dev_version = self.data['dev_version_template'] % self.data
-        self.data['dev_version'] = dev_version
+        self.data["new_version"] = version
+        dev_version = self.data["dev_version_template"] % self.data
+        self.data["dev_version"] = dev_version
         logger.info("New version string is %s", dev_version)
 
     def _write_version(self):
         """Update the version in vcs"""
-        self.vcs.version = self.data['dev_version']
+        self.vcs.version = self.data["dev_version"]
 
 
 def datacheck(data):
