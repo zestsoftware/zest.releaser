@@ -14,24 +14,6 @@ Some initial imports:
 
 Choose makes the choice between version control systems.
 
-Subversion:
-
-    >>> os.chdir(svnsourcedir)
-    >>> choose.version_control()
-    <Subversion at TESTTEMP/tha.example-svn .>
-
-Mercurial:
-
-    >>> os.chdir(hgsourcedir)
-    >>> choose.version_control()
-    <Hg at TESTTEMP/tha.example-hg .>
-
-Bazaar:
-
-    >>> os.chdir(bzrsourcedir)
-    >>> choose.version_control()
-    <Bzr at TESTTEMP/tha.example-bzr .>
-
 Git:
 
     >>> os.chdir(gitsourcedir)

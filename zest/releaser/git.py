@@ -1,13 +1,12 @@
-from __future__ import unicode_literals
+from zest.releaser.utils import execute_command
+from zest.releaser.utils import fs_to_text
+from zest.releaser.vcs import BaseVersionControl
 
 import logging
-import tempfile
 import os.path
 import sys
+import tempfile
 
-from zest.releaser.utils import fs_to_text
-from zest.releaser.utils import execute_command
-from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger(__name__)
 
@@ -82,41 +81,6 @@ class Git(BaseVersionControl):
         cmd = ['git', 'tag', version, '-m', message]
         if sign:
             cmd.append("--sign")
-        if os.path.isdir('.git/svn'):
-            print("\nEXPERIMENTAL support for git-svn tagging!\n")
-            with open('.git/HEAD') as f:
-                cur_branch = f.read().strip().split('/')[-1]
-            print("You are on branch %s." % (cur_branch,))
-            if cur_branch != 'master':
-                print("Only the master branch is supported for "
-                      "git-svn tagging.")
-                print("Please tag yourself.")
-                print("'git tag' needs to list tag named %s." % (version,))
-                sys.exit(1)
-            cmd = [cmd]
-
-            trunk = None
-            # In Git v2.0, the default prefix will change from "" (no prefix)
-            # to "origin/", try both here.
-            for t in ['.git/refs/remotes/trunk',
-                      '.git/refs/remotes/origin/trunk']:
-                if os.path.isfile(t):
-                    with open(t) as f:
-                        trunk = f.read()
-
-            if not trunk:
-                print('No SVN remote found (only the default svn ' +
-                      'prefixes ("" or "origin/") are supported).')
-                sys.exit(1)
-
-            with open('.git/refs/heads/master') as f:
-                local_head = f.read()
-            if local_head != trunk:
-                print("Your local master diverges from trunk.\n")
-                # dcommit before local tagging
-                cmd.insert(0, ['git', 'svn', 'dcommit'])
-            # create tag in svn
-            cmd.append(['git', 'svn', 'tag', '-m', message, version])
         return cmd
 
     def cmd_checkout_from_tag(self, version, checkout_dir):

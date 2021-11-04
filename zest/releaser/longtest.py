@@ -1,12 +1,12 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
-from __future__ import unicode_literals
 
 import io
 import logging
 import sys
 import tempfile
 import webbrowser
+
 
 try:
     from readme_renderer.rst import render
@@ -16,6 +16,7 @@ except ImportError:
 
 from zest.releaser import utils
 from zest.releaser.utils import _execute_command
+
 
 HTML_PREFIX = '''<html>
   <head>

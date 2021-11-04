@@ -47,7 +47,7 @@ Make a change:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -42,3 +42,5 @@ setup(name='tha.example',
+    @@ -40,3 +40,5 @@ setup(name='tha.example',
                'console_scripts': [
                ]},
            )
@@ -67,7 +67,8 @@ and in other this:
 
     >>> print('dummy %s' % execute_command(cmd))
     dummy...small tweak
-     1 files changed, 2 insertions(+), 0 deletions(-)
+     1 file changed, 2 insertions(+)
+
 
 
 Tags
@@ -108,7 +109,7 @@ Make and commit a small change:
     >>> cmd = checkout.cmd_commit('small second tweak')
     >>> print('dummy %s' % execute_command(cmd))
     dummy...small second tweak
-     1 files changed, 2 insertions(+), 0 deletions(-)
+     1 file changed, 2 insertions(+)
 
 Now we can request the changes since a specific tag:
 
@@ -120,7 +121,7 @@ Now we can request the changes since a specific tag:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -44,3 +44,5 @@ setup(name='tha.example',
+    @@ -42,3 +42,5 @@ setup(name='tha.example',
            )
     <BLANKLINE>
      a = 2
@@ -131,10 +132,8 @@ Now we can request the changes since a specific tag:
 Making a tag checkout
 ---------------------
 
-For checking out a tag with subversion or mercurial, we first create a temp
-dir and afterwards do a checkout/clone of a tag.  With git, we immediately
-make a clone of the repository in a tempdir and afterwards switch ("checkout")
-that directory to the tag.
+With git, we make a clone of the repository in a tempdir and
+afterwards switch ("checkout") that directory to the tag.
 
 Since version 6.6.3 we create a shallow clone, which only contains the
 last commit.  And since 6.6.4 this works properly. :-) For that to

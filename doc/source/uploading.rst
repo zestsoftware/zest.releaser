@@ -193,28 +193,15 @@ files:
   you if you don't already have it. The default is often good enough.
 
 - Setuptools *can* detect which files are included in your version control
-  system (svn, git, etc.) which it'll then automatically include.
+  system (git) which it'll then automatically include.
 
 The last approch has a problem: not every version control system is supported
 out of the box. So you might need to install extra packages to get it to
 work. So: use a ``MANIFEST.in`` file to spare you the trouble. If not, here
-are some extra packages:
+is an extra package:
 
 - setuptools-git (Setuptools plugin for finding files under Git
   version control)
-
-- setuptools_hg (Setuptools plugin for finding files under Mercurial
-  version control)
-
-- setuptools_bzr (Setuptools plugin for finding files under Bazaar
-  version control)
-
-- setuptools_subversion (Setuptools plugin for finding files under
-  Subversion version control.)  You probably need this when you
-  upgrade to the recent subversion 1.7.  If you suddenly start missing
-  files in the sdists you upload to PyPI you definitely need it.
-  Alternatively: set up a proper MANIFEST.in as that method works with
-  any version control system.
 
 In general, if you are missing files in the uploaded package, the best
 is to put a proper ``MANIFEST.in`` file next to your ``setup.py``.

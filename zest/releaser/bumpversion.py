@@ -1,13 +1,13 @@
 """Do the checks and tasks that have to happen after doing a release.
 """
-from __future__ import unicode_literals
-
-import logging
-import sys
 
 from pkg_resources import parse_version
 from zest.releaser import baserelease
 from zest.releaser import utils
+
+import logging
+import sys
+
 
 logger = logging.getLogger(__name__)
 
@@ -95,8 +95,8 @@ class BumpVersion(baserelease.Basereleaser):
                 print("No tag found. No version bump needed.")
                 sys.exit(0)
             else:
-                print("Last tag: {}".format(last_tag_version))
-            print("Current version: {}".format(original_version))
+                print(f"Last tag: {last_tag_version}")
+            print(f"Current version: {original_version}")
             params = dict(
                 feature=feature,
                 breaking=breaking,

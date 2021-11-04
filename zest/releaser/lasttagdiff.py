@@ -1,14 +1,14 @@
 # GPL, (c) Reinout van Rees
 #
 # Script to show the diff with the last relevant tag.
-from __future__ import unicode_literals
+
+from zest.releaser import utils
+from zest.releaser.utils import execute_command
 
 import logging
 import sys
-
 import zest.releaser.choose
-from zest.releaser.utils import execute_command
-from zest.releaser import utils
+
 
 logger = logging.getLogger(__name__)
 

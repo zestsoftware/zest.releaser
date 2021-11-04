@@ -1,13 +1,14 @@
 # Small utility methods.
-from __future__ import unicode_literals
 
 from argparse import ArgumentParser
+
 import logging
 import os
 import re
 import subprocess
 import sys
 import textwrap
+
 
 try:
     from tokenize import detect_encoding
@@ -19,10 +20,10 @@ try:
 except ImportError:
     HAVE_CHARDET = False
 from colorama import Fore
-import pkg_resources
 from pkg_resources import parse_version
-import six
-from six.moves import input  # noqa
+
+import pkg_resources
+
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ ENCODING_HINTS = (b'# coding=', b'# -*- coding: ', b'# vim: set fileencoding=')
 
 
 def fs_to_text(fs_name):
-    if not isinstance(fs_name, six.text_type):
+    if not isinstance(fs_name, str):
         fs_name = fs_name.decode(sys.getfilesystemencoding(),
                                  'surrogateescape')
     return fs_name
@@ -68,37 +69,8 @@ def splitlines_with_trailing(content):
 
 
 def write_text_file(filename, contents, encoding=None):
-    if six.PY2:
-        if isinstance(contents, six.text_type):
-            # Python 2 unicode needs to be encoded.
-            if encoding is None:
-                encoding = OUTPUT_ENCODING
-                logger.debug(
-                    "Writing to %s with the default output encoding %s",
-                    filename, encoding)
-            else:
-                logger.debug("Writing to %s with its original encoding %s",
-                             filename, encoding)
-            # We might have added something to the contents (a changelog entry)
-            # that does not fit the detected encoding.
-            # So we try a few encodings.
-            orig_encoding = encoding
-            encodings = [orig_encoding, OUTPUT_ENCODING, 'utf-8']
-            for encoding in encodings:
-                try:
-                    contents = contents.encode(encoding)
-                    logger.debug("Encoding we actually used: %s", encoding)
-                    break
-                except UnicodeEncodeError:
-                    pass
-            else:
-                logger.error("Could not write to file %s with any of these "
-                             "encodings: %s", filename, encodings)
-        with open(filename, 'w') as f:
-            f.write(contents)
-    else:
-        with open(filename, 'w', encoding=encoding) as f:
-            f.write(contents)
+    with open(filename, 'w', encoding=encoding) as f:
+        f.write(contents)
 
 
 def read_text_file(filename, encoding=None, fallback_encoding=None):
@@ -364,7 +336,7 @@ def parse_options(parser=None):
 TESTMODE = False
 
 
-class AnswerBook(object):
+class AnswerBook:
 
     def __init__(self):
         self.answers = []
@@ -385,7 +357,7 @@ def get_input(question):
     if not TESTMODE:
         # Normal operation.
         result = input(question)
-        if not isinstance(result, six.text_type):
+        if not isinstance(result, str):
             result = result.decode(INPUT_ENCODING)
         return result.strip()
     # Testing means no interactive input. Get it from answers_for_testing.
@@ -644,7 +616,7 @@ def run_hooks(setup_cfg, which_releaser, when, data):
     when can be before, middle, after.
 
     """
-    hook_group = '%s.%s' % (which_releaser, when)
+    hook_group = f'{which_releaser}.{when}'
     config = setup_cfg.config
 
     if config is not None and config.has_option('zest.releaser', hook_group):
@@ -693,7 +665,7 @@ def run_entry_points(which_releaser, when, data):
     when can be before, middle, after.
 
     """
-    group = 'zest.releaser.%s.%s' % (which_releaser, when)
+    group = f'zest.releaser.{which_releaser}.{when}'
     for entrypoint in pkg_resources.iter_entry_points(group=group):
         # Grab the function that is the actual plugin.
         plugin = entrypoint.load()
@@ -728,7 +700,7 @@ def format_command(command):
     args = []
     for arg in command:
         if " " in arg:
-            arg = "'{}'".format(arg)
+            arg = f"'{arg}'"
         args.append(arg)
     return " ".join(args)
 
@@ -746,9 +718,9 @@ def _subprocess_open(p, command, input_value, show_stderr):
     else:
         (stdout_output, stderr_output) = p.communicate()
     # We assume that the output from commands we're running is text.
-    if not isinstance(stdout_output, six.text_type):
+    if not isinstance(stdout_output, str):
         stdout_output = stdout_output.decode(OUTPUT_ENCODING)
-    if not isinstance(stderr_output, six.text_type):
+    if not isinstance(stderr_output, str):
         stderr_output = stderr_output.decode(OUTPUT_ENCODING)
     # TODO.  Note that the returncode is always None, also after
     # running p.kill().  The shell=True may be tripping us up.  For

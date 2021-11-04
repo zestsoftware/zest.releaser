@@ -1,14 +1,14 @@
 # GPL, (c) Reinout van Rees
-from __future__ import unicode_literals
+
+from colorama import Fore
+from urllib import request
+from urllib.error import HTTPError
 
 import logging
 import os
+import requests
 import sys
 
-from colorama import Fore
-from six.moves.urllib.error import HTTPError
-from six.moves.urllib import request as urllib2
-import requests
 
 try:
     from twine.cli import dispatch as twine_dispatch
@@ -49,7 +49,7 @@ def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
     url = 'https://pypi.org/simple/%s' % package
     try:
-        urllib2.urlopen(url)
+        request.urlopen(url)
         return True
     except HTTPError as e:
         logger.debug("Package not found on pypi: %s", e)
@@ -116,7 +116,7 @@ class Releaser(baserelease.Basereleaser):
                       (tag, version))
                 sys.exit(1)
         if not self.vcs.tag_exists(tag):
-            print("\nFailed to create tag %s!" % (tag,))
+            print(f"\nFailed to create tag {tag}!")
             sys.exit(1)
 
     def _upload_distributions(self, package):
@@ -147,8 +147,8 @@ class Releaser(baserelease.Basereleaser):
         self._run_hooks('before_upload')
 
         # Get list of all files to upload.
-        files_in_dist = sorted([
-            os.path.join('dist', filename) for filename in os.listdir('dist')]
+        files_in_dist = sorted(
+            os.path.join('dist', filename) for filename in os.listdir('dist')
         )
 
         register = self.pypiconfig.register_package()
@@ -200,7 +200,7 @@ class Releaser(baserelease.Basereleaser):
         question = "Upload"
         if register:
             question = "Register and upload"
-        return utils.ask("%s to %s" % (question, server),
+        return utils.ask(f"{question} to {server}",
                      default=default, exact=exact)
 
     def _retry_twine(self, twine_command, server, filenames):
@@ -298,32 +298,6 @@ class Releaser(baserelease.Basereleaser):
                 # Fix the setup.cfg in the current working directory
                 # so the current release works well.
                 self.setup_cfg.fix_config()
-                # Now we may want to commit this.  Note that this is
-                # only really useful for subversion, as for example in
-                # git you are in a detached HEAD state, which is a
-                # place where a commit will be lost.
-                #
-                # Ah, in the case of bazaar doing a commit is actually
-                # harmful, as the commit ends up on the tip, instead
-                # of only being done on a tag or branch.
-                #
-                # So the summary is:
-                #
-                # - svn: NEEDED, not harmful
-                # - git: not needed, not harmful
-                # - hg: not needed, not harmful
-                # - bzr: not needed, HARMFUL
-                #
-                # So for clarity and safety we should only do this for
-                # subversion.
-                if self.vcs.internal_filename == '.svn':
-                    command = self.vcs.cmd_commit(
-                        "Fixed %s on tag for release" %
-                        self.setup_cfg.config_filename)
-                    print(execute_command(command))
-                else:
-                    logger.debug("Not committing in non-svn repository as "
-                                 "this is not needed or may be harmful.")
 
         # Run extra entry point
         self._run_hooks('after_checkout')

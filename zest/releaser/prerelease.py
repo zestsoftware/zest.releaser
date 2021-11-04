@@ -1,13 +1,13 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
-from __future__ import unicode_literals
+
+from zest.releaser import baserelease
+from zest.releaser import utils
 
 import datetime
 import logging
 import sys
 
-from zest.releaser import baserelease
-from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ class Prereleaser(baserelease.Basereleaser):
         self._grab_history()
         if self.data['update_history']:
             # Print changelog for this release.
-            print("Changelog entries for version {0}:\n".format(
+            print("Changelog entries for version {}:\n".format(
                 self.data['new_version']))
             print(self.data.get('history_last_release'))
         # Grab and set new version.

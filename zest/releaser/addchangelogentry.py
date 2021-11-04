@@ -1,12 +1,12 @@
 """Add a changelog entry.
 """
-from __future__ import unicode_literals
+
+from zest.releaser import baserelease
+from zest.releaser import utils
 
 import logging
 import sys
 
-from zest.releaser import baserelease
-from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
 

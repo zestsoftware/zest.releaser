@@ -122,7 +122,7 @@ Asking for making a release or not
 ----------------------------------
 
 Some people hardly ever want to make a full release of a package to
-pypi; a subversion tag may be enough.  They can tell zest.releaser to
+pypi; a git tag may be enough.  They can tell zest.releaser to
 use a different default answer when it asks to make a checkout for a
 release.  This means you can usually just press Enter on all questions
 that zest.releaser asks.

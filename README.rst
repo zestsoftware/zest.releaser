@@ -38,15 +38,6 @@ First the three most important links:
 - The code is at `github.com/zestsoftware/zest.releaser
   <https://github.com/zestsoftware/zest.releaser>`_.
 
-And... we're automatically being tested by Travis and Landscape:
-
-.. image:: https://api.travis-ci.com/zestsoftware/zest.releaser.png?branch=master
-   :target: https://travis-ci.com/github/zestsoftware/zest.releaser
-
-.. image:: https://landscape.io/github/zestsoftware/zest.releaser/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/zestsoftware/zest.releaser/master
-   :alt: Code Health
-
 
 Compatibility / Dependencies
 ----------------------------
@@ -54,9 +45,8 @@ Compatibility / Dependencies
 .. image:: https://img.shields.io/pypi/pyversions/zest.releaser?   :alt: PyPI - Python Version
 .. image:: https://img.shields.io/pypi/implementation/zest.releaser?   :alt: PyPI - Implementation
 
-``zest.releaser`` works on Python 2.7.
-Python 3.5+ is supported.
-PyPy2 is supported.
+``zest.releaser`` works on Python 3.6+, including PyPy3.
+Tested until Python 3.10, but see ``tox.ini`` for the canonical place for that.
 
 To be sure: the packages that you release with ``zest.releaser`` may
 very well work on other Python versions: that totally depends on your
@@ -67,8 +57,6 @@ We depend on:
 - ``setuptools`` for the entrypoint hooks that we offer.
 
 - ``colorama`` for colorized output (some errors printed in red).
-
-- ``six`` for python2/python3 compatibility.
 
 - ``twine`` for secure uploading via https to pypi. Plain setuptools doesn't
   support this.
@@ -135,25 +123,17 @@ project's buildout, by having a buildout configuration such as::
     eggs = zest.releaser[recommended]
 
 
-Version control systems: svn, hg, git, bzr
-------------------------------------------
+Version control systems: git
+----------------------------
 
-Of course you must have a version control system installed.  zest.releaser
-currently supports:
+Of course you must have a version control system installed.
+Since version 7, zest.releaser only supports git.
 
-- Subversion (svn).
-
-- Mercurial (hg).
-
-- Git (git).
-
-- Git-svn.
-
-- Bazaar (bzr).
-
-Others could be added if there are volunteers! Git and mercurial support
-have been contributed years ago when we were working with bzr and subversion,
-for instance.
+If you use Subversion (svn), Mercurial (hg), Git-svn, or Bazaar (bzr), please use version 6.
+If you really want, you can probably copy the relevant parts from the old code to a new package,
+and release this as an add-on package for zest.releaser.
+I suspect that currently it would only work with a monkey patch.
+If you are planning something, please open an issue, and we can see about making this part pluggable.
 
 
 Available commands

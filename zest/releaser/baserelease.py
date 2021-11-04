@@ -1,20 +1,19 @@
 """Provide a base for the three releasers"""
 
-from __future__ import unicode_literals
+
+from zest.releaser import choose
+from zest.releaser import pypi
+from zest.releaser import utils
+from zest.releaser.utils import execute_command
+from zest.releaser.utils import read_text_file
+from zest.releaser.utils import write_text_file
 
 import logging
 import os
 import pkg_resources
 import re
-import six
 import sys
 
-from zest.releaser import utils
-from zest.releaser import choose
-from zest.releaser import pypi
-from zest.releaser.utils import execute_command
-from zest.releaser.utils import read_text_file
-from zest.releaser.utils import write_text_file
 
 logger = logging.getLogger(__name__)
 DATE_PATTERN = re.compile(r'^\d{4}-\d{2}-\d{2}$')
@@ -54,10 +53,10 @@ DATA = {
 NOTHING_CHANGED_YET = '- Nothing changed yet.'
 
 
-class Basereleaser(object):
+class Basereleaser:
 
     def __init__(self, vcs=None):
-        os.environ[str("ZESTRELEASER")] = str("We are called from within zest.releaser")
+        os.environ["ZESTRELEASER"] = "We are called from within zest.releaser"
         # ^^^ Env variable so called tools can detect us. Don't depend on the
         # actual text, just on the variable's name.
         if vcs is None:
@@ -91,10 +90,6 @@ class Basereleaser(object):
         between initially getting the current version, and later getting
         a suggested version or asking the user.
         """
-        # 'initial' is not used in this method, but may be used by sub classes.
-        # Mention it here so a check on landscape.io does not complain about an
-        # unused argument.
-        initial  # noqa
         version = self.vcs.version
         if not version:
             logger.critical("No version detected, so we can't do anything.")
@@ -291,7 +286,7 @@ class Basereleaser(object):
         prefix = utils.get_list_item(self.data['history_lines'])
         for index, line in enumerate(message.splitlines()):
             if index == 0:
-                line = '{} {}'.format(prefix, line)
+                line = f'{prefix} {line}'
             else:
                 line = '{}  {}'.format(' ' * len(prefix), line)
             lines.append(line)
@@ -311,7 +306,7 @@ class Basereleaser(object):
             return
         # We want quotes around the text, but also want to avoid
         # printing text with a u'unicode marker' in front...
-        pretty_nothing_changed = '"{}"'.format(nothing_yet)
+        pretty_nothing_changed = f'"{nothing_yet}"'
         if not utils.ask(
                 "WARNING: Changelog contains {}. Are you sure you "
                 "want to release?".format(pretty_nothing_changed),
@@ -331,7 +326,7 @@ class Basereleaser(object):
         required = self.data.get('required_changelog_text')
         if not required:
             return
-        if isinstance(required, six.string_types):
+        if isinstance(required, str):
             required = [required]
         history_last_release = self.data['history_last_release']
         for text in required:

@@ -1,14 +1,12 @@
-from __future__ import unicode_literals
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
 
 import logging
 import os
+import pkg_resources
 import sys
 
-import pkg_resources
-from six import text_type
-from six.moves.configparser import ConfigParser
-from six.moves.configparser import NoSectionError
-from six.moves.configparser import NoOptionError
 
 try:
     pkg_resources.get_distribution('wheel')
@@ -23,7 +21,7 @@ DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
 logger = logging.getLogger(__name__)
 
 
-class BaseConfig(object):
+class BaseConfig:
     """Base config class with a few helper methods."""
 
     def __init__(self):
@@ -56,7 +54,7 @@ class BaseConfig(object):
                 result = self.config.get(section, key, raw=raw)
             except (NoSectionError, NoOptionError, ValueError):
                 return result
-            if not isinstance(result, text_type):
+            if not isinstance(result, str):
                 result = result.decode('utf-8')
         return result
 

@@ -7,29 +7,17 @@ Detailed tests of prerelease.py
 
 Several items are prepared for us.
 
-An svn repository:
+A git checkout of a project:
 
-    >>> repo_url
-    'file://TESTREPO'
-
-An svn checkout of a project:
-
-    >>> svnsourcedir
-    'TESTTEMP/tha.example-svn'
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
     >>> import os
-    >>> os.chdir(svnsourcedir)
-    >>> from zest.releaser.utils import execute_command
-    >>> print(execute_command(["svn", "info", svnsourcedir]))
-    Path: ...
-    URL: file://TESTREPO/tha.example/trunk
-    ...
+    >>> os.chdir(gitsourcedir)
 
 The version is at 0.1.dev0:
 
-    >>> svnhead('setup.py')
+    >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.1.dev0'
 
 Asking input on the prompt is not unittestable unless we use the prepared
@@ -52,14 +40,12 @@ Run the prerelease script:
 
 The changelog and setup.py are at 0.1 and indicate a release date:
 
-    >>> svnhead('CHANGES.txt')
+    >>> githead('CHANGES.txt')
     Changelog of tha.example
     ========================
     <BLANKLINE>
     0.1 (...-...-...)
     ----------------
-    >>> svnhead('setup.py')
+    >>> githead('setup.py')
     from setuptools import setup, find_packages
-    import os.path
-    <BLANKLINE>
     version = '0.1'
