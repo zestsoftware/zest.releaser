@@ -1,11 +1,12 @@
-import logging
-import os
-import sys
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
 
+import logging
+import os
 import pkg_resources
+import sys
+
 
 try:
     pkg_resources.get_distribution('wheel')

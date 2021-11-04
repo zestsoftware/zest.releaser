@@ -2,12 +2,13 @@
 #
 # Script to show the diff with the last relevant tag.
 
-import logging
-import sys
-
-import zest.releaser.choose
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+
+import logging
+import sys
+import zest.releaser.choose
+
 
 logger = logging.getLogger(__name__)
 

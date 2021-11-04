@@ -1,9 +1,10 @@
+from zest.releaser import git
+from zest.releaser import utils
+
 import logging
 import os
 import sys
 
-from zest.releaser import git
-from zest.releaser import utils
 
 logger = logging.getLogger(__name__)
 

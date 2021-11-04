@@ -1,5 +1,7 @@
-import pkg_resources
 from colorama import init
+
+import pkg_resources
+
 
 # Initialize colorized output.  Set it to reset after each print, so
 # for example a foreground color does not linger into the next print.

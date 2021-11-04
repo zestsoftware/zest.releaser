@@ -1,10 +1,11 @@
+from zest.releaser import pypi
+from zest.releaser import utils
+
 import logging
 import os
 import re
 import sys
 
-from zest.releaser import pypi
-from zest.releaser import utils
 
 VERSION_PATTERN = re.compile(r"""
 ^                # Start of line

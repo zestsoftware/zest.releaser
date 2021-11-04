@@ -2,12 +2,13 @@
 #
 # Script to show the log from the last relevant tag till now.
 
-import logging
-import sys
-
-import zest.releaser.choose
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+
+import logging
+import sys
+import zest.releaser.choose
+
 
 logger = logging.getLogger(__name__)
 

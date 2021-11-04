@@ -1,19 +1,19 @@
 """Provide a base for the three releasers"""
 
 
-import logging
-import os
-import re
-import sys
-
-import pkg_resources
-
 from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
+
+import logging
+import os
+import pkg_resources
+import re
+import sys
+
 
 logger = logging.getLogger(__name__)
 DATE_PATTERN = re.compile(r'^\d{4}-\d{2}-\d{2}$')

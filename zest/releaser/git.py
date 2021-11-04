@@ -1,11 +1,12 @@
+from zest.releaser.utils import execute_command
+from zest.releaser.utils import fs_to_text
+from zest.releaser.vcs import BaseVersionControl
+
 import logging
 import os.path
 import sys
 import tempfile
 
-from zest.releaser.utils import execute_command
-from zest.releaser.utils import fs_to_text
-from zest.releaser.vcs import BaseVersionControl
 
 logger = logging.getLogger(__name__)
 

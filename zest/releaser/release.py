@@ -1,13 +1,14 @@
 # GPL, (c) Reinout van Rees
 
-import logging
-import os
-import sys
+from colorama import Fore
 from urllib import request
 from urllib.error import HTTPError
 
+import logging
+import os
 import requests
-from colorama import Fore
+import sys
+
 
 try:
     from twine.cli import dispatch as twine_dispatch
@@ -22,6 +23,7 @@ from zest.releaser import baserelease
 from zest.releaser import pypi
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+
 
 # Documentation for self.data.  You get runtime warnings when something is in
 # self.data that is not in this list.  Embarrasment-driven documentation!

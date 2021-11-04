@@ -7,6 +7,7 @@ import sys
 import tempfile
 import webbrowser
 
+
 try:
     from readme_renderer.rst import render
     HAVE_README = True
@@ -15,6 +16,7 @@ except ImportError:
 
 from zest.releaser import utils
 from zest.releaser.utils import _execute_command
+
 
 HTML_PREFIX = '''<html>
   <head>

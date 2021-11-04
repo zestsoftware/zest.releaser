@@ -1,5 +1,3 @@
-import os
-
 from zest.releaser import addchangelogentry
 from zest.releaser import baserelease
 from zest.releaser import bumpversion
@@ -8,6 +6,8 @@ from zest.releaser import prerelease
 from zest.releaser import release
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
+
+import os
 
 
 def prepare_entrypoint_documentation(data):

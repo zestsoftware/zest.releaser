@@ -1,21 +1,20 @@
 """Set up functional test fixtures"""
 
-import os
-import shutil
-import sys
-import tarfile
-import tempfile
+from colorama import Fore
 from io import StringIO
 from urllib import request
 from urllib.error import HTTPError
-
-import pkg_resources
-from colorama import Fore
-
 from zest.releaser import choose
 from zest.releaser import utils
 from zest.releaser.baserelease import NOTHING_CHANGED_YET
 from zest.releaser.utils import execute_command
+
+import os
+import pkg_resources
+import shutil
+import sys
+import tarfile
+import tempfile
 
 
 def setup(test):
