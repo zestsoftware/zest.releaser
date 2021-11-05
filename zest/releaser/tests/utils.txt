@@ -740,13 +740,11 @@ Do real strings or tuples:
     >>> print(utils.format_command(('x', 'y', 'zet')))
     x y zet
 
-Show some real action.
-This should not contain a literal u'...' in the output on Python 2.7,
-but that is hard to test, as we normalize the output to not show it:
+Show some real action, and let's include non-ascii:
 
-    >>> cmd = ['git', 'tag', '1.0', '-m', u'Possibly unicode']
+    >>> cmd = ['git', 'tag', '1.0', '-m', '\xae registered trademark']
     >>> print(utils.format_command(cmd))
-    git tag 1.0 -m 'Possibly unicode'
+    git tag 1.0 -m '® registered trademark'
 
 
 Reading text files
@@ -755,15 +753,16 @@ Reading text files
 When reading text files, reliable encoding handling is a pain. Did anyone say
 "corner cases"?
 
-There once was a bug with python 3. ``b'example'[0] gives back an integer
-instead of an ``b'e'``. We had to compensate for that so that the following
-example works:
+On python 3 you have to watch out with bytes.
+b'example'[0] gives back an integer 101 instead of b'e'.
+101 is the number of 'e' in the ascii table.
+We needed to compensate for that so that the following example works:
 
     >>> import os
     >>> import tempfile
     >>> _, example_filename = tempfile.mkstemp()
     >>> with open(example_filename, 'wb') as f:
-    ...     _ = f.write(u'# -*- coding: utf-8 -*-\nblaá'.encode('utf-8'))
+    ...     _ = f.write('# -*- coding: utf-8 -*-\nblaá'.encode('utf-8'))
     >>> lines, encoding = utils.read_text_file(example_filename)
     >>> 'bla' in lines[1]
     True

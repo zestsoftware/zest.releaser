@@ -44,9 +44,6 @@ class BaseConfig:
 
     def _get_text(self, section, key, default=None, raw=False):
         """Get a text from the config.
-
-        We want unicode, also on Python 2.
-        In Python 3 this is already the case.
         """
         result = default
         if self.config is not None:
@@ -54,8 +51,6 @@ class BaseConfig:
                 result = self.config.get(section, key, raw=raw)
             except (NoSectionError, NoOptionError, ValueError):
                 return result
-            if not isinstance(result, str):
-                result = result.decode("utf-8")
         return result
 
 

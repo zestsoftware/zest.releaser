@@ -1,29 +1,18 @@
 # Small utility methods.
 
 from argparse import ArgumentParser
-
-import logging
-import os
-import re
-import subprocess
-import sys
-import textwrap
-
-
-try:
-    from tokenize import detect_encoding
-except ImportError:
-    detect_encoding = None
-try:
-    import chardet
-
-    HAVE_CHARDET = True
-except ImportError:
-    HAVE_CHARDET = False
 from colorama import Fore
 from pkg_resources import parse_version
 
+import logging
+import os
 import pkg_resources
+import re
+import shlex
+import subprocess
+import sys
+import textwrap
+import tokenize
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +29,6 @@ if getattr(sys.stdin, "encoding", None):
 OUTPUT_ENCODING = INPUT_ENCODING
 if getattr(sys.stdout, "encoding", None):
     OUTPUT_ENCODING = sys.stdout.encoding
-ENCODING_HINTS = (b"# coding=", b"# -*- coding: ", b"# vim: set fileencoding=")
 
 
 def fs_to_text(fs_name):
@@ -76,121 +64,55 @@ def write_text_file(filename, contents, encoding=None):
 def read_text_file(filename, encoding=None, fallback_encoding=None):
     """Return lines and encoding of the file
 
-    If encoding is specified, we use that encoding.
-
-    If fallback_encoding is specified, we use that encoding if needed
-    and not overridden by other logic.  This will come from the
-    'encoding' setting in setup.cfg/.pypirc.
-
     Unless specified manually, We have no way of knowing what text
     encoding this file may be in.
-
     The standard Python 'open' method uses the default system encoding
     to read text files in Python 3 or falls back to utf-8.
 
-    We first look for coding hints in the file itself.
+    1. If encoding is specified, we use that encoding.
 
-    Otherwise we use the fallback_encoding if set.
+    2. If fallback_encoding is specified, we use that encoding if needed
+       and not overridden by other logic.  This will come from the
+       'encoding' setting in setup.cfg/.pypirc.
 
-    Lastly we try to detect the encoding:
-
-    - On Python 3 we can use tokenize.
-
-    - On Python 2 we can use chardet.
-
+    3. Lastly we try to detect the encoding using tokenize.
     """
-    with open(filename, "rb") as filehandler:
-        data = filehandler.read()
-
     if encoding is not None:
         # The simple case.
         logger.debug(
             "Decoding file %s from encoding %s from argument.", filename, encoding
         )
-        return splitlines_with_trailing(data.decode(encoding)), encoding
-
-    # If the file contains only ascii, it seems fine to simply use that.
-    encoding = "ascii"
-    try:
-        logger.debug("Decoding file %s from encoding %s.", filename, encoding)
-        return splitlines_with_trailing(data.decode(encoding)), encoding
-    except UnicodeDecodeError:
-        logger.debug("File %s is not ascii.", filename)
-        pass
-
-    # Only if the encoding is not manually specified, we may try to
-    # detect it.
-
-    # Look for hints, PEP263-style
-    if data[:3] == b"\xef\xbb\xbf":
-        encoding = "utf-8"
-        logger.debug(
-            "Detected encoding of %s, standard 3 opening chars: %s", filename, encoding
-        )
-        return splitlines_with_trailing(data.decode(encoding)), encoding
-
-    data_len = len(data)
-    for canary in ENCODING_HINTS:
-        if canary not in data:
-            continue
-        pos = data.index(canary)
-        if pos > 1 and data[pos - 1] not in (b" ", b"\n", b"\r"):
-            continue
-        pos += len(canary)
-        coding = b""
-        while pos < data_len and data[pos : pos + 1] not in (b" ", b"\n"):
-            coding += data[pos : pos + 1]
-            pos += 1
-        encoding = coding.decode("ascii").strip()
-        try:
-            result = splitlines_with_trailing(data.decode(encoding))
-            logger.debug(
-                "Detected encoding of %s because of '%s': %s",
-                filename,
-                canary,
-                encoding,
-            )
-            return result, encoding
-        except (LookupError, UnicodeError):
-            # Try the next one
-            pass
+        with open(filename, "rb", encoding=encoding) as filehandler:
+            data = filehandler.read()
+        return splitlines_with_trailing(data), encoding
 
     if fallback_encoding:
-        encoding = fallback_encoding
+        logger.debug(
+            "Decoding file %s from encoding %s from setup.cfg.", filename, fallback_encoding
+        )
         try:
-            logger.debug(
-                "Decoding file %s from encoding %s from setup.cfg.", filename, encoding
-            )
-            return splitlines_with_trailing(data.decode(encoding)), encoding
+            with open(filename, "rb", encoding=fallback_encoding) as filehandler:
+                data = filehandler.read()
+            return splitlines_with_trailing(data), fallback_encoding
         except UnicodeDecodeError:
             logger.warning(
                 "setup.cfg has zest.releaser encoding option %r, "
                 "but this fails for file %s. "
                 "Consider changing the file or the option.",
-                encoding,
+                fallback_encoding,
                 filename,
             )
 
-    if detect_encoding is not None:
-        # This is Python 3 with tokenize.
-        with open(filename, "rb") as filehandler:
-            encoding = detect_encoding(filehandler.readline)[0]
-            logger.debug(
-                "Detected encoding of %s with tokenize: %s", filename, encoding
-            )
-
-    if HAVE_CHARDET:
-        # This is Python 2 with chardet.
-        encoding_result = chardet.detect(data)
-        if encoding_result and encoding_result["encoding"] is not None:
-            encoding = encoding_result["encoding"]
-            logger.debug("Detected encoding of %s with chardet: %s", filename, encoding)
-            return splitlines_with_trailing(data.decode(encoding)), encoding
-
-    # Fall back to utf-8
-    encoding = "utf-8"
-    logger.debug("No encoding detected for %s, falling back to %s", filename, encoding)
-    return splitlines_with_trailing(data.decode(encoding)), encoding
+    # tokenize first detects the encoding (looking for encoding hints
+    # or an UTF-8 BOM) and opens the file using this encoding.
+    # See https://docs.python.org/3/library/tokenize.html
+    with tokenize.open(filename) as filehandler:
+        data = filehandler.read()
+        encoding = filehandler.encoding
+        logger.debug(
+            "Detected encoding of %s with tokenize: %s", filename, encoding
+        )
+    return splitlines_with_trailing(data), encoding
 
 
 def strip_version(version):
@@ -720,15 +642,13 @@ KNOWN_WARNINGS = [w.lower() for w in KNOWN_WARNINGS]
 
 
 def format_command(command):
-    # THIS IS INSECURE! DO NOT USE except for directly printing the
-    # result.
-    # Poor man's argument quoting, sufficient for user information.
-    # Used since shlex.quote() does not exist in Python 2.7.
-    args = []
-    for arg in command:
-        if " " in arg:
-            arg = f"'{arg}'"
-        args.append(arg)
+    """Return command list formatted as string.
+
+    THIS IS INSECURE! DO NOT USE except for directly printing the result.
+    Do NOT pass this to subprocess.popen/run.
+    See also: https://docs.python.org/3/library/shlex.html#shlex.quote
+    """
+    args = [shlex.quote(arg) for arg in command]
     return " ".join(args)
 
 
@@ -789,8 +709,6 @@ def _execute_command(command, input_value=""):
     else:
         env = None
         show_stderr = True
-    # On Python 3, subprocess.Popen can and should be used as context
-    # manager, to avoid unclosed files.  On Python 2 this is not possible.
     process_kwargs = {
         "shell": not isinstance(command, (list, tuple)),
         "stdin": subprocess.PIPE,
@@ -799,15 +717,8 @@ def _execute_command(command, input_value=""):
         "close_fds": MUST_CLOSE_FDS,
         "env": env,
     }
-    if hasattr(subprocess.Popen, "__exit__"):
-        # Python 3
-        with subprocess.Popen(command, **process_kwargs) as process:
-            result = _subprocess_open(process, command, input_value, show_stderr)
-    else:
-        # Python 2
-        process = subprocess.Popen(command, **process_kwargs)
-        result = _subprocess_open(process, command, input_value, show_stderr)
-    return result
+    with subprocess.Popen(command, **process_kwargs) as process:
+        return _subprocess_open(process, command, input_value, show_stderr)
 
 
 def get_errors(stderr_output):

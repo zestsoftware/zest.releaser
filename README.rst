@@ -90,18 +90,14 @@ of ``zest.releaser`` users:
   packaging.  Mostly it performs checks on the ``setup.py`` file, like
   checking for Python version classifiers.
 
-- chardet_, the universal character encoding detector. To do the right thing
-  in case your readme or changelog is in a non-utf-8 character set.
-
-- readme_ to check your long description in the same way as pypi does. No more
+- readme_renderer_ to check your long description in the same way as pypi does. No more
   unformatted restructured text on your pypi page just because there was a
   small error somewhere. Handy.
 
 .. _wheel: https://pypi.org/project/wheel
 .. _`check-manifest`: https://pypi.org/project/check-manifest
 .. _pyroma: https://pypi.org/project/pyroma
-.. _chardet: https://pypi.org/project/chardet
-.. _readme: https://pypi.org/project/readme
+.. _readme_renderer: https://pypi.org/project/readme_renderer
 
 
 Installation

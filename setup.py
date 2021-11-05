@@ -61,7 +61,6 @@ setup(
     ],
     extras_require={
         "recommended": [
-            "chardet",
             "check-manifest",
             "pyroma",
             "readme_renderer",
