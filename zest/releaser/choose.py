@@ -25,7 +25,7 @@ def version_control():
     q = "You are NOT in the root of the repository. Do you want to go there?"
     for level in range(8):
         curdir_contents = os.listdir(path)
-        if '.git' in curdir_contents:
+        if ".git" in curdir_contents:
             if level != 0 and utils.ask(q, default=False):
                 os.chdir(path)
             return git.Git(path)
@@ -36,5 +36,5 @@ def version_control():
             break
         path = newpath
 
-    logger.critical('No version control system detected.')
+    logger.critical("No version control system detected.")
     sys.exit(1)
