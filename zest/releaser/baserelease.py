@@ -385,15 +385,7 @@ class Basereleaser:
 
         diff_cmd = self.vcs.cmd_diff()
         diff = execute_command(diff_cmd)
-        if sys.version.startswith("2.6.2"):
-            # python2.6.2 bug... http://bugs.python.org/issue5170 This is the
-            # spot it can surface as we show a part of the changelog which can
-            # contain every kind of character.  The rest is mostly ascii.
-            print("Diff results:")
-            print(diff)
-        else:
-            # Common case
-            logger.info("The '%s':\n\n%s\n", utils.format_command(diff_cmd), diff)
+        logger.info("The '%s':\n\n%s\n", utils.format_command(diff_cmd), diff)
         if utils.ask("OK to commit this"):
             msg = commit_msg % self.data
             msg = self.update_commit_message(msg)
