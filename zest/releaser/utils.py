@@ -18,9 +18,6 @@ import tokenize
 logger = logging.getLogger(__name__)
 
 WRONG_IN_VERSION = ["svn", "dev", "("]
-# For zc.buildout's system() method:
-MUST_CLOSE_FDS = not sys.platform.startswith("win")
-
 AUTO_RESPONSE = False
 VERBOSE = False
 INPUT_ENCODING = "UTF-8"
@@ -677,7 +674,7 @@ def _subprocess_open(p, command, show_stderr):
 
 
 def _execute_command(command):
-    """commands.getoutput() replacement that also works on windows"""
+    """Execute a command, returning stdout, plus maybe parts of stderr."""
     # Enforce the command to be a list or arguments.
     assert isinstance(command, (list, tuple))
     logger.debug("Running command: '%s'", format_command(command))
@@ -696,7 +693,6 @@ def _execute_command(command):
         "stdin": subprocess.PIPE,
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
-        "close_fds": MUST_CLOSE_FDS,
         "env": env,
     }
     with subprocess.Popen(command, **process_kwargs) as process:
