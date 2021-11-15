@@ -659,13 +659,8 @@ def format_command(command):
 __command_is_string__ = False
 
 
-def _subprocess_open(p, command, input_value, show_stderr):
-    if input_value:
-        (stdout_output, stderr_output) = p.communicate(
-            input_value.encode(INPUT_ENCODING)
-        )
-    else:
-        (stdout_output, stderr_output) = p.communicate()
+def _subprocess_open(p, command, show_stderr):
+    (stdout_output, stderr_output) = p.communicate()
     # We assume that the output from commands we're running is text.
     if not isinstance(stdout_output, str):
         stdout_output = stdout_output.decode(OUTPUT_ENCODING)
@@ -691,7 +686,7 @@ def _subprocess_open(p, command, input_value, show_stderr):
     return result
 
 
-def _execute_command(command, input_value=""):
+def _execute_command(command):
     """commands.getoutput() replacement that also works on windows"""
     # Enforce the command to be a list or arguments, except if
     # ``__command_is_string__`` is string is set, which is meant to be
@@ -718,7 +713,7 @@ def _execute_command(command, input_value=""):
         "env": env,
     }
     with subprocess.Popen(command, **process_kwargs) as process:
-        return _subprocess_open(process, command, input_value, show_stderr)
+        return _subprocess_open(process, command, show_stderr)
 
 
 def get_errors(stderr_output):
@@ -768,7 +763,7 @@ def execute_command(command, allow_retry=False, fail_message=""):
     - Retry
     - Continue
 
-    There is an error is there is a red color in the output.
+    There is an error when there is a red color in the output.
 
     It might be a warning, but we cannot detect the distinction.
     """
