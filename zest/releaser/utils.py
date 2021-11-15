@@ -652,13 +652,6 @@ def format_command(command):
     return " ".join(args)
 
 
-# USE WITH CAUTION: If True, allow the command to be a string instead
-# of a list of arguments. The command-string will be executed via a
-# shell. This should only be used in the test-suite for testing
-# redirects.
-__command_is_string__ = False
-
-
 def _subprocess_open(p, command, show_stderr):
     (stdout_output, stderr_output) = p.communicate()
     # We assume that the output from commands we're running is text.
@@ -666,9 +659,6 @@ def _subprocess_open(p, command, show_stderr):
         stdout_output = stdout_output.decode(OUTPUT_ENCODING)
     if not isinstance(stderr_output, str):
         stderr_output = stderr_output.decode(OUTPUT_ENCODING)
-    # TODO.  Note that the returncode is always None, also after
-    # running p.kill().  The shell=True may be tripping us up.  For
-    # some ideas, see http://stackoverflow.com/questions/4789837
     if p.returncode or show_stderr or "Traceback" in stderr_output:
         # Some error occured
         result = stdout_output + get_errors(stderr_output)
@@ -688,10 +678,8 @@ def _subprocess_open(p, command, show_stderr):
 
 def _execute_command(command):
     """commands.getoutput() replacement that also works on windows"""
-    # Enforce the command to be a list or arguments, except if
-    # ``__command_is_string__`` is string is set, which is meant to be
-    # used by the test-suite only (see above).
-    assert isinstance(command, (list, tuple)) or __command_is_string__
+    # Enforce the command to be a list or arguments.
+    assert isinstance(command, (list, tuple))
     logger.debug("Running command: '%s'", format_command(command))
     if command[0].startswith(sys.executable):
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
@@ -705,7 +693,6 @@ def _execute_command(command):
         env = None
         show_stderr = True
     process_kwargs = {
-        "shell": not isinstance(command, (list, tuple)),
         "stdin": subprocess.PIPE,
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
