@@ -23,9 +23,6 @@ VERBOSE = False
 INPUT_ENCODING = "UTF-8"
 if getattr(sys.stdin, "encoding", None):
     INPUT_ENCODING = sys.stdin.encoding
-OUTPUT_ENCODING = INPUT_ENCODING
-if getattr(sys.stdout, "encoding", None):
-    OUTPUT_ENCODING = sys.stdout.encoding
 
 
 def fs_to_text(fs_name):
@@ -650,27 +647,19 @@ def format_command(command):
 
 
 def _subprocess_open(process, show_stderr):
-    (stdout_output, stderr_output) = process.stdout, process.stderr
-    # We assume that the output from commands we're running is text.
-    if not isinstance(stdout_output, str):
-        stdout_output = stdout_output.decode(OUTPUT_ENCODING)
-    if not isinstance(stderr_output, str):
-        stderr_output = stderr_output.decode(OUTPUT_ENCODING)
-    if process.returncode or show_stderr or "Traceback" in stderr_output:
+    if process.returncode or show_stderr or "Traceback" in process.stderr:
         # Some error occured
-        result = stdout_output + get_errors(stderr_output)
-    else:
-        # Only return the stdout. Stderr only contains possible
-        # weird/confusing warnings that might trip up extraction of version
-        # numbers and so.
-        result = stdout_output
-        if stderr_output:
-            logger.debug(
-                "Stderr of running command '%s':\n%s",
-                format_command(process.args),
-                stderr_output,
-            )
-    return result
+        return process.stdout + get_errors(process.stderr)
+    # Only return the stdout. Stderr only contains possible
+    # weird/confusing warnings that might trip up extraction of version
+    # numbers and so.
+    if process.stderr:
+        logger.debug(
+            "Stderr of running command '%s':\n%s",
+            format_command(process.args),
+            process.stderr,
+        )
+    return process.stdout
 
 
 def _execute_command(command):
@@ -694,6 +683,11 @@ def _execute_command(command):
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
         "env": env,
+        # With Python 3.7+ we could use the more understandable 'text' alias
+        # instead of the cryptic 'universal_newlines'.
+        # They do the same: open a file (stdin/out/err) in text mode
+        # instead of binary.  Core Python is better at knowing which encoding to use.
+        "universal_newlines": True,
     }
     process = subprocess.run(command, **process_kwargs)
     return _subprocess_open(process, show_stderr)
