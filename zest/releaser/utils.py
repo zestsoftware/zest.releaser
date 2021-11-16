@@ -649,14 +649,14 @@ def format_command(command):
     return " ".join(args)
 
 
-def _subprocess_open(p, command, show_stderr):
-    (stdout_output, stderr_output) = p.communicate()
+def _subprocess_open(process, show_stderr):
+    (stdout_output, stderr_output) = process.stdout, process.stderr
     # We assume that the output from commands we're running is text.
     if not isinstance(stdout_output, str):
         stdout_output = stdout_output.decode(OUTPUT_ENCODING)
     if not isinstance(stderr_output, str):
         stderr_output = stderr_output.decode(OUTPUT_ENCODING)
-    if p.returncode or show_stderr or "Traceback" in stderr_output:
+    if process.returncode or show_stderr or "Traceback" in stderr_output:
         # Some error occured
         result = stdout_output + get_errors(stderr_output)
     else:
@@ -667,7 +667,7 @@ def _subprocess_open(p, command, show_stderr):
         if stderr_output:
             logger.debug(
                 "Stderr of running command '%s':\n%s",
-                format_command(command),
+                format_command(process.args),
                 stderr_output,
             )
     return result
@@ -695,8 +695,8 @@ def _execute_command(command):
         "stderr": subprocess.PIPE,
         "env": env,
     }
-    with subprocess.Popen(command, **process_kwargs) as process:
-        return _subprocess_open(process, command, show_stderr)
+    process = subprocess.run(command, **process_kwargs)
+    return _subprocess_open(process, show_stderr)
 
 
 def get_errors(stderr_output):
