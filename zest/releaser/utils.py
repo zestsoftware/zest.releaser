@@ -641,22 +641,6 @@ def format_command(command):
     return " ".join(args)
 
 
-def _subprocess_open(process, show_stderr):
-    if process.returncode or show_stderr or "Traceback" in process.stderr:
-        # Some error occured
-        return process.stdout + get_errors(process.stderr)
-    # Only return the stdout. Stderr only contains possible
-    # weird/confusing warnings that might trip up extraction of version
-    # numbers and so.
-    if process.stderr:
-        logger.debug(
-            "Stderr of running command '%s':\n%s",
-            format_command(process.args),
-            process.stderr,
-        )
-    return process.stdout
-
-
 def _execute_command(command):
     """Execute a command, returning stdout, plus maybe parts of stderr."""
     # Enforce the command to be a list or arguments.
@@ -685,7 +669,19 @@ def _execute_command(command):
         "universal_newlines": True,
     }
     process = subprocess.run(command, **process_kwargs)
-    return _subprocess_open(process, show_stderr)
+    if process.returncode or show_stderr or "Traceback" in process.stderr:
+        # Some error occured
+        return process.stdout + get_errors(process.stderr)
+    # Only return the stdout. Stderr only contains possible
+    # weird/confusing warnings that might trip up extraction of version
+    # numbers and so.
+    if process.stderr:
+        logger.debug(
+            "Stderr of running command '%s':\n%s",
+            format_command(process.args),
+            process.stderr,
+        )
+    return process.stdout
 
 
 def get_errors(stderr_output):
