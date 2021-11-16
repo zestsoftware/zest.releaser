@@ -20,9 +20,6 @@ logger = logging.getLogger(__name__)
 WRONG_IN_VERSION = ["svn", "dev", "("]
 AUTO_RESPONSE = False
 VERBOSE = False
-INPUT_ENCODING = "UTF-8"
-if getattr(sys.stdin, "encoding", None):
-    INPUT_ENCODING = sys.stdin.encoding
 
 
 def fs_to_text(fs_name):
@@ -287,8 +284,6 @@ def get_input(question):
     if not TESTMODE:
         # Normal operation.
         result = input(question)
-        if not isinstance(result, str):
-            result = result.decode(INPUT_ENCODING)
         return result.strip()
     # Testing means no interactive input. Get it from answers_for_testing.
     print("Question: %s" % question)
