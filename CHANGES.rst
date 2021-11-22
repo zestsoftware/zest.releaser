@@ -16,5 +16,7 @@ Big cleanup to ease future development:
 
 - Switched from Travis to GitHub Actions.
 
+- Simplified running commands by using ``subprocess.run``.
+
 
 .. # Note: for older changes see ``doc/sources/changelog.rst``.

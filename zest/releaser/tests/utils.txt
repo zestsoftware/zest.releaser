@@ -463,28 +463,27 @@ We want to discover errors and show them in red.
     True
 
 Warnings may also end up in the error output.  That may be unwanted.
-Note: Setting ``__command_is_string__`` is a special hack implemented
-only for this test-case.  It makes ``utils._execute_command()`` to
-accept a command-string and execute it via a shell.
+We have a script to test this, which passes all input to std error.
+
+    >>> import os
+    >>> import zest.releaser.tests
+    >>> test_dir = os.path.dirname(zest.releaser.tests.__file__)
+    >>> script = os.path.join(test_dir, "cmd_error.py")
 
     >>> warning = "warning: no previously-included files matching '*.pyc' found anywhere in distribution."
-    >>> utils.__command_is_string__ = True
-    >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
-    >>> utils.__command_is_string__ = False
+    >>> result = utils.execute_command(['python', script, warning])
     >>> result.startswith(Fore.RED)
     False
     >>> result.startswith(Fore.MAGENTA)
     True
     >>> print(result)
-    MAGENTA warning: no previously-included files matching *.pyc found anywhere in distribution.
+    MAGENTA warning: no previously-included files matching '*.pyc' found anywhere in distribution.
 
 One similar harmless warning by distutils does not get the 'warning:'
 prefixed, so we handle it explicitly:
 
     >>> warning = "no previously-included directories found matching devsrc"
-    >>> utils.__command_is_string__ = True
-    >>> result = utils.execute_command('echo %s > /dev/stderr' % warning)
-    >>> utils.__command_is_string__ = False
+    >>> result = utils.execute_command(['python', script, warning])
     >>> result.startswith(Fore.RED)
     False
     >>> result.startswith(Fore.MAGENTA)
@@ -492,15 +491,13 @@ prefixed, so we handle it explicitly:
     >>> print(result)
     MAGENTA no previously-included directories found matching devsrc
 
-Let's do a combination:
+Let's do a combination of a warning and an actual error:
 
     >>> message = """
     ... Warn: What is the answer to life, the universe and everything?
     ...
     ... 41"""
-    >>> utils.__command_is_string__ = True
-    >>> result = utils.execute_command('echo "%s" > /dev/stderr' % message)
-    >>> utils.__command_is_string__ = False
+    >>> result = utils.execute_command(['python', script, message])
     >>> result
     '\x1b[35mWarn: What is the answer to life, the universe and everything?\n\n\x1b[31m41'
     >>> print(result)

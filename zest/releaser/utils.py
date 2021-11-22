@@ -18,17 +18,8 @@ import tokenize
 logger = logging.getLogger(__name__)
 
 WRONG_IN_VERSION = ["svn", "dev", "("]
-# For zc.buildout's system() method:
-MUST_CLOSE_FDS = not sys.platform.startswith("win")
-
 AUTO_RESPONSE = False
 VERBOSE = False
-INPUT_ENCODING = "UTF-8"
-if getattr(sys.stdin, "encoding", None):
-    INPUT_ENCODING = sys.stdin.encoding
-OUTPUT_ENCODING = INPUT_ENCODING
-if getattr(sys.stdout, "encoding", None):
-    OUTPUT_ENCODING = sys.stdout.encoding
 
 
 def fs_to_text(fs_name):
@@ -293,8 +284,6 @@ def get_input(question):
     if not TESTMODE:
         # Normal operation.
         result = input(question)
-        if not isinstance(result, str):
-            result = result.decode(INPUT_ENCODING)
         return result.strip()
     # Testing means no interactive input. Get it from answers_for_testing.
     print("Question: %s" % question)
@@ -652,51 +641,10 @@ def format_command(command):
     return " ".join(args)
 
 
-# USE WITH CAUTION: If True, allow the command to be a string instead
-# of a list of arguments. The command-string will be executed via a
-# shell. This should only be used in the test-suite for testing
-# redirects.
-__command_is_string__ = False
-
-
-def _subprocess_open(p, command, input_value, show_stderr):
-    if input_value:
-        (stdout_output, stderr_output) = p.communicate(
-            input_value.encode(INPUT_ENCODING)
-        )
-    else:
-        (stdout_output, stderr_output) = p.communicate()
-    # We assume that the output from commands we're running is text.
-    if not isinstance(stdout_output, str):
-        stdout_output = stdout_output.decode(OUTPUT_ENCODING)
-    if not isinstance(stderr_output, str):
-        stderr_output = stderr_output.decode(OUTPUT_ENCODING)
-    # TODO.  Note that the returncode is always None, also after
-    # running p.kill().  The shell=True may be tripping us up.  For
-    # some ideas, see http://stackoverflow.com/questions/4789837
-    if p.returncode or show_stderr or "Traceback" in stderr_output:
-        # Some error occured
-        result = stdout_output + get_errors(stderr_output)
-    else:
-        # Only return the stdout. Stderr only contains possible
-        # weird/confusing warnings that might trip up extraction of version
-        # numbers and so.
-        result = stdout_output
-        if stderr_output:
-            logger.debug(
-                "Stderr of running command '%s':\n%s",
-                format_command(command),
-                stderr_output,
-            )
-    return result
-
-
-def _execute_command(command, input_value=""):
-    """commands.getoutput() replacement that also works on windows"""
-    # Enforce the command to be a list or arguments, except if
-    # ``__command_is_string__`` is string is set, which is meant to be
-    # used by the test-suite only (see above).
-    assert isinstance(command, (list, tuple)) or __command_is_string__
+def _execute_command(command):
+    """Execute a command, returning stdout, plus maybe parts of stderr."""
+    # Enforce the command to be a list or arguments.
+    assert isinstance(command, (list, tuple))
     logger.debug("Running command: '%s'", format_command(command))
     if command[0].startswith(sys.executable):
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
@@ -710,15 +658,30 @@ def _execute_command(command, input_value=""):
         env = None
         show_stderr = True
     process_kwargs = {
-        "shell": not isinstance(command, (list, tuple)),
         "stdin": subprocess.PIPE,
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
-        "close_fds": MUST_CLOSE_FDS,
         "env": env,
+        # With Python 3.7+ we could use the more understandable 'text' alias
+        # instead of the cryptic 'universal_newlines'.
+        # They do the same: open a file (stdin/out/err) in text mode
+        # instead of binary.  Core Python is better at knowing which encoding to use.
+        "universal_newlines": True,
     }
-    with subprocess.Popen(command, **process_kwargs) as process:
-        return _subprocess_open(process, command, input_value, show_stderr)
+    process = subprocess.run(command, **process_kwargs)
+    if process.returncode or show_stderr or "Traceback" in process.stderr:
+        # Some error occured
+        return process.stdout + get_errors(process.stderr)
+    # Only return the stdout. Stderr only contains possible
+    # weird/confusing warnings that might trip up extraction of version
+    # numbers and so.
+    if process.stderr:
+        logger.debug(
+            "Stderr of running command '%s':\n%s",
+            format_command(process.args),
+            process.stderr,
+        )
+    return process.stdout
 
 
 def get_errors(stderr_output):
@@ -768,7 +731,7 @@ def execute_command(command, allow_retry=False, fail_message=""):
     - Retry
     - Continue
 
-    There is an error is there is a red color in the output.
+    There is an error when there is a red color in the output.
 
     It might be a warning, but we cannot detect the distinction.
     """
