@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-7.0.0a1 (unreleased)
+7.0.0a1 (2021-12-01)
 --------------------
 
 Big cleanup to ease future development:

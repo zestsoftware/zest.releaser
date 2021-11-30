@@ -5,7 +5,7 @@ import codecs
 import sys
 
 
-version = "7.0.0a1.dev0"
+version = "7.0.0a1"
 
 
 def read(filename):
