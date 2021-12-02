@@ -32,14 +32,14 @@ HTML_POSTFIX = """
 logger = logging.getLogger(__name__)
 
 
-def show_longdesc():
+def show_longdesc(headless):
     if not HAVE_README:
         logging.error(
             "To check the long description, we need the 'readme_renderer' "
             "package. "
             "(It is included if you install `zest.releaser[recommended]`)"
         )
-        sys.exit(1)
+        return 1
 
     filename = tempfile.mktemp(".html")
     # Note: for the setup.py call we use _execute_command() from our
@@ -55,7 +55,10 @@ def show_longdesc():
         warning_text = warnings.getvalue()
         warning_text = warning_text.replace("<string>", rst_filename)
         print(warning_text)
-        sys.exit(1)
+        return 1
+
+    if headless:
+        return 0
 
     if "<html" not in html[:20]:
         # Add a html declaration including utf-8 indicator
@@ -67,8 +70,18 @@ def show_longdesc():
     url = "file://" + filename
     logging.info("Opening %s in your webbrowser.", url)
     webbrowser.open(url)
+    return 0
 
 
 def main():
+    parser = utils.base_option_parser()
+    parser.add_argument(
+        "--headless",
+        action="store_true",
+        dest="feature",
+        default=False,
+        help="Do not open a browser window with the HTML result")
+    options = utils.parse_options(parser)
     utils.configure_logging()
-    show_longdesc()
+    code = show_longdesc(headless=options.headless)
+    sys.exit(code)
