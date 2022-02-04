@@ -78,7 +78,7 @@ def main():
     parser.add_argument(
         "--headless",
         action="store_true",
-        dest="feature",
+        dest="headless",
         default=False,
         help="Do not open a browser window with the HTML result")
     options = utils.parse_options(parser)
