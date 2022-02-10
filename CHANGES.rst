@@ -1,6 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
+7.0.0a3 (unreleased)
+--------------------
+
+- Nothing changed yet.
+
+
 7.0.0a2 (2022-02-10)
 --------------------
 
