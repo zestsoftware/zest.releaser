@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-7.0.0a2 (unreleased)
+7.0.0a2 (2022-02-10)
 --------------------
 
 - Add ``--headless`` option to ``longtest``.
