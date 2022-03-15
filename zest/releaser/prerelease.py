@@ -9,6 +9,17 @@ import logging
 import sys
 
 
+try:
+    # This is a recommended dependency.
+    # Not a core dependency for now, as zest.releaser can also be used for
+    # non-Python projects.
+    from pep440 import is_canonical
+except ImportError:
+    def is_canonical(version):
+        logger.debug("Using dummy is_canonical that always returns True.")
+        return True
+
+
 logger = logging.getLogger(__name__)
 
 HISTORY_HEADER = "%(new_version)s (%(today)s)"
@@ -95,7 +106,14 @@ class Prereleaser(baserelease.Basereleaser):
         suggestion = utils.cleanup_version(original_version)
         new_version = None
         if not initial:
-            new_version = utils.ask_version("Enter version", default=suggestion)
+            while new_version is None:
+                new_version = utils.ask_version("Enter version", default=suggestion)
+                if not is_canonical(new_version):
+                    logger.warning(f"'{new_version}' is not a canonical Python package version.")
+                    question = "Do you want to use this version anyway?"
+                    if not utils.ask(question):
+                        # Set to None: we will ask to enter a new version.
+                        new_version = None
         if not new_version:
             new_version = suggestion
         self.data["original_version"] = original_version
