@@ -64,6 +64,7 @@ setup(
     extras_require={
         "recommended": [
             "check-manifest",
+            "pep440",
             "pyroma",
             "readme_renderer",
             "wheel",

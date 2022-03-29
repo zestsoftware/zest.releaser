@@ -4,7 +4,10 @@ Changelog for zest.releaser
 7.0.0a3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Bug 381: In ``prerelease``, check with ``pep440`` if the version is canonical.
+  Added ``pep440`` to the ``recommended`` extra, not to the core dependencies:
+  ``zest.releaser`` can also be used for non-Python projects.
+  [maurits]
 
 
 7.0.0a2 (2022-02-10)
