@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-7.0.0a3 (unreleased)
+7.0.0a3 (2022-04-04)
 --------------------
 
 - Bug 381: In ``prerelease``, check with ``pep440`` if the version is canonical.
