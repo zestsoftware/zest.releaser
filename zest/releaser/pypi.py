@@ -537,7 +537,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             tag-format = v{version}
 
-        ``tag-format`` must contain exaclty one formatting instruction: for the
+        ``tag-format`` must contain exactly one formatting instruction: for the
         ``version`` key.
 
         Accepts also ``%(version)s`` format for backward compatibility.
@@ -571,7 +571,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             tag-message = Creating v{version} tag.
 
-        ``tag-message`` must contain exaclty one formatting
+        ``tag-message`` must contain exactly one formatting
         instruction: for the ``version`` key.
 
         The default format is ``Tagging {version}``.
@@ -597,7 +597,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             tag-signing = yes
 
-        ``tag-signing`` must contain exaclty one word which will be
+        ``tag-signing`` must contain exactly one word which will be
         converted to a boolean. Currently are accepted (case
         insensitively): 0, false, no, off for False, and 1, true, yes,
         on for True).

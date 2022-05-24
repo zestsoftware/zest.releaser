@@ -670,7 +670,7 @@ def _execute_command(command):
     }
     process = subprocess.run(command, **process_kwargs)
     if process.returncode or show_stderr or "Traceback" in process.stderr:
-        # Some error occured
+        # Some error occurred
         return process.stdout + get_errors(process.stderr)
     # Only return the stdout. Stderr only contains possible
     # weird/confusing warnings that might trip up extraction of version
@@ -685,7 +685,7 @@ def _execute_command(command):
 
 
 def get_errors(stderr_output):
-    # Some error occured.  Return the relevant output.
+    # Some error occurred.  Return the relevant output.
     # print(Fore.RED + stderr_output)
     stderr_output = stderr_output.strip()
     if not stderr_output:

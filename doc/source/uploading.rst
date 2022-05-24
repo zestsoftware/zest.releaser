@@ -97,7 +97,7 @@ Uploading with twine
 
 Since version 6.0, we always use twine_ for uploading to the Python
 Package Index, because it is safer: it uses ``https`` for uploading.
-Since version 4.0 we already prefered it if it was available, but it
+Since version 4.0 we already preferred it if it was available, but it
 is now a core dependency, installed automatically.
 
 .. _twine: https://pypi.org/project/twine
@@ -195,7 +195,7 @@ files:
 - Setuptools *can* detect which files are included in your version control
   system (git) which it'll then automatically include.
 
-The last approch has a problem: not every version control system is supported
+The last approach has a problem: not every version control system is supported
 out of the box. So you might need to install extra packages to get it to
 work. So: use a ``MANIFEST.in`` file to spare you the trouble. If not, here
 is an extra package:
