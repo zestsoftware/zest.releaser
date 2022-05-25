@@ -274,7 +274,10 @@ class AnswerBook:
         self.answers = answers
 
     def get_next_answer(self):
-        return self.answers.pop(0)
+        if self.answers:
+            return self.answers.pop(0)
+        # Accept the default.
+        return ''
 
 
 test_answer_book = AnswerBook()
