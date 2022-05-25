@@ -1,4 +1,4 @@
-  zest.releaser is copyright (C) 2008-2012 Zest Sofware
+  zest.releaser is copyright (C) 2008-2012 Zest Software
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
