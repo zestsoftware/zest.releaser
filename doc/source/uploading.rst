@@ -164,7 +164,8 @@ configuration in your ``setup.cfg`` or global ``~/.pypirc``.  One use
 case for this is telling Travis to skip Continuous Integration builds::
 
   [zest.releaser]
-  extra-message = [ci skip]
+  extra-message = This will be added after the message
+  prefix-message = This will be added before the message
 
 
 Signing your commits or tags with git
