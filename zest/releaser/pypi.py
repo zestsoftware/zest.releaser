@@ -7,7 +7,6 @@ import os
 import pkg_resources
 import sys
 
-
 try:
     pkg_resources.get_distribution("wheel")
 except pkg_resources.DistributionNotFound:
@@ -280,6 +279,24 @@ class PypiConfig(BaseConfig):
         """
         return self._get_boolean("zest.releaser", "release", default=True)
 
+    def __get_message_config__(self, config_name):
+        """
+        Return the value of the message configuration based on its name.
+
+        If the configuration does not exist or can't be retrieved, return an empty string.
+
+        :param config_name: Name of the configuration to obtain from configuration file
+        :return: The configuration value or an empty string
+        """
+        default = ""
+        if self.config is None:
+            return default
+        try:
+            result = self._get_text("zest.releaser", config_name, default=default)
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
     def extra_message(self):
         """Return extra text to be added to commit messages.
 
@@ -293,14 +310,22 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             extra-message = [ci skip]
         """
-        default = ""
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text("zest.releaser", "extra-message", default=default)
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.__get_message_config__("extra-message")
+
+    def prefix_message(self):
+        """Return extra text to be added before the commit message.
+
+        This can for example be used to skip CI builds.  This at least
+        works for Travis.  See
+        http://docs.travis-ci.com/user/how-to-skip-a-build/
+
+        Enable this mode by adding a ``prefix-message`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            prefix-message = [ci skip]
+        """
+        return self.__get_message_config__("prefix-message")
 
     def history_file(self):
         """Return path of history file.

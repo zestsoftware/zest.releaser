@@ -37,7 +37,7 @@ Two methods are unimplemented:
     ...
     NotImplementedError
 
-We can update commit messages based on what we find in ``setup.cfg``::
+We can suffix commit messages based on what we find in ``setup.cfg``::
 
     >>> lines = [
     ...     "[zest.releaser]",
@@ -76,3 +76,54 @@ And check with multiple lines.
     <BLANKLINE>
     Where is my towel?
     Not again.
+
+We can prefix commit messages based on what we find in ``setup.cfg``::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "prefix-message = Aargh!"]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> print(base.update_commit_message('Ni!'))
+    Aargh! Ni!
+
+
+Check that this works with non-ascii too.
+
+    >>> lines = [
+    ...     "[zest.releaser]".encode('utf-8'),
+    ...     "prefix-message = \u2603".encode('utf-8')]
+    >>> with open('setup.cfg', 'wb') as f:
+    ...     _ = f.write(b'\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> base.update_commit_message('Ni!')
+    '\u2603 Ni!'
+
+And check with multiple lines.
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "prefix-message =",
+    ...     "    Where is my towel?",
+    ...     "    Not again."]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> print(base.update_commit_message('Ni!'))
+    Where is my towel?
+    Not again. Ni!
+
+We can prefix and suffix commit messages based on what we find in ``setup.cfg``::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "extra-message = after",
+    ...     "prefix-message = before"]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> base = baserelease.Basereleaser()
+    >>> print(base.update_commit_message('Ni!'))
+    before Ni!
+    <BLANKLINE>
+    after

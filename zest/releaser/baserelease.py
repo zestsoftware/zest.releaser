@@ -422,7 +422,10 @@ class Basereleaser:
         raise NotImplementedError()
 
     def update_commit_message(self, msg):
+        prefix_message = self.pypiconfig.prefix_message()
         extra_message = self.pypiconfig.extra_message()
+        if prefix_message:
+            msg = "%s %s" % (prefix_message, msg)
         if extra_message:
             msg += "\n\n%s" % extra_message
         return msg
