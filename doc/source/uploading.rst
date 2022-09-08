@@ -165,7 +165,13 @@ case for this is telling Travis to skip Continuous Integration builds::
 
   [zest.releaser]
   extra-message = This will be added after the message
-  prefix-message = This will be added before the message
+
+Internal policies might mandate some sort of tag at the start of the
+commit message. You can prepend this with::
+
+    [zest.releaser]
+    prefix-message = [tools]
+
 
 
 Signing your commits or tags with git
