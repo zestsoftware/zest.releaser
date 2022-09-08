@@ -39,7 +39,7 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     <BLANKLINE>
     [zest.releaser]
     extra-message = [ci skip]
-    prefix-message = before
+    prefix-message = [TAG]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
     >>> pypiconfig.distutils_servers()
     ['pypi']
