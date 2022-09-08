@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-7.0.0a4 (unreleased)
---------------------
+7.0.0 (2022-09-09)
+------------------
 
 - Optionally add prefix text to commit messages.  This can be used ensure your messages follow some regular expression.
   To activate this, add ``prefix-message = [TAG]`` to a ``[zest.releaser]``
