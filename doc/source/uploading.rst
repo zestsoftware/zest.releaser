@@ -166,6 +166,13 @@ case for this is telling Travis to skip Continuous Integration builds::
   [zest.releaser]
   extra-message = [ci skip]
 
+Internal policies might mandate some sort of tag at the start of the
+commit message. You can prepend this with::
+
+  [zest.releaser]
+  prefix-message = [tools]
+
+
 
 Signing your commits or tags with git
 -------------------------------------

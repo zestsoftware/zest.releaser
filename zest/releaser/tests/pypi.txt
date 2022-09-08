@@ -39,6 +39,7 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     <BLANKLINE>
     [zest.releaser]
     extra-message = [ci skip]
+    prefix-message = [TAG]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
     >>> pypiconfig.distutils_servers()
     ['pypi']
@@ -71,6 +72,7 @@ And the new format that allows multiple uploads:
     <BLANKLINE>
     [zest.releaser]
     extra-message = [ci skip]
+    prefix-message = [TAG]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> from pprint import pprint
     >>> pprint(sorted(pypiconfig.distutils_servers()))

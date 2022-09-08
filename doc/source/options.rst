@@ -93,6 +93,9 @@ create-wheel = yes / no
 extra-message = [ci skip]
     Extra message to add to each commit (prerelease, postrelease).
 
+prefix-message = [TAG]
+    Prefix message to add at the beginning of each commit (prerelease, postrelease).
+
 no-input = yes / no
     Default: no.  Set this to yes to accept default answers for all
     questions.

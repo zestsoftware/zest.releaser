@@ -4,8 +4,11 @@ Changelog for zest.releaser
 7.0.0a4 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Optionally add prefix text to commit messages.  This can be used ensure your messages follow some regular expression.
+  To activate this, add ``prefix-message = [TAG]`` to a ``[zest.releaser]``
+  section in the ``setup.cfg`` of your package, or your global
+  ``~/.pypirc``.  Or add your favorite geeky quotes there.
+  [LvffY]
 
 7.0.0a3 (2022-04-04)
 --------------------
