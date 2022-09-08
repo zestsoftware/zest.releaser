@@ -315,15 +315,13 @@ class PypiConfig(BaseConfig):
     def prefix_message(self):
         """Return extra text to be added before the commit message.
 
-        This can for example be used to skip CI builds.  This at least
-        works for Travis.  See
-        http://docs.travis-ci.com/user/how-to-skip-a-build/
+        This can for example be used follow internal policies on commit messages.
 
         Enable this mode by adding a ``prefix-message`` option, either in the
         package you want to release, or in your ~/.pypirc::
 
             [zest.releaser]
-            prefix-message = [ci skip]
+            prefix-message = [TAG]
         """
         return self.__get_message_config__("prefix-message")
 
