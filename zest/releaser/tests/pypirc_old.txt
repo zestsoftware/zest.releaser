@@ -4,3 +4,4 @@ password:asjemenou
 
 [zest.releaser]
 extra-message = [ci skip]
+prefix-message = [TAG]
