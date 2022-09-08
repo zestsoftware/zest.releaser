@@ -4,10 +4,8 @@ Changelog for zest.releaser
 7.0.0a4 (unreleased)
 --------------------
 
-- Optionally add prefix text to commit messages.  This can be used to
-  avoid running Travis Continuous Integration builds.  See
-  http://docs.travis-ci.com/user/how-to-skip-a-build/.  To activate
-  this, add ``prefix-message = [ci skip]`` to a ``[zest.releaser]``
+- Optionally add prefix text to commit messages.  This can be used ensure your messages follow some regular expression.
+  To activate this, add ``prefix-message = [TAG]`` to a ``[zest.releaser]``
   section in the ``setup.cfg`` of your package, or your global
   ``~/.pypirc``.  Or add your favorite geeky quotes there.
   [LvffY]
