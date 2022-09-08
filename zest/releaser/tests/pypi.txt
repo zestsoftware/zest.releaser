@@ -72,7 +72,7 @@ And the new format that allows multiple uploads:
     <BLANKLINE>
     [zest.releaser]
     extra-message = [ci skip]
-    prefix-message = before
+    prefix-message = [TAG]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> from pprint import pprint
     >>> pprint(sorted(pypiconfig.distutils_servers()))
