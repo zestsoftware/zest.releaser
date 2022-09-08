@@ -164,13 +164,13 @@ configuration in your ``setup.cfg`` or global ``~/.pypirc``.  One use
 case for this is telling Travis to skip Continuous Integration builds::
 
   [zest.releaser]
-  extra-message = This will be added after the message
+  extra-message = [ci skip]
 
 Internal policies might mandate some sort of tag at the start of the
 commit message. You can prepend this with::
 
-    [zest.releaser]
-    prefix-message = [tools]
+  [zest.releaser]
+  prefix-message = [tools]
 
 
 
