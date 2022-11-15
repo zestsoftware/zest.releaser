@@ -1,10 +1,6 @@
 Detailed tests of vcs.py
 ========================
 
-.. :doctest:
-.. :setup: zest.releaser.tests.functional.setup
-.. :teardown: zest.releaser.tests.functional.teardown
-
 Some initial imports and utility functions:
 
     >>> from zest.releaser import vcs

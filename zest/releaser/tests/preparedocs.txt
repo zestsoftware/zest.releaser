@@ -1,8 +1,6 @@
 Documentation utility functions
 ===============================
 
-.. :doctest:
-
 We're testing ``preparedocs.py`` here:
 
     >>> from zest.releaser import preparedocs

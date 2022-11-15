@@ -70,7 +70,6 @@ setup(
             "wheel",
         ],
         "test": [
-            "z3c.testsetup >= 0.8.4",
             "zope.testing",
             "zope.testrunner",
             "wheel",

@@ -1,10 +1,6 @@
 Integration test
 ================
 
-.. :doctest:
-.. :setup: zest.releaser.tests.functional.setup
-.. :teardown: zest.releaser.tests.functional.teardown
-
 This test is based on the functional tests using a git repository, but enables
 releaser hooks on the test package and ensures that they run.
 

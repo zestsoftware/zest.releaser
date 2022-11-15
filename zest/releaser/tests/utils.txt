@@ -1,8 +1,6 @@
 Utility functions
 =================
 
-.. :doctest:
-
 We're testing ``utils.py`` here:
 
     >>> from zest.releaser import utils

@@ -1,10 +1,14 @@
+from .functional import setup
+from .functional import teardown
 from colorama import Fore
 from zope.testing import renormalizing
 
+import doctest
+import os
 import re
 import tempfile
 import twine.cli
-import z3c.testsetup
+import unittest
 
 
 def mock_dispatch(*args):
@@ -49,4 +53,48 @@ checker = renormalizing.RENormalizing(
     ]
 )
 
-test_suite = z3c.testsetup.register_all_tests("zest.releaser", checker=checker)
+# test_suite = z3c.testsetup.register_all_tests("zest.releaser", checker=checker)
+
+
+def test_suite():
+    """Find .txt files and test code examples in them."""
+    suite = unittest.TestSuite()
+
+    # These are simple tests without setup.
+    simple = [
+        "preparedocs.txt",
+        "pypi.txt",
+        "utils.txt",
+    ]
+    suite.addTests(
+        doctest.DocFileSuite(
+            *simple,
+            checker=checker,
+            optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE,
+        )
+    )
+
+    # Now for more involved tests with setup and teardown
+    doctests = []
+    tests_path = os.path.dirname(__file__)
+    for filename in sorted(os.listdir(tests_path)):
+        if not filename.endswith(".txt"):
+            continue
+        if filename in simple:
+            continue
+        if filename.startswith("pypirc_"):
+            # Sample pypirc file
+            continue
+        doctests.append(filename)
+
+    suite.addTests(
+        doctest.DocFileSuite(
+            *doctests,
+            setUp=setup,
+            tearDown=teardown,
+            checker=checker,
+            optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE,
+        )
+    )
+
+    return suite
