@@ -123,7 +123,8 @@ but 0.2.20:
     Our reply: n
 
 Releases without numbers at the end should not fluster us even when we
-cannot suggest a reasonable number. We'll ask for a version until we get one:
+cannot suggest a reasonable number. We'll ask for a version until we get one.
+This this case it is not a canonical version so we have an extra question about this:
 
     >>> add_changelog_entry()
     >>> utils.test_answer_book.set_answers(['', '', '0.3beta', ''])
@@ -131,6 +132,8 @@ cannot suggest a reasonable number. We'll ask for a version until we get one:
     Question...
     Question: Enter version [0.2.20]:
     Our reply: 0.3beta
+    Question: Do you want to use this version anyway? (Y/n)?
+    Our reply: <ENTER>
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
