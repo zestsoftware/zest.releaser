@@ -53,7 +53,6 @@ checker = renormalizing.RENormalizing(
     ]
 )
 
-# test_suite = z3c.testsetup.register_all_tests("zest.releaser", checker=checker)
 
 
 def test_suite():
