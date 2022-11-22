@@ -1,10 +1,6 @@
 Detailed tests of prerelease.py
 ===============================
 
-.. :doctest:
-.. :setup: zest.releaser.tests.functional.setup
-.. :teardown: zest.releaser.tests.functional.teardown
-
 Several items are prepared for us.
 
 A git checkout of a project:

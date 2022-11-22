@@ -4,7 +4,7 @@ Changelog for zest.releaser
 7.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for Python 3.11, remove ``z3c.testsetup`` from test dependencies.  [maurits]
 
 
 7.0.0 (2022-09-09)
