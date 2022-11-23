@@ -44,7 +44,7 @@ Or on multiple lines::
 
   This was difficult."
 
-The ``bumpversion`` command accepts some mutually exclusive options:
+The ``bumpversion`` and ``postrelease`` commands accept some mutually exclusive options:
 
 - With ``--feature`` we update the minor version.
 
