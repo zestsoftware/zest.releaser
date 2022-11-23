@@ -217,6 +217,9 @@ version
 ``postrelease`` data dict items
 -------------------------------
 
+breaking
+    True if we handle a breaking (major) change
+
 dev_version
     New version with development marker (so 1.1.dev0)
 
@@ -225,6 +228,12 @@ dev_version_template
 
 development_marker
     String to be appended to version after postrelease
+
+feature
+    True if we handle a feature (minor) change
+
+final
+    True if we handle a final release
 
 new_version
     New version, without development marker (so 1.1)
@@ -250,5 +259,8 @@ clean_new_version
 feature
     True if we handle a feature (minor) change
 
+final
+    True if we handle a final release
+
 release
-    Type of release: breaking, feature, normal
+    Type of release: breaking, feature, normal, final
