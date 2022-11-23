@@ -1,7 +1,7 @@
 Options
 =======
 
-Zest.releaser tries not too burden you with lots of command line
+Zest.releaser tries not to burden you with lots of command line
 options.  Instead, it asks questions while doing its job.  But in some
 cases, a command line option makes sense.
 
@@ -44,11 +44,13 @@ Or on multiple lines::
 
   This was difficult."
 
-The ``bumpversion`` command accepts two mutually exclusive options:
+The ``bumpversion`` command accepts some mutually exclusive options:
 
 - With ``--feature`` we update the minor version.
 
-- With option ``--breaking`` we update the major version.
+- With ``--breaking`` we update the major version.
+
+- With ``--final`` we remove alpha / beta / rc markers from the version.
 
 
 Global options

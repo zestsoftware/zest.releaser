@@ -143,6 +143,7 @@ def suggest_version(
     less_zeroes=False,
     levels=0,
     dev_marker=".dev0",
+    final=False,
 ):
     """Suggest new version.
 
@@ -151,13 +152,15 @@ def suggest_version(
 
     - feature: increase major version, 1.2.3 -> 1.3.
     - breaking: increase minor version, 1.2.3 -> 2 (well, 2.0)
+    - final: remove a/b/rc, 6.0.0rc1 -> 6.0.0
     - less_zeroes: instead of 2.0.0, suggest 2.0.
       Only makes sense in combination with feature or breaking.
     - levels: number of levels to aim for.  3 would give: 1.2.3.
       levels=0 would mean: do not change the number of levels.
     """
-    if feature and breaking:
-        print("Cannot have both breaking and feature in suggest_version.")
+    # How many options are enabled?
+    if len(list(filter(None, [breaking, feature, final]))) > 1:
+        print("ERROR: Only enable one option of breaking/feature/final.")
         sys.exit(1)
     dev = ""
     base_dev_marker = strip_last_number(dev_marker)
@@ -202,18 +205,28 @@ def suggest_version(
         if target != -1:
             # Something like 1.2rc1 where we want a feature bump.  This gets
             # too tricky.
-            return None
-        # Fall back on simply updating the last character when it is
-        # an integer.
-        try:
-            last = int(current[target]) + 1
-            suggestion = current[:target] + str(last)
-        except (ValueError, IndexError):
-            logger.warning(
-                "Version does not end with a number, so we can't "
-                "calculate a suggestion for a next version."
-            )
-            return None
+            return
+        if final:
+            parsed_version = parse_version(current)
+            if not parsed_version.pre:
+                logger.warning(
+                    "Version is not a pre version, so we cannot "
+                    "calculate a suggestion for the final version."
+                )
+                return
+            suggestion = parsed_version.base_version
+        else:
+            # Fall back on simply updating the last character when it is
+            # an integer.
+            try:
+                last = int(current[target]) + 1
+                suggestion = current[:target] + str(last)
+            except (ValueError, IndexError):
+                logger.warning(
+                    "Version does not end with a number, so we can't "
+                    "calculate a suggestion for a next version."
+                )
+                return
     # Maybe add a few zeroes: turn 2 into 2.0.0 if 3 levels is the goal.
     goal = max(original_levels, levels)
     length = len(suggestion.split("."))
