@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-7.1.0 (unreleased)
+7.1.0 (2022-11-23)
 ------------------
 
 - Add the ``bumpversion`` options to the ``postrelease`` command.
