@@ -183,6 +183,22 @@ this combination a bit more:
     >>> utils.suggest_version('1.7.2.1', less_zeroes=True, levels=3)
     '1.7.2.2'
 
+You can get a suggestion for a final release:
+
+    >>> utils.suggest_version('1.2.3a1', final=True)
+    '1.2.3'
+    >>> utils.suggest_version('1.2.3b2.dev1', final=True)
+    '1.2.3.dev0'
+    >>> utils.suggest_version('1.2.3rc1', final=True)
+    '1.2.3'
+    >>> utils.suggest_version('2.0rc2', final=True)
+    '2.0'
+
+If no final release is needed, you get no suggestion:
+
+    >>> utils.suggest_version('6.0.0dev0', final=True) is None
+    True
+
 
 Asking input
 ------------

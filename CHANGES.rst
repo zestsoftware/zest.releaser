@@ -4,6 +4,10 @@ Changelog for zest.releaser
 7.0.1 (unreleased)
 ------------------
 
+- Add ``--final`` option to ``bumpversion`` command.
+  This removes alpha / beta / rc markers from the version.
+  [maurits]
+
 - Add support for Python 3.11, remove ``z3c.testsetup`` from test dependencies.  [maurits]
 
 
@@ -15,6 +19,7 @@ Changelog for zest.releaser
   section in the ``setup.cfg`` of your package, or your global
   ``~/.pypirc``.  Or add your favorite geeky quotes there.
   [LvffY]
+
 
 7.0.0a3 (2022-04-04)
 --------------------

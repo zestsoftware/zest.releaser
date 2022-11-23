@@ -22,7 +22,8 @@ DATA.update(
         "breaking": "True if we handle a breaking (major) change",
         "clean_new_version": "Clean new version (say 1.1)",
         "feature": "True if we handle a feature (minor) change",
-        "release": "Type of release: breaking, feature, normal",
+        "final": "True if we handle a final release",
+        "release": "Type of release: breaking, feature, normal, final",
     }
 )
 
@@ -34,13 +35,15 @@ class BumpVersion(baserelease.Basereleaser):
 
     """
 
-    def __init__(self, vcs=None, breaking=False, feature=False):
+    def __init__(self, vcs=None, breaking=False, feature=False, final=False):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         if breaking:
             release = "breaking"
         elif feature:
             release = "feature"
+        elif final:
+            release = "final"
         else:
             release = "normal"
         self.data.update(
@@ -48,6 +51,7 @@ class BumpVersion(baserelease.Basereleaser):
                 breaking=breaking,
                 commit_msg=COMMIT_MSG,
                 feature=feature,
+                final=final,
                 history_header=HISTORY_HEADER,
                 release=release,
                 update_history=True,
@@ -91,6 +95,7 @@ class BumpVersion(baserelease.Basereleaser):
             # Get a suggestion.
             breaking = self.data["breaking"]
             feature = self.data["feature"]
+            final = self.data["final"]
             # Compare the suggestion for the last tag with the current version.
             # The wanted version bump may already have been done.
             last_tag_version = utils.get_last_tag(self.vcs, allow_missing=True)
@@ -103,16 +108,23 @@ class BumpVersion(baserelease.Basereleaser):
             params = dict(
                 feature=feature,
                 breaking=breaking,
+                final=final,
                 less_zeroes=self.pypiconfig.less_zeroes(),
                 levels=self.pypiconfig.version_levels(),
                 dev_marker=self.pypiconfig.development_marker(),
             )
-            minimum_version = utils.suggest_version(last_tag_version, **params)
-            if parse_version(minimum_version) <= parse_version(
-                utils.cleanup_version(original_version)
-            ):
-                print("No version bump needed.")
-                sys.exit(0)
+            if final:
+                minimum_version = utils.suggest_version(original_version, **params)
+                if minimum_version is None:
+                    print("No version bump needed.")
+                    sys.exit(0)
+            else:
+                minimum_version = utils.suggest_version(last_tag_version, **params)
+                if parse_version(minimum_version) <= parse_version(
+                    utils.cleanup_version(original_version)
+                ):
+                    print("No version bump needed.")
+                    sys.exit(0)
             # A bump is needed.  Get suggestion for next version.
             suggestion = utils.suggest_version(original_version, **params)
         if not initial:
@@ -145,10 +157,22 @@ def main():
         default=False,
         help="Bump for breaking release (increase major version)",
     )
+    parser.add_argument(
+        "--final",
+        action="store_true",
+        dest="final",
+        default=False,
+        help="Bump for final release (remove alpha/beta/rc from version)",
+    )
     options = utils.parse_options(parser)
-    if options.breaking and options.feature:
-        print("Cannot have both breaking and feature options.")
+    # How many options are enabled?
+    if len(list(filter(None, [options.breaking, options.feature, options.final]))) > 1:
+        print("ERROR: Only enable one option of breaking/feature/final.")
         sys.exit(1)
     utils.configure_logging()
-    bumpversion = BumpVersion(breaking=options.breaking, feature=options.feature)
+    bumpversion = BumpVersion(
+        breaking=options.breaking,
+        feature=options.feature,
+        final=options.final,
+    )
     bumpversion.run()
