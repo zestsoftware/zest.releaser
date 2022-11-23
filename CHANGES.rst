@@ -4,6 +4,10 @@ Changelog for zest.releaser
 7.0.1 (unreleased)
 ------------------
 
+- Add the ``bumpversion`` options to the ``postrelease`` command.
+  This means ``feature``, ``breaking``, and ``final``.
+  [rnc, maurits]
+
 - Add ``--final`` option to ``bumpversion`` command.
   This removes alpha / beta / rc markers from the version.
   [maurits]

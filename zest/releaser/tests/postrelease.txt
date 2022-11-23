@@ -230,3 +230,75 @@ The old one is left untouched:
     1.0 (1972-12-25)
     <BLANKLINE>
     - hello
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '1.4.dev0'
+
+Let's try some options by simply calling postrelease a few times without calling prerelease or release.
+First prepare a bugfix release.
+
+    >>> utils.test_answer_book.set_answers(['1.5.1', '', 'n'])
+    >>> postrelease.main()
+    Current version is 1.4
+    Question: Enter new development version ('.dev0' will be appended) [1.5]:
+    Our reply: 1.5.1
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '1.5.1.dev0'
+
+Now say that the next version should be a feature release:
+
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
+    >>> import sys
+    >>> sys.argv[1:] = ['--feature']
+    >>> postrelease.main()
+    Current version is 1.5.1
+    Question: Enter new development version ('.dev0' will be appended) [1.6.0]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '1.6.0.dev0'
+
+Now say that the next version should be a breaking release, but make it an alpha:
+
+    >>> utils.test_answer_book.set_answers(['2.0.0a1', '', 'n'])
+    >>> sys.argv[1:] = ['--breaking']
+    >>> postrelease.main()
+    Current version is 1.6.0
+    Question: Enter new development version ('.dev0' will be appended) [2.0.0]:
+    Our reply: 2.0.0a1
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '2.0.0a1.dev0'
+
+Now say that the next version is a final release.
+
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
+    >>> sys.argv[1:] = ['--final']
+    >>> postrelease.main()
+    Current version is 2.0.0a1
+    Question: Enter new development version ('.dev0' will be appended) [2.0.0]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '2.0.0.dev0'

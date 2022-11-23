@@ -19,9 +19,12 @@ DEV_VERSION_TEMPLATE = "%(new_version)s%(development_marker)s"
 DATA = baserelease.DATA.copy()
 DATA.update(
     {
+        "breaking": "True if we handle a breaking (major) change",
         "dev_version": "New version with development marker (so 1.1.dev0)",
         "dev_version_template": "Template for development version number",
         "development_marker": "String to be appended to version after postrelease",
+        "feature": "True if we handle a feature (minor) change",
+        "final": "True if we handle a final release",
         "new_version": "New version, without development marker (so 1.1)",
     }
 )
@@ -34,12 +37,15 @@ class Postreleaser(baserelease.Basereleaser):
 
     """
 
-    def __init__(self, vcs=None):
+    def __init__(self, vcs=None, breaking=False, feature=False, final=False):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(
             dict(
+                breaking=breaking,
                 commit_msg=COMMIT_MSG,
+                feature=feature,
+                final=final,
                 dev_version_template=DEV_VERSION_TEMPLATE,
                 development_marker=self.pypiconfig.development_marker(),
                 history_header=HISTORY_HEADER,
@@ -67,18 +73,20 @@ class Postreleaser(baserelease.Basereleaser):
     def _ask_for_new_dev_version(self):
         """Ask for and store a new dev version string."""
         current = self.vcs.version
-        logger.debug("Extracted version: %s", current)
         if not current:
             logger.critical("No version found.")
             sys.exit(1)
         # Clean it up to a non-development version.
         current = utils.cleanup_version(current)
-        suggestion = utils.suggest_version(
-            current,
+        params = dict(
+            breaking=self.data["breaking"],
+            feature=self.data["feature"],
+            final=self.data["final"],
             less_zeroes=self.pypiconfig.less_zeroes(),
             levels=self.pypiconfig.version_levels(),
             dev_marker=self.pypiconfig.development_marker(),
         )
+        suggestion = utils.suggest_version(current, **params)
         print("Current version is %s" % current)
         q = (
             "Enter new development version "
@@ -107,7 +115,37 @@ def datacheck(data):
 
 
 def main():
-    utils.parse_options()
+    parser = utils.base_option_parser()
+    parser.add_argument(
+        "--feature",
+        action="store_true",
+        dest="feature",
+        default=False,
+        help="Bump for feature release (increase minor version)",
+    )
+    parser.add_argument(
+        "--breaking",
+        action="store_true",
+        dest="breaking",
+        default=False,
+        help="Bump for breaking release (increase major version)",
+    )
+    parser.add_argument(
+        "--final",
+        action="store_true",
+        dest="final",
+        default=False,
+        help="Bump for final release (remove alpha/beta/rc from version)",
+    )
+    options = utils.parse_options(parser)
+    # How many options are enabled?
+    if len(list(filter(None, [options.breaking, options.feature, options.final]))) > 1:
+        print("ERROR: Only enable one option of breaking/feature/final.")
+        sys.exit(1)
     utils.configure_logging()
-    postreleaser = Postreleaser()
+    postreleaser = Postreleaser(
+        breaking=options.breaking,
+        feature=options.feature,
+        final=options.final,
+    )
     postreleaser.run()
