@@ -5,7 +5,7 @@ Changelog for zest.releaser
 ------------------
 
 - Add the ``bumpversion`` options to the ``postrelease`` command.
-  This means ``feature``, ``breaking``, and ``--final``.
+  This means ``feature``, ``breaking``, and ``final``.
   [rnc, maurits]
 
 - Add ``--final`` option to ``bumpversion`` command.
