@@ -104,6 +104,10 @@ def setup(test):
             f.write(new_changes)
         commit_all_changes()
 
+    def rename_changelog(src: str, dst: str):
+        execute_command(["git", "mv", src, dst])
+        commit_all_changes()
+
     test.globs.update(
         {
             "tempdir": test.tempdir,
@@ -112,6 +116,7 @@ def setup(test):
             "mock_pypi_available": test.mock_pypi_available,
             "add_changelog_entry": add_changelog_entry,
             "commit_all_changes": commit_all_changes,
+            "rename_changelog": rename_changelog
         }
     )
 

@@ -142,3 +142,16 @@ And there won't be any underline in headers::
 
     >>> base.underline_char == ""
     True
+
+Also, if we have no ``changelog_format`` setting, but the
+history file ends with ``.md``, we consider it Markdown::
+
+    >>> lines = ["[zest.releaser]", ""]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> rename_changelog("CHANGES.txt", "CHANGES.md")
+    >>> base = baserelease.Basereleaser()
+    >>> base._grab_history()
+    >>> breakpoint()
+    >>> base.changelog_format
+    'md'

@@ -84,7 +84,10 @@ class Basereleaser:
 
     @property
     def changelog_format(self):
-        return self.pypiconfig.changelog_format()
+        default = "rst"
+        config_value = self.pypiconfig.changelog_format()
+        history_file = self.data.get("history_file") or ""
+        return utils.history_format(config_value, history_file)
 
     @property
     def underline_char(self):

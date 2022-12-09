@@ -953,3 +953,14 @@ def get_list_item(lines):
             count = new_count
     # Return the best one.
     return best
+
+
+def history_format(config_value, history_file):
+    """Decide what is the history/changelog format."""
+    default = "rst"
+    history_format = config_value
+    if not history_format:
+        history_file = history_file or ""
+        ext = history_file.split(".")[-1].lower()
+        history_format = "md" if ext in ["md", "markdown"] else default
+    return history_format

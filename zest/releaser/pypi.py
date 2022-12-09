@@ -392,7 +392,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             changelog_format = md
         """
-        default = "rst"
+        default = ""
         if self.config is None:
             return default
         try:
