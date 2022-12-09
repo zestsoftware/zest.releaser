@@ -382,6 +382,27 @@ class PypiConfig(BaseConfig):
             return default
         return result
 
+    def history_format(self):
+        """Return the format to be used for Changelog files.
+
+        Configure this by adding an ``history_format`` option, either in the
+        package you want to release, or in your ~/.pypirc, and using ``rst`` for
+        Restructured Text and ``md`` for Markdown::
+
+            [zest.releaser]
+            history_format = md
+        """
+        default = ""
+        if self.config is None:
+            return default
+        try:
+            result = self._get_text(
+                "zest.releaser", "history_format", default=default, raw=True
+            )
+        except (NoSectionError, NoOptionError, ValueError):
+            return default
+        return result
+
     def create_wheel(self):
         """Should we create a Python wheel for this package?
 

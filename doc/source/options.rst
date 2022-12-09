@@ -179,6 +179,9 @@ encoding = a string
   Set this to, for example, ``utf-8`` when the encoding of your ``CHANGES.rst``
   file is not determined correctly.
 
+history_format = a string
+  Default: empty.
+  Set this to ``md`` to handle changelog entries in Markdown.
 
 Per project options
 -------------------

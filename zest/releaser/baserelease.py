@@ -82,6 +82,20 @@ class Basereleaser:
         if self.pypiconfig.no_input():
             utils.AUTO_RESPONSE = True
 
+    @property
+    def history_format(self):
+        default = "rst"
+        config_value = self.pypiconfig.history_format()
+        history_file = self.data.get("history_file") or ""
+        return utils.history_format(config_value, history_file)
+
+    @property
+    def underline_char(self):
+        underline_char = "-"
+        if self.history_format == "md":
+            underline_char = ""
+        return underline_char
+
     def _grab_version(self, initial=False):
         """Just grab the version.
 
@@ -182,6 +196,8 @@ class Basereleaser:
         if self.data["history_file"] is None:
             return
         good_heading = self.data["history_header"] % self.data
+        if self.history_format == "md" and not good_heading.startswith("#"):
+            good_heading = f"## {good_heading}"
         if not add and self.data.get("has_released_header"):
             # So we are editing a line, but it already has a release date.
             logger.warning(
@@ -195,14 +211,14 @@ class Basereleaser:
         headings = self.data["headings"]
         history_lines = self.data["history_lines"]
         previous = ""
-        underline_char = "-"
+        underline_char = self.underline_char
         empty = False
         if not history_lines:
             # Remember that we were empty to start with.
             empty = True
             # prepare header line
             history_lines.append("")
-        if len(history_lines) <= 1:
+        if len(history_lines) <= 1 and underline_char:
             # prepare underline
             history_lines.append(underline_char)
         if not headings:
@@ -216,12 +232,13 @@ class Basereleaser:
             underline_char = history_lines[underline_line][0]
         except IndexError:
             logger.debug("No character on line below header.")
-            underline_char = "-"
+            underline_char = self.underline_char
         previous = history_lines[inject_location]
         if add:
+            underline = underline_char * len(good_heading) if underline_char else ""
             inject = [
                 good_heading,
-                underline_char * len(good_heading),
+                underline,
                 "",
                 self.data["nothing_changed_yet"],
                 "",
@@ -234,12 +251,13 @@ class Basereleaser:
             # edit current line
             history_lines[inject_location] = good_heading
             logger.debug("Set heading from '%s' to '%s'.", previous, good_heading)
-            history_lines[underline_line] = utils.fix_rst_heading(
-                heading=good_heading, below=history_lines[underline_line]
-            )
-            logger.debug(
-                "Set line below heading to '%s'", history_lines[underline_line]
-            )
+            if self.history_format == "rst":
+                history_lines[underline_line] = utils.fix_rst_heading(
+                    heading=good_heading, below=history_lines[underline_line]
+                )
+                logger.debug(
+                    "Set line below heading to '%s'", history_lines[underline_line]
+                )
         # Setting history_lines is not needed, except when we have replaced the
         # original instead of changing it.  So just set it.
         self.data["history_lines"] = history_lines

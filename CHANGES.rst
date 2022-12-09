@@ -4,7 +4,12 @@ Changelog for zest.releaser
 7.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Auto-detect ``history_format`` based on history filename.
+  [ericof]
+
+- Add ``history_format`` option, to explicitly set changelogs
+  entries in Markdown.
+  [ericof]
 
 
 7.1.0 (2022-11-23)

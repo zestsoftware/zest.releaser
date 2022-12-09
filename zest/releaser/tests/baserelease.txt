@@ -123,3 +123,34 @@ We can prefix and suffix commit messages based on what we find in ``setup.cfg``:
     before Ni!
     <BLANKLINE>
     after
+
+We can use Markdown based on what we find in ``setup.cfg``::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "history_format = md"]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+
+Now, Basereleaser will recognize the format as Markdown::
+
+    >>> base = baserelease.Basereleaser()
+    >>> base.history_format
+    'md'
+
+And there won't be any underline in headers::
+
+    >>> base.underline_char == ""
+    True
+
+Also, if we have no ``history_format`` setting, but the
+history file ends with ``.md``, we consider it Markdown::
+
+    >>> lines = ["[zest.releaser]", ""]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> rename_changelog("CHANGES.txt", "CHANGES.md")
+    >>> base = baserelease.Basereleaser()
+    >>> base._grab_history()
+    >>> base.history_format
+    'md'
