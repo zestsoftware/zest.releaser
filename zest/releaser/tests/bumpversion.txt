@@ -128,7 +128,7 @@ It will also work if we use Markdown::
 
     >>> lines = [
     ...     "[zest.releaser]",
-    ...     "changelog_format = md"]
+    ...     "history_format = md"]
     >>> with open('setup.cfg', 'w') as f:
     ...     _ = f.write('\n'.join(lines))
     >>> lines = [

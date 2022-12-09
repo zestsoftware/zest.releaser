@@ -83,16 +83,16 @@ class Basereleaser:
             utils.AUTO_RESPONSE = True
 
     @property
-    def changelog_format(self):
+    def history_format(self):
         default = "rst"
-        config_value = self.pypiconfig.changelog_format()
+        config_value = self.pypiconfig.history_format()
         history_file = self.data.get("history_file") or ""
         return utils.history_format(config_value, history_file)
 
     @property
     def underline_char(self):
         underline_char = "-"
-        if self.changelog_format == "md":
+        if self.history_format == "md":
             underline_char = ""
         return underline_char
 
@@ -196,7 +196,7 @@ class Basereleaser:
         if self.data["history_file"] is None:
             return
         good_heading = self.data["history_header"] % self.data
-        if self.changelog_format == "md" and not good_heading.startswith("#"):
+        if self.history_format == "md" and not good_heading.startswith("#"):
             good_heading = f"## {good_heading}"
         if not add and self.data.get("has_released_header"):
             # So we are editing a line, but it already has a release date.
@@ -251,7 +251,7 @@ class Basereleaser:
             # edit current line
             history_lines[inject_location] = good_heading
             logger.debug("Set heading from '%s' to '%s'.", previous, good_heading)
-            if self.changelog_format == "rst":
+            if self.history_format == "rst":
                 history_lines[underline_line] = utils.fix_rst_heading(
                     heading=good_heading, below=history_lines[underline_line]
                 )
