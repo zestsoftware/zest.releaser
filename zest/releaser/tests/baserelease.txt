@@ -152,6 +152,5 @@ history file ends with ``.md``, we consider it Markdown::
     >>> rename_changelog("CHANGES.txt", "CHANGES.md")
     >>> base = baserelease.Basereleaser()
     >>> base._grab_history()
-    >>> breakpoint()
     >>> base.history_format
     'md'
