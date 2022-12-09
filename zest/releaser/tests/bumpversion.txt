@@ -123,3 +123,33 @@ Now a final release, where we keep the dev marker::
     <BLANKLINE>
     3.0.0 (unreleased)
     ------------------
+
+It will also work if we use Markdown::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "changelog_format = md"]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> lines = [
+    ...     "# Changelog",
+    ...     "",
+    ...     "## 3.0.0 (unreleased)"]
+    >>> with open('CHANGES.txt', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> commit_all_changes()
+    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> sys.argv[1:] = ['--final']
+    >>> bumpversion.main()
+    Checking version bump for final release.
+    Last tag: 2.9.4
+    Current version: 3.0.0.dev0
+    Question: Enter version [3.0.1.dev0]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> githead('CHANGES.txt')
+    # Changelog
+    <BLANKLINE>
+    ## 3.0.1 (unreleased)

@@ -123,3 +123,22 @@ We can prefix and suffix commit messages based on what we find in ``setup.cfg``:
     before Ni!
     <BLANKLINE>
     after
+
+We can use Markdown based on what we find in ``setup.cfg``::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "changelog_format = md"]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+
+Now, Basereleaser will recognize the format as Markdown::
+
+    >>> base = baserelease.Basereleaser()
+    >>> base.changelog_format
+    'md'
+
+And there won't be any underline in headers::
+
+    >>> base.underline_char == ""
+    True
