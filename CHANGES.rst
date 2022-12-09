@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-7.1.1 (unreleased)
+7.2.0 (unreleased)
 ------------------
 
 - Auto-detect ``history_format`` based on history filename.
