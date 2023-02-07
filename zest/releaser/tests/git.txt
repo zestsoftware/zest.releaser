@@ -1,4 +1,4 @@
-'Detailed tests of git.py
+Detailed tests of git.py
 ========================
 
 Some initial imports:
