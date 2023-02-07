@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-7.3.0 (unreleased)
+7.3.0 (2023-02-07)
 ------------------
 
 - Add option ``run-pre-commit = yes / no``.
