@@ -675,3 +675,27 @@ class PypiConfig(BaseConfig):
         except (NoSectionError, NoOptionError, ValueError):
             return default
         return result
+
+    def run_pre_commit(self):
+        """Return whether we should run pre commit hooks.
+
+        At least in git you have pre commit hooks.
+        These may interfere with releasing:
+        zest.releaser changes your setup.py, a pre commit hook
+        runs black or isort and gives an error, so the commit is cancelled.
+        By default (since version 7.3.0) we do not run pre commit hooks.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-signing`` option::
+
+            [zest.releaser]
+            run-pre-commit = yes
+
+        ``run-pre-commit`` must contain exactly one word which will be
+        converted to a boolean. Currently are accepted (case
+        insensitively): 0, false, no, off for False, and 1, true, yes,
+        on for True).
+
+        The default when this option has not been set is False.
+
+        """
+        return self._get_boolean("zest.releaser", "run-pre-commit", default=False)

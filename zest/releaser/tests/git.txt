@@ -54,7 +54,7 @@ Commit it:
 
     >>> cmd = checkout.cmd_commit('small tweak')
     >>> cmd
-    ['git', 'commit', '-a', '-m', 'small tweak']
+    ['git', 'commit', '-a', '-m', 'small tweak', '-n']
 
 In some cases we get this output:
 ``[master ...] small tweak``

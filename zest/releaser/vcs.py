@@ -58,8 +58,8 @@ class BaseVersionControl:
             # Determine relative path from root of repo.
             self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
         self.setup_cfg = pypi.SetupConfig()
-        pypi_cfg = pypi.PypiConfig()
-        self.fallback_encoding = pypi_cfg.encoding()
+        self.pypi_cfg = pypi.PypiConfig()
+        self.fallback_encoding = self.pypi_cfg.encoding()
 
     def __repr__(self):
         return "<{} at {} {}>".format(
