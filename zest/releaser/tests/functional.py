@@ -78,7 +78,7 @@ def setup(test):
     execute_command(["git", "config", "--local", "commit.gpgsign", "false"])
     execute_command(["git", "config", "--local", "tag.gpgsign", "false"])
     execute_command(["git", "add", "."])
-    execute_command(["git", "commit", "-a", "-m", "init"])
+    execute_command(["git", "commit", "-a", "-m", "init" "-n"])
     os.chdir(test.orig_dir)
 
     def githead(*filename_parts):

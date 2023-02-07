@@ -67,7 +67,10 @@ class Git(BaseVersionControl):
         return ["git", "diff"]
 
     def cmd_commit(self, message):
-        return ["git", "commit", "-a", "-m", message]
+        parts = ["git", "commit", "-a", "-m", message]
+        if not self.pypi_cfg.run_pre_commit():
+            parts.append("-n")
+        return parts
 
     def cmd_diff_last_commit_against_tag(self, version):
         return ["git", "diff", version]

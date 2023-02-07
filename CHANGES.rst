@@ -1,10 +1,14 @@
 Changelog for zest.releaser
 ===========================
 
-7.2.1 (unreleased)
+7.3.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add option ``run-pre-commit = yes / no``.
+  Default: no.
+  When set to true, pre commit hooks are run.
+  This may interfere with releasing when they fail.
+  [maurits]
 
 
 7.2.0 (2022-12-09)

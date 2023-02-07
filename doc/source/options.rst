@@ -183,6 +183,13 @@ history_format = a string
   Default: empty.
   Set this to ``md`` to handle changelog entries in Markdown.
 
+run-pre-commit = yes / no
+    Default: no.
+    New in version 7.3.0.
+    When set to true, pre commit hooks are run.
+    This may interfere with releasing when they fail.
+
+
 Per project options
 -------------------
 
