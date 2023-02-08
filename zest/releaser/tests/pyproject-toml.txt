@@ -1,0 +1,144 @@
+Integration test
+================
+
+Now try a project with only a ``pyproject.toml`` and no ``setup.cfg`` or ``setup.py``.
+
+Several items are prepared for us.
+
+A git directory (repository and checkout in one):
+
+    >>> gitsourcedir
+    'TESTTEMP/tha.example-git'
+    >>> import os
+    >>> os.chdir(gitsourcedir)
+
+We remove and add files.
+
+    >>> from zest.releaser import tests
+    >>> from zest.releaser.utils import execute_command
+    >>> import shutil
+    >>> _ = execute_command(["git", "rm", "setup.cfg", "setup.py"])
+    >>> pyproject_file = os.path.join(os.path.dirname(tests.__file__), "pyproject.toml")
+    >>> shutil.copy(pyproject_file, os.path.curdir)
+    './pyproject.toml'
+    >>> _ = execute_command(["git", "add", "pyproject.toml"])
+    >>> _ = execute_command(["git", "commit", "-m", "Move to pyproject.toml"])
+    >>> print(execute_command(["git", "status"]))
+    On branch master
+    nothing to commit, working directory clean
+
+The version is at 0.1.dev0:
+
+    >>> githead('pyproject.toml')
+    [project]
+    name = "tha.example"
+    version = "0.1.dev0"
+    description = "Example package"
+    keywords = ["example"]
+
+Asking input on the prompt is not unittestable unless we use the prepared
+testing hack in utils.py:
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
+Run the prerelease script:
+
+    >>> from zest.releaser import prerelease
+    >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
+    >>> prerelease.main()
+    Question...
+    Question: Enter version [0.1]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+
+The changelog now has a release date instead of ``(unreleased)``:
+
+    >>> githead('CHANGES.txt')
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.1 (2008-12-20)
+    ----------------
+
+And the version number is just 0.1 and has lost its dev marker:
+
+    >>> githead('pyproject.toml')
+    [project]
+    name = "tha.example"
+    version = "0.1"
+    description = "Example package"
+    keywords = ["example"]
+
+The release script tags the release and uploads it.  Note that in the
+other function tests we call
+``mock_pypi_available.append('tha.example')``, but we do not do this
+here.  This way we can check what happens when a package is not yet
+known on PyPI:
+
+    >>> utils.test_answer_book.set_answers(['y', 'y', 'y', 'yes'])
+    >>> from zest.releaser import release
+    >>> release.main()
+    Checking data dict
+    Tag needed to proceed, you can use the following command:
+    git tag 0.1 -m 'Tagging 0.1'
+    Question: Run this command (Y/n)?
+    Our reply: y
+    <BLANKLINE>
+    Question: Check out the tag
+        (for tweaks or pypi/distutils server upload) (y/N)?
+    Our reply: y
+    RED Note: ...0.1...
+    ...
+    RED HEAD is now at ...
+    Preparing release 0.1
+    <BLANKLINE>
+
+TODO No source distribution or wheel is generated yet!!!!!
+This currently only happens when you have a setup.py.
+One related small thing is that for the question "Check out the tag"
+the default answer is No, instead of Yes.
+So there is much more to do.
+But writing pyproject.toml has worked, which is a start.
+
+There is now a tag:
+
+    >>> print(execute_command(["git", "tag"]))
+    0.1
+
+And the postrelease script ups the version:
+
+    >>> utils.test_answer_book.set_answers(['', '', 'n'])
+    >>> from zest.releaser import postrelease
+    >>> postrelease.main()
+    Current version is 0.1
+    Question: Enter new development version ('.dev0' will be appended) [0.2]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    Question: OK to push commits to the server? (Y/n)?
+    Our reply: n
+
+The changelog and pyproject.toml are at 0.2 and indicate dev mode:
+
+    >>> githead('CHANGES.txt')
+    Changelog of tha.example
+    ========================
+    <BLANKLINE>
+    0.2 (unreleased)
+    ----------------
+    >>> githead('pyproject.toml')
+    [project]
+    name = "tha.example"
+    version = "0.2.dev0"
+    description = "Example package"
+    keywords = ["example"]
+
+And there are no uncommitted changes:
+
+    >>> print(execute_command(["git", "status"]))
+    On branch master
+    nothing to commit, working directory clean

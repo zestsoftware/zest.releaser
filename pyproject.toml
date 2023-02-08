@@ -1,2 +1,96 @@
+[build-system]
+# See https://snarky.ca/what-the-heck-is-pyproject-toml/
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zest.releaser"
+version = "7.3.1.dev0"
+description = "Software releasing made easy and repeatable"
+license = {text = "GPL"}
+authors = [
+    {name = "Reinout van Rees", email = "reinout@vanrees.org"},
+    {name = "Maurits van Rees", email = "maurits@vanrees.org"},
+]
+dependencies = [
+    "setuptools",
+    "colorama",
+    "requests",
+    "twine >= 1.6.0",
+    "tomli; python_version<'3.11'",
+]
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 6 - Mature",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["releasing", "packaging", "pypi"]
+# I thought there was a way to combine two files, but I don't see it.
+# So define the readme as dynamic: still defined in setup.py.
+dynamic = ["readme"]
+
+[project.optional-dependencies]
+recommended = [
+    "check-manifest",
+    "pep440",
+    "pyroma",
+    "readme_renderer",
+    "wheel",
+]
+test = [
+    "zope.testing",
+    "zope.testrunner",
+    "wheel",
+]
+
+[project.urls]
+documentation = "https://zestreleaser.readthedocs.io"
+repository = "https://github.com/zestsoftware/zest.releaser/"
+changelog = "https://github.com/zestsoftware/zest.releaser/blob/master/CHANGES.rst"
+
+[project.scripts]
+release = "zest.releaser.release:main"
+prerelease = "zest.releaser.prerelease:main"
+postrelease = "zest.releaser.postrelease:main"
+fullrelease = "zest.releaser.fullrelease:main"
+longtest = "zest.releaser.longtest:main"
+lasttagdiff = "zest.releaser.lasttagdiff:main"
+lasttaglog = "zest.releaser.lasttaglog:main"
+addchangelogentry = "zest.releaser.addchangelogentry:main"
+bumpversion = "zest.releaser.bumpversion:main"
+
+# The datachecks are implemented as entry points to be able to check
+# our entry point implementation.
+[project.entry-points."zest.releaser.prereleaser.middle"]
+datacheck = "zest.releaser.prerelease:datacheck"
+
+[project.entry-points."zest.releaser.releaser.middle"]
+datacheck = "zest.releaser.release:datacheck"
+
+[project.entry-points."zest.releaser.postreleaser.middle"]
+datacheck = "zest.releaser.postrelease:datacheck"
+
+[project.entry-points."zest.releaser.addchangelogentry.middle"]
+datacheck = "zest.releaser.addchangelogentry:datacheck"
+
+[project.entry-points."zest.releaser.bumpversion.middle"]
+datacheck = "zest.releaser.bumpversion:datacheck"
+
+# Documentation generation
+[project.entry-points."zest.releaser.prereleaser.before"]
+preparedocs = "zest.releaser.preparedocs:prepare_entrypoint_documentation"
+
 [tool.isort]
 profile = "plone"

@@ -1,0 +1,15 @@
+[project]
+name = "tha.example"
+version = "0.1.dev0"
+description = "Example package"
+keywords = ["example"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Programming Language :: Python :: 3.9",
+]
+requires-python = ">=3.6"
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"

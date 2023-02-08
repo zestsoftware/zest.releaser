@@ -4,8 +4,8 @@ Version handling
 Where does the version come from?
 ---------------------------------
 
-A version number is essentially what zest.releaser cannot do without. A
-version number can come from four different locations:
+A version number is essentially what zest.releaser cannot do without.
+A version number can come from various different locations:
 
 - The ``setup.py`` file. Two styles are supported::
 
@@ -20,6 +20,12 @@ version number can come from four different locations:
     def setup(
         version='1.0',
         name='...
+
+- The ``pyproject.toml`` file. zest.releaser will look for something like::
+
+    [project]
+    name = "..."
+    version = "1.0"
 
 - The ``setup.cfg`` file. zest.releaser will look for something like::
 
