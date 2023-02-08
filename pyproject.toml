@@ -1,3 +1,8 @@
+[build-system]
+# See https://snarky.ca/what-the-heck-is-pyproject-toml/
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "zest.releaser"
 version = "7.3.1.dev0"
