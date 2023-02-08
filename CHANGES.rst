@@ -4,7 +4,11 @@ Changelog for zest.releaser
 7.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Support reading and writing the version in ``pyproject.toml``.
+  See `issue 295 <https://github.com/zestsoftware/zest.releaser/issues/295>`_,
+  `issue 373 <https://github.com/zestsoftware/zest.releaser/issues/373>`_,
+  and `PEP-621 <https://peps.python.org/pep-0621/>`_,
+  [maurits]
 
 
 7.3.0 (2023-02-07)

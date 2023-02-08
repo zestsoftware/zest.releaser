@@ -6,6 +6,13 @@ import os
 import re
 import sys
 
+try:
+    # Python 3.11+
+    import tomllib
+except ImportError:
+    # Python 3.10-
+    import tomli as tomllib
+
 
 VERSION_PATTERN = re.compile(
     r"""
@@ -125,6 +132,14 @@ class BaseVersionControl:
                 line = line.replace('"', "").replace("'", "")
                 return utils.strip_version(line)
 
+    def get_pyproject_toml_version(self):
+        if not os.path.exists("pyproject.toml"):
+            return
+        with open("pyproject.toml", "rb") as myfile:
+            result = tomllib.load(myfile)
+        # Might be None, but that is fine.
+        return result.get("project", {}).get("version")
+
     def filefind(self, names):
         """Return first found file matching name (case-insensitive).
 
@@ -197,7 +212,7 @@ class BaseVersionControl:
         return False
 
     def _extract_version(self):
-        """Extract the version from setup.py or version.txt.
+        """Extract the version from setup.py or version.txt or similar.
 
         If there is a setup.py and it gives back a version that differs
         from version.txt then this version.txt is not the one we should
@@ -212,6 +227,7 @@ class BaseVersionControl:
         """
         return (
             self.get_python_file_version()
+            or self.get_pyproject_toml_version()
             or self.get_setup_py_version()
             or self.get_version_txt_version()
         )
@@ -233,6 +249,50 @@ class BaseVersionControl:
         utils.write_text_file(filename, contents, encoding)
         logger.info("Set __version__ in %s to '%s'", filename, version)
 
+    def _update_pyproject_toml_version(self, version):
+        # This is only called when get_pyproject_toml_version sees a version.
+        filename = "pyproject.toml"
+        lines, encoding = utils.read_text_file(
+            filename,
+            fallback_encoding=self.fallback_encoding,
+        )
+        good_version = "version = '%s'" % version
+        found_project = False
+        found_version = False
+        for index, line in enumerate(lines):
+            line = line.strip()
+            # First look for '[project]'.
+            if line == "[project]":
+                found_project = True
+                continue
+            if not found_project:
+                continue
+            # Then look for 'version =' within the same section
+            if line.startswith("["):
+                # The next section starts.  Stop searching.
+                break
+            if not line.replace(" ", "").startswith("version="):
+                continue
+            # We found the version line!
+            lines[index] = (
+                good_version.replace("'", '"') if '"' in line else good_version
+            )
+            found_version = True
+
+        if not found_version:
+            logger.error(
+                "We could read a version from %s, "
+                "but could not write it back. See "
+                "https://zestreleaser.readthedocs.io/en/latest/versions.html "
+                "for hints.",
+                filename,
+            )
+            raise RuntimeError("Cannot set version")
+
+        contents = "\n".join(lines)
+        utils.write_text_file(filename, contents, encoding)
+        logger.info("Set version in %s to '%s'", filename, version)
+
     def _update_version(self, version):
         """Find out where to change the version and change it.
 
@@ -243,6 +303,10 @@ class BaseVersionControl:
         """
         if self.get_python_file_version():
             self._update_python_file_version(version)
+            return
+
+        if self.get_pyproject_toml_version():
+            self._update_pyproject_toml_version(version)
             return
 
         version_filenames = ["version"]

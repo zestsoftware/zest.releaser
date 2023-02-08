@@ -12,6 +12,7 @@ dependencies = [
     "colorama",
     "requests",
     "twine >= 1.6.0",
+    "tomli; python_version<'3.11'",
 ]
 requires-python = ">=3.6"
 classifiers = [
