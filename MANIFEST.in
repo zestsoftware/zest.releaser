@@ -1,6 +1,6 @@
 recursive-include zest *
 recursive-include doc *
-include *rst LICENSE.GPL
+include *rst LICENSE.GPL tox.ini
 exclude .installed.cfg
 exclude .gitattributes
 global-exclude *.pyc
