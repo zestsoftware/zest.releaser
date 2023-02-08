@@ -24,7 +24,7 @@ if sys.version_info < (3,):
 
 setup(
     long_description=long_description,
-    packages=find_packages(exclude=["ez_setup"]),
+    packages=find_packages(),
     namespace_packages=["zest"],
     include_package_data=True,
     zip_safe=False,
