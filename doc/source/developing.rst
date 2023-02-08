@@ -57,7 +57,7 @@ To run a specific environment and a specific test file::
 Python versions
 ---------------
 
-The tests currently pass on python 3.6-3.10 and PyPy3.
+The tests currently pass on python 3.7-3.11 and PyPy3.
 
 
 Necessary programs

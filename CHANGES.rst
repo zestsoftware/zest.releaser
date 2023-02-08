@@ -4,6 +4,8 @@ Changelog for zest.releaser
 7.3.1 (unreleased)
 ------------------
 
+- Drop support for Python 3.6.  [maurits]
+
 - Support reading and writing the version in ``pyproject.toml``.
   See `issue 295 <https://github.com/zestsoftware/zest.releaser/issues/295>`_,
   `issue 373 <https://github.com/zestsoftware/zest.releaser/issues/373>`_,
