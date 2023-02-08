@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-7.3.1 (unreleased)
-------------------
+8.0.0a1 (2023-02-08)
+--------------------
 
 - Drop support for Python 3.6.  [maurits]
 
