@@ -406,36 +406,25 @@ class PypiConfig(BaseConfig):
     def create_wheel(self):
         """Should we create a Python wheel for this package?
 
-        Either in your ~/.pypirc or in a setup.cfg in a specific
-        package, add this when you want to create a Python wheel, next
-        to a standard sdist:
+        This is next to the standard source distribution that we always create
+        when releasing a Python package.
+
+        Changed in version 8.0.0a2: we ALWAYS create a wheel,
+        unless this is explicitly switched off.
+        The `wheel` package must be installed though, which is in our
+        'recommended' extra.
+
+        To switch this OFF, either in your ~/.pypirc or in a setup.cfg in
+        a specific package, add this:
 
         [zest.releaser]
-        create-wheel = yes
-
-        If there is no setting for ``create-wheel``, then if there is a
-        ``[bdist_wheel]`` section, it is treated as if
-        ``create-wheel`` was true.  We used to look at the value of
-        the ``universal`` option, but that no longer matters.
-        This will still create a wheel:
-
-        [bdist_wheel]
-        universal = 0
-
-        See https://github.com/zestsoftware/zest.releaser/issues/315
+        create-wheel = no
         """
         if not USE_WHEEL:
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        create_setting = self._get_boolean("zest.releaser", "create-wheel", None)
-        if create_setting is not None:
-            # User specified this setting, it overrides
-            # inferring from bdist_wheel
-            return create_setting
-        # No zest.releaser setting, are they asking for a universal wheel?
-        # Then they want wheels in general.
-        return self.config.has_section("bdist_wheel")
+        return self._get_boolean("zest.releaser", "create-wheel", True)
 
     def register_package(self):
         """Should we try to register this package with a package server?
