@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-8.0.0a2 (unreleased)
+8.0.0a2 (2023-04-06)
 --------------------
 
 - Always create wheels, except when you explicitly switch this off in the config:
