@@ -849,19 +849,32 @@ def get_last_tag(vcs, allow_missing=False):
     # by setuptools' version parsing. A direct match is obviously
     # right. The 'less' approach handles development eggs that have
     # already been switched back to development.
-    available_tags.reverse()
-    found = available_tags[0]
+    # Note: if parsing the current version fails, there is nothing we can do:
+    # there is no sane way of knowing which version is smaller than an unparsable
+    # version, so we just break hard.
     parsed_version = parse_version(version)
+    found = parsed_found = None
     for tag in available_tags:
-        parsed_tag = parse_version(tag)
-        parsed_found = parse_version(found)
+        try:
+            parsed_tag = parse_version(tag)
+        except Exception:
+            # I don't want to import this specific exception,
+            # because it sounds unstable:
+            # pkg_resources.extern.packaging.version.InvalidVersion
+            continue
         if parsed_tag == parsed_version:
             found = tag
             logger.debug("Found exact match: %s", found)
             break
-        if parsed_tag >= parsed_found and parsed_tag < parsed_version:
-            logger.debug("Found possible lower match: %s", tag)
-            found = tag
+        if parsed_tag >= parsed_version:
+            # too new tag, not interesting
+            continue
+        if found is not None and parsed_tag <= parsed_found:
+            # we already have a better match
+            continue
+        logger.debug("Found possible lower match: %s", tag)
+        found = tag
+        parsed_found = parsed_tag
     return found
 
 
