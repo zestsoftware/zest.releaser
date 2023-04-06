@@ -4,6 +4,12 @@ Changelog for zest.releaser
 8.0.0a2 (unreleased)
 --------------------
 
+- Always create wheels, except when you explicitly switch this off in the config:
+  ``[zest.releaser] create-wheel = no``.
+  If the ``wheel`` package is not available, we still do not create wheels.
+  Fixes `issue 406 <https://github.com/zestsoftware/zest.releaser/issues/406>`_.
+  [maurits]
+
 - Do not fail when tag versions cannot be parsed.
   This can happen in ``lasttaglog``, ``lasttagdiff``, and ``bumpversion``, with ``setuptools`` 66 or higher.
   Fixes `issue 408 <https://github.com/zestsoftware/zest.releaser/issues/408>`_.
