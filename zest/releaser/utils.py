@@ -861,6 +861,7 @@ def get_last_tag(vcs, allow_missing=False):
             # I don't want to import this specific exception,
             # because it sounds unstable:
             # pkg_resources.extern.packaging.version.InvalidVersion
+            logger.debug("Could not parse version: %s", tag)
             continue
         if parsed_tag == parsed_version:
             found = tag
