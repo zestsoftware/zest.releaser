@@ -24,7 +24,7 @@ We remove and add files.
     >>> _ = execute_command(["git", "add", "pyproject.toml"])
     >>> _ = execute_command(["git", "commit", "-m", "Move to pyproject.toml"])
     >>> print(execute_command(["git", "status"]))
-    On branch master
+    On branch main
     nothing to commit, working directory clean
 
 The version is at 0.1.dev0:
@@ -140,5 +140,5 @@ The changelog and pyproject.toml are at 0.2 and indicate dev mode:
 And there are no uncommitted changes:
 
     >>> print(execute_command(["git", "status"]))
-    On branch master
+    On branch main
     nothing to commit, working directory clean

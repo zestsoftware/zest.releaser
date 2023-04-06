@@ -71,7 +71,7 @@ def setup(test):
     gitsourcedir = os.path.join(test.tempdir, "tha.example-git")
     shutil.copytree(sourcedir, gitsourcedir)
     os.chdir(gitsourcedir)
-    execute_command(["git", "init"])
+    execute_command(["git", "init", "-b", "main"])
     # Configure local git.
     execute_command(["git", "config", "--local", "user.name", "Temp user"])
     execute_command(["git", "config", "--local", "user.email", "temp@example.com"])

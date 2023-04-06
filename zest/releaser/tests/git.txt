@@ -57,7 +57,7 @@ Commit it:
     ['git', 'commit', '-a', '-m', 'small tweak', '-n']
 
 In some cases we get this output:
-``[master ...] small tweak``
+``[main ...] small tweak``
 and in other this:
 ``Created commit ...: small tweak``
 
@@ -189,14 +189,14 @@ The tempdir should be at tag 0.1.  The last line ought to be "a = 2"
     ...
     a = 2
 
-Change back to the source directory and return to the master branch.
+Change back to the source directory and return to the main branch.
 
     >>> os.chdir(gitsourcedir)
-    >>> cmd = [['git', 'checkout', 'master'],
+    >>> cmd = [['git', 'checkout', 'main'],
     ... ['git', 'submodule', 'update', '--init', '--recursive']]
     >>> print(execute_commands(cmd))
     RED Previous HEAD position was ... small tweak
-    RED Switched to branch 'master'
+    RED Switched to branch 'main'
 
 Pushing changes
 ---------------

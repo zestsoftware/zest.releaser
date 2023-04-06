@@ -4,7 +4,10 @@ Changelog for zest.releaser
 8.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Do not fail when tag versions cannot be parsed.
+  This can happen in ``lasttaglog``, ``lasttagdiff``, and ``bumpversion``, with ``setuptools`` 66 or higher.
+  Fixes `issue 408 <https://github.com/zestsoftware/zest.releaser/issues/408>`_.
+  [maurits]
 
 
 8.0.0a1 (2023-02-08)
