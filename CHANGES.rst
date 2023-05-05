@@ -4,7 +4,7 @@ Changelog for zest.releaser
 8.0.0a3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Make final release, no changes since latest alpha.  [maurits]
 
 
 8.0.0a2 (2023-04-06)
