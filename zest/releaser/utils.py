@@ -978,3 +978,15 @@ def history_format(config_value, history_file):
         ext = history_file.split(".")[-1].lower()
         history_format = "md" if ext in ["md", "markdown"] else default
     return history_format
+
+
+def string_to_bool(value):
+    """Reimplementation of configparser.ConfigParser.getboolean()"""
+    if value.isalpha():
+        value=value.lower()
+    if value in ["1", "yes", "true", "on"]:
+        return True
+    elif value in ["0", "no", "false", "off"]:
+        return False
+    else:
+        raise ValueError(f"Cannot convert string {value} to a bool")
