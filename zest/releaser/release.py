@@ -265,9 +265,9 @@ class Releaser(baserelease.Basereleaser):
         # override it in the exceptional case but just hit Enter in
         # the usual case.
         main_files = os.listdir(self.data["workingdir"])
-        if "setup.py" not in main_files and "setup.cfg" not in main_files:
-            # Neither setup.py nor setup.cfg, so this is no python
-            # package, so at least a pypi release is not useful.
+        if not {"setup.py", "setup.cfg", "pyproject.toml"}.intersection(main_files):
+            # No setup.py, setup.cfg, or pyproject.toml, so this is no
+            # python package, so at least a pypi release is not useful.
             # Expected case: this is a buildout directory.
             default_answer = False
         else:
