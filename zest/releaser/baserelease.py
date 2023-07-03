@@ -77,15 +77,17 @@ class Basereleaser:
                 "zest.releaser.tests", "pypirc_old.txt"
             )
             self.pypiconfig = pypi.PypiConfig(pypirc_old)
+            self.zest_releaser_config = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_old)
         else:
             self.pypiconfig = pypi.PypiConfig()
-        if self.pypiconfig.no_input():
+            self.zest_releaser_config = pypi.ZestReleaserConfig()
+        if self.zest_releaser_config.no_input():
             utils.AUTO_RESPONSE = True
 
     @property
     def history_format(self):
         default = "rst"
-        config_value = self.pypiconfig.history_format()
+        config_value = self.zest_releaser_config.history_format()
         history_file = self.data.get("history_file") or ""
         return utils.history_format(config_value, history_file)
 
@@ -124,8 +126,8 @@ class Basereleaser:
         self.data["headings"] = []
         self.data["history_last_release"] = ""
         self.data["history_insert_line_here"] = 0
-        default_location = self.pypiconfig.history_file()
-        fallback_encoding = self.pypiconfig.encoding()
+        default_location = self.zest_releaser_config.history_file()
+        fallback_encoding = self.zest_releaser_config.encoding()
         history_file = self.vcs.history_file(location=default_location)
         self.data["history_file"] = history_file
         if not history_file:
@@ -416,7 +418,7 @@ class Basereleaser:
         push_cmds = self.vcs.push_commands()
         if not push_cmds:
             return
-        default_anwer = self.pypiconfig.push_changes()
+        default_anwer = self.zest_releaser_config.push_changes()
         if utils.ask("OK to push commits to the server?", default=default_anwer):
             for push_cmd in push_cmds:
                 output = execute_command(push_cmd)
@@ -440,8 +442,8 @@ class Basereleaser:
         raise NotImplementedError()
 
     def update_commit_message(self, msg):
-        prefix_message = self.pypiconfig.prefix_message()
-        extra_message = self.pypiconfig.extra_message()
+        prefix_message = self.zest_releaser_config.prefix_message()
+        extra_message = self.zest_releaser_config.extra_message()
         if prefix_message:
             msg = "%s %s" % (prefix_message, msg)
         if extra_message:

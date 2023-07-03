@@ -73,10 +73,10 @@ class Releaser(baserelease.Basereleaser):
     def prepare(self):
         """Collect some data needed for releasing"""
         self._grab_version()
-        tag = self.pypiconfig.tag_format(self.data["version"])
+        tag = self.zest_releaser_config.tag_format(self.data["version"])
         self.data["tag"] = tag
-        self.data["tag-message"] = self.pypiconfig.tag_message(self.data["version"])
-        self.data["tag-signing"] = self.pypiconfig.tag_signing()
+        self.data["tag-message"] = self.zest_releaser_config.tag_message(self.data["version"])
+        self.data["tag-signing"] = self.zest_releaser_config.tag_signing()
         self.data["tag_already_exists"] = self.vcs.tag_exists(tag)
 
     def execute(self):
@@ -133,7 +133,7 @@ class Releaser(baserelease.Basereleaser):
         )
         result = utils.execute_command(utils.setup_py("sdist"))
         utils.show_interesting_lines(result)
-        if self.pypiconfig.create_wheel():
+        if self.zest_releaser_config.create_wheel():
             logger.info(
                 "Making a wheel of a fresh tag checkout (in %s).",
                 self.data["tagworkingdir"],
@@ -158,7 +158,7 @@ class Releaser(baserelease.Basereleaser):
             os.path.join("dist", filename) for filename in os.listdir("dist")
         )
 
-        register = self.pypiconfig.register_package()
+        register = self.zest_releaser_config.register_package()
 
         # If TWINE_REPOSITORY_URL is set, use it.
         if self.pypiconfig.twine_repository_url():
@@ -271,7 +271,7 @@ class Releaser(baserelease.Basereleaser):
             # Expected case: this is a buildout directory.
             default_answer = False
         else:
-            default_answer = self.pypiconfig.want_release()
+            default_answer = self.zest_releaser_config.want_release()
 
         if not utils.ask(
             "Check out the tag (for tweaks or pypi/distutils " "server upload)",

@@ -47,7 +47,7 @@ class Postreleaser(baserelease.Basereleaser):
                 feature=feature,
                 final=final,
                 dev_version_template=DEV_VERSION_TEMPLATE,
-                development_marker=self.pypiconfig.development_marker(),
+                development_marker=self.zest_releaser_config.development_marker(),
                 history_header=HISTORY_HEADER,
                 update_history=True,
             )
@@ -82,9 +82,9 @@ class Postreleaser(baserelease.Basereleaser):
             breaking=self.data["breaking"],
             feature=self.data["feature"],
             final=self.data["final"],
-            less_zeroes=self.pypiconfig.less_zeroes(),
-            levels=self.pypiconfig.version_levels(),
-            dev_marker=self.pypiconfig.development_marker(),
+            less_zeroes=self.zest_releaser_config.less_zeroes(),
+            levels=self.zest_releaser_config.version_levels(),
+            dev_marker=self.zest_releaser_config.development_marker(),
         )
         suggestion = utils.suggest_version(current, **params)
         print("Current version is %s" % current)
