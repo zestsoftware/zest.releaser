@@ -167,17 +167,13 @@ class SetupConfig(BaseConfig):
 class PypiConfig(BaseConfig):
     """Wrapper around the pypi config file"""
 
-    def __init__(self, config_filename=DIST_CONFIG_FILE, use_setup_cfg=True):
+    def __init__(self, config_filename=DIST_CONFIG_FILE):
         """Grab the PyPI configuration.
 
         This is .pypirc in the home directory.  It is overridable for
         test purposes.
-
-        If there is a setup.cfg file in the current directory, we read
-        it too.
         """
         self.config_filename = config_filename
-        self.use_setup_cfg = use_setup_cfg
         self.reload()
 
     def reload(self):
@@ -189,7 +185,7 @@ class PypiConfig(BaseConfig):
         upload fails, you edit the .pypirc file to fix the account
         settings, and tell release to retry the command.
         """
-        self._read_configfile(use_setup_cfg=self.use_setup_cfg)
+        self._read_configfile()
     
     def zest_releaser_config(self):
         default = None
@@ -216,24 +212,13 @@ class PypiConfig(BaseConfig):
             return default
         return result
 
-    def _read_configfile(self, use_setup_cfg=True):
-        """Read the PyPI config file and store it (when valid).
-
-        Usually read the setup.cfg too.
-        """
-        rc = self.config_filename
-        if not os.path.isabs(rc):
-            rc = os.path.join(os.path.expanduser("~"), self.config_filename)
-        filenames = [rc]
-        if use_setup_cfg:
-            # If there is a setup.cfg in the package, parse it
-            filenames.append("setup.cfg")
-        files = [f for f in filenames if os.path.exists(f)]
-        if not files:
+    def _read_configfile(self):
+        """Read the PyPI config file and store it (when valid)."""
+        if not os.path.exists(self.config_filename):
             self.config = None
             return
         self.config = ConfigParser()
-        self.config.read(files)
+        self.config.read(self.config_filename)
 
     def twine_repository(self):
         """Gets the repository from Twine environment variables."""
