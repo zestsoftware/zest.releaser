@@ -8,6 +8,13 @@ import pkg_resources
 import sys
 
 try:
+    # Python 3.11+
+    import tomllib
+except ImportError:
+    # Python 3.10-
+    import tomli as tomllib
+
+try:
     pkg_resources.get_distribution("wheel")
 except pkg_resources.DistributionNotFound:
     USE_WHEEL = False
@@ -15,6 +22,7 @@ else:
     USE_WHEEL = True
 DIST_CONFIG_FILE = ".pypirc"
 SETUP_CONFIG_FILE = "setup.cfg"
+PYPROJECTTOML_CONFIG_FILE = "pyproject.toml"
 DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
 
 logger = logging.getLogger(__name__)
@@ -688,3 +696,57 @@ class PypiConfig(BaseConfig):
 
         """
         return self._get_boolean("zest.releaser", "run-pre-commit", default=False)
+
+
+class PyprojectTomlConfig(BaseConfig):
+    """Wrapper around the pyproject.toml file if available.
+
+    This is for optional zest.releaser-specific settings::
+
+        [zest-releaser]
+        python-file-with-version = "reinout/maurits.py"
+
+
+    """
+
+    config_filename = PYPROJECTTOML_CONFIG_FILE
+
+    def __init__(self):
+        """Grab the configuration (overridable for test purposes)"""
+        # If there is a pyproject.toml in the package, parse it
+        if not os.path.exists(self.config_filename):
+            self.config = None
+            return
+        with open(self.config_filename, "rb") as tomlconfig:
+            self.config = tomllib.load(tomlconfig)
+
+    def zest_releaser_config(self):
+        default = None
+        if self.config is None:
+            return default
+        try:
+            result = self.config["tools"]["zest-releaser"]
+        except KeyError:
+            return default
+        return result
+
+    def python_file_with_version(self):
+        """Return Python filename with ``__version__`` marker, if configured.
+
+        Enable this by adding a ``python-file-with-version`` option::
+
+            [zest-releaser]
+            python-file-with-version = reinout/maurits.py
+
+        Return None when nothing has been configured.
+
+        """
+        default = None
+        zest_releaser_config = self.zest_releaser_config()
+        if zest_releaser_config is None:
+            return default
+        try:
+            result = zest_releaser_config["python-file-with-version"]
+        except KeyError:
+            return default
+        return result
