@@ -7,6 +7,8 @@ import os
 import pkg_resources
 import sys
 
+from utils import string_to_bool
+
 try:
     # Python 3.11+
     import tomllib
@@ -135,6 +137,29 @@ class SetupConfig(BaseConfig):
         logger.info("New setup.cfg contents:")
         with open(self.config_filename) as config_file:
             print("".join(config_file.readlines()))
+
+    def zest_releaser_config(self):
+        default = None
+        if self.config is None:
+            return default
+        try:
+            result = dict(self.config["zest-releaser"].items())
+            boolean_keys = [
+                "release",
+                "create-wheel",
+                "no-input",
+                "register",
+                "push-changes",
+                "less-zeroes",
+                "tag-signing",
+                "run-pre-commit",
+            ]
+            for key, value in result.items():
+                if key in boolean_keys:
+                    result[key] = string_to_bool(value)
+        except KeyError:
+            return default
+        return result
 
     def python_file_with_version(self):
         """Return Python filename with ``__version__`` marker, if configured.
