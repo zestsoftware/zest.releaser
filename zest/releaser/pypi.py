@@ -807,11 +807,10 @@ class ZestReleaserConfig:
         setup_config = SetupConfig().zest_releaser_config()
         pypi_config = PypiConfig().zest_releaser_config()
         pyproject_config = PyprojectTomlConfig().zest_releaser_config()
-        config = setup_config | pypi_config | pyproject_config
-        return config
+        self.config = setup_config | pypi_config | pyproject_config
 
     def __init__(self):
-        self.config = self.load_configs()
+        self.load_configs()
     
     def want_release(self):
         """Does the user normally want to release this package.
