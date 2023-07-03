@@ -5,7 +5,7 @@ import os
 import pkg_resources
 import sys
 
-from utils import string_to_bool
+from .utils import string_to_bool
 
 try:
     # Python 3.11+
@@ -697,7 +697,7 @@ class ZestReleaserConfig:
 
         """
         try:
-            return self.config("tag-signing")
+            return self.config["tag-signing"]
         except KeyError:
             return False
 
@@ -745,6 +745,6 @@ class ZestReleaserConfig:
 
         """
         try:
-            return self.config("run-pre-commit")
+            return self.config["run-pre-commit"]
         except KeyError:
             return False
