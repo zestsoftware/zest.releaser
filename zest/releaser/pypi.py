@@ -163,28 +163,6 @@ class SetupConfig(BaseConfig):
             return default
         return result
 
-    def python_file_with_version(self):
-        """Return Python filename with ``__version__`` marker, if configured.
-
-        Enable this by adding a ``python-file-with-version`` option::
-
-            [zest.releaser]
-            python-file-with-version = reinout/maurits.py
-
-        Return None when nothing has been configured.
-
-        """
-        default = None
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text(
-                "zest.releaser", "python-file-with-version", default=default
-            )
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
-
 
 class PypiConfig(BaseConfig):
     """Wrapper around the pypi config file"""
@@ -345,27 +323,6 @@ class PyprojectTomlConfig(BaseConfig):
             return default
         return result
 
-    def python_file_with_version(self):
-        """Return Python filename with ``__version__`` marker, if configured.
-
-        Enable this by adding a ``python-file-with-version`` option::
-
-            [zest-releaser]
-            python-file-with-version = reinout/maurits.py
-
-        Return None when nothing has been configured.
-
-        """
-        default = None
-        zest_releaser_config = self.zest_releaser_config()
-        if zest_releaser_config is None:
-            return default
-        try:
-            result = zest_releaser_config["python-file-with-version"]
-        except KeyError:
-            return default
-        return result
-
 
 class ZestReleaserConfig:
     def load_configs(self):
@@ -468,6 +425,22 @@ class ZestReleaserConfig:
             except KeyError:
                 result = None
         return result
+
+    def python_file_with_version(self):
+        """Return Python filename with ``__version__`` marker, if configured.
+
+        Enable this by adding a ``python-file-with-version`` option::
+
+            [zest-releaser]
+            python-file-with-version = reinout/maurits.py
+
+        Return None when nothing has been configured.
+
+        """
+        try:
+            return self.config["python-file-with-version"]
+        except KeyError:
+            return None
 
     def encoding(self):
         """Return encoding to use for text files.
