@@ -216,6 +216,7 @@ class PypiConfig(BaseConfig):
         if self.config is None:
             return default
         try:
+            # TODO: raw read items from configparser so as not to format version tags
             result = dict(self.config["zest-releaser"].items())
             boolean_keys = [
                 "release",
@@ -230,6 +231,7 @@ class PypiConfig(BaseConfig):
             for key, value in result.items():
                 if key in boolean_keys:
                     result[key] = string_to_bool(value)
+            # TODO: also convert integers
         except KeyError:
             return default
         return result
@@ -802,11 +804,422 @@ class PyprojectTomlConfig(BaseConfig):
 
 class ZestReleaserConfig:
     def load_configs(self):
-        setup_config = SetupConfig()
-        pypi_config = PypiConfig()
-        pyproject_config = PyprojectTomlConfig()
+        setup_config = SetupConfig().zest_releaser_config()
+        pypi_config = PypiConfig().zest_releaser_config()
+        pyproject_config = PyprojectTomlConfig().zest_releaser_config()
         config = setup_config | pypi_config | pyproject_config
         return config
 
     def __init__(self):
         self.config = self.load_configs()
+    
+    def want_release(self):
+        """Does the user normally want to release this package.
+
+        Some colleagues find it irritating to have to remember to
+        answer the question "Check out the tag (for tweaks or
+        pypi/distutils server upload)" with the non-default 'no' when
+        in 99 percent of the cases they just make a release specific
+        for a customer, so they always answer 'no' here.  This is
+        where an extra config option comes in handy: you can influence
+        the default answer so you can just keep hitting 'Enter' until
+        zest.releaser is done.
+
+        Either in your ~/.pypirc or in a setup.cfg or pyproject.toml in a specific
+        package, add this when you want the default answer to this
+        question to be 'no':
+
+        [zest.releaser]
+        release = no
+
+        The default when this option has not been set is True.
+
+        Standard config rules apply, so you can use upper or lower or
+        mixed case and specify 0, false, no or off for boolean False,
+        and 1, on, true or yes for boolean True.
+        """
+        try:
+            return self.config["release"]
+        except KeyError:
+            return True
+
+    def extra_message(self):
+        """Return extra text to be added to commit messages.
+
+        This can for example be used to skip CI builds.  This at least
+        works for Travis.  See
+        http://docs.travis-ci.com/user/how-to-skip-a-build/
+
+        Enable this mode by adding a ``extra-message`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            extra-message = [ci skip]
+        """
+        try:
+            return self.config["extra-message"]
+        except KeyError:
+            return None
+
+    def prefix_message(self):
+        """Return extra text to be added before the commit message.
+
+        This can for example be used follow internal policies on commit messages.
+
+        Enable this mode by adding a ``prefix-message`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            prefix-message = [TAG]
+        """
+        try:
+            return self.config["prefix-message"]
+        except KeyError:
+            return None
+
+    def history_file(self):
+        """Return path of history file.
+
+        Usually zest.releaser can find the correct one on its own.
+        But sometimes it may not find anything, or it finds multiple
+        and selects the wrong one.
+
+        Configure this by adding a ``history-file`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            history-file = deep/down/historie.doc
+        """
+        try:
+            result = self.config["history-file"]
+        except KeyError:
+            try:
+                # We were reading an underscore instead of a dash at first.
+                result = self.config["history_file"]
+            except KeyError:
+                result = None
+        return result
+
+    def encoding(self):
+        """Return encoding to use for text files.
+
+        Mostly the changelog and if needed `setup.py`.
+
+        The encoding cannot always be determined correctly.
+        This setting is a way to fix that.
+        See https://github.com/zestsoftware/zest.releaser/issues/264
+
+        Configure this by adding an ``encoding`` option, either in the
+        package you want to release, or in your ~/.pypirc::
+
+            [zest.releaser]
+            encoding = utf-8
+        """
+        try:
+            return self.config["encoding"]
+        except KeyError:
+            return ""
+
+    def history_format(self):
+        """Return the format to be used for Changelog files.
+
+        Configure this by adding an ``history_format`` option, either in the
+        package you want to release, or in your ~/.pypirc, and using ``rst`` for
+        Restructured Text and ``md`` for Markdown::
+
+            [zest.releaser]
+            history_format = md
+        """
+        try:
+            return self.config["history_format"]
+        except KeyError:
+            return ""
+
+    def create_wheel(self):
+        """Should we create a Python wheel for this package?
+
+        This is next to the standard source distribution that we always create
+        when releasing a Python package.
+
+        Changed in version 8.0.0a2: we ALWAYS create a wheel,
+        unless this is explicitly switched off.
+        The `wheel` package must be installed though, which is in our
+        'recommended' extra.
+
+        To switch this OFF, either in your ~/.pypirc or in a setup.cfg in
+        a specific package, add this:
+
+        [zest.releaser]
+        create-wheel = no
+        """
+        if not USE_WHEEL:
+            # If the wheel package is not available, we obviously
+            # cannot create wheels.
+            return False
+        try:
+            return self.config["create-wheel"]
+        except KeyError:
+            return True
+
+    def register_package(self):
+        """Should we try to register this package with a package server?
+
+        For the standard Python Package Index (PyPI), registering a
+        package is no longer needed: this is done automatically when
+        uploading a distribution for a package.  In fact, trying to
+        register may fail.  See
+        https://github.com/zestsoftware/zest.releaser/issues/191
+        So by default zest.releaser will no longer register a package.
+
+        But you may be using your own package server, and registering
+        may be wanted or even required there.  In this case
+        you will need to turn on the register function.
+        In your setup.cfg or ~/.pypirc, use the following to ensure that
+        register is called on the package server:
+
+        [zest.releaser]
+        register = yes
+
+        Note that if you have specified multiple package servers, this
+        option is used for all of them.  There is no way to register and
+        upload to server A, and only upload to server B.
+        """
+        try:
+            return self.config["register"]
+        except KeyError:
+            return True
+
+    def no_input(self):
+        """Return whether the user wants to run in no-input mode.
+
+        Enable this mode by adding a ``no-input`` option::
+
+            [zest.releaser]
+            no-input = yes
+
+        The default when this option has not been set is False.
+        """
+        try:
+            return self.config["no-input"]
+        except KeyError:
+            return True
+
+    def development_marker(self):
+        """Return development marker to be appended in postrelease.
+
+        Override the default ``.dev0`` in ~/.pypirc or setup.cfg using
+        a ``development-marker`` option::
+
+            [zest.releaser]
+            development-marker = .dev1
+
+        Returns default of ``.dev0`` when nothing has been configured.
+        """
+        try:
+            return self.config["no-input"]
+        except KeyError:
+            return ".dev0"
+
+    def push_changes(self):
+        """Return whether the user wants to push the changes to the remote.
+
+        Configure this mode by adding a ``push-changes`` option::
+
+            [zest.releaser]
+            push-changes = no
+
+        The default when this option has not been set is True.
+        """
+        try:
+            return self.config["push-changes"]
+        except KeyError:
+            return True
+
+    def less_zeroes(self):
+        """Return whether the user prefers less zeroes at the end of a version.
+
+        Configure this mode by adding a ``less-zeroes`` option::
+
+            [zest.releaser]
+            less-zeroes = yes
+
+        The default when this option has not been set is False.
+
+        When set to true:
+        - Instead of 1.3.0 we will suggest 1.3.
+        - Instead of 2.0.0 we will suggest 2.0.
+
+        This only makes sense for the bumpversion command.
+        In the postrelease command we read this option too,
+        but with the current logic it has no effect there.
+        """
+        try:
+            return self.config["less-zeroes"]
+        except KeyError:
+            return False
+
+    def version_levels(self):
+        """How many levels does the user prefer in a version number?
+
+        Configure this mode by adding a ``version-levels`` option::
+
+            [zest.releaser]
+            version-levels = 3
+
+        The default when this option has not been set is 0, which means:
+        no preference, so use the length of the current number.
+
+        This means when suggesting a next version after 1.2:
+        - with levels=0 we will suggest 1.3: no change
+        - with levels=1 we will still suggest 1.3, as we will not
+          use this to remove numbers, only to add them
+        - with levels=2 we will suggest 1.3
+        - with levels=3 we will suggest 1.2.1
+
+        If the current version number has more levels, we keep them.
+        So next version for 1.2.3.4 with levels=1 is 1.2.3.5.
+
+        Tweaking version-levels and less-zeroes should give you the
+        version number strategy that you prefer.
+        """
+        default = 0
+        try:
+            result = self.config["version-levels"]
+        except KeyError:
+            return default
+        if result < 0:
+            return default
+        return result
+
+    _tag_format_deprecated_message = "\n".join(
+        line.strip()
+        for line in """
+    `tag-format` contains deprecated `%%(version)s` format. Please change to:
+
+    [zest.releaser]
+    tag-format = %s
+    """.strip().splitlines()
+    )
+
+    def tag_format(self, version):
+        """Return the formatted tag that should be used in the release.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-format`` option::
+
+            [zest.releaser]
+            tag-format = v{version}
+
+        ``tag-format`` must contain exactly one formatting instruction: for the
+        ``version`` key.
+
+        Accepts also ``%(version)s`` format for backward compatibility.
+
+        The default format, when nothing has been configured, is ``{version}``.
+        """
+        fmt = "{version}"
+        try:
+            fmt = self.config["tag-format"]
+        except KeyError:
+            pass
+        if "{version}" in fmt:
+            return fmt.format(version=version)
+        # BBB:
+        if "%(version)s" in fmt:
+            proposed_fmt = fmt.replace("%(version)s", "{version}")
+            print(self._tag_format_deprecated_message % proposed_fmt)
+            return fmt % {"version": version}
+        print("{version} needs to be part of 'tag-format': %s" % fmt)
+        sys.exit(1)
+
+    def tag_message(self, version):
+        """Return the commit message to be used when tagging.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-message``
+        option::
+
+            [zest.releaser]
+            tag-message = Creating v{version} tag.
+
+        ``tag-message`` must contain exactly one formatting
+        instruction: for the ``version`` key.
+
+        The default format is ``Tagging {version}``.
+        """
+        fmt = "Tagging {version}"
+        try:
+            fmt = self.config["tag-message"]
+        except KeyError:
+            pass
+        if "{version}" not in fmt:
+            print("{version} needs to be part of 'tag-message': '%s'" % fmt)
+            sys.exit(1)
+        return fmt.format(version=version)
+
+    def tag_signing(self):
+        """Return whether the tag should be signed.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-signing`` option::
+
+            [zest.releaser]
+            tag-signing = yes
+
+        ``tag-signing`` must contain exactly one word which will be
+        converted to a boolean. Currently are accepted (case
+        insensitively): 0, false, no, off for False, and 1, true, yes,
+        on for True).
+
+        The default when this option has not been set is False.
+
+        """
+        try:
+            return self.config("tag-signing")
+        except KeyError:
+            return False
+
+    def date_format(self):
+        """Return the string format for the date used in the changelog.
+
+        Override the default ``%Y-%m-%d`` in ~/.pypirc or setup.cfg using
+        a ``date-format`` option::
+
+            [zest.releaser]
+            date-format = %%B %%e, %%Y
+
+        Note: the % signs should be doubled for compatibility with other tools
+        (i.e. pip) that parse setup.cfg using the interpolating ConfigParser.
+
+        Returns default of ``%Y-%m-%d`` when nothing has been configured.
+        """
+        default = "%Y-%m-%d"
+        try:
+            result = self.config["date-format"].replace("%%", "%")
+        except (KeyError, ValueError):
+            return default
+        return result
+
+    def run_pre_commit(self):
+        """Return whether we should run pre commit hooks.
+
+        At least in git you have pre commit hooks.
+        These may interfere with releasing:
+        zest.releaser changes your setup.py, a pre commit hook
+        runs black or isort and gives an error, so the commit is cancelled.
+        By default (since version 7.3.0) we do not run pre commit hooks.
+
+        Configure it in ~/.pypirc or setup.cfg using a ``tag-signing`` option::
+
+            [zest.releaser]
+            run-pre-commit = yes
+
+        ``run-pre-commit`` must contain exactly one word which will be
+        converted to a boolean. Currently are accepted (case
+        insensitively): 0, false, no, off for False, and 1, true, yes,
+        on for True).
+
+        The default when this option has not been set is False.
+
+        """
+        try:
+            return self.config("run-pre-commit")
+        except KeyError:
+            return False
