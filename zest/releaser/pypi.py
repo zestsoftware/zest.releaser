@@ -308,9 +308,9 @@ class PyprojectTomlConfig(BaseConfig):
 
 
 class ZestReleaserConfig:
-    def load_configs(self):
+    def load_configs(self, pypirc_config_filename=DIST_CONFIG_FILE):
         setup_config = SetupConfig().zest_releaser_config()
-        pypi_config = PypiConfig().zest_releaser_config()
+        pypi_config = PypiConfig(config_filename=pypirc_config_filename).zest_releaser_config()
         pyproject_config = PyprojectTomlConfig().zest_releaser_config()
         combined_config = {}
         # overwrite any duplicate keys in the following order:
@@ -319,8 +319,8 @@ class ZestReleaserConfig:
                 combined_config.update(config)
         self.config = combined_config
 
-    def __init__(self):
-        self.load_configs()
+    def __init__(self, pypirc_config_filename=DIST_CONFIG_FILE):
+        self.load_configs(pypirc_config_filename=pypirc_config_filename)
     
     def want_release(self):
         """Does the user normally want to release this package.
