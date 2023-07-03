@@ -798,3 +798,15 @@ class PyprojectTomlConfig(BaseConfig):
         except KeyError:
             return default
         return result
+
+
+class ZestReleaserConfig:
+    def load_configs(self):
+        setup_config = SetupConfig()
+        pypi_config = PypiConfig()
+        pyproject_config = PyprojectTomlConfig()
+        config = setup_config | pypi_config | pyproject_config
+        return config
+
+    def __init__(self):
+        self.config = self.load_configs()
