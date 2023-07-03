@@ -68,7 +68,7 @@ class Git(BaseVersionControl):
 
     def cmd_commit(self, message):
         parts = ["git", "commit", "-a", "-m", message]
-        if not self.pypi_cfg.run_pre_commit():
+        if not self.zest_releaser_config.run_pre_commit():
             parts.append("-n")
         return parts
 

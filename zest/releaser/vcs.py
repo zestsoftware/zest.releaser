@@ -66,7 +66,8 @@ class BaseVersionControl:
             self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
         self.setup_cfg = pypi.SetupConfig()
         self.pypi_cfg = pypi.PypiConfig()
-        self.fallback_encoding = self.pypi_cfg.encoding()
+        self.zest_releaser_config = pypi.ZestReleaserConfig()
+        self.fallback_encoding = self.zest_releaser_config.encoding()
 
     def __repr__(self):
         return "<{} at {} {}>".format(
@@ -115,7 +116,7 @@ class BaseVersionControl:
             return utils.strip_version(version)
 
     def get_python_file_version(self):
-        python_version_file = self.setup_cfg.python_file_with_version()
+        python_version_file = self.zest_releaser_config.python_file_with_version()
         if not python_version_file:
             return
         lines, encoding = utils.read_text_file(
@@ -233,7 +234,7 @@ class BaseVersionControl:
         )
 
     def _update_python_file_version(self, version):
-        filename = self.setup_cfg.python_file_with_version()
+        filename = self.zest_releaser_config.python_file_with_version()
         lines, encoding = utils.read_text_file(
             filename,
             fallback_encoding=self.fallback_encoding,
