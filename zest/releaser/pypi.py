@@ -210,6 +210,29 @@ class PypiConfig(BaseConfig):
         settings, and tell release to retry the command.
         """
         self._read_configfile(use_setup_cfg=self.use_setup_cfg)
+    
+    def zest_releaser_config(self):
+        default = None
+        if self.config is None:
+            return default
+        try:
+            result = dict(self.config["zest-releaser"].items())
+            boolean_keys = [
+                "release",
+                "create-wheel",
+                "no-input",
+                "register",
+                "push-changes",
+                "less-zeroes",
+                "tag-signing",
+                "run-pre-commit",
+            ]
+            for key, value in result.items():
+                if key in boolean_keys:
+                    result[key] = string_to_bool(value)
+        except KeyError:
+            return default
+        return result
 
     def _read_configfile(self, use_setup_cfg=True):
         """Read the PyPI config file and store it (when valid).
