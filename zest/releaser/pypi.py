@@ -512,7 +512,7 @@ class ZestReleaserConfig:
         try:
             return self.config["register"]
         except KeyError:
-            return True
+            return False
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
@@ -527,7 +527,7 @@ class ZestReleaserConfig:
         try:
             return self.config["no-input"]
         except KeyError:
-            return True
+            return False
 
     def development_marker(self):
         """Return development marker to be appended in postrelease.
