@@ -1,6 +1,4 @@
-from configparser import ConfigParser
-from configparser import NoOptionError
-from configparser import NoSectionError
+from configparser import ConfigParser, NoOptionError, NoSectionError
 
 import logging
 import os
