@@ -216,8 +216,7 @@ class PypiConfig(BaseConfig):
         if self.config is None:
             return default
         try:
-            # TODO: raw read items from configparser so as not to format version tags
-            result = dict(self.config["zest-releaser"].items())
+            result = dict(self.config["zest-releaser"].items(raw=True))
             boolean_keys = [
                 "release",
                 "create-wheel",
@@ -231,7 +230,8 @@ class PypiConfig(BaseConfig):
             for key, value in result.items():
                 if key in boolean_keys:
                     result[key] = string_to_bool(value)
-            # TODO: also convert integers
+                if key in ["version-levels"]:
+                    result[key] = int(value)
         except KeyError:
             return default
         return result
