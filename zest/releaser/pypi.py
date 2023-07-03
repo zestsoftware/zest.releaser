@@ -372,7 +372,12 @@ class ZestReleaserConfig:
         setup_config = SetupConfig().zest_releaser_config()
         pypi_config = PypiConfig().zest_releaser_config()
         pyproject_config = PyprojectTomlConfig().zest_releaser_config()
-        self.config = setup_config | pypi_config | pyproject_config
+        combined_config = {}
+        # overwrite any duplicate keys in the following order:
+        for config in [setup_config, pypi_config, pyproject_config]:
+            if isinstance(config, dict):
+                combined_config |= config
+        self.config = combined_config
 
     def __init__(self):
         self.load_configs()
