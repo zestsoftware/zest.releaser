@@ -21,7 +21,7 @@ name yourself.  We'll do that in the rest of these tests.
 
 A missing file doesn't lead to an error:
 
-    >>> pypiconfig = pypi.PypiConfig(config_filename='non/existing', use_setup_cfg=False)
+    >>> pypiconfig = pypi.PypiConfig(config_filename='non/existing')
     >>> pypiconfig.config is None
     True
 
@@ -127,28 +127,27 @@ use a different default answer when it asks to make a checkout for a
 release.  This means you can usually just press Enter on all questions
 that zest.releaser asks.
 
-We try to read a [zest.releaser] section, either in pypirc or
-setup.cfg and look  for a ``release`` option.  We can
-ask for the result like this, which by default is True:
+We try to read a [zest.releaser] section and look  for a ``release``
+option.  We can ask for the result like this, which by default is True:
 
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both)
-    >>> pypiconfig.want_release()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_both)
+    >>> zestreleaserconfig.want_release()
     True
 
 We have a pypirc for this:
 
     >>> pypirc_no_release = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_no_release.txt')
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_no_release)
-    >>> pypiconfig.want_release()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_no_release)
+    >>> zestreleaserconfig.want_release()
     False
 
 We can also specify to always do that checkout during a release:
 
     >>> pypirc_yes_release = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_yes_release.txt')
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release)
-    >>> pypiconfig.want_release()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_yes_release)
+    >>> zestreleaserconfig.want_release()
     True
 
 
@@ -173,16 +172,16 @@ zest.releaser, which now contains a setup.cfg.
 
 We can ask for the result like this, which by default is True:
 
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_both, use_setup_cfg=False)
-    >>> pypiconfig.create_wheel()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_both)
+    >>> zestreleaserconfig.create_wheel()
     True
 
 We can also specify to not create the wheel, even when (universal) wheels could be created:
 
     >>> pypirc_yes_release = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_universal_nocreate.txt')
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release, use_setup_cfg=False)
-    >>> pypiconfig.create_wheel()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_yes_release)
+    >>> zestreleaserconfig.create_wheel()
     False
 
 Fixing setup.cfg
@@ -274,8 +273,8 @@ By default the tag format is just the version itself:
 
     >>> version = '1.2.3'
     >>> os.remove(pypi.SETUP_CONFIG_FILE)
-    >>> pypiconfig = pypi.PypiConfig()
-    >>> pypiconfig.tag_format(version)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.tag_format(version)
     '1.2.3'
 
 But it can be customized with a format string, as long as it contains
@@ -287,8 +286,8 @@ the string ``{version}``:
     ... """
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...     _ = f.write(SETUP_CFG)
-    >>> pypiconfig = pypi.PypiConfig()
-    >>> pypiconfig.tag_format(version)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.tag_format(version)
     'mytag-1.2.3'
 
 Or, for backward compatibility, a Python % interpolation format:
@@ -299,8 +298,8 @@ Or, for backward compatibility, a Python % interpolation format:
     ... """
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...     _ = f.write(SETUP_CFG)
-    >>> pypiconfig = pypi.PypiConfig()
-    >>> pypiconfig.tag_format(version)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.tag_format(version)
     `tag-format` contains deprecated `%(version)s` format. Please change to:
     <BLANKLINE>
     [zest.releaser]
@@ -323,8 +322,8 @@ By default the tag message is ``Tagging`` plus the version:
 
     >>> version = '1.2.3'
     >>> os.remove(pypi.SETUP_CONFIG_FILE)
-    >>> pypiconfig = pypi.PypiConfig()
-    >>> pypiconfig.tag_message(version)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.tag_message(version)
     'Tagging 1.2.3'
 
 But it can be customized with a message string, as long as it contains
@@ -336,8 +335,8 @@ the string ``{version}``:
     ... """
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...     _ = f.write(SETUP_CFG)
-    >>> pypiconfig = pypi.PypiConfig()
-    >>> pypiconfig.tag_message(version)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.tag_message(version)
     'Creating v1.2.3 tag.'
 
 
@@ -352,19 +351,19 @@ behaviour with a ``--no-input`` commandline option, but also by adding
 
 The default is False:
 
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_yes_release, use_setup_cfg=False)
-    >>> pypiconfig.no_input()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_yes_release)
+    >>> zestreleaserconfig.no_input()
     False
 
 Enable the option in ``.pypirc``:
 
     >>> pypirc_no_input = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_no_input.txt')
-    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_no_input)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_no_input)
 
 Now the option should be set to True:
 
-    >>> pypiconfig.no_input()
+    >>> zestreleaserconfig.no_input()
     True
 
 Let's enable the option also in setup.cfg:
@@ -375,11 +374,11 @@ Let's enable the option also in setup.cfg:
     ... """
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...     _ = f.write(SETUP_CFG)
-    >>> pypiconfig = pypi.PypiConfig()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
 
 The option should be set to True here as well:
 
-    >>> pypiconfig.no_input()
+    >>> zestreleaserconfig.no_input()
     True
 
 
@@ -391,7 +390,7 @@ in it. For that, there's the ``python-file-with-version`` option.
 
 The default is None:
 
-    >>> setup_config.python_file_with_version()
+    >>> zestreleaserconfig.python_file_with_version()
 
 Enable the option:
 
@@ -401,6 +400,6 @@ Enable the option:
     ... """
     >>> with open(pypi.SETUP_CONFIG_FILE, 'w') as f:
     ...    _ = f.write(SETUP_CFG)
-    >>> setup_config = pypi.SetupConfig()
-    >>> setup_config.python_file_with_version()
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.python_file_with_version()
     'reinout/maurits.py'
