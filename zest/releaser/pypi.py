@@ -86,7 +86,7 @@ class SetupConfig(BaseConfig):
         if not os.path.exists(self.config_filename):
             self.config = None
             return
-        self.config = ConfigParser()
+        self.config = ConfigParser(interpolation=None)
         self.config.read(self.config_filename)
 
     def has_bad_commands(self):
@@ -141,7 +141,7 @@ class SetupConfig(BaseConfig):
             return None
 
         try:
-            result = dict(self.config["zest-releaser"].items(raw=True))
+            result = dict(self.config["zest.releaser"].items())
         except KeyError:
             return None
 
@@ -194,7 +194,7 @@ class PypiConfig(BaseConfig):
             return None
 
         try:
-            result = dict(self.config["zest-releaser"].items(raw=True))
+            result = dict(self.config["zest.releaser"].items())
         except KeyError:
             return None
 
@@ -220,7 +220,7 @@ class PypiConfig(BaseConfig):
         if not os.path.exists(self.config_filename):
             self.config = None
             return
-        self.config = ConfigParser()
+        self.config = ConfigParser(interpolation=None)
         self.config.read(self.config_filename)
 
     def twine_repository(self):
