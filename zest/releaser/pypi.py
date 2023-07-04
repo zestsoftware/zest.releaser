@@ -514,7 +514,7 @@ class ZestReleaserConfig:
 
         Returns default of ``.dev0`` when nothing has been configured.
         """
-        return self.config.get("no-input", ".dev0")
+        return self.config.get("development-marker", ".dev0")
 
     def push_changes(self):
         """Return whether the user wants to push the changes to the remote.
