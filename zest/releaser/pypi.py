@@ -164,7 +164,10 @@ class SetupConfig(BaseConfig):
 
 
 class PypiConfig(BaseConfig):
-    """Wrapper around the pypi config file"""
+    """Wrapper around the pypi config file.
+    Contains functions which return information about
+    the pypi configuration.
+    """
 
     def __init__(self, config_filename=DIST_CONFIG_FILE):
         """Grab the PyPI configuration.
@@ -299,13 +302,12 @@ class PyprojectTomlConfig(BaseConfig):
             self.config = tomllib.load(tomlconfig)
 
     def zest_releaser_config(self):
-        default = None
         if self.config is None:
-            return default
+            return None
         try:
             result = self.config["tools"]["zest-releaser"]
         except KeyError:
-            return default
+            return None
         return result
 
 
