@@ -137,28 +137,29 @@ class SetupConfig(BaseConfig):
             print("".join(config_file.readlines()))
 
     def zest_releaser_config(self):
-        default = None
-        if self.config is None:
-            return default
+        if not self.config:
+            return None
+
         try:
             result = dict(self.config["zest-releaser"].items(raw=True))
-            boolean_keys = [
-                "release",
-                "create-wheel",
-                "no-input",
-                "register",
-                "push-changes",
-                "less-zeroes",
-                "tag-signing",
-                "run-pre-commit",
-            ]
-            for key, value in result.items():
-                if key in boolean_keys:
-                    result[key] = string_to_bool(value)
-                if key in ["version-levels"]:
-                    result[key] = int(value)
         except KeyError:
-            return default
+            return None
+
+        boolean_keys = [
+            "release",
+            "create-wheel",
+            "no-input",
+            "register",
+            "push-changes",
+            "less-zeroes",
+            "tag-signing",
+            "run-pre-commit",
+        ]
+        for key, value in result.items():
+            if key in boolean_keys:
+                result[key] = string_to_bool(value)
+            if key in ["version-levels"]:
+                result[key] = int(value)
         return result
 
 
@@ -186,28 +187,29 @@ class PypiConfig(BaseConfig):
         self._read_configfile()
     
     def zest_releaser_config(self):
-        default = None
-        if self.config is None:
-            return default
+        if not self.config:
+            return None
+
         try:
             result = dict(self.config["zest-releaser"].items(raw=True))
-            boolean_keys = [
-                "release",
-                "create-wheel",
-                "no-input",
-                "register",
-                "push-changes",
-                "less-zeroes",
-                "tag-signing",
-                "run-pre-commit",
-            ]
-            for key, value in result.items():
-                if key in boolean_keys:
-                    result[key] = string_to_bool(value)
-                if key in ["version-levels"]:
-                    result[key] = int(value)
         except KeyError:
-            return default
+            return None
+
+        boolean_keys = [
+            "release",
+            "create-wheel",
+            "no-input",
+            "register",
+            "push-changes",
+            "less-zeroes",
+            "tag-signing",
+            "run-pre-commit",
+        ]
+        for key, value in result.items():
+            if key in boolean_keys:
+                result[key] = string_to_bool(value)
+            if key in ["version-levels"]:
+                result[key] = int(value)
         return result
 
     def _read_configfile(self):
@@ -315,7 +317,8 @@ class ZestReleaserConfig:
         combined_config = {}
         # overwrite any duplicate keys in the following order:
         for config in [setup_config, pypi_config, pyproject_config]:
-            if isinstance(config, dict):
+            if config:
+                assert isinstance(config, dict)
                 combined_config.update(config)
         self.config = combined_config
 
