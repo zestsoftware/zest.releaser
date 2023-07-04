@@ -352,10 +352,7 @@ class ZestReleaserConfig:
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        try:
-            return self.config["release"]
-        except KeyError:
-            return True
+        return self.config.get("release", True)
 
     def extra_message(self):
         """Return extra text to be added to commit messages.
@@ -370,10 +367,7 @@ class ZestReleaserConfig:
             [zest.releaser]
             extra-message = [ci skip]
         """
-        try:
-            return self.config["extra-message"]
-        except KeyError:
-            return None
+        return self.config.get("extra-message")
 
     def prefix_message(self):
         """Return extra text to be added before the commit message.
@@ -386,10 +380,7 @@ class ZestReleaserConfig:
             [zest.releaser]
             prefix-message = [TAG]
         """
-        try:
-            return self.config["prefix-message"]
-        except KeyError:
-            return None
+        return self.config.get("prefix-message")
 
     def history_file(self):
         """Return path of history file.
@@ -404,14 +395,10 @@ class ZestReleaserConfig:
             [zest.releaser]
             history-file = deep/down/historie.doc
         """
-        try:
-            result = self.config["history-file"]
-        except KeyError:
-            try:
-                # We were reading an underscore instead of a dash at first.
-                result = self.config["history_file"]
-            except KeyError:
-                result = None
+        # we were using an underscore at first
+        result = self.config.get("history_file")
+        # but if they're both defined, the hyphenated key takes precedence
+        result = self.config.get("history-file", result)
         return result
 
     def python_file_with_version(self):
@@ -425,10 +412,7 @@ class ZestReleaserConfig:
         Return None when nothing has been configured.
 
         """
-        try:
-            return self.config["python-file-with-version"]
-        except KeyError:
-            return None
+        return self.config.get("python-file-with-version")
 
     def encoding(self):
         """Return encoding to use for text files.
@@ -445,10 +429,7 @@ class ZestReleaserConfig:
             [zest.releaser]
             encoding = utf-8
         """
-        try:
-            return self.config["encoding"]
-        except KeyError:
-            return ""
+        return self.config.get("encoding", "")
 
     def history_format(self):
         """Return the format to be used for Changelog files.
@@ -460,10 +441,7 @@ class ZestReleaserConfig:
             [zest.releaser]
             history_format = md
         """
-        try:
-            return self.config["history_format"]
-        except KeyError:
-            return ""
+        return self.config.get("history_format", "")
 
     def create_wheel(self):
         """Should we create a Python wheel for this package?
@@ -486,10 +464,7 @@ class ZestReleaserConfig:
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        try:
-            return self.config["create-wheel"]
-        except KeyError:
-            return True
+        return self.config.get("create-wheel", True)
 
     def register_package(self):
         """Should we try to register this package with a package server?
@@ -514,10 +489,7 @@ class ZestReleaserConfig:
         option is used for all of them.  There is no way to register and
         upload to server A, and only upload to server B.
         """
-        try:
-            return self.config["register"]
-        except KeyError:
-            return False
+        return self.config.get("register", False)
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
@@ -529,10 +501,7 @@ class ZestReleaserConfig:
 
         The default when this option has not been set is False.
         """
-        try:
-            return self.config["no-input"]
-        except KeyError:
-            return False
+        return self.config.get("no-input", False)
 
     def development_marker(self):
         """Return development marker to be appended in postrelease.
@@ -545,10 +514,7 @@ class ZestReleaserConfig:
 
         Returns default of ``.dev0`` when nothing has been configured.
         """
-        try:
-            return self.config["no-input"]
-        except KeyError:
-            return ".dev0"
+        return self.config.get("no-input", ".dev0")
 
     def push_changes(self):
         """Return whether the user wants to push the changes to the remote.
@@ -560,10 +526,7 @@ class ZestReleaserConfig:
 
         The default when this option has not been set is True.
         """
-        try:
-            return self.config["push-changes"]
-        except KeyError:
-            return True
+        return self.config.get("push-changes", True)
 
     def less_zeroes(self):
         """Return whether the user prefers less zeroes at the end of a version.
@@ -583,10 +546,7 @@ class ZestReleaserConfig:
         In the postrelease command we read this option too,
         but with the current logic it has no effect there.
         """
-        try:
-            return self.config["less-zeroes"]
-        except KeyError:
-            return False
+        return self.config.get("less-zeroes", False)
 
     def version_levels(self):
         """How many levels does the user prefer in a version number?
@@ -613,10 +573,7 @@ class ZestReleaserConfig:
         version number strategy that you prefer.
         """
         default = 0
-        try:
-            result = self.config["version-levels"]
-        except KeyError:
-            return default
+        result = self.config.get("version-levels", default)
         if result < 0:
             return default
         return result
@@ -646,11 +603,8 @@ class ZestReleaserConfig:
 
         The default format, when nothing has been configured, is ``{version}``.
         """
-        fmt = "{version}"
-        try:
-            fmt = self.config["tag-format"]
-        except KeyError:
-            pass
+        default_fmt = "{version}"
+        fmt = self.config.get("tag-format", default_fmt)
         if "{version}" in fmt:
             return fmt.format(version=version)
         # BBB:
@@ -675,11 +629,8 @@ class ZestReleaserConfig:
 
         The default format is ``Tagging {version}``.
         """
-        fmt = "Tagging {version}"
-        try:
-            fmt = self.config["tag-message"]
-        except KeyError:
-            pass
+        default_fmt = "Tagging {version}"
+        fmt = self.config.get("tag-message", default_fmt)
         if "{version}" not in fmt:
             print("{version} needs to be part of 'tag-message': '%s'" % fmt)
             sys.exit(1)
@@ -701,10 +652,7 @@ class ZestReleaserConfig:
         The default when this option has not been set is False.
 
         """
-        try:
-            return self.config["tag-signing"]
-        except KeyError:
-            return False
+        return self.config.get("tag-signing", False)
 
     def date_format(self):
         """Return the string format for the date used in the changelog.
@@ -749,7 +697,4 @@ class ZestReleaserConfig:
         The default when this option has not been set is False.
 
         """
-        try:
-            return self.config["run-pre-commit"]
-        except KeyError:
-            return False
+        return self.config.get("run-pre-commit", False)
