@@ -6,6 +6,8 @@ import os
 import re
 import sys
 
+from configparser import ConfigParser
+
 try:
     # Python 3.11+
     import tomllib
@@ -103,6 +105,15 @@ class BaseVersionControl:
             utils.execute_command(utils.setup_py("egg_info"))
             return utils.execute_command(utils.setup_py("--name")).strip()
 
+    def get_setup_cfg_name(self):
+        if os.path.exists("setup.cfg"):
+            setup_cfg = ConfigParser()
+            setup_cfg.read("setup.cfg")
+            try:
+                return setup_cfg["metadata"]["name"]
+            except KeyError:
+                return None
+
     def get_version_txt_version(self):
         filenames = ["version"]
         for extension in TXT_EXTENSIONS:
@@ -138,6 +149,14 @@ class BaseVersionControl:
             result = tomllib.load(myfile)
         # Might be None, but that is fine.
         return result.get("project", {}).get("version")
+
+    def get_pyproject_toml_name(self):
+        if not os.path.exists("pyproject.toml"):
+            return
+        with open("pyproject.toml", "rb") as myfile:
+            result = tomllib.load(myfile)
+        # Might be None, but that is fine.
+        return result.get("project", {}).get("name")
 
     def filefind(self, names):
         """Return first found file matching name (case-insensitive).
@@ -229,6 +248,14 @@ class BaseVersionControl:
             or self.get_pyproject_toml_version()
             or self.get_setup_py_version()
             or self.get_version_txt_version()
+        )
+
+    def _extract_name(self):
+        """Extract the package name from setup.py or pyproject.toml or similar."""
+        return (
+            self.get_setup_py_name()
+            or self.get_setup_cfg_name()
+            or self.get_pyproject_toml_name()
         )
 
     def _update_python_file_version(self, version):
