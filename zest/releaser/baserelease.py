@@ -279,10 +279,9 @@ class Basereleaser:
                 "the existing file. This might give problems.",
                 orig_encoding,
             )
-            config = self.setup_cfg.config
             fallback_encodings = []
-            if config.has_option("zest.releaser", "encoding"):
-                encoding = config.get("zest.releaser", "encoding")
+            if "encoding" in self.zest_releaser_config:
+                encoding = self.zest_releaser_config["encoding"]
                 if encoding != orig_encoding:
                     fallback_encodings.append(encoding)
             encoding = "utf-8"

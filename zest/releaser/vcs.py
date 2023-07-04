@@ -64,7 +64,6 @@ class BaseVersionControl:
             self.reporoot = reporoot
             # Determine relative path from root of repo.
             self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
-        self.setup_cfg = pypi.SetupConfig()
         self.zest_releaser_config = pypi.ZestReleaserConfig()
         self.fallback_encoding = self.zest_releaser_config.encoding()
 
