@@ -3,6 +3,8 @@
 from colorama import Fore
 from urllib import request
 from urllib.error import HTTPError
+from build import ProjectBuilder
+import pyproject_hooks
 
 import logging
 import os
@@ -131,15 +133,14 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        result = utils.execute_command(utils.setup_py("sdist"))
-        utils.show_interesting_lines(result)
+        builder = ProjectBuilder(srcdir='.', runner=pyproject_hooks.quiet_subprocess_runner)
+        builder.build('sdist', './dist/')
         if self.zest_releaser_config.create_wheel():
             logger.info(
                 "Making a wheel of a fresh tag checkout (in %s).",
                 self.data["tagworkingdir"],
             )
-            result = utils.execute_command(utils.setup_py("bdist_wheel"))
-        utils.show_interesting_lines(result)
+            builder.build('wheel', './dist/')
         if not self.pypiconfig.is_pypi_configured():
             logger.error(
                 "You must have a properly configured %s file in "
