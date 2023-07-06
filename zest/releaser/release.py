@@ -73,9 +73,7 @@ def _project_builder_runner(cmd, cwd=None, extra_environ=None):
         for line in result_split:
             line = line.decode()
             if line.lower().startswith(("warning", "error")):
-                line = Fore.RED + line
-            else:
-                line = Fore.RESET + line  # so that not all the lines after a warning are red
+                line = Fore.RED + line + Fore.RESET  # reset so that not all the lines after a warning are red
             formatted_result.append(line)
         formatted_result_joined = "\n".join(formatted_result)
         utils.show_interesting_lines(formatted_result_joined)
