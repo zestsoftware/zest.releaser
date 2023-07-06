@@ -60,7 +60,7 @@ def package_in_pypi(package):
         return False
 
 def _project_builder_runner(cmd, cwd=None, extra_environ=None):
-        """Call the subprocess, and format warnings and error sin red so that
+        """Call the subprocess, and format warnings and errors in red so that
         they will work correctly with utils.show_interesting_lines()
         """
         env = os.environ.copy()
@@ -72,7 +72,7 @@ def _project_builder_runner(cmd, cwd=None, extra_environ=None):
         formatted_result = []
         for line in result_split:
             line = line.decode()
-            if "warning" in line.lower() or "error" in line.lower():
+            if line.lower().startswith(("warning", "error")):
                 line = Fore.RED + line
             else:
                 line = Fore.RESET + line  # so that not all the lines after a warning are red
