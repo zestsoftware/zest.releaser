@@ -47,9 +47,10 @@ checker = renormalizing.RENormalizing(
             "nothing to commit, working tree clean",
         ),
         # We should ignore coloring by colorama.  Or actually print it
-        # clearly.  This catches Fore.RED and Fore.MAGENTA.
+        # clearly.  This catches Fore.RED, Fore.MAGENTA and Fore.RESET.
         (re.compile(re.escape(Fore.RED)), "RED "),
         (re.compile(re.escape(Fore.MAGENTA)), "MAGENTA "),
+        (re.compile(re.escape(Fore.RESET)), "RESET "),
     ]
 )
 
