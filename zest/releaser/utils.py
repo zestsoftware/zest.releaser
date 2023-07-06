@@ -573,7 +573,7 @@ def run_hooks(zest_releaser_config, which_releaser, when, data):
     hook_group = f"{which_releaser}.{when}"
     config = zest_releaser_config.config
 
-    if config is not None and config.has_option("zest.releaser", hook_group):
+    if config is not None and config.get(hook_group):
         # Multiple hooks may be specified, each one separated by whitespace
         # (including newlines)
         hook_names = config.get(hook_group).split()

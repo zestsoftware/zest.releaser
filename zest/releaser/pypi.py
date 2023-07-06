@@ -315,18 +315,19 @@ class ZestReleaserConfig:
     hooks_filename = None
 
     def load_configs(self, pypirc_config_filename=DIST_CONFIG_FILE):
-        setup_config = SetupConfig().zest_releaser_config()
-        pypi_config = PypiConfig(config_filename=pypirc_config_filename).zest_releaser_config()
-        pyproject_config = PyprojectTomlConfig().zest_releaser_config()
+        setup_config = SetupConfig()
+        pypi_config = PypiConfig(config_filename=pypirc_config_filename)
+        pyproject_config = PyprojectTomlConfig()
         combined_config = {}
         # overwrite any duplicate keys in the following order:
         for config in [setup_config, pypi_config, pyproject_config]:
-            if config:
-                assert isinstance(config, dict)
-                combined_config.update(config)
-                # store which config file contained the hooks
-                if any([x for x in config.keys() if x.lower().startswith(("prereleaser.", "releaser.", "postreleaser."))]):
-                    self.hooks_filename = config.config_filename()
+            if zest_config := config.zest_releaser_config():
+                assert isinstance(zest_config, dict)
+                combined_config.update(zest_config)
+
+                # store which config file contained entrypoint hooks
+                if any([x for x in zest_config.keys() if x.lower().startswith(("prereleaser.", "releaser.", "postreleaser."))]):
+                    self.hooks_filename = config.config_filename
         self.config = combined_config
 
     def __init__(self, pypirc_config_filename=DIST_CONFIG_FILE):
