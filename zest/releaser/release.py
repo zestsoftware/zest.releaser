@@ -4,7 +4,7 @@ from colorama import Fore
 from urllib import request
 from urllib.error import HTTPError
 from build import ProjectBuilder
-import pyproject_hooks
+from subprocess import check_output, STDOUT
 
 import logging
 import os
@@ -58,6 +58,27 @@ def package_in_pypi(package):
     except HTTPError as e:
         logger.debug("Package not found on pypi: %s", e)
         return False
+
+def _project_builder_runner(cmd, cwd=None, extra_environ=None):
+        """Call the subprocess, and format warnings and error sin red so that
+        they will work correctly with utils.show_interesting_lines()
+        """
+        env = os.environ.copy()
+        if extra_environ:
+            env.update(extra_environ)
+
+        result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
+        result_split = result.split(b"\n")
+        formatted_result = []
+        for line in result_split:
+            line = line.decode()
+            if "warning" in line.lower() or "error" in line.lower():
+                line = Fore.RED + line
+            else:
+                line = Fore.RESET + line  # so that not all the lines after a warning are red
+            formatted_result.append(line)
+        formatted_result_joined = "\n".join(formatted_result)
+        utils.show_interesting_lines(formatted_result_joined)
 
 
 class Releaser(baserelease.Basereleaser):
@@ -133,7 +154,7 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        builder = ProjectBuilder(srcdir='.', runner=pyproject_hooks.quiet_subprocess_runner)
+        builder = ProjectBuilder(srcdir='.', runner=_project_builder_runner)
         builder.build('sdist', './dist/')
         if self.zest_releaser_config.create_wheel():
             logger.info(
