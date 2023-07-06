@@ -19,6 +19,7 @@ dependencies = [
     "twine >= 1.6.0",
     "build >= 0.6.0.post1",  # 0.6.0 wasn't compatible with Python 3.7
     "tomli; python_version<'3.11'",
+    "setuptools >= 61.0.0",  # older versions can't read pyproject.toml configurations
 ]
 requires-python = ">=3.7"
 classifiers = [

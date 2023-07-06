@@ -338,7 +338,7 @@ class Releaser(baserelease.Basereleaser):
         # Run extra entry point
         self._run_hooks("after_checkout")
 
-        if "setup.py" in os.listdir(self.data["tagworkingdir"]):
+        if any(filename in os.listdir(self.data["tagworkingdir"]) for filename in ["setup.py", "pyproject.toml"]):
             self._upload_distributions(package)
 
         # Make sure we are in the expected directory again.
