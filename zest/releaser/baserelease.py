@@ -425,7 +425,7 @@ class Basereleaser:
 
     def _run_hooks(self, when):
         which_releaser = self.__class__.__name__.lower()
-        utils.run_hooks(self.setup_cfg, which_releaser, when, self.data)
+        utils.run_hooks(self.zest_releaser_config, which_releaser, when, self.data)
 
     def run(self):
         self._run_hooks("before")

@@ -312,6 +312,8 @@ class PyprojectTomlConfig(BaseConfig):
 
 
 class ZestReleaserConfig:
+    hooks_filename = None
+
     def load_configs(self, pypirc_config_filename=DIST_CONFIG_FILE):
         setup_config = SetupConfig().zest_releaser_config()
         pypi_config = PypiConfig(config_filename=pypirc_config_filename).zest_releaser_config()
@@ -322,6 +324,9 @@ class ZestReleaserConfig:
             if config:
                 assert isinstance(config, dict)
                 combined_config.update(config)
+                # store which config file contained the hooks
+                if any([x for x in config.keys() if x.lower().startswith(("prereleaser.", "releaser.", "postreleaser."))]):
+                    self.hooks_filename = config.config_filename()
         self.config = combined_config
 
     def __init__(self, pypirc_config_filename=DIST_CONFIG_FILE):

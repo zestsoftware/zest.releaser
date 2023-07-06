@@ -561,7 +561,7 @@ def resolve_name(name):
     return ret
 
 
-def run_hooks(setup_cfg, which_releaser, when, data):
+def run_hooks(zest_releaser_config, which_releaser, when, data):
     """Run all release hooks for the given release step, including
     project-specific hooks from setup.cfg, and globally installed entry-points.
 
@@ -571,12 +571,12 @@ def run_hooks(setup_cfg, which_releaser, when, data):
 
     """
     hook_group = f"{which_releaser}.{when}"
-    config = setup_cfg.config
+    config = zest_releaser_config.config
 
     if config is not None and config.has_option("zest.releaser", hook_group):
         # Multiple hooks may be specified, each one separated by whitespace
         # (including newlines)
-        hook_names = config.get("zest.releaser", hook_group).split()
+        hook_names = config.get(hook_group).split()
         hooks = []
 
         # The following code is adapted from the 'packaging' package being
@@ -586,15 +586,13 @@ def run_hooks(setup_cfg, which_releaser, when, data):
         # distributed with the project
         # an optional package_dir option adds support for source layouts where
         # Python packages are not directly in the root of the source
-        config_dir = os.path.dirname(setup_cfg.config_filename)
-        sys.path.insert(0, os.path.dirname(setup_cfg.config_filename))
+        config_dir = os.path.dirname(zest_releaser_config.hooks_filename)
+        sys.path.insert(0, os.path.dirname(zest_releaser_config.hooks_filename))
 
-        if config.has_option("zest.releaser", "hook_package_dir"):
-            package_dir = config.get("zest.releaser", "hook_package_dir")
+        package_dir = config.get("hook_package_dir")
+        if package_dir:
             package_dir = os.path.join(config_dir, package_dir)
             sys.path.insert(0, package_dir)
-        else:
-            package_dir = None
 
         try:
             for hook_name in hook_names:
