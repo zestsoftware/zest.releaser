@@ -4,7 +4,7 @@ from colorama import Fore
 from urllib import request
 from urllib.error import HTTPError
 from build import ProjectBuilder
-from subprocess import check_output, STDOUT
+from subprocess import check_output, CalledProcessError, STDOUT
 
 import logging
 import os
@@ -67,7 +67,11 @@ def _project_builder_runner(cmd, cwd=None, extra_environ=None):
         if extra_environ:
             env.update(extra_environ)
 
-        result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
+        try:
+            result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
+        except CalledProcessError as e:
+            print(e.output.decode())
+            raise SystemExit from e
         result_split = result.split(b"\n")
         formatted_result = []
         for line in result_split:
