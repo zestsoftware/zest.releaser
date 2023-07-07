@@ -43,7 +43,7 @@ Make a change:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -42,3 +42,5 @@ setup(name='tha.example',
+    @@ -41,3 +41,5 @@ setup(name='tha.example',
                'console_scripts': [
                ]},
            )
@@ -117,7 +117,7 @@ Now we can request the changes since a specific tag:
     index 9c14143..54fa3b9 100644
     --- a/setup.py
     +++ b/setup.py
-    @@ -44,3 +44,5 @@ setup(name='tha.example',
+    @@ -43,3 +43,5 @@ setup(name='tha.example',
            )
     <BLANKLINE>
      a = 2
