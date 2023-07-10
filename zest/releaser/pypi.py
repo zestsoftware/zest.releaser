@@ -305,7 +305,7 @@ class PyprojectTomlConfig(BaseConfig):
         if self.config is None:
             return None
         try:
-            result = self.config["tools"]["zest-releaser"]
+            result = self.config["tool"]["zest-releaser"]
         except KeyError:
             return None
         return result
