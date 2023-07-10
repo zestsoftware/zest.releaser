@@ -68,7 +68,7 @@ Lots of things may be in this file, but zest.releaser looks for a
   [zest.releaser]
   some-option = some value
 
-For yes/no options, you can use no/false/off/0 or yes/true/on/1 as
+For true/false options, you can use no/false/off/0 or yes/true/on/1 as
 answers; upper, lower or mixed case are all fine.
 
 Various options change the default answer of a question.
@@ -78,19 +78,19 @@ see if you can tweak the default answers by setting one of these options
 
 We have these options:
 
-release = yes / no
-    Default: yes.  When this is false, zest.releaser sets ``no`` as
+release = true / false
+    Default: true.  When this is false, zest.releaser sets ``false`` as
     default answer for the question if you want to create a checkout
     of the tag.
 
-create-wheel = yes / no
-    Default: no.  Set to yes if you want zest.releaser to create
+create-wheel = true / false
+    Default: false.  Set to true if you want zest.releaser to create
     Python wheels.  You need to install the ``wheel`` package for this
     to work.
 
     If the package is a universal wheel, indicated by having
     ``universal = 1`` in the ``[bdist_wheel]`` section of
-    ``setup.cfg``, then the default for this value is yes.
+    ``setup.cfg``, then the default for this value is true.
 
 extra-message = [ci skip]
     Extra message to add to each commit (prerelease, postrelease).
@@ -98,22 +98,22 @@ extra-message = [ci skip]
 prefix-message = [TAG]
     Prefix message to add at the beginning of each commit (prerelease, postrelease).
 
-no-input = yes / no
-    Default: no.  Set this to yes to accept default answers for all
+no-input = true / false
+    Default: false.  Set this to true to accept default answers for all
     questions.
 
-register = yes / no
-    Default: no.  Set this to yes to register a package before uploading.
+register = true / false
+    Default: false.  Set this to true to register a package before uploading.
     On the official Python Package Index registering a package is no longer needed,
     and may even fail.
 
-push-changes = yes / no
-    Default: yes.  When this is false, zest.releaser sets ``no`` as
+push-changes = true / false
+    Default: true.  When this is false, zest.releaser sets ``false`` as
     default answer for the question if you want to push the changes to
     the remote.
 
-less-zeroes = yes / no
-    Default: no.
+less-zeroes = true / false
+    Default: false.
     This influences the version suggested by the bumpversion command.
     When set to true:
 
@@ -153,8 +153,8 @@ tag-message = a string
     command of the VCS.
     It must contain ``{version}``.
 
-tag-signing = yes / no
-    Default: no.
+tag-signing = true / false
+    Default: false.
     When set to true, tags are signed using the signing feature of the
     respective vcs. Currently tag-signing is only supported for git.
     Note: When you enable it, everyone releasing the project is
@@ -183,8 +183,8 @@ history_format = a string
   Default: empty.
   Set this to ``md`` to handle changelog entries in Markdown.
 
-run-pre-commit = yes / no
-    Default: no.
+run-pre-commit = true / false
+    Default: false.
     New in version 7.3.0.
     When set to true, pre commit hooks are run.
     This may interfere with releasing when they fail.
@@ -199,3 +199,14 @@ Python package.
 
 These are the same options as the global ones.  If you set an option
 locally in a project, this will override the global option.
+
+You can also set these options in a ``pyproject.toml`` file. If you do
+so, instead of having a ``[zest.releaser]`` section, you should use a
+``[tool.zest-releaser]`` section. For true/false options in a
+``pyproject.toml``, you must use lowercase true or false; for string
+options like ``extra-message`` or ``prefix-message``, you should put
+the value between double quotes, like this::
+
+  [tool.zest-releaser]
+  create-wheel = true
+  extra-message = "[ci skip]"
