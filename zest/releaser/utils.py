@@ -574,9 +574,16 @@ def run_hooks(zest_releaser_config, which_releaser, when, data):
     config = zest_releaser_config.config
 
     if config is not None and config.get(hook_group):
-        # Multiple hooks may be specified, each one separated by whitespace
+        # Multiple hooks may be specified
+        # in setup.cfg or .pypirc each one is separated by whitespace
         # (including newlines)
-        hook_names = config.get(hook_group).split()
+        if zest_releaser_config.hooks_filename in ["setup.py", "setup.cfg", ".pypirc"]:
+            hook_names = config.get(hook_group).split()
+        # in pyproject.toml, a list is passed with the hooks
+        elif zest_releaser_config.hooks_filename == "pyproject.toml":
+            hook_names = config.get(hook_group)
+        else:
+            hook_names = []
         hooks = []
 
         # The following code is adapted from the 'packaging' package being
