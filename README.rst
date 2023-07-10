@@ -68,9 +68,10 @@ of ``zest.releaser`` users:
 
 - wheel_ for creating a Python wheel that we upload to PyPI next to
   the standard source distribution.  Wheels are the new Python package
-  format.  Create or edit ``setup.cfg`` in your project (or globally
-  in your ``~/.pypirc``) and create a section ``[zest.releaser]`` with
-  ``create-wheel = yes`` to create a wheel to upload to PyPI.  See
+  format.  Create or edit ``setup.cfg`` or ``pyproject.toml`` in your
+  project (or globally in your ``~/.pypirc``) and create a section
+  ``[zest.releaser]`` (``[tool.zest-releaser]`` in ``pyproject.toml``)
+  with ``create-wheel = true`` to create a wheel to upload to PyPI.  See
   http://pythonwheels.com for deciding whether this is a good idea for
   your package.  Briefly, if it is a pure Python 2 *or* pure Python 3
   package: just do it. If it is a pure Python 2 *and* a pure Python 3
