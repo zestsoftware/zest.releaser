@@ -49,9 +49,15 @@ A version number can come from various different locations:
 
     [zest.releaser]
     python-file-with-version = mypackage/__init__.py
+  
+  Alternatively, in ``pyproject.toml``, you can use the following::
+
+    [tool.zest-releaser]
+    python-file-with-version = "mypackage/__init__.py"
 
   Because you need to configure this explicitly, this option takes precedence
-  over any ``setup.py`` or ``version.txt`` file.
+  over any ``setup.py``, ``setup.cfg`` or ``pyproject.toml`` package version,
+  or ``version.txt`` file.
 
 
 Where is the version number being set?
