@@ -70,8 +70,7 @@ def _project_builder_runner(cmd, cwd=None, extra_environ=None):
         try:
             result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
         except CalledProcessError as e:
-            print(e.output.decode())
-            raise SystemExit from e
+            raise SystemExit(f"Build failed with the following error:\n{e.output.decode()}\nExiting") from e
         result_split = result.split(b"\n")
         formatted_result = []
         for line in result_split:
