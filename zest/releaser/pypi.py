@@ -321,7 +321,8 @@ class ZestReleaserConfig:
         combined_config = {}
         # overwrite any duplicate keys in the following order:
         for config in [setup_config, pypi_config, pyproject_config]:
-            if zest_config := config.zest_releaser_config():
+            if config.zest_releaser_config() is not None:
+                zest_config = config.zest_releaser_config()
                 assert isinstance(zest_config, dict)
                 combined_config.update(zest_config)
 
