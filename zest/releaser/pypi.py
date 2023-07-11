@@ -285,7 +285,7 @@ class PyprojectTomlConfig(BaseConfig):
 
     This is for optional zest.releaser-specific settings::
 
-        [zest-releaser]
+        [tool.zest-releaser]
         python-file-with-version = "reinout/maurits.py"
 
 
