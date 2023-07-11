@@ -155,10 +155,13 @@ class SetupConfig(BaseConfig):
             "tag-signing",
             "run-pre-commit",
         ]
+        integer_keys = [
+            "version-levels",
+        ]
         for key, value in result.items():
             if key in boolean_keys:
                 result[key] = string_to_bool(value)
-            if key in ["version-levels"]:
+            if key in integer_keys:
                 result[key] = int(value)
         return result
 
