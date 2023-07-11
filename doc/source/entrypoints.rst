@@ -66,6 +66,11 @@ An entry point is configured like this in your setup.py::
               'dosomething = my.package.some:some_entrypoint',
               ]},
 
+or like this in your pyproject.toml::
+
+    [project.entry-points."zest.releaser.prereleaser.middle"]
+    dosomething = "my.package.some:some_entrypoint"
+
 Entry-points can also be specified in the setup.cfg file like this
 (The options will be split by white-space and processed in the given
 order.)::
@@ -83,6 +88,15 @@ etc.)
 and ``middle`` with the respective hook name (`before`, `middle`, `after`,
 `after_checkout`, etc.)
 as needed.
+
+Similarly, they can also be placed in the ``tool.zest-releaser`` config section of
+pyproject.toml like this::
+
+    [tool.zest-releaser]
+    prereleaser.middle = [
+        "my.package.some.some_entrypoint",
+        "our.package.other_module.other_function"
+    ]
 
 See the ``setup.py`` of ``zest.releaser`` itself for some real world examples.
 
