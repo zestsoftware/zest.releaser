@@ -143,6 +143,7 @@ class SetupConfig(BaseConfig):
         try:
             result = dict(self.config["zest.releaser"].items())
         except KeyError:
+            logger.debug(f"No [zest.releaser] section found in the {self.config_filename}")
             return None
 
         boolean_keys = [
@@ -200,6 +201,7 @@ class PypiConfig(BaseConfig):
         try:
             result = dict(self.config["zest.releaser"].items())
         except KeyError:
+            logger.debug(f"No [zest.releaser] section found in the {self.config_filename}")
             return None
 
         boolean_keys = [
@@ -311,6 +313,7 @@ class PyprojectTomlConfig(BaseConfig):
         try:
             result = self.config["tool"]["zest-releaser"]
         except KeyError:
+            logger.debug(f"No [tool.zest-releaser] section found in the {self.config_filename}")
             return None
         return result
 
