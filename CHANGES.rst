@@ -4,9 +4,9 @@ Changelog for zest.releaser
 8.0.1 (unreleased)
 ------------------
 
-- Change build system to pypa/build instead of setup.py.
+- Changed build system to pypa/build instead of explicitly using setuptools.
 
-- Add support for pyproject.toml projects.
+- Zest.releaser's settings can now also be placed in ``pyproject.toml``.
 
 
 8.0.0 (2023-05-05)
