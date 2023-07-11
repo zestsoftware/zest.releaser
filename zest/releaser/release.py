@@ -60,8 +60,11 @@ def package_in_pypi(package):
         return False
 
 def _project_builder_runner(cmd, cwd=None, extra_environ=None):
-        """Call the subprocess, and format warnings and errors in red so that
-        they will work correctly with utils.show_interesting_lines()
+        """Run the build command and format warnings and errors.
+        
+        It runs the build command in a subprocess. Warnings and errors are formatted
+        in red so that they will work correctly with utils.show_interesting_lines(). We 
+        mimic the setuptools/wheels output that way.
         """
         env = os.environ.copy()
         if extra_environ:

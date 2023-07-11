@@ -165,6 +165,7 @@ class SetupConfig(BaseConfig):
 
 class PypiConfig(BaseConfig):
     """Wrapper around the pypi config file.
+    
     Contains functions which return information about
     the pypi configuration.
     """
