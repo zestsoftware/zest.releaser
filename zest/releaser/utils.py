@@ -994,4 +994,4 @@ def string_to_bool(value):
     elif value in ["0", "no", "false", "off"]:
         return False
     else:
-        raise ValueError(f"Cannot convert string {value} to a bool")
+        raise ValueError(f"Cannot convert string '{value}' to a bool")
