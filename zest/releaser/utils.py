@@ -995,3 +995,34 @@ def string_to_bool(value):
         return False
     else:
         raise ValueError(f"Cannot convert string '{value}' to a bool")
+
+
+def extract_zestreleaser_configparser(config, config_filename):
+        if not config:
+            return None
+
+        try:
+            result = dict(config["zest.releaser"].items())
+        except KeyError:
+            logger.debug(f"No [zest.releaser] section found in the {config_filename}")
+            return None
+
+        boolean_keys = [
+            "release",
+            "create-wheel",
+            "no-input",
+            "register",
+            "push-changes",
+            "less-zeroes",
+            "tag-signing",
+            "run-pre-commit",
+        ]
+        integer_keys = [
+            "version-levels",
+        ]
+        for key, value in result.items():
+            if key in boolean_keys:
+                result[key] = string_to_bool(value)
+            if key in integer_keys:
+                result[key] = int(value)
+        return result

@@ -5,7 +5,7 @@ import os
 import pkg_resources
 import sys
 
-from .utils import string_to_bool
+from .utils import string_to_bool, extract_zestreleaser_configparser
 
 try:
     # Python 3.11+
@@ -137,34 +137,7 @@ class SetupConfig(BaseConfig):
             print("".join(config_file.readlines()))
 
     def zest_releaser_config(self):
-        if not self.config:
-            return None
-
-        try:
-            result = dict(self.config["zest.releaser"].items())
-        except KeyError:
-            logger.debug(f"No [zest.releaser] section found in the {self.config_filename}")
-            return None
-
-        boolean_keys = [
-            "release",
-            "create-wheel",
-            "no-input",
-            "register",
-            "push-changes",
-            "less-zeroes",
-            "tag-signing",
-            "run-pre-commit",
-        ]
-        integer_keys = [
-            "version-levels",
-        ]
-        for key, value in result.items():
-            if key in boolean_keys:
-                result[key] = string_to_bool(value)
-            if key in integer_keys:
-                result[key] = int(value)
-        return result
+        return extract_zestreleaser_configparser(self.config, self.config_filename)
 
 
 class PypiConfig(BaseConfig):
@@ -195,31 +168,7 @@ class PypiConfig(BaseConfig):
         self._read_configfile()
     
     def zest_releaser_config(self):
-        if not self.config:
-            return None
-
-        try:
-            result = dict(self.config["zest.releaser"].items())
-        except KeyError:
-            logger.debug(f"No [zest.releaser] section found in the {self.config_filename}")
-            return None
-
-        boolean_keys = [
-            "release",
-            "create-wheel",
-            "no-input",
-            "register",
-            "push-changes",
-            "less-zeroes",
-            "tag-signing",
-            "run-pre-commit",
-        ]
-        for key, value in result.items():
-            if key in boolean_keys:
-                result[key] = string_to_bool(value)
-            if key in ["version-levels"]:
-                result[key] = int(value)
-        return result
+        return extract_zestreleaser_configparser(self.config, self.config_filename)
 
     def _read_configfile(self):
         """Read the PyPI config file and store it (when valid)."""
