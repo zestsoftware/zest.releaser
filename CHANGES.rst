@@ -8,6 +8,8 @@ Changelog for zest.releaser
 
 - Zest.releaser's settings can now also be placed in ``pyproject.toml``.
 
+- Added pre-commit config for neater code (black, flake8, isort).
+
 
 8.0.0 (2023-05-05)
 ------------------
