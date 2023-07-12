@@ -71,7 +71,7 @@ of ``zest.releaser`` users:
   distribution format for Python.
   Since version 8.0.0a2 we always create wheels, except when you
   explicitly switch this off in the config:
-  ``[zest.releaser] create-wheel = no``.
+  ``create-wheel = false``.
   If you are sure you want "universal" wheels, follow the directions from the
   `wheel documentation <https://wheel.readthedocs.io/en/stable/user_guide.html>`_.
 
