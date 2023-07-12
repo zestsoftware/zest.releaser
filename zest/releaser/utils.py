@@ -683,11 +683,7 @@ def _execute_command(command):
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
         "env": env,
-        # With Python 3.7+ we could use the more understandable 'text' alias
-        # instead of the cryptic 'universal_newlines'.
-        # They do the same: open a file (stdin/out/err) in text mode
-        # instead of binary.  Core Python is better at knowing which encoding to use.
-        "universal_newlines": True,
+        "text": True,
     }
     process = subprocess.run(command, **process_kwargs)
     if process.returncode or show_stderr or "Traceback" in process.stderr:

@@ -45,7 +45,7 @@ Compatibility / Dependencies
 .. image:: https://img.shields.io/pypi/pyversions/zest.releaser?   :alt: PyPI - Python Version
 .. image:: https://img.shields.io/pypi/implementation/zest.releaser?   :alt: PyPI - Implementation
 
-``zest.releaser`` works on Python 3.7+, including PyPy3.
+``zest.releaser`` works on Python 3.8+, including PyPy3.
 Tested until Python 3.11, but see ``tox.ini`` for the canonical place for that.
 
 To be sure: the packages that you release with ``zest.releaser`` may

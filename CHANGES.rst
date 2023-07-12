@@ -1,14 +1,18 @@
 Changelog for zest.releaser
 ===========================
 
-8.0.1 (unreleased)
+9.0.0 (unreleased)
 ------------------
 
-- Changed build system to pypa/build instead of explicitly using setuptools.
+- Changed build system to pypa/build instead of explicitly using
+  setuptools.
 
 - Zest.releaser's settings can now also be placed in ``pyproject.toml``.
 
 - Added pre-commit config for neater code (black, flake8, isort).
+
+- Dropped support for python 3.7. Together with switching to ``build`` and
+  ``pyproject.toml``, this warrants a major version bump.
 
 
 8.0.0 (2023-05-05)
