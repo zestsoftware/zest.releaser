@@ -4,6 +4,8 @@ Changelog for zest.releaser
 9.0.0 (unreleased)
 ------------------
 
+- Use native namespace packages for ``zest.releaser``, instead of deprecated ``pkg_resources`` based ones.
+
 - Changed build system to pypa/build instead of explicitly using
   setuptools.
 
