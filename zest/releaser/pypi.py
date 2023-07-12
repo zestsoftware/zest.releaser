@@ -173,11 +173,15 @@ class PypiConfig(BaseConfig):
 
     def _read_configfile(self):
         """Read the PyPI config file and store it (when valid)."""
-        if not os.path.exists(self.config_filename):
+        config_filename = self.config_filename
+        if not os.path.exists(config_filename) and not os.path.isabs(config_filename):
+            # When filename is .pypirc, we look in ~/.pypirc
+            config_filename = os.path.join(os.path.expanduser("~"), config_filename)
+        if not os.path.exists(config_filename):
             self.config = None
             return
         self.config = ConfigParser(interpolation=None)
-        self.config.read(self.config_filename)
+        self.config.read(config_filename)
 
     def twine_repository(self):
         """Gets the repository from Twine environment variables."""
