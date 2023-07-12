@@ -561,7 +561,7 @@ def resolve_name(name):
     return ret
 
 
-def run_hooks(setup_cfg, which_releaser, when, data):
+def run_hooks(zest_releaser_config, which_releaser, when, data):
     """Run all release hooks for the given release step, including
     project-specific hooks from setup.cfg, and globally installed entry-points.
 
@@ -571,12 +571,19 @@ def run_hooks(setup_cfg, which_releaser, when, data):
 
     """
     hook_group = f"{which_releaser}.{when}"
-    config = setup_cfg.config
+    config = zest_releaser_config.config
 
-    if config is not None and config.has_option("zest.releaser", hook_group):
-        # Multiple hooks may be specified, each one separated by whitespace
+    if config is not None and config.get(hook_group):
+        # Multiple hooks may be specified
+        # in setup.cfg or .pypirc each one is separated by whitespace
         # (including newlines)
-        hook_names = config.get("zest.releaser", hook_group).split()
+        if zest_releaser_config.hooks_filename in ["setup.py", "setup.cfg", ".pypirc"]:
+            hook_names = config.get(hook_group).split()
+        # in pyproject.toml, a list is passed with the hooks
+        elif zest_releaser_config.hooks_filename == "pyproject.toml":
+            hook_names = config.get(hook_group)
+        else:
+            hook_names = []
         hooks = []
 
         # The following code is adapted from the 'packaging' package being
@@ -586,15 +593,13 @@ def run_hooks(setup_cfg, which_releaser, when, data):
         # distributed with the project
         # an optional package_dir option adds support for source layouts where
         # Python packages are not directly in the root of the source
-        config_dir = os.path.dirname(setup_cfg.config_filename)
-        sys.path.insert(0, os.path.dirname(setup_cfg.config_filename))
+        config_dir = os.path.dirname(zest_releaser_config.hooks_filename)
+        sys.path.insert(0, os.path.dirname(zest_releaser_config.hooks_filename))
 
-        if config.has_option("zest.releaser", "hook_package_dir"):
-            package_dir = config.get("zest.releaser", "hook_package_dir")
+        package_dir = config.get("hook_package_dir")
+        if package_dir:
             package_dir = os.path.join(config_dir, package_dir)
             sys.path.insert(0, package_dir)
-        else:
-            package_dir = None
 
         try:
             for hook_name in hook_names:
@@ -978,3 +983,46 @@ def history_format(config_value, history_file):
         ext = history_file.split(".")[-1].lower()
         history_format = "md" if ext in ["md", "markdown"] else default
     return history_format
+
+
+def string_to_bool(value):
+    """Reimplementation of configparser.ConfigParser.getboolean()"""
+    if value.isalpha():
+        value=value.lower()
+    if value in ["1", "yes", "true", "on"]:
+        return True
+    elif value in ["0", "no", "false", "off"]:
+        return False
+    else:
+        raise ValueError(f"Cannot convert string '{value}' to a bool")
+
+
+def extract_zestreleaser_configparser(config, config_filename):
+        if not config:
+            return None
+
+        try:
+            result = dict(config["zest.releaser"].items())
+        except KeyError:
+            logger.debug(f"No [zest.releaser] section found in the {config_filename}")
+            return None
+
+        boolean_keys = [
+            "release",
+            "create-wheel",
+            "no-input",
+            "register",
+            "push-changes",
+            "less-zeroes",
+            "tag-signing",
+            "run-pre-commit",
+        ]
+        integer_keys = [
+            "version-levels",
+        ]
+        for key, value in result.items():
+            if key in boolean_keys:
+                result[key] = string_to_bool(value)
+            if key in integer_keys:
+                result[key] = int(value)
+        return result

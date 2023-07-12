@@ -109,9 +109,9 @@ class BumpVersion(baserelease.Basereleaser):
                 feature=feature,
                 breaking=breaking,
                 final=final,
-                less_zeroes=self.pypiconfig.less_zeroes(),
-                levels=self.pypiconfig.version_levels(),
-                dev_marker=self.pypiconfig.development_marker(),
+                less_zeroes=self.zest_releaser_config.less_zeroes(),
+                levels=self.zest_releaser_config.version_levels(),
+                dev_marker=self.zest_releaser_config.development_marker(),
             )
             if final:
                 minimum_version = utils.suggest_version(original_version, **params)

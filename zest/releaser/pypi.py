@@ -1,11 +1,18 @@
-from configparser import ConfigParser
-from configparser import NoOptionError
-from configparser import NoSectionError
+from configparser import ConfigParser, NoOptionError, NoSectionError
 
 import logging
 import os
 import pkg_resources
 import sys
+
+from .utils import string_to_bool, extract_zestreleaser_configparser
+
+try:
+    # Python 3.11+
+    import tomllib
+except ImportError:
+    # Python 3.10-
+    import tomli as tomllib
 
 try:
     pkg_resources.get_distribution("wheel")
@@ -15,6 +22,7 @@ else:
     USE_WHEEL = True
 DIST_CONFIG_FILE = ".pypirc"
 SETUP_CONFIG_FILE = "setup.cfg"
+PYPROJECTTOML_CONFIG_FILE = "pyproject.toml"
 DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
 
 logger = logging.getLogger(__name__)
@@ -78,7 +86,7 @@ class SetupConfig(BaseConfig):
         if not os.path.exists(self.config_filename):
             self.config = None
             return
-        self.config = ConfigParser()
+        self.config = ConfigParser(interpolation=None)
         self.config.read(self.config_filename)
 
     def has_bad_commands(self):
@@ -128,43 +136,24 @@ class SetupConfig(BaseConfig):
         with open(self.config_filename) as config_file:
             print("".join(config_file.readlines()))
 
-    def python_file_with_version(self):
-        """Return Python filename with ``__version__`` marker, if configured.
-
-        Enable this by adding a ``python-file-with-version`` option::
-
-            [zest.releaser]
-            python-file-with-version = reinout/maurits.py
-
-        Return None when nothing has been configured.
-
-        """
-        default = None
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text(
-                "zest.releaser", "python-file-with-version", default=default
-            )
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+    def zest_releaser_config(self):
+        return extract_zestreleaser_configparser(self.config, self.config_filename)
 
 
 class PypiConfig(BaseConfig):
-    """Wrapper around the pypi config file"""
+    """Wrapper around the pypi config file.
+    
+    Contains functions which return information about
+    the pypi configuration.
+    """
 
-    def __init__(self, config_filename=DIST_CONFIG_FILE, use_setup_cfg=True):
+    def __init__(self, config_filename=DIST_CONFIG_FILE):
         """Grab the PyPI configuration.
 
         This is .pypirc in the home directory.  It is overridable for
         test purposes.
-
-        If there is a setup.cfg file in the current directory, we read
-        it too.
         """
         self.config_filename = config_filename
-        self.use_setup_cfg = use_setup_cfg
         self.reload()
 
     def reload(self):
@@ -176,26 +165,18 @@ class PypiConfig(BaseConfig):
         upload fails, you edit the .pypirc file to fix the account
         settings, and tell release to retry the command.
         """
-        self._read_configfile(use_setup_cfg=self.use_setup_cfg)
+        self._read_configfile()
+    
+    def zest_releaser_config(self):
+        return extract_zestreleaser_configparser(self.config, self.config_filename)
 
-    def _read_configfile(self, use_setup_cfg=True):
-        """Read the PyPI config file and store it (when valid).
-
-        Usually read the setup.cfg too.
-        """
-        rc = self.config_filename
-        if not os.path.isabs(rc):
-            rc = os.path.join(os.path.expanduser("~"), self.config_filename)
-        filenames = [rc]
-        if use_setup_cfg:
-            # If there is a setup.cfg in the package, parse it
-            filenames.append("setup.cfg")
-        files = [f for f in filenames if os.path.exists(f)]
-        if not files:
+    def _read_configfile(self):
+        """Read the PyPI config file and store it (when valid)."""
+        if not os.path.exists(self.config_filename):
             self.config = None
             return
-        self.config = ConfigParser()
-        self.config.read(files)
+        self.config = ConfigParser(interpolation=None)
+        self.config.read(self.config_filename)
 
     def twine_repository(self):
         """Gets the repository from Twine environment variables."""
@@ -252,6 +233,63 @@ class PypiConfig(BaseConfig):
         # The servers all need to have a section in the config file.
         return [server for server in index_servers if self.config.has_section(server)]
 
+
+class PyprojectTomlConfig(BaseConfig):
+    """Wrapper around the pyproject.toml file if available.
+
+    This is for optional zest.releaser-specific settings::
+
+        [tool.zest-releaser]
+        python-file-with-version = "reinout/maurits.py"
+
+
+    """
+
+    config_filename = PYPROJECTTOML_CONFIG_FILE
+
+    def __init__(self):
+        """Grab the configuration (overridable for test purposes)"""
+        # If there is a pyproject.toml in the package, parse it
+        if not os.path.exists(self.config_filename):
+            self.config = None
+            return
+        with open(self.config_filename, "rb") as tomlconfig:
+            self.config = tomllib.load(tomlconfig)
+
+    def zest_releaser_config(self):
+        if self.config is None:
+            return None
+        try:
+            result = self.config["tool"]["zest-releaser"]
+        except KeyError:
+            logger.debug(f"No [tool.zest-releaser] section found in the {self.config_filename}")
+            return None
+        return result
+
+
+class ZestReleaserConfig:
+    hooks_filename = None
+
+    def load_configs(self, pypirc_config_filename=DIST_CONFIG_FILE):
+        setup_config = SetupConfig()
+        pypi_config = PypiConfig(config_filename=pypirc_config_filename)
+        pyproject_config = PyprojectTomlConfig()
+        combined_config = {}
+        # overwrite any duplicate keys in the following order:
+        for config in [setup_config, pypi_config, pyproject_config]:
+            if config.zest_releaser_config() is not None:
+                zest_config = config.zest_releaser_config()
+                assert isinstance(zest_config, dict)
+                combined_config.update(zest_config)
+
+                # store which config file contained entrypoint hooks
+                if any([x for x in zest_config.keys() if x.lower().startswith(("prereleaser.", "releaser.", "postreleaser."))]):
+                    self.hooks_filename = config.config_filename
+        self.config = combined_config
+
+    def __init__(self, pypirc_config_filename=DIST_CONFIG_FILE):
+        self.load_configs(pypirc_config_filename=pypirc_config_filename)
+    
     def want_release(self):
         """Does the user normally want to release this package.
 
@@ -264,7 +302,7 @@ class PypiConfig(BaseConfig):
         the default answer so you can just keep hitting 'Enter' until
         zest.releaser is done.
 
-        Either in your ~/.pypirc or in a setup.cfg in a specific
+        Either in your ~/.pypirc or in a setup.cfg or pyproject.toml in a specific
         package, add this when you want the default answer to this
         question to be 'no':
 
@@ -277,25 +315,7 @@ class PypiConfig(BaseConfig):
         mixed case and specify 0, false, no or off for boolean False,
         and 1, on, true or yes for boolean True.
         """
-        return self._get_boolean("zest.releaser", "release", default=True)
-
-    def __get_message_config__(self, config_name):
-        """
-        Return the value of the message configuration based on its name.
-
-        If the configuration does not exist or can't be retrieved, return an empty string.
-
-        :param config_name: Name of the configuration to obtain from configuration file
-        :return: The configuration value or an empty string
-        """
-        default = ""
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text("zest.releaser", config_name, default=default)
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.config.get("release", True)
 
     def extra_message(self):
         """Return extra text to be added to commit messages.
@@ -310,7 +330,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             extra-message = [ci skip]
         """
-        return self.__get_message_config__("extra-message")
+        return self.config.get("extra-message")
 
     def prefix_message(self):
         """Return extra text to be added before the commit message.
@@ -323,7 +343,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             prefix-message = [TAG]
         """
-        return self.__get_message_config__("prefix-message")
+        return self.config.get("prefix-message")
 
     def history_file(self):
         """Return path of history file.
@@ -338,23 +358,24 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             history-file = deep/down/historie.doc
         """
-        default = ""
-        if self.config is None:
-            return default
-        marker = object()
-        try:
-            result = self._get_text("zest.releaser", "history-file", default=marker)
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        if result == marker:
-            # We were reading an underscore instead of a dash at first.
-            try:
-                result = self._get_text(
-                    "zest.releaser", "history_file", default=default
-                )
-            except (NoSectionError, NoOptionError, ValueError):
-                return default
+        # we were using an underscore at first
+        result = self.config.get("history_file")
+        # but if they're both defined, the hyphenated key takes precedence
+        result = self.config.get("history-file", result)
         return result
+
+    def python_file_with_version(self):
+        """Return Python filename with ``__version__`` marker, if configured.
+
+        Enable this by adding a ``python-file-with-version`` option::
+
+            [zest-releaser]
+            python-file-with-version = reinout/maurits.py
+
+        Return None when nothing has been configured.
+
+        """
+        return self.config.get("python-file-with-version")
 
     def encoding(self):
         """Return encoding to use for text files.
@@ -371,16 +392,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             encoding = utf-8
         """
-        default = ""
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text(
-                "zest.releaser", "encoding", default=default, raw=True
-            )
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.config.get("encoding", "")
 
     def history_format(self):
         """Return the format to be used for Changelog files.
@@ -392,16 +404,7 @@ class PypiConfig(BaseConfig):
             [zest.releaser]
             history_format = md
         """
-        default = ""
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text(
-                "zest.releaser", "history_format", default=default, raw=True
-            )
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.config.get("history_format", "")
 
     def create_wheel(self):
         """Should we create a Python wheel for this package?
@@ -424,7 +427,7 @@ class PypiConfig(BaseConfig):
             # If the wheel package is not available, we obviously
             # cannot create wheels.
             return False
-        return self._get_boolean("zest.releaser", "create-wheel", True)
+        return self.config.get("create-wheel", True)
 
     def register_package(self):
         """Should we try to register this package with a package server?
@@ -449,7 +452,7 @@ class PypiConfig(BaseConfig):
         option is used for all of them.  There is no way to register and
         upload to server A, and only upload to server B.
         """
-        return self._get_boolean("zest.releaser", "register")
+        return self.config.get("register", False)
 
     def no_input(self):
         """Return whether the user wants to run in no-input mode.
@@ -461,7 +464,7 @@ class PypiConfig(BaseConfig):
 
         The default when this option has not been set is False.
         """
-        return self._get_boolean("zest.releaser", "no-input")
+        return self.config.get("no-input", False)
 
     def development_marker(self):
         """Return development marker to be appended in postrelease.
@@ -474,16 +477,7 @@ class PypiConfig(BaseConfig):
 
         Returns default of ``.dev0`` when nothing has been configured.
         """
-        default = ".dev0"
-        if self.config is None:
-            return default
-        try:
-            result = self._get_text(
-                "zest.releaser", "development-marker", default=default
-            )
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
-        return result
+        return self.config.get("development-marker", ".dev0")
 
     def push_changes(self):
         """Return whether the user wants to push the changes to the remote.
@@ -495,7 +489,7 @@ class PypiConfig(BaseConfig):
 
         The default when this option has not been set is True.
         """
-        return self._get_boolean("zest.releaser", "push-changes", default=True)
+        return self.config.get("push-changes", True)
 
     def less_zeroes(self):
         """Return whether the user prefers less zeroes at the end of a version.
@@ -515,7 +509,7 @@ class PypiConfig(BaseConfig):
         In the postrelease command we read this option too,
         but with the current logic it has no effect there.
         """
-        return self._get_boolean("zest.releaser", "less-zeroes")
+        return self.config.get("less-zeroes", False)
 
     def version_levels(self):
         """How many levels does the user prefer in a version number?
@@ -542,12 +536,7 @@ class PypiConfig(BaseConfig):
         version number strategy that you prefer.
         """
         default = 0
-        if self.config is None:
-            return default
-        try:
-            result = self.config.getint("zest.releaser", "version-levels")
-        except (NoSectionError, NoOptionError, ValueError):
-            return default
+        result = self.config.get("version-levels", default)
         if result < 0:
             return default
         return result
@@ -577,14 +566,8 @@ class PypiConfig(BaseConfig):
 
         The default format, when nothing has been configured, is ``{version}``.
         """
-        fmt = "{version}"
-        if self.config is not None:
-            try:
-                fmt = self._get_text(
-                    "zest.releaser", "tag-format", default=fmt, raw=True
-                )
-            except (NoSectionError, NoOptionError, ValueError):
-                pass
+        default_fmt = "{version}"
+        fmt = self.config.get("tag-format", default_fmt)
         if "{version}" in fmt:
             return fmt.format(version=version)
         # BBB:
@@ -609,14 +592,8 @@ class PypiConfig(BaseConfig):
 
         The default format is ``Tagging {version}``.
         """
-        fmt = "Tagging {version}"
-        if self.config:
-            try:
-                fmt = self._get_text(
-                    "zest.releaser", "tag-message", default=fmt, raw=True
-                )
-            except (NoSectionError, NoOptionError, ValueError):
-                pass
+        default_fmt = "Tagging {version}"
+        fmt = self.config.get("tag-message", default_fmt)
         if "{version}" not in fmt:
             print("{version} needs to be part of 'tag-message': '%s'" % fmt)
             sys.exit(1)
@@ -638,7 +615,7 @@ class PypiConfig(BaseConfig):
         The default when this option has not been set is False.
 
         """
-        return self._get_boolean("zest.releaser", "tag-signing", default=False)
+        return self.config.get("tag-signing", False)
 
     def date_format(self):
         """Return the string format for the date used in the changelog.
@@ -655,13 +632,9 @@ class PypiConfig(BaseConfig):
         Returns default of ``%Y-%m-%d`` when nothing has been configured.
         """
         default = "%Y-%m-%d"
-        if self.config is None:
-            return default
         try:
-            result = self._get_text(
-                "zest.releaser", "date-format", default=default
-            ).replace("%%", "%")
-        except (NoSectionError, NoOptionError, ValueError):
+            result = self.config["date-format"].replace("%%", "%")
+        except (KeyError, ValueError):
             return default
         return result
 
@@ -687,4 +660,4 @@ class PypiConfig(BaseConfig):
         The default when this option has not been set is False.
 
         """
-        return self._get_boolean("zest.releaser", "run-pre-commit", default=False)
+        return self.config.get("run-pre-commit", False)

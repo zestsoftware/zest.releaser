@@ -28,10 +28,10 @@ class Git(BaseVersionControl):
 
     @property
     def name(self):
-        package_name = self.get_setup_py_name()
+        package_name = self._extract_name()
         if package_name:
             return package_name
-        # No setup.py? With git we can probably only fall back to the directory
+        # No python package name? With git we can probably only fall back to the directory
         # name as there's no svn-url with a usable name in it.
         dir_name = os.path.basename(os.getcwd())
         dir_name = fs_to_text(dir_name)
@@ -68,7 +68,7 @@ class Git(BaseVersionControl):
 
     def cmd_commit(self, message):
         parts = ["git", "commit", "-a", "-m", message]
-        if not self.pypi_cfg.run_pre_commit():
+        if not self.zest_releaser_config.run_pre_commit():
             parts.append("-n")
         return parts
 

@@ -75,19 +75,6 @@ In the past, ``git`` commands would give slightly different output.
 If the output of a command changes again, we may need extra compatibility code in ``test_setup.py``
 
 
-Setuptools is needed
---------------------
-
-You also need ``setuptools`` in your system path.  This is because
-we basically call 'sys.executable setup.py egg_info' directly (in the tests
-and in the actual code), which will give an import error on setuptools
-otherwise.  There is a branch with a hack that solves this but it sounds too
-hacky.
-
-TODO: calling ``setup.py`` from the command line is not recommended anymore.
-We should upgrade the code to no longer do that.
-
-
 Building the documentation locally
 -------------------------------------
 

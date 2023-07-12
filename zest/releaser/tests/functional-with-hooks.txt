@@ -51,7 +51,12 @@ Run the prerelease script.  Note that pyroma and check-manifest have
 hooks here so they are run too, but the order may differ.  With the
 bin/test script first pyroma is run, then check-manifest.  With tox it
 is the other way around.  So we use ellipsis for that part.
+sys.dont_write_bytecode is set to True to avoid writing .pyc files so
+that check-manifest doesn't complain about differences between the sdist
+directory and the vcs.
 
+    >>> import sys
+    >>> sys.dont_write_bytecode = True
     >>> from zest.releaser import prerelease
     >>> utils.test_answer_book.set_answers(['', '', '', '', ''])
     >>> prerelease.main()
@@ -99,8 +104,8 @@ The release script tags the release and uploads it:
     Showing first few lines...
     running sdist
     running egg_info
+    creating src/tha.example.egg-info
     ...
-    creating dist
     Creating ...
     removing 'tha.example-0.1' ...
     releaser_before_upload

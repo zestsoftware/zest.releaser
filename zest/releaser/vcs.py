@@ -6,6 +6,8 @@ import os
 import re
 import sys
 
+from configparser import ConfigParser
+
 try:
     # Python 3.11+
     import tomllib
@@ -64,9 +66,8 @@ class BaseVersionControl:
             self.reporoot = reporoot
             # Determine relative path from root of repo.
             self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
-        self.setup_cfg = pypi.SetupConfig()
-        self.pypi_cfg = pypi.PypiConfig()
-        self.fallback_encoding = self.pypi_cfg.encoding()
+        self.zest_releaser_config = pypi.ZestReleaserConfig()
+        self.fallback_encoding = self.zest_releaser_config.encoding()
 
     def __repr__(self):
         return "<{} at {} {}>".format(
@@ -104,6 +105,15 @@ class BaseVersionControl:
             utils.execute_command(utils.setup_py("egg_info"))
             return utils.execute_command(utils.setup_py("--name")).strip()
 
+    def get_setup_cfg_name(self):
+        if os.path.exists("setup.cfg"):
+            setup_cfg = ConfigParser()
+            setup_cfg.read("setup.cfg")
+            try:
+                return setup_cfg["metadata"]["name"]
+            except KeyError:
+                return None
+
     def get_version_txt_version(self):
         filenames = ["version"]
         for extension in TXT_EXTENSIONS:
@@ -115,7 +125,7 @@ class BaseVersionControl:
             return utils.strip_version(version)
 
     def get_python_file_version(self):
-        python_version_file = self.setup_cfg.python_file_with_version()
+        python_version_file = self.zest_releaser_config.python_file_with_version()
         if not python_version_file:
             return
         lines, encoding = utils.read_text_file(
@@ -139,6 +149,14 @@ class BaseVersionControl:
             result = tomllib.load(myfile)
         # Might be None, but that is fine.
         return result.get("project", {}).get("version")
+
+    def get_pyproject_toml_name(self):
+        if not os.path.exists("pyproject.toml"):
+            return
+        with open("pyproject.toml", "rb") as myfile:
+            result = tomllib.load(myfile)
+        # Might be None, but that is fine.
+        return result.get("project", {}).get("name")
 
     def filefind(self, names):
         """Return first found file matching name (case-insensitive).
@@ -232,8 +250,16 @@ class BaseVersionControl:
             or self.get_version_txt_version()
         )
 
+    def _extract_name(self):
+        """Extract the package name from setup.py or pyproject.toml or similar."""
+        return (
+            self.get_setup_py_name()
+            or self.get_setup_cfg_name()
+            or self.get_pyproject_toml_name()
+        )
+
     def _update_python_file_version(self, version):
-        filename = self.setup_cfg.python_file_with_version()
+        filename = self.zest_releaser_config.python_file_with_version()
         lines, encoding = utils.read_text_file(
             filename,
             fallback_encoding=self.fallback_encoding,

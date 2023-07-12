@@ -6,19 +6,22 @@ are some assumptions built-in that might or might not fit you.  Lots of people
 are using it in various companies and open source projects, so it'll probably
 fit :-)
 
-- We absolutely need a version. There's a ``version.txt`` or ``setup.py`` in
-  your project. The ``version.txt`` has a single line with the version number
-  (newline optional). The ``setup.py`` should have a single ``version =
-  '0.3'`` line somewhere. You can also have it in the actual ``setup()`` call,
-  on its own line still, as `` version = '0.3',``. Indentation and comma are
-  preserved. If your ``setup.py`` actually reads the version from your
-  ``setup.cfg`` (as `it does automatically
+- We absolutely need a version. There's a ``version.txt``, ``setup.py``, or
+  ``pyproject.toml`` in your project. The ``version.txt`` has a single line
+  with the version number (newline optional). The ``setup.py`` should have a
+  single ``version = '0.3'`` line somewhere. You can also have it in the
+  actual ``setup()`` call, on its own line still, as `` version = '0.3',``.
+  Indentation and comma are preserved. If your ``setup.py`` actually reads
+  the version from your ``setup.cfg`` (as `it does automatically
   <https://setuptools.readthedocs.io/en/latest/setuptools.html#configuring-
   setup-using-setup-cfg-files>`_ using ``setuptools`` since version 30.3.0),
   then the version will be modified there too. If you need something special,
   you can always do a ``version=version`` and put the actual version statement
   in a zest.releaser- friendly format near the top of the file. Reading (in
-  Plone products) a version.txt into setup.py works great, too.
+  Plone products) a version.txt into setup.py works great, too. If you use
+  ``pyproject.toml``, you should put the version under the ``project``
+  metadata section, which also contains the package name, as a single line like
+  ``version = "0.3"``.
 
 - The history/changes file restriction is probably the most severe at the
   moment. zest.releaser searches for a restructuredtext header with

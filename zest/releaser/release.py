@@ -3,6 +3,8 @@
 from colorama import Fore
 from urllib import request
 from urllib.error import HTTPError
+from build import ProjectBuilder
+from subprocess import check_output, CalledProcessError, STDOUT
 
 import logging
 import os
@@ -57,6 +59,31 @@ def package_in_pypi(package):
         logger.debug("Package not found on pypi: %s", e)
         return False
 
+def _project_builder_runner(cmd, cwd=None, extra_environ=None):
+        """Run the build command and format warnings and errors.
+        
+        It runs the build command in a subprocess. Warnings and errors are formatted
+        in red so that they will work correctly with utils.show_interesting_lines(). We 
+        mimic the setuptools/wheels output that way.
+        """
+        env = os.environ.copy()
+        if extra_environ:
+            env.update(extra_environ)
+
+        try:
+            result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
+        except CalledProcessError as e:
+            raise SystemExit(f"Build failed with the following error:\n{e.output.decode()}\nExiting") from e
+        result_split = result.split(b"\n")
+        formatted_result = []
+        for line in result_split:
+            line = line.decode()
+            if line.lower().startswith(("warning", "error")):
+                line = Fore.RED + line + Fore.RESET  # reset so that not all the lines after a warning are red
+            formatted_result.append(line)
+        formatted_result_joined = "\n".join(formatted_result)
+        utils.show_interesting_lines(formatted_result_joined)
+
 
 class Releaser(baserelease.Basereleaser):
     """Release the project by tagging it and optionally uploading to pypi."""
@@ -73,10 +100,10 @@ class Releaser(baserelease.Basereleaser):
     def prepare(self):
         """Collect some data needed for releasing"""
         self._grab_version()
-        tag = self.pypiconfig.tag_format(self.data["version"])
+        tag = self.zest_releaser_config.tag_format(self.data["version"])
         self.data["tag"] = tag
-        self.data["tag-message"] = self.pypiconfig.tag_message(self.data["version"])
-        self.data["tag-signing"] = self.pypiconfig.tag_signing()
+        self.data["tag-message"] = self.zest_releaser_config.tag_message(self.data["version"])
+        self.data["tag-signing"] = self.zest_releaser_config.tag_signing()
         self.data["tag_already_exists"] = self.vcs.tag_exists(tag)
 
     def execute(self):
@@ -131,15 +158,14 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        result = utils.execute_command(utils.setup_py("sdist"))
-        utils.show_interesting_lines(result)
-        if self.pypiconfig.create_wheel():
+        builder = ProjectBuilder(srcdir='.', runner=_project_builder_runner)
+        builder.build('sdist', './dist/')
+        if self.zest_releaser_config.create_wheel():
             logger.info(
                 "Making a wheel of a fresh tag checkout (in %s).",
                 self.data["tagworkingdir"],
             )
-            result = utils.execute_command(utils.setup_py("bdist_wheel"))
-        utils.show_interesting_lines(result)
+            builder.build('wheel', './dist/')
         if not self.pypiconfig.is_pypi_configured():
             logger.error(
                 "You must have a properly configured %s file in "
@@ -158,7 +184,7 @@ class Releaser(baserelease.Basereleaser):
             os.path.join("dist", filename) for filename in os.listdir("dist")
         )
 
-        register = self.pypiconfig.register_package()
+        register = self.zest_releaser_config.register_package()
 
         # If TWINE_REPOSITORY_URL is set, use it.
         if self.pypiconfig.twine_repository_url():
@@ -265,13 +291,13 @@ class Releaser(baserelease.Basereleaser):
         # override it in the exceptional case but just hit Enter in
         # the usual case.
         main_files = os.listdir(self.data["workingdir"])
-        if "setup.py" not in main_files and "setup.cfg" not in main_files:
-            # Neither setup.py nor setup.cfg, so this is no python
-            # package, so at least a pypi release is not useful.
+        if not {"setup.py", "setup.cfg", "pyproject.toml"}.intersection(main_files):
+            # No setup.py, setup.cfg, or pyproject.toml, so this is no
+            # python package, so at least a pypi release is not useful.
             # Expected case: this is a buildout directory.
             default_answer = False
         else:
-            default_answer = self.pypiconfig.want_release()
+            default_answer = self.zest_releaser_config.want_release()
 
         if not utils.ask(
             "Check out the tag (for tweaks or pypi/distutils " "server upload)",
@@ -318,7 +344,7 @@ class Releaser(baserelease.Basereleaser):
         # Run extra entry point
         self._run_hooks("after_checkout")
 
-        if "setup.py" in os.listdir(self.data["tagworkingdir"]):
+        if any(filename in os.listdir(self.data["tagworkingdir"]) for filename in ["setup.py", "pyproject.toml"]):
             self._upload_distributions(package)
 
         # Make sure we are in the expected directory again.
