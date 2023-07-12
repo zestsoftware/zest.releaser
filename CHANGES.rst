@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-8.1.0 (unreleased)
+9.0.0 (unreleased)
 ------------------
 
 - Changed build system to pypa/build instead of explicitly using setuptools.
