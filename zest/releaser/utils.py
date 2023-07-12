@@ -79,7 +79,9 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
 
     if fallback_encoding:
         logger.debug(
-            "Decoding file %s from encoding %s from setup.cfg.", filename, fallback_encoding
+            "Decoding file %s from encoding %s from setup.cfg.",
+            filename,
+            fallback_encoding,
         )
         try:
             with open(filename, "rb", encoding=fallback_encoding) as filehandler:
@@ -100,9 +102,7 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
     with tokenize.open(filename) as filehandler:
         data = filehandler.read()
         encoding = filehandler.encoding
-        logger.debug(
-            "Detected encoding of %s with tokenize: %s", filename, encoding
-        )
+        logger.debug("Detected encoding of %s with tokenize: %s", filename, encoding)
     return splitlines_with_trailing(data), encoding
 
 
@@ -290,7 +290,7 @@ class AnswerBook:
         if self.answers:
             return self.answers.pop(0)
         # Accept the default.
-        return ''
+        return ""
 
 
 test_answer_book = AnswerBook()
@@ -988,7 +988,7 @@ def history_format(config_value, history_file):
 def string_to_bool(value):
     """Reimplementation of configparser.ConfigParser.getboolean()"""
     if value.isalpha():
-        value=value.lower()
+        value = value.lower()
     if value in ["1", "yes", "true", "on"]:
         return True
     elif value in ["0", "no", "false", "off"]:
@@ -998,31 +998,31 @@ def string_to_bool(value):
 
 
 def extract_zestreleaser_configparser(config, config_filename):
-        if not config:
-            return None
+    if not config:
+        return None
 
-        try:
-            result = dict(config["zest.releaser"].items())
-        except KeyError:
-            logger.debug(f"No [zest.releaser] section found in the {config_filename}")
-            return None
+    try:
+        result = dict(config["zest.releaser"].items())
+    except KeyError:
+        logger.debug(f"No [zest.releaser] section found in the {config_filename}")
+        return None
 
-        boolean_keys = [
-            "release",
-            "create-wheel",
-            "no-input",
-            "register",
-            "push-changes",
-            "less-zeroes",
-            "tag-signing",
-            "run-pre-commit",
-        ]
-        integer_keys = [
-            "version-levels",
-        ]
-        for key, value in result.items():
-            if key in boolean_keys:
-                result[key] = string_to_bool(value)
-            if key in integer_keys:
-                result[key] = int(value)
-        return result
+    boolean_keys = [
+        "release",
+        "create-wheel",
+        "no-input",
+        "register",
+        "push-changes",
+        "less-zeroes",
+        "tag-signing",
+        "run-pre-commit",
+    ]
+    integer_keys = [
+        "version-levels",
+    ]
+    for key, value in result.items():
+        if key in boolean_keys:
+            result[key] = string_to_bool(value)
+        if key in integer_keys:
+            result[key] = int(value)
+    return result

@@ -80,7 +80,8 @@ def main():
         action="store_true",
         dest="headless",
         default=False,
-        help="Do not open a browser window with the HTML result")
+        help="Do not open a browser window with the HTML result",
+    )
     options = utils.parse_options(parser)
     utils.configure_logging()
     code = show_longdesc(headless=options.headless)

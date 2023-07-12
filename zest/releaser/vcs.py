@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 from zest.releaser import pypi
 from zest.releaser import utils
 
@@ -6,7 +7,6 @@ import os
 import re
 import sys
 
-from configparser import ConfigParser
 
 try:
     # Python 3.11+
