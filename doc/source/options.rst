@@ -84,13 +84,8 @@ release = true / false
     of the tag.
 
 create-wheel = true / false
-    Default: false.  Set to true if you want zest.releaser to create
-    Python wheels.  You need to install the ``wheel`` package for this
-    to work.
-
-    If the package is a universal wheel, indicated by having
-    ``universal = 1`` in the ``[bdist_wheel]`` section of
-    ``setup.cfg``, then the default for this value is true.
+    Default: true, if the recommended ``wheel`` package is installed.
+    Set to false if you do not want zest.releaser to create Python wheels.
 
 extra-message = [ci skip]
     Extra message to add to each commit (prerelease, postrelease).
@@ -208,5 +203,5 @@ options like ``extra-message`` or ``prefix-message``, you should put
 the value between double quotes, like this::
 
   [tool.zest-releaser]
-  create-wheel = true
+  create-wheel = false
   extra-message = "[ci skip]"

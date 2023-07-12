@@ -67,19 +67,13 @@ contains a few trusted add-ons that we feel are useful for the great majority
 of ``zest.releaser`` users:
 
 - wheel_ for creating a Python wheel that we upload to PyPI next to
-  the standard source distribution.  Wheels are the new Python package
-  format.  Create or edit ``setup.cfg`` or ``pyproject.toml`` in your
-  project (or globally in your ``~/.pypirc``) and create a section
-  ``[zest.releaser]`` (``[tool.zest-releaser]`` in ``pyproject.toml``)
-  with ``create-wheel = true`` to create a wheel to upload to PyPI.  See
-  http://pythonwheels.com for deciding whether this is a good idea for
-  your package.  Briefly, if it is a pure Python 2 *or* pure Python 3
-  package: just do it. If it is a pure Python 2 *and* a pure Python 3
-  project, it is known as a "universal" wheel, because one wheel can
-  be installed on all implementations and versions of Python. If you
-  indicate this in ``setup.cfg`` with the section ``[bdist_wheel]``
-  having ``universal = 1``, then we will automatically upload a wheel,
-  unless ``create-wheel`` is explicitly set to false.
+  the standard source distribution.  Wheels are the official binary
+  distribution format for Python.
+  Since version 8.0.0a2 we always create wheels, except when you
+  explicitly switch this off in the config:
+  ``[zest.releaser] create-wheel = no``.
+  If you are sure you want "universal" wheels, follow the directions from the
+  `wheel documentation <https://wheel.readthedocs.io/en/stable/user_guide.html>`_.
 
 - `check-manifest`_ checks your ``MANIFEST.in`` file for completeness,
   or tells you that you need such a file.  It basically checks if all
