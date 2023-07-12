@@ -2,9 +2,6 @@
 
 from build import ProjectBuilder
 from colorama import Fore
-from subprocess import CalledProcessError
-from subprocess import check_output
-from subprocess import STDOUT
 from urllib import request
 from urllib.error import HTTPError
 
@@ -65,31 +62,14 @@ def package_in_pypi(package):
 def _project_builder_runner(cmd, cwd=None, extra_environ=None):
     """Run the build command and format warnings and errors.
 
-    It runs the build command in a subprocess. Warnings and errors are formatted
-    in red so that they will work correctly with utils.show_interesting_lines(). We
-    mimic the setuptools/wheels output that way.
-    """
-    env = os.environ.copy()
-    if extra_environ:
-        env.update(extra_environ)
+    It runs the build command in a subprocess.
+    extra_environ will contain for example:
 
-    try:
-        result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
-    except CalledProcessError as e:
-        raise SystemExit(
-            f"Build failed with the following error:\n{e.output.decode()}\nExiting"
-        ) from e
-    result_split = result.split(b"\n")
-    formatted_result = []
-    for line in result_split:
-        line = line.decode()
-        if line.lower().startswith(("warning", "error")):
-            line = (
-                Fore.RED + line + Fore.RESET
-            )  # reset so that not all the lines after a warning are red
-        formatted_result.append(line)
-    formatted_result_joined = "\n".join(formatted_result)
-    utils.show_interesting_lines(formatted_result_joined)
+    {'PEP517_BUILD_BACKEND': 'setuptools.build_meta:__legacy__'}
+    """
+    utils.show_interesting_lines(
+        execute_command(cmd, cwd=cwd, extra_environ=extra_environ)
+    )
 
 
 class Releaser(baserelease.Basereleaser):

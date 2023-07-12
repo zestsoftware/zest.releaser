@@ -474,7 +474,7 @@ def show_interesting_lines(result):
         # warnings/errors, print complete result.
         print(result)
         if not ask(
-            "There were errors or warnings. Are you sure " "you want to continue?",
+            "There were errors or warnings. Are you sure you want to continue?",
             default=False,
         ):
             sys.exit(1)
@@ -662,26 +662,32 @@ def format_command(command):
     return " ".join(args)
 
 
-def _execute_command(command):
+def _execute_command(command, cwd=None, extra_environ=None):
     """Execute a command, returning stdout, plus maybe parts of stderr."""
     # Enforce the command to be a list or arguments.
     assert isinstance(command, (list, tuple))
     logger.debug("Running command: '%s'", format_command(command))
+    env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
+    if extra_environ is not None:
+        env.update(extra_environ)
+    # By default we show errors, of course.
+    show_stderr = True
     if command[0].startswith(sys.executable):
-        env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        if "upload" in command or "register" in command:
-            # We really do want to see the stderr here, otherwise a
-            # failed upload does not even show up in the output.
-            show_stderr = True
-        else:
-            show_stderr = False
-    else:
-        env = None
-        show_stderr = True
+        # For several Python commands, we do not want to see the stderr:
+        # if we include it for `python setup.py --version`, then the version
+        # may contain all kinds of warnings.
+        show_stderr = False
+        # But we really DO want to see the stderr for some other Python commands,
+        # otherwise for example a failed upload would not even show up in the output.
+        for flag in ("upload", "register", "build_sdist", "build_wheel", "-mbuild"):
+            if flag in command:
+                show_stderr = True
+                break
     process_kwargs = {
         "stdin": subprocess.PIPE,
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
+        "cwd": cwd,
         "env": env,
         "text": True,
     }
@@ -731,7 +737,9 @@ def get_errors(stderr_output):
     return "\n".join(errors)
 
 
-def execute_command(command, allow_retry=False, fail_message=""):
+def execute_command(
+    command, allow_retry=False, fail_message="", cwd=None, extra_environ=None
+):
     """Run the command and possibly retry it.
 
     When allow_retry is False, we simply call the base
@@ -752,7 +760,7 @@ def execute_command(command, allow_retry=False, fail_message=""):
 
     It might be a warning, but we cannot detect the distinction.
     """
-    result = _execute_command(command)
+    result = _execute_command(command, cwd=cwd, extra_environ=extra_environ)
     if not allow_retry:
         return result
     if Fore.RED not in result:
