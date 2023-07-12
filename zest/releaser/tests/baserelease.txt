@@ -8,6 +8,11 @@ Change to a git dir:
     >>> import os
     >>> os.chdir(gitsourcedir)
 
+We need to set test mode, to avoid reading ~/.pypirc::
+
+    >>> from zest.releaser import utils
+    >>> utils.TESTMODE = True
+
 Init the Basereleaser, which is otherwise only used as a base class.
 
     >>> from zest.releaser import baserelease

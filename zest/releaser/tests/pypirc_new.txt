@@ -17,7 +17,3 @@ password:password
 repository:http://my.company/products
 username:user
 password:password
-
-[zest.releaser]
-extra-message = [ci skip]
-prefix-message = [TAG]

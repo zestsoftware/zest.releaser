@@ -4,6 +4,7 @@ from zest.releaser import utils
 
 import logging
 import os
+import pkg_resources
 import re
 import sys
 
@@ -66,7 +67,15 @@ class BaseVersionControl:
             self.reporoot = reporoot
             # Determine relative path from root of repo.
             self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
-        self.zest_releaser_config = pypi.ZestReleaserConfig()
+        if utils.TESTMODE:
+            pypirc_old = pkg_resources.resource_filename(
+                "zest.releaser.tests", "pypirc_old.txt"
+            )
+            self.zest_releaser_config = pypi.ZestReleaserConfig(
+                pypirc_config_filename=pypirc_old
+            )
+        else:
+            self.zest_releaser_config = pypi.ZestReleaserConfig()
         self.fallback_encoding = self.zest_releaser_config.encoding()
 
     def __repr__(self):

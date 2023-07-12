@@ -34,10 +34,6 @@ There are two styles of ``.pypirc`` files.  The old one just for pypi:
     [server-login]
     username:pipo_de_clown
     password:asjemenou
-    <BLANKLINE>
-    [zest.releaser]
-    extra-message = [ci skip]
-    prefix-message = [TAG]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_old)
     >>> pypiconfig.distutils_servers()
     ['pypi']
@@ -67,10 +63,6 @@ And the new format that allows multiple uploads:
     repository:http://my.company/products
     username:user
     password:password
-    <BLANKLINE>
-    [zest.releaser]
-    extra-message = [ci skip]
-    prefix-message = [TAG]
     >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_new)
     >>> from pprint import pprint
     >>> pprint(sorted(pypiconfig.distutils_servers()))
@@ -164,23 +156,23 @@ If the package is installed, we set a constant:
     >>> USE_WHEEL
     True
 
-We try to read a [zest.releaser] section, either in pypirc or
-setup.cfg and check for a ``create-wheel`` option.  In this case we
-explicitly disable checking for a setup.cfg, because when running the
+We try to read a [zest.releaser] section, in pypirc, setup.cfg or
+pyproject.toml and check for a ``create-wheel`` option.  In this case we
+explicitly disable checking for the files in the package, because when running the
 tests with ``tox`` the current directory is the base directory of
 zest.releaser, which now contains a setup.cfg.
 
 We can ask for the result like this, which by default is True:
 
-    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_both)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_both, use_package_config=False)
     >>> zestreleaserconfig.create_wheel()
     True
 
 We can also specify to not create the wheel, even when (universal) wheels could be created:
 
-    >>> pypirc_yes_release = pkg_resources.resource_filename(
+    >>> pypirc_no_create = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_universal_nocreate.txt')
-    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_yes_release)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_no_create, use_package_config=False)
     >>> zestreleaserconfig.create_wheel()
     False
 
