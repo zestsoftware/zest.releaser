@@ -1,7 +1,3 @@
 [server-login]
 username:pipo_de_clown
 password:asjemenou
-
-[zest.releaser]
-extra-message = [ci skip]
-prefix-message = [TAG]

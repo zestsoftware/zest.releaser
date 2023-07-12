@@ -173,11 +173,15 @@ class PypiConfig(BaseConfig):
 
     def _read_configfile(self):
         """Read the PyPI config file and store it (when valid)."""
-        if not os.path.exists(self.config_filename):
+        config_filename = self.config_filename
+        if not os.path.exists(config_filename) and not os.path.isabs(config_filename):
+            # When filename is .pypirc, we look in ~/.pypirc
+            config_filename = os.path.join(os.path.expanduser("~"), config_filename)
+        if not os.path.exists(config_filename):
             self.config = None
             return
         self.config = ConfigParser(interpolation=None)
-        self.config.read(self.config_filename)
+        self.config.read(config_filename)
 
     def twine_repository(self):
         """Gets the repository from Twine environment variables."""
@@ -274,12 +278,37 @@ class ZestReleaserConfig:
     hooks_filename = None
 
     def load_configs(self, pypirc_config_filename=DIST_CONFIG_FILE):
+        """Load configs from several files.
+
+        The order is this:
+
+        - ~/.pypirc
+        - setup.cfg
+        - pyproject.toml
+
+        A later config file overwrites keys from an earlier config file.
+        I think this order makes the most sense.
+        Example: extra-message = [ci skip]
+        What I expect, is:
+
+        * Most packages won't have this setting.
+        * If you make releases for lots of packages, you probably set this in
+          your global ~/.pypirc.
+        * A few individual packages will explicitly set this.
+          They will expect this to have the effect that the extra message is
+          added to commits, regardless of who makes a release.
+          So this individual package setting should win.
+        * Finally, pyproject.toml is newer than setup.cfg, so it makes sense
+          that this file has the last say.
+        """
         setup_config = SetupConfig()
         pypi_config = PypiConfig(config_filename=pypirc_config_filename)
         pyproject_config = PyprojectTomlConfig()
         combined_config = {}
-        # overwrite any duplicate keys in the following order:
-        for config in [setup_config, pypi_config, pyproject_config]:
+        config_files = [pypi_config]
+        if not self.omit_package_config_in_test:
+            config_files.extend([setup_config, pyproject_config])
+        for config in config_files:
             if config.zest_releaser_config() is not None:
                 zest_config = config.zest_releaser_config()
                 assert isinstance(zest_config, dict)
@@ -298,7 +327,10 @@ class ZestReleaserConfig:
                     self.hooks_filename = config.config_filename
         self.config = combined_config
 
-    def __init__(self, pypirc_config_filename=DIST_CONFIG_FILE):
+    def __init__(
+        self, pypirc_config_filename=DIST_CONFIG_FILE, omit_package_config_in_test=False
+    ):
+        self.omit_package_config_in_test = omit_package_config_in_test
         self.load_configs(pypirc_config_filename=pypirc_config_filename)
 
     def want_release(self):
