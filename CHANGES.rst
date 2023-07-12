@@ -4,12 +4,13 @@ Changelog for zest.releaser
 9.0.0 (unreleased)
 ------------------
 
-- Use native namespace packages for ``zest.releaser``, instead of deprecated ``pkg_resources`` based ones.
-
 - Changed build system to pypa/build instead of explicitly using
   setuptools.
 
 - Zest.releaser's settings can now also be placed in ``pyproject.toml``.
+
+- Use native namespace packages for ``zest.releaser``, instead of
+  deprecated ``pkg_resources`` based ones.
 
 - Added pre-commit config for neater code (black, flake8, isort).
 
