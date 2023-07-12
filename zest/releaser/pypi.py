@@ -306,7 +306,7 @@ class ZestReleaserConfig:
         pyproject_config = PyprojectTomlConfig()
         combined_config = {}
         config_files = [pypi_config]
-        if self.use_package_config:
+        if not self.omit_package_config_in_test:
             config_files.extend([setup_config, pyproject_config])
         for config in config_files:
             if config.zest_releaser_config() is not None:
@@ -328,9 +328,9 @@ class ZestReleaserConfig:
         self.config = combined_config
 
     def __init__(
-        self, pypirc_config_filename=DIST_CONFIG_FILE, use_package_config=True
+        self, pypirc_config_filename=DIST_CONFIG_FILE, omit_package_config_in_test=False
     ):
-        self.use_package_config = use_package_config
+        self.omit_package_config_in_test = omit_package_config_in_test
         self.load_configs(pypirc_config_filename=pypirc_config_filename)
 
     def want_release(self):

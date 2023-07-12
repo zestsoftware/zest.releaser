@@ -164,7 +164,7 @@ zest.releaser, which now contains a setup.cfg.
 
 We can ask for the result like this, which by default is True:
 
-    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_both, use_package_config=False)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_both, omit_package_config_in_test=True)
     >>> zestreleaserconfig.create_wheel()
     True
 
@@ -172,7 +172,7 @@ We can also specify to not create the wheel, even when (universal) wheels could 
 
     >>> pypirc_no_create = pkg_resources.resource_filename(
     ...     'zest.releaser.tests', 'pypirc_universal_nocreate.txt')
-    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_no_create, use_package_config=False)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_no_create, omit_package_config_in_test=True)
     >>> zestreleaserconfig.create_wheel()
     False
 
