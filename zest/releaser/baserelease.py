@@ -77,7 +77,9 @@ class Basereleaser:
                 "zest.releaser.tests", "pypirc_old.txt"
             )
             self.pypiconfig = pypi.PypiConfig(pypirc_old)
-            self.zest_releaser_config = pypi.ZestReleaserConfig(pypirc_config_filename=pypirc_old)
+            self.zest_releaser_config = pypi.ZestReleaserConfig(
+                pypirc_config_filename=pypirc_old
+            )
         else:
             self.pypiconfig = pypi.PypiConfig()
             self.zest_releaser_config = pypi.ZestReleaserConfig()
@@ -86,7 +88,6 @@ class Basereleaser:
 
     @property
     def history_format(self):
-        default = "rst"
         config_value = self.zest_releaser_config.history_format()
         history_file = self.data.get("history_file") or ""
         return utils.history_format(config_value, history_file)

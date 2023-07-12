@@ -49,7 +49,7 @@ A version number can come from various different locations:
 
     [zest.releaser]
     python-file-with-version = mypackage/__init__.py
-  
+
   Alternatively, in ``pyproject.toml``, you can use the following::
 
     [tool.zest-releaser]

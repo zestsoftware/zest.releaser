@@ -1,6 +1,5 @@
 """Set up functional test fixtures"""
 
-from colorama import Fore
 from io import StringIO
 from urllib import request
 from urllib.error import HTTPError
@@ -116,7 +115,7 @@ def setup(test):
             "mock_pypi_available": test.mock_pypi_available,
             "add_changelog_entry": add_changelog_entry,
             "commit_all_changes": commit_all_changes,
-            "rename_changelog": rename_changelog
+            "rename_changelog": rename_changelog,
         }
     )
 

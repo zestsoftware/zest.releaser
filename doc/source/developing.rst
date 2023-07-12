@@ -41,17 +41,31 @@ Running tests
 
 Actually, this should be easy now, because we use tox.
 So ``pip install tox`` somewhere, probably in a virtualenv, maybe the current directory,
-and call it:
+and call it::
 
-    tox
+    $ tox
 
 You probably want to run the tests for all environments in parallel::
 
-    tox -p auto
+    $ tox -p auto
 
 To run a specific environment and a specific test file::
 
-    tox -e py38 -- utils.txt
+    $ tox -e py38 -- utils.txt
+
+
+Code formatting
+---------------
+
+We use black/flake8/isort. To make it easy to configure and run, there's a
+pre-commit config. Enable it with::
+
+    $ pre-commit install
+
+That will run it before every commit. You can also run it periodically when
+developing::
+
+    $ pre-commit run --all
 
 
 Python versions
@@ -64,15 +78,14 @@ Necessary programs
 ------------------
 
 To run the tests, you need to have the supported versioning systems installed.
-Since version 7, we only support ``git``.
-On ubuntu::
-
-  $ sudo apt-get install git
+Since version 7, we only support ``git``, which you already have installed
+probably :-)
 
 There may be test failures when you have different versions of these programs.
-In that case, please investigate as these may be genuine errors.
-In the past, ``git`` commands would give slightly different output.
-If the output of a command changes again, we may need extra compatibility code in ``test_setup.py``
+In that case, please investigate as these *may* be genuine errors.  In the
+past, ``git`` commands would give slightly different output.  If the output of
+a command changes again, we may need extra compatibility code in
+``test_setup.py``.
 
 
 Building the documentation locally

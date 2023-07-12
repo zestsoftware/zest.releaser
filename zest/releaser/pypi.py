@@ -1,11 +1,13 @@
-from configparser import ConfigParser, NoOptionError, NoSectionError
+from .utils import extract_zestreleaser_configparser
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
 
 import logging
 import os
 import pkg_resources
 import sys
 
-from .utils import string_to_bool, extract_zestreleaser_configparser
 
 try:
     # Python 3.11+
@@ -50,8 +52,7 @@ class BaseConfig:
         return result
 
     def _get_text(self, section, key, default=None, raw=False):
-        """Get a text from the config.
-        """
+        """Get a text from the config."""
         result = default
         if self.config is not None:
             try:
@@ -142,7 +143,7 @@ class SetupConfig(BaseConfig):
 
 class PypiConfig(BaseConfig):
     """Wrapper around the pypi config file.
-    
+
     Contains functions which return information about
     the pypi configuration.
     """
@@ -166,7 +167,7 @@ class PypiConfig(BaseConfig):
         settings, and tell release to retry the command.
         """
         self._read_configfile()
-    
+
     def zest_releaser_config(self):
         return extract_zestreleaser_configparser(self.config, self.config_filename)
 
@@ -262,7 +263,9 @@ class PyprojectTomlConfig(BaseConfig):
         try:
             result = self.config["tool"]["zest-releaser"]
         except KeyError:
-            logger.debug(f"No [tool.zest-releaser] section found in the {self.config_filename}")
+            logger.debug(
+                f"No [tool.zest-releaser] section found in the {self.config_filename}"
+            )
             return None
         return result
 
@@ -283,13 +286,21 @@ class ZestReleaserConfig:
                 combined_config.update(zest_config)
 
                 # store which config file contained entrypoint hooks
-                if any([x for x in zest_config.keys() if x.lower().startswith(("prereleaser.", "releaser.", "postreleaser."))]):
+                if any(
+                    [
+                        x
+                        for x in zest_config.keys()
+                        if x.lower().startswith(
+                            ("prereleaser.", "releaser.", "postreleaser.")
+                        )
+                    ]
+                ):
                     self.hooks_filename = config.config_filename
         self.config = combined_config
 
     def __init__(self, pypirc_config_filename=DIST_CONFIG_FILE):
         self.load_configs(pypirc_config_filename=pypirc_config_filename)
-    
+
     def want_release(self):
         """Does the user normally want to release this package.
 

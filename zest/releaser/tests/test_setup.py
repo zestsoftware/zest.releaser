@@ -55,7 +55,6 @@ checker = renormalizing.RENormalizing(
 )
 
 
-
 def test_suite():
     """Find .txt files and test code examples in them."""
     suite = unittest.TestSuite()

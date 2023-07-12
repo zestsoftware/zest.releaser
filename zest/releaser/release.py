@@ -1,10 +1,12 @@
 # GPL, (c) Reinout van Rees
 
+from build import ProjectBuilder
 from colorama import Fore
+from subprocess import CalledProcessError
+from subprocess import check_output
+from subprocess import STDOUT
 from urllib import request
 from urllib.error import HTTPError
-from build import ProjectBuilder
-from subprocess import check_output, CalledProcessError, STDOUT
 
 import logging
 import os
@@ -59,30 +61,35 @@ def package_in_pypi(package):
         logger.debug("Package not found on pypi: %s", e)
         return False
 
-def _project_builder_runner(cmd, cwd=None, extra_environ=None):
-        """Run the build command and format warnings and errors.
-        
-        It runs the build command in a subprocess. Warnings and errors are formatted
-        in red so that they will work correctly with utils.show_interesting_lines(). We 
-        mimic the setuptools/wheels output that way.
-        """
-        env = os.environ.copy()
-        if extra_environ:
-            env.update(extra_environ)
 
-        try:
-            result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
-        except CalledProcessError as e:
-            raise SystemExit(f"Build failed with the following error:\n{e.output.decode()}\nExiting") from e
-        result_split = result.split(b"\n")
-        formatted_result = []
-        for line in result_split:
-            line = line.decode()
-            if line.lower().startswith(("warning", "error")):
-                line = Fore.RED + line + Fore.RESET  # reset so that not all the lines after a warning are red
-            formatted_result.append(line)
-        formatted_result_joined = "\n".join(formatted_result)
-        utils.show_interesting_lines(formatted_result_joined)
+def _project_builder_runner(cmd, cwd=None, extra_environ=None):
+    """Run the build command and format warnings and errors.
+
+    It runs the build command in a subprocess. Warnings and errors are formatted
+    in red so that they will work correctly with utils.show_interesting_lines(). We
+    mimic the setuptools/wheels output that way.
+    """
+    env = os.environ.copy()
+    if extra_environ:
+        env.update(extra_environ)
+
+    try:
+        result = check_output(cmd, cwd=cwd, env=env, stderr=STDOUT)
+    except CalledProcessError as e:
+        raise SystemExit(
+            f"Build failed with the following error:\n{e.output.decode()}\nExiting"
+        ) from e
+    result_split = result.split(b"\n")
+    formatted_result = []
+    for line in result_split:
+        line = line.decode()
+        if line.lower().startswith(("warning", "error")):
+            line = (
+                Fore.RED + line + Fore.RESET
+            )  # reset so that not all the lines after a warning are red
+        formatted_result.append(line)
+    formatted_result_joined = "\n".join(formatted_result)
+    utils.show_interesting_lines(formatted_result_joined)
 
 
 class Releaser(baserelease.Basereleaser):
@@ -102,7 +109,9 @@ class Releaser(baserelease.Basereleaser):
         self._grab_version()
         tag = self.zest_releaser_config.tag_format(self.data["version"])
         self.data["tag"] = tag
-        self.data["tag-message"] = self.zest_releaser_config.tag_message(self.data["version"])
+        self.data["tag-message"] = self.zest_releaser_config.tag_message(
+            self.data["version"]
+        )
         self.data["tag-signing"] = self.zest_releaser_config.tag_signing()
         self.data["tag_already_exists"] = self.vcs.tag_exists(tag)
 
@@ -158,14 +167,14 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        builder = ProjectBuilder(srcdir='.', runner=_project_builder_runner)
-        builder.build('sdist', './dist/')
+        builder = ProjectBuilder(srcdir=".", runner=_project_builder_runner)
+        builder.build("sdist", "./dist/")
         if self.zest_releaser_config.create_wheel():
             logger.info(
                 "Making a wheel of a fresh tag checkout (in %s).",
                 self.data["tagworkingdir"],
             )
-            builder.build('wheel', './dist/')
+            builder.build("wheel", "./dist/")
         if not self.pypiconfig.is_pypi_configured():
             logger.error(
                 "You must have a properly configured %s file in "
@@ -344,7 +353,10 @@ class Releaser(baserelease.Basereleaser):
         # Run extra entry point
         self._run_hooks("after_checkout")
 
-        if any(filename in os.listdir(self.data["tagworkingdir"]) for filename in ["setup.py", "pyproject.toml"]):
+        if any(
+            filename in os.listdir(self.data["tagworkingdir"])
+            for filename in ["setup.py", "pyproject.toml"]
+        ):
             self._upload_distributions(package)
 
         # Make sure we are in the expected directory again.
