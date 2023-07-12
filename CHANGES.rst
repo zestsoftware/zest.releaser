@@ -9,6 +9,9 @@ Changelog for zest.releaser
 
 - Zest.releaser's settings can now also be placed in ``pyproject.toml``.
 
+- Use native namespace packages for ``zest.releaser``, instead of
+  deprecated ``pkg_resources`` based ones.
+
 - Added pre-commit config for neater code (black, flake8, isort).
 
 - Dropped support for python 3.7. Together with switching to ``build`` and
