@@ -10,6 +10,8 @@ Changelog for zest.releaser
 
 - Added pre-commit config for neater code (black, flake8, isort).
 
+- Dropped support for python 3.7.
+
 
 8.0.0 (2023-05-05)
 ------------------

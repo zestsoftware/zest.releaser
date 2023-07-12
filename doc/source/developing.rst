@@ -71,7 +71,7 @@ developing::
 Python versions
 ---------------
 
-The tests currently pass on python 3.7-3.11 and PyPy3.
+The tests currently pass on python 3.8-3.11 and PyPy3.
 
 
 Necessary programs
