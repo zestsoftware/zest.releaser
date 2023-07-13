@@ -779,6 +779,10 @@ We needed to compensate for that so that the following example works:
     True
     >>> encoding
     'utf-8'
+
+Specifying the encoding works, too:
+
+    >>> lines, encoding = utils.read_text_file(example_filename, encoding="utf-8")
     >>> os.remove(example_filename)  # cleanup
 
 By using `.splitlines()`, we reliably handle different lineendings now.
