@@ -128,7 +128,6 @@ class Basereleaser:
         self.data["history_last_release"] = ""
         self.data["history_insert_line_here"] = 0
         default_location = self.zest_releaser_config.history_file()
-        fallback_encoding = self.zest_releaser_config.encoding()
         history_file = self.vcs.history_file(location=default_location)
         self.data["history_file"] = history_file
         if not history_file:
@@ -137,7 +136,6 @@ class Basereleaser:
         logger.debug("Checking %s", history_file)
         history_lines, history_encoding = read_text_file(
             history_file,
-            fallback_encoding=fallback_encoding,
         )
         headings = utils.extract_headings_from_history(history_lines)
         if not headings:
@@ -280,31 +278,20 @@ class Basereleaser:
                 "the existing file. This might give problems.",
                 orig_encoding,
             )
-            fallback_encodings = []
-            if "encoding" in self.zest_releaser_config:
-                encoding = self.zest_releaser_config["encoding"]
-                if encoding != orig_encoding:
-                    fallback_encodings.append(encoding)
-            encoding = "utf-8"
-            if encoding != orig_encoding:
-                fallback_encodings.append(encoding)
-            for encoding in fallback_encodings:
-                try:
-                    # Note: we do not change the message at this point,
-                    # we only check if an encoding can work.
-                    message.encode(encoding)
-                except UnicodeEncodeError:
-                    # Let's continue. There might be a chance that it works.
-                    logger.warning("Changelog entry is also not %s. ", encoding)
-                else:
-                    logger.debug("Forcing new history_encoding %s", encoding)
-                    self.data["history_encoding"] = encoding
-                    break
-            else:
+            fallback_encoding = "utf-8"
+            try:
+                # Note: we do not change the message at this point,
+                # we only check if an encoding can work.
+                message.encode(fallback_encoding)
+            except UnicodeEncodeError:
                 logger.warning(
-                    "No correct encoding could be determined for writing. "
-                    "This will probably fail in a moment."
+                    "Tried %s for changelog entry, but that didn't work. "
+                    "It will probably fail soon afterwards.",
+                    fallback_encoding,
                 )
+            else:
+                logger.debug("Forcing new history_encoding %s", fallback_encoding)
+                self.data["history_encoding"] = fallback_encoding
         lines = []
         prefix = utils.get_list_item(self.data["history_lines"])
         for index, line in enumerate(message.splitlines()):

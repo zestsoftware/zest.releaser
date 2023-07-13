@@ -76,7 +76,6 @@ class BaseVersionControl:
             )
         else:
             self.zest_releaser_config = pypi.ZestReleaserConfig()
-        self.fallback_encoding = self.zest_releaser_config.encoding()
 
     def __repr__(self):
         return "<{} at {} {}>".format(
@@ -137,10 +136,7 @@ class BaseVersionControl:
         python_version_file = self.zest_releaser_config.python_file_with_version()
         if not python_version_file:
             return
-        lines, encoding = utils.read_text_file(
-            python_version_file,
-            fallback_encoding=self.fallback_encoding,
-        )
+        lines, encoding = utils.read_text_file(python_version_file)
         encoding  # noqa, unused variable
         for line in lines:
             match = UNDERSCORED_VERSION_PATTERN.search(line)
@@ -271,7 +267,6 @@ class BaseVersionControl:
         filename = self.zest_releaser_config.python_file_with_version()
         lines, encoding = utils.read_text_file(
             filename,
-            fallback_encoding=self.fallback_encoding,
         )
         good_version = "__version__ = '%s'" % version
         for index, line in enumerate(lines):
@@ -289,7 +284,6 @@ class BaseVersionControl:
         filename = "pyproject.toml"
         lines, encoding = utils.read_text_file(
             filename,
-            fallback_encoding=self.fallback_encoding,
         )
         good_version = "version = '%s'" % version
         found_project = False
@@ -363,7 +357,6 @@ class BaseVersionControl:
         line_number = 0
         setup_lines, encoding = utils.read_text_file(
             "setup.py",
-            fallback_encoding=self.fallback_encoding,
         )
         for line_number, line in enumerate(setup_lines):
             if VERSION_PATTERN.search(line):
@@ -395,7 +388,6 @@ class BaseVersionControl:
         if os.path.exists("setup.cfg"):
             setup_cfg_lines, encoding = utils.read_text_file(
                 "setup.cfg",
-                fallback_encoding=self.fallback_encoding,
             )
             for line_number, line in enumerate(setup_cfg_lines):
                 if VERSION_PATTERN.search(line):

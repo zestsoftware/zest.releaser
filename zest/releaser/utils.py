@@ -52,7 +52,7 @@ def write_text_file(filename, contents, encoding=None):
         f.write(contents)
 
 
-def read_text_file(filename, encoding=None, fallback_encoding=None):
+def read_text_file(filename, encoding=None):
     """Return lines and encoding of the file
 
     Unless specified manually, We have no way of knowing what text
@@ -62,11 +62,7 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
 
     1. If encoding is specified, we use that encoding.
 
-    2. If fallback_encoding is specified, we use that encoding if needed
-       and not overridden by other logic.  This will come from the
-       'encoding' setting in setup.cfg/.pypirc.
-
-    3. Lastly we try to detect the encoding using tokenize.
+    2. Lastly we try to detect the encoding using tokenize.
     """
     if encoding is not None:
         # The simple case.
@@ -76,25 +72,6 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
         with open(filename, "rb", encoding=encoding) as filehandler:
             data = filehandler.read()
         return splitlines_with_trailing(data), encoding
-
-    if fallback_encoding:
-        logger.debug(
-            "Decoding file %s from encoding %s from setup.cfg.",
-            filename,
-            fallback_encoding,
-        )
-        try:
-            with open(filename, "rb", encoding=fallback_encoding) as filehandler:
-                data = filehandler.read()
-            return splitlines_with_trailing(data), fallback_encoding
-        except UnicodeDecodeError:
-            logger.warning(
-                "setup.cfg has zest.releaser encoding option %r, "
-                "but this fails for file %s. "
-                "Consider changing the file or the option.",
-                fallback_encoding,
-                filename,
-            )
 
     # tokenize first detects the encoding (looking for encoding hints
     # or an UTF-8 BOM) and opens the file using this encoding.

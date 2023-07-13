@@ -4,7 +4,10 @@ Changelog for zest.releaser
 9.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Removed ``encoding`` config option as nobody is using it anymore (using the
+  option would result in a crash). Apparently it isn't needed anymore now that
+  we don't use python 2 anymore. Fixes `issue 391
+  <https://github.com/zestsoftware/zest.releaser/issues/391>`_.
 
 
 9.0.0a1 (2023-07-13)
