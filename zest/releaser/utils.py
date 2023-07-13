@@ -73,7 +73,7 @@ def read_text_file(filename, encoding=None, fallback_encoding=None):
         logger.debug(
             "Decoding file %s from encoding %s from argument.", filename, encoding
         )
-        with open(filename, "rb", encoding=encoding) as filehandler:
+        with open(filename, "r", encoding=encoding) as filehandler:
             data = filehandler.read()
         return splitlines_with_trailing(data), encoding
 
