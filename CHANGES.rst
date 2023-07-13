@@ -4,7 +4,9 @@ Changelog for zest.releaser
 9.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- If ``encoding`` is set in the config file, the reading of text doesn't break
+  anymore. Fixes `issue 391
+  <https://github.com/zestsoftware/zest.releaser/issues/391>`_.
 
 
 9.0.0a1 (2023-07-13)
