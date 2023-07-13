@@ -95,3 +95,7 @@ preparedocs = "zest.releaser.preparedocs:prepare_entrypoint_documentation"
 
 [tool.isort]
 profile = "plone"
+
+[tool.zest-releaser]
+extra-message = "[ci skip]"
+tag-signing = true
