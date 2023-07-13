@@ -420,23 +420,6 @@ class ZestReleaserConfig:
         """
         return self.config.get("python-file-with-version")
 
-    def encoding(self):
-        """Return encoding to use for text files.
-
-        Mostly the changelog and if needed `setup.py`.
-
-        The encoding cannot always be determined correctly.
-        This setting is a way to fix that.
-        See https://github.com/zestsoftware/zest.releaser/issues/264
-
-        Configure this by adding an ``encoding`` option, either in the
-        package you want to release, or in your ~/.pypirc::
-
-            [zest.releaser]
-            encoding = utf-8
-        """
-        return self.config.get("encoding", "")
-
     def history_format(self):
         """Return the format to be used for Changelog files.
 

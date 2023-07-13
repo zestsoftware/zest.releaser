@@ -169,11 +169,6 @@ history-file = a string
     But sometimes it may not find anything, or it finds multiple files and selects the wrong one.
     Then you can set a path here.
 
-encoding = a string
-  Default: empty.
-  Set this to, for example, ``utf-8`` when the encoding of your ``CHANGES.rst``
-  file is not determined correctly.
-
 history_format = a string
   Default: empty.
   Set this to ``md`` to handle changelog entries in Markdown.
