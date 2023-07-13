@@ -5,15 +5,15 @@
 # serve to show the default.
 
 import datetime
+import importlib
 import os
-import pkg_resources
 
 
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 
 project = "zest.releaser"
 author = "Reinout and Maurits van Rees"
-version = pkg_resources.get_distribution("zest.releaser").version
+version = importlib.metadata.version("zest.releaser")
 release = version
 this_year = datetime.date.today().year
 copyright = "%s, %s" % (this_year, author)
