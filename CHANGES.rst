@@ -4,6 +4,11 @@ Changelog for zest.releaser
 9.0.0a2 (unreleased)
 --------------------
 
+- Ignore error output when calling `build`.
+  We only need to look at the exit code to see if it worked.
+  You can call zest.releaser with ``--verbose`` if you want 
+  to see the possible warnings.
+
 - Removed ``encoding`` config option as nobody is using it anymore (using the
   option would result in a crash). Apparently it isn't needed anymore now that
   we don't use python 2 anymore. Fixes `issue 391
