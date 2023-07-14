@@ -6,6 +6,7 @@ from zest.releaser import utils
 from zest.releaser.utils import _execute_command
 
 import logging
+import os
 import readme_renderer
 import sys
 import tempfile
@@ -29,6 +30,14 @@ logger = logging.getLogger(__name__)
 def show_longdesc():
     vcs = choose.version_control()
     name = vcs.name
+
+    # Corner case. importlib.metadata wants to be next to the egg-info. Which
+    # doesn't play nice if the egg-info is in a src/ dir, which is a
+    # relatively common occurrence.
+    if os.path.exists(f"src/{name}.egg-info"):
+        logger.info("egg-info dir found in src/ dir, chdir'ing to src first")
+        os.chdir("src")
+
     filename = tempfile.mktemp(".html")
     html = _execute_command(
         [
