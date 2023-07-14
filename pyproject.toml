@@ -50,9 +50,9 @@ recommended = [
     "wheel",
 ]
 test = [
+    "wheel",
     "zope.testing",
     "zope.testrunner",
-    "wheel",
 ]
 
 [project.urls]
