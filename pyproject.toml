@@ -13,14 +13,13 @@ authors = [
     {name = "Maurits van Rees", email = "maurits@vanrees.org"},
 ]
 dependencies = [
-    "setuptools",
+    "build >= 0.6.0.post1",  # 0.6.0 wasn't compatible with Python 3.7
     "colorama",
     "readme_renderer",
     "requests",
-    "twine >= 1.6.0",
-    "build >= 0.6.0.post1",  # 0.6.0 wasn't compatible with Python 3.7
-    "tomli; python_version<'3.11'",
     "setuptools >= 61.0.0",  # older versions can't read pyproject.toml configurations
+    "tomli; python_version<'3.11'",
+    "twine >= 1.6.0",
 ]
 requires-python = ">=3.8"
 classifiers = [
