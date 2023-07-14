@@ -164,9 +164,9 @@ Note: markdown files should use the "underline" style of headings, not the
 
 There are some additional tools:
 
-- **longtest**: small tool that renders a setup.py's long description
-  and opens it in a web browser. This assumes an installed docutils
-  (as it needs ``rst2html.py``).
+- **longtest**: small tool that renders the long description and opens it in a
+  web browser. Handy for debugging formatting issues locally before uploading
+  it to pypi.
 
 - **lasttagdiff**: small tool that shows the *diff* of the current
   branch with the last released tag.  Handy for checking whether all
