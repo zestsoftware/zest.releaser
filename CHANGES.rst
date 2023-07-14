@@ -9,6 +9,13 @@ Changelog for zest.releaser
   we don't use python 2 anymore. Fixes `issue 391
   <https://github.com/zestsoftware/zest.releaser/issues/391>`_.
 
+- The ``longtest`` is now simpler. It runs readme_renderer and just displays
+  the result in the browser, without error handling. ``twine check`` should be
+  used if you want a real hard check (``longtest --headless`` is
+  deprecated). The advantage is that longtest now also renders markdown
+  correctly.
+  Fixes `issue 363 <https://github.com/zestsoftware/zest.releaser/issues/363>`_.
+
 
 9.0.0a1 (2023-07-13)
 --------------------
