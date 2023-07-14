@@ -15,6 +15,7 @@ authors = [
 dependencies = [
     "setuptools",
     "colorama",
+    "readme_renderer",
     "requests",
     "twine >= 1.6.0",
     "build >= 0.6.0.post1",  # 0.6.0 wasn't compatible with Python 3.7
@@ -47,7 +48,6 @@ recommended = [
     "check-manifest",
     "pep440",
     "pyroma",
-    "readme_renderer",
     "wheel",
 ]
 test = [
