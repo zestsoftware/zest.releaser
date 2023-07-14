@@ -656,7 +656,7 @@ def _execute_command(command, cwd=None, extra_environ=None):
         show_stderr = False
         # But we really DO want to see the stderr for some other Python commands,
         # otherwise for example a failed upload would not even show up in the output.
-        for flag in ("upload", "register", "build_sdist", "build_wheel", "-mbuild"):
+        for flag in ("upload", "register"):
             if flag in command:
                 show_stderr = True
                 break
