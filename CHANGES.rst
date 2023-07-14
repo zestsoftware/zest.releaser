@@ -13,7 +13,7 @@ Changelog for zest.releaser
   the result in the browser, without error handling. ``twine check`` should be
   used if you want a real hard check (``longtest --headless`` is
   deprecated). The advantage is that longtest now also renders markdown
-  correctly.
+  correctly.  This adds `readme_renderer[md]` as dependency.
   Fixes `issue 363 <https://github.com/zestsoftware/zest.releaser/issues/363>`_.
 
 
