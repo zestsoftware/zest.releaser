@@ -13,13 +13,13 @@ authors = [
     {name = "Maurits van Rees", email = "maurits@vanrees.org"},
 ]
 dependencies = [
-    "setuptools",
-    "colorama",
-    "requests",
-    "twine >= 1.6.0",
     "build >= 0.6.0.post1",  # 0.6.0 wasn't compatible with Python 3.7
-    "tomli; python_version<'3.11'",
+    "colorama",
+    "readme_renderer[md] >= 40",
+    "requests",
     "setuptools >= 61.0.0",  # older versions can't read pyproject.toml configurations
+    "tomli; python_version<'3.11'",
+    "twine >= 1.6.0",
 ]
 requires-python = ">=3.8"
 classifiers = [
@@ -47,13 +47,12 @@ recommended = [
     "check-manifest",
     "pep440",
     "pyroma",
-    "readme_renderer",
     "wheel",
 ]
 test = [
+    "wheel",
     "zope.testing",
     "zope.testrunner",
-    "wheel",
 ]
 
 [project.urls]

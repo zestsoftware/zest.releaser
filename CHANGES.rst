@@ -6,13 +6,20 @@ Changelog for zest.releaser
 
 - Ignore error output when calling `build`.
   We only need to look at the exit code to see if it worked.
-  You can call zest.releaser with ``--verbose`` if you want 
+  You can call zest.releaser with ``--verbose`` if you want
   to see the possible warnings.
 
 - Removed ``encoding`` config option as nobody is using it anymore (using the
   option would result in a crash). Apparently it isn't needed anymore now that
   we don't use python 2 anymore. Fixes `issue 391
   <https://github.com/zestsoftware/zest.releaser/issues/391>`_.
+
+- The ``longtest`` is now simpler. It runs readme_renderer and just displays
+  the result in the browser, without error handling. ``twine check`` should be
+  used if you want a real hard check (``longtest --headless`` is
+  deprecated). The advantage is that longtest now also renders markdown
+  correctly.  This adds `readme_renderer[md]` as dependency.
+  Fixes `issue 363 <https://github.com/zestsoftware/zest.releaser/issues/363>`_.
 
 
 9.0.0a1 (2023-07-13)

@@ -1,22 +1,16 @@
 """Do the checks and tasks that have to happen before doing a release.
 """
 
-import io
+from zest.releaser import choose
+from zest.releaser import utils
+from zest.releaser.utils import _execute_command
+
 import logging
+import os
+import readme_renderer
 import sys
 import tempfile
 import webbrowser
-
-
-try:
-    from readme_renderer.rst import render
-
-    HAVE_README = True
-except ImportError:
-    HAVE_README = False
-
-from zest.releaser import utils
-from zest.releaser.utils import _execute_command
 
 
 HTML_PREFIX = """<html>
@@ -29,36 +23,31 @@ HTML_POSTFIX = """
 </html>"""
 
 
+readme_renderer  # noqa, indicating it as a dependency
 logger = logging.getLogger(__name__)
 
 
-def show_longdesc(headless):
-    if not HAVE_README:
-        logging.error(
-            "To check the long description, we need the 'readme_renderer' "
-            "package. "
-            "(It is included if you install `zest.releaser[recommended]`)"
-        )
-        return 1
+def show_longdesc():
+    vcs = choose.version_control()
+    name = vcs.name
+
+    # Corner case. importlib.metadata wants to be next to the egg-info. Which
+    # doesn't play nice if the egg-info is in a src/ dir, which is a
+    # relatively common occurrence.
+    if os.path.exists(f"src/{name}.egg-info"):
+        logger.info("egg-info dir found in src/ dir, chdir'ing to src first")
+        os.chdir("src")
 
     filename = tempfile.mktemp(".html")
-    # Note: for the setup.py call we use _execute_command() from our
-    # utils module. This makes sure the python path is set up right.
-    longdesc = _execute_command(utils.setup_py("--long-description"))
-    warnings = io.StringIO()
-    html = render(longdesc, warnings)
-    if html is None:
-        logging.error("Error generating html. Invalid ReST.")
-        rst_filename = tempfile.mktemp(".rst")
-        with open(rst_filename, "wb") as rst_file:
-            rst_file.write(longdesc.encode("utf-8"))
-        warning_text = warnings.getvalue()
-        warning_text = warning_text.replace("<string>", rst_filename)
-        print(warning_text)
-        return 1
-
-    if headless:
-        return 0
+    html = _execute_command(
+        [
+            sys.executable,
+            "-m",
+            "readme_renderer",
+            "--package",
+            name,
+        ]
+    )
 
     if "<html" not in html[:20]:
         # Add a html declaration including utf-8 indicator
@@ -70,7 +59,6 @@ def show_longdesc(headless):
     url = "file://" + filename
     logging.info("Opening %s in your webbrowser.", url)
     webbrowser.open(url)
-    return 0
 
 
 def main():
@@ -80,9 +68,11 @@ def main():
         action="store_true",
         dest="headless",
         default=False,
-        help="Do not open a browser window with the HTML result",
+        help="Deprecated",
     )
     options = utils.parse_options(parser)
     utils.configure_logging()
-    code = show_longdesc(headless=options.headless)
-    sys.exit(code)
+    if options.headless:
+        logger.error("--headless is deprecated, for real checks use 'twine check'.")
+        sys.exit(1)
+    show_longdesc()
