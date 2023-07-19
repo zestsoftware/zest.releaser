@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.0.0a2 (unreleased)
+9.0.0a2 (2023-07-19)
 --------------------
 
 - Ignore error output when calling `build`.
