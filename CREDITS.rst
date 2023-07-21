@@ -22,3 +22,6 @@ Credits
 
 * `Mateusz Legięcki <https://github.com/Behoston>`_ added a dockerfile for
   much easier testing.
+
+* `Eli Sallé <https://github.com/elisallenens>`_ added pyproject.toml support
+  for zest.releaser's own options. We're modern now!
