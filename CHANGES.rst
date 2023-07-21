@@ -4,7 +4,7 @@ Changelog for zest.releaser
 9.0.0a3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Updated contributors list.
 
 
 9.0.0a2 (2023-07-19)
