@@ -740,6 +740,9 @@ def execute_command(
     result = _execute_command(command, cwd=cwd, extra_environ=extra_environ)
     if not allow_retry:
         return result
+    if AUTO_RESPONSE:
+        # Also don't ask for retry, just return the result.
+        return result
     if Fore.RED not in result:
         show_interesting_lines(result)
         return result
