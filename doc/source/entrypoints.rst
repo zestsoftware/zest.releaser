@@ -114,6 +114,9 @@ Notes:
 * The order in which entry-point defined via installed packages are
   processed is undefined.
 
+* *If* you use an entry point defined in the package you're releasing *and*
+  your package has the code inside a ``src/`` dir, you might have to add
+  ``hook_package_dir = src`` to the ``[tool.zest-releaser]`` section.
 
 
 Comments about data dict items
