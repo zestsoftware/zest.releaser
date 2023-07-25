@@ -740,6 +740,9 @@ def execute_command(
     result = _execute_command(command, cwd=cwd, extra_environ=extra_environ)
     if not allow_retry:
         return result
+    if AUTO_RESPONSE:
+        # Also don't ask for retry, just return the result.
+        return result
     if Fore.RED not in result:
         show_interesting_lines(result)
         return result
@@ -770,7 +773,11 @@ def execute_commands(commands, allow_retry=False, fail_message=""):
 
 
 def retry_yes_no(command):
-    """Ask the user to maybe retry a command."""
+    """Ask the user to maybe retry a command.
+
+    This is used for the twine upload command and for the final 'git push'.
+
+    """
     explanation = """
     You have these options for retrying (first character is enough):
     Yes:   Retry. Do this if it looks like a temporary Internet or PyPI outage.
@@ -778,7 +785,8 @@ def retry_yes_no(command):
            case of a credentials problem.
     No:    Do not retry, but continue with the rest of the process.
     Quit:  Stop completely. Note that the postrelease step has not
-           been run yet, you need to do that manually.
+           finished fully. You need to do the 'git push' and possibly the upload
+           manually.
     ?:     Show this help."""
     explanation = textwrap.dedent(explanation)
     question = "Retry this command? [Yes/no/quit/?]"
