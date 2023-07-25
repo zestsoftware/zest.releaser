@@ -10,6 +10,10 @@ Changelog for zest.releaser
   needed for most entry points, btw).
   Fixes `issue 370 <https://github.com/zestsoftware/zest.releaser/issues/370>`_.
 
+- Allowing for retry for ``git push``, which might fail because of a protected
+  branch. Also displaying that possible cause when it occurs. Fixes `issue 385
+  <https://github.com/zestsoftware/zest.releaser/issues/385>`_.
+
 
 9.0.0a2 (2023-07-19)
 --------------------
