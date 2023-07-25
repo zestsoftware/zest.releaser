@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.0.0a3 (unreleased)
+9.0.0a3 (2023-07-25)
 --------------------
 
 - Updated contributors list.
