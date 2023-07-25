@@ -6,6 +6,10 @@ Changelog for zest.releaser
 
 - Updated contributors list.
 
+- Documenting ``hook_package_dir`` setting for entry points (which isn't
+  needed for most entry points, btw).
+  Fixes `issue 370 <https://github.com/zestsoftware/zest.releaser/issues/370>`_.
+
 
 9.0.0a2 (2023-07-19)
 --------------------
