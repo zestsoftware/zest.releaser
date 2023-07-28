@@ -86,6 +86,7 @@ Mock that the tag exists and we get a question:
     Question: There is already a tag 0.1, show if there are differences? (Y/n)?
     Our reply: y
     git diff 0.1
+    RED ERROR: exit code 128.
     RED fatal: ambiguous argument '0.1': unknown revision or path not in the working tree.
     ...
 

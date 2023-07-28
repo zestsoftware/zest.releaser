@@ -444,18 +444,19 @@ def extract_headings_from_history(history_lines):
 def show_interesting_lines(result):
     """Just print the first and last five lines of (pypi) output.
 
-    But: when there are errors or warnings, print everything and ask
-    the user if she wants to continue.
+    But: when there are errors or warnings, print everything.
+    And if there is a non-zero exit code, ask the user if she wants to continue.
     """
     if Fore.RED in result:
         # warnings/errors, print complete result.
         print(result)
-        if not ask(
-            "There were errors or warnings. Are you sure you want to continue?",
-            default=False,
-        ):
-            sys.exit(1)
-        # User has seen everything and wants to continue.
+        if ERROR_EXIT_CODE in result:
+            if not ask(
+                "There were errors or warnings. Are you sure you want to continue?",
+                default=False,
+            ):
+                sys.exit(1)
+        # User has seen everything and wants to continue, or there was no exit code.
         return
 
     # No errors or warnings.  Show first and last lines.
@@ -626,6 +627,8 @@ KNOWN_WARNINGS = [
 ]
 # Make them lowercase just to be sure.
 KNOWN_WARNINGS = [w.lower() for w in KNOWN_WARNINGS]
+# If we see a non-zero exit code, we add this in this output:
+ERROR_EXIT_CODE = "ERROR: exit code"
 
 
 def format_command(command):
@@ -670,7 +673,15 @@ def _execute_command(command, cwd=None, extra_environ=None):
     }
     process = subprocess.run(command, **process_kwargs)
     if process.returncode or show_stderr or "Traceback" in process.stderr:
-        # Some error occurred
+        # Some error occurred.  Or everything is fine, but the command
+        # prints to stderr anyway.
+        if process.returncode:
+            return (
+                Fore.RED
+                 + f"{ERROR_EXIT_CODE} {process.returncode}.\n"
+                 + process.stdout
+                 + get_errors(process.stderr)
+            )
         return process.stdout + get_errors(process.stderr)
     # Only return the stdout. Stderr only contains possible
     # weird/confusing warnings that might trip up extraction of version
@@ -743,7 +754,7 @@ def execute_command(
     if AUTO_RESPONSE:
         # Also don't ask for retry, just return the result.
         return result
-    if Fore.RED not in result:
+    if Fore.RED not in result or ERROR_EXIT_CODE not in result:
         show_interesting_lines(result)
         return result
     # There are warnings or errors. Print the complete result.

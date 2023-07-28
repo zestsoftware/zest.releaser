@@ -413,8 +413,8 @@ Just one line: no problem:
     >>> utils.show_interesting_lines(output)
     just one line, no newlines
 
-In case of errors, shown in red, we show all and ask what the user
-wants to do.
+In case of errors, shown in red, we show all.
+If there was a non-zero exit code, we ask what the user wants to do.
 
     >>> output = "a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn"
     >>> utils.show_interesting_lines(output)
@@ -435,11 +435,28 @@ wants to do.
     >>> output = Fore.RED + output
     >>> utils.test_answer_book.set_answers([''])
     >>> utils.show_interesting_lines(output)
+    RED a
+    b
+    c
+    d
+    e
+    f
+    g
+    h
+    i
+    j
+    k
+    l
+    m
+    n
+    >>> output = f"{utils.ERROR_EXIT_CODE} 1\n{output}"
+    >>> utils.show_interesting_lines(output)
     Traceback (most recent call last):
     ...
     SystemExit: 1
     >>> utils.test_answer_book.set_answers(['y'])
     >>> utils.show_interesting_lines(output)
+    ERROR: exit code 1
     RED a
     b
     c
