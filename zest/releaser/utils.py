@@ -678,9 +678,9 @@ def _execute_command(command, cwd=None, extra_environ=None):
         if process.returncode:
             return (
                 Fore.RED
-                 + f"{ERROR_EXIT_CODE} {process.returncode}.\n"
-                 + process.stdout
-                 + get_errors(process.stderr)
+                + f"{ERROR_EXIT_CODE} {process.returncode}.\n"
+                + process.stdout
+                + get_errors(process.stderr)
             )
         return process.stdout + get_errors(process.stderr)
     # Only return the stdout. Stderr only contains possible
@@ -750,9 +750,24 @@ def execute_command(
     """
     result = _execute_command(command, cwd=cwd, extra_environ=extra_environ)
     if not allow_retry:
+        if ERROR_EXIT_CODE in result:
+            print(result)
+            if not ask(
+                "There were errors or warnings. Are you sure you want to continue?",
+                default=False,
+            ):
+                sys.exit(1)
+        # Note: whoever calls us could print the result.  This would be double
+        # in case there was an error code but the user continues.  So be it.
         return result
+
+    # At this point, a retry is allowed.  We only do this for very few commands.
     if AUTO_RESPONSE:
-        # Also don't ask for retry, just return the result.
+        # Retry is not possible with auto response, so just return the result.
+        if ERROR_EXIT_CODE in result:
+            # This is a real error, and the user cannot react.  We quit.
+            print(result)
+            sys.exit(1)
         return result
     if Fore.RED not in result or ERROR_EXIT_CODE not in result:
         show_interesting_lines(result)

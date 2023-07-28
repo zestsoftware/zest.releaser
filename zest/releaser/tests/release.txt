@@ -83,12 +83,9 @@ Mock that the tag exists and we get a question:
     Our reply: n
     >>> utils.test_answer_book.set_answers(['y'])
     >>> releaser._info_if_tag_already_exists()
-    Question: There is already a tag 0.1, show if there are differences? (Y/n)?
-    Our reply: y
-    git diff 0.1
-    RED ERROR: exit code 128.
-    RED fatal: ambiguous argument '0.1': unknown revision or path not in the working tree.
-    ...
+    Traceback (most recent call last):
+    ...diff_command...
+    RuntimeError: SYSTEM EXIT (code=1)
 
 Note: the diff itself fails as we mocked its existence.
 

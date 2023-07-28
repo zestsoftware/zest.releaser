@@ -5,10 +5,10 @@ Changelog for zest.releaser
 --------------------
 
 - When a command we call exits with a non-zero exit code, clearly state this in the output.
+  Ask the user if she wants to continue or not.
   Note that this is tricky to do right.  Some commands like ``git`` seem to print everything to stderr,
   leading us to think there are errors, but the exit code is zero, so it should be fine.
-  We do not want to ask the user to often if she wants to continue or not.
-  But we do not want to silently swallow important errors either.
+  We do not want to ask too many questions, but we do not want to silently swallow important errors either.
   [maurits]
 
 

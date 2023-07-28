@@ -155,6 +155,10 @@ history file ends with ``.md``, we consider it Markdown::
     >>> with open('setup.cfg', 'w') as f:
     ...     _ = f.write('\n'.join(lines))
     >>> rename_changelog("CHANGES.txt", "CHANGES.md")
+    >>> with open('setup.py') as f:
+    ...     setup_py_contents = f.read()
+    >>> with open('setup.py', 'w') as f:
+    ...     _ = f.write(setup_py_contents.replace("CHANGES.txt", "CHANGES.md"))
     >>> base = baserelease.Basereleaser()
     >>> base._grab_history()
     >>> base.history_format

@@ -489,9 +489,10 @@ We want to discover errors and show them in red.
     '\x1b[31m'
     >>> Fore.MAGENTA
     '\x1b[35m'
-    >>> output = utils.execute_command(['ls', 'some-non-existing-file'])
-    >>> output.startswith(Fore.RED)
-    True
+    >>> utils.execute_command(['ls', 'some-non-existing-file'])
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
 
 Warnings may also end up in the error output.  That may be unwanted.
 We have a script to test this, which passes all input to std error.

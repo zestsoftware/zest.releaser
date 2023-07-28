@@ -408,6 +408,9 @@ class Basereleaser:
         default_anwer = self.zest_releaser_config.push_changes()
         if utils.ask("OK to push commits to the server?", default=default_anwer):
             for push_cmd in push_cmds:
+                if utils.TESTMODE:
+                    logger.info("MOCK push command: %s", push_cmd)
+                    continue
                 output = execute_command(
                     push_cmd,
                     allow_retry=True,
