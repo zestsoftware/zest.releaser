@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.0.0a4 (unreleased)
+9.0.0b1 (2023-07-31)
 --------------------
 
 - When a command we call exits with a non-zero exit code, clearly state this in the output.
