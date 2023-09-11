@@ -1,8 +1,8 @@
 Changelog for zest.releaser
 ===========================
 
-9.0.0b2 (unreleased)
---------------------
+9.0.0 (2023-09-11)
+------------------
 
 - Make final release.  Nothing changed since the last beta.  [maurits]
 
