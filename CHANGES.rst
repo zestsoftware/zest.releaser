@@ -4,7 +4,8 @@ Changelog for zest.releaser
 9.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Typo fix in the readme: we look at ``__version__`` instead of
+  ``__versions__``...
 
 
 9.0.0 (2023-09-11)
