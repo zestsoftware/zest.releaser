@@ -4,7 +4,8 @@ Changelog for zest.releaser
 9.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Using newer 'build' (``>=1.0.0``) including a slight API change, fixes
+  #433. [reinout]
 
 
 9.0.0 (2023-09-11)
