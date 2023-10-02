@@ -147,7 +147,7 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        builder = ProjectBuilder(srcdir=".", runner=_project_builder_runner)
+        builder = ProjectBuilder(source_dir=".", runner=_project_builder_runner)
         builder.build("sdist", "./dist/")
         if self.zest_releaser_config.create_wheel():
             logger.info(
