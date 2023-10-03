@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.0.1 (unreleased)
+9.1.0 (2023-10-03)
 ------------------
 
 - Using newer 'build' (``>=1.0.0``) including a slight API change, fixes
