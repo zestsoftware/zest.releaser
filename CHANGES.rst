@@ -4,7 +4,11 @@ Changelog for zest.releaser
 9.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Using newer 'build' (``>=1.0.0``) including a slight API change, fixes
+  #433. [reinout]
+
+- Typo fix in the readme: we look at ``__version__`` instead of
+  the previously-documented ``__versions__``... [reinout]
 
 
 9.0.0 (2023-09-11)

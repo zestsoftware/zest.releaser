@@ -8,7 +8,7 @@ It does away with all the boring bits. This is what zest.releaser automates
 for you:
 
 * It updates the version number. The version number can either be in
-  ``setup.py`` or ``version.txt`` or in a ``__versions__`` attribute in a
+  ``setup.py`` or ``version.txt`` or in a ``__version__`` attribute in a
   Python file or in ``setup.cfg``. For example, it switches you from
   ``0.3.dev0`` (current development version) to ``0.3`` (release) to
   ``0.4.dev0`` (new development version).
