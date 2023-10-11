@@ -148,13 +148,19 @@ class PypiConfig(BaseConfig):
     the pypi configuration.
     """
 
-    def __init__(self, config_filename=DIST_CONFIG_FILE):
+    def __init__(
+        self, config_filename=DIST_CONFIG_FILE, omit_package_config_in_test=False
+    ):
         """Grab the PyPI configuration.
 
         This is .pypirc in the home directory.  It is overridable for
         test purposes.
+
+        We usually load PyPI config from setup.cfg as well.
+        This can be switched off with omit_package_config_in_test=True.
         """
         self.config_filename = config_filename
+        self.omit_package_config_in_test = omit_package_config_in_test
         self.reload()
 
     def reload(self):
@@ -172,7 +178,11 @@ class PypiConfig(BaseConfig):
         return extract_zestreleaser_configparser(self.config, self.config_filename)
 
     def _read_configfile(self):
-        """Read the PyPI config file and store it (when valid)."""
+        """Read the PyPI config file and store it (when valid).
+
+        Possibly combine it with setup.cfg.
+        This may override global .pypirc settings.
+        """
         config_filename = self.config_filename
         if not os.path.exists(config_filename) and not os.path.isabs(config_filename):
             # When filename is .pypirc, we look in ~/.pypirc
@@ -182,6 +192,8 @@ class PypiConfig(BaseConfig):
             return
         self.config = ConfigParser(interpolation=None)
         self.config.read(config_filename)
+        if not self.omit_package_config_in_test:
+            self.config.read(SETUP_CONFIG_FILE)
 
     def twine_repository(self):
         """Gets the repository from Twine environment variables."""

@@ -4,7 +4,9 @@ Changelog for zest.releaser
 9.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- When reading ``~/.pypirc`` config, read ``setup.cfg`` as well, as it might
+  override some of these values, like ``[distutils] index-servers``.
+  Fixes issue #436.  [maurits]
 
 
 9.1.0 (2023-10-03)
