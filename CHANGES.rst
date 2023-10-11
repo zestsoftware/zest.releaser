@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.1.1 (unreleased)
+9.1.1 (2023-10-11)
 ------------------
 
 - When reading ``~/.pypirc`` config, read ``setup.cfg`` as well, as it might
