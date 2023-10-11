@@ -4,7 +4,8 @@ Changelog for zest.releaser
 9.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- When reading ``~/.pypirc`` config, read ``setup.cfg`` as well to override this.
+  Fixes issue #436.  [maurits]
 
 
 9.1.0 (2023-10-03)
