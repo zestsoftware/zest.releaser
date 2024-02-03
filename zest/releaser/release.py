@@ -155,6 +155,9 @@ class Releaser(baserelease.Basereleaser):
                 self.data["tagworkingdir"],
             )
             builder.build("wheel", "./dist/")
+        if not self.pypiconfig.upload_pypi():
+            logger.info("Upload to Pypi was disabled in configuration.")
+            return
         if not self.pypiconfig.is_pypi_configured():
             logger.error(
                 "You must have a properly configured %s file in "
