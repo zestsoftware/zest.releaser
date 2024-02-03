@@ -478,7 +478,7 @@ class ZestReleaserConfig:
         The default when this option has not been set is True.
 
         """
-        return self._get_boolean('zest.releaser', 'upload-pypi', default=True)
+        return self._get_boolean("zest.releaser", "upload-pypi", default=True)
 
     def register_package(self):
         """Should we try to register this package with a package server?
