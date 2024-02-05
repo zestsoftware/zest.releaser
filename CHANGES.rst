@@ -1,6 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
+9.1.3 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 9.1.2 (2024-02-05)
 ------------------
 
