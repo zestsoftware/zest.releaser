@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.1.2 (unreleased)
+9.1.2 (2024-02-05)
 ------------------
 
 - If you want to build a release package (release=true, the default), but don't want to
