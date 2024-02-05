@@ -23,12 +23,6 @@ If you have docker installed, all you need to do to run the tests is::
   $ docker build . -t zest:dev
   $ docker run --rm zest:dev
 
-The "build" step runs bootstrap and buildout. Re-run it periodically to get
-the latest versions of if you've changed the buildout config.
-
-Note: buildout should not be needed anymore, because we use ``tox``.
-So the Dockerfile was updated, but not tested.
-
 The "run" command runs the tests. It uses the code copied into the dockerfile
 in the build step, but you probably want to test your current version. For
 that, mount the code directory into the docker::
