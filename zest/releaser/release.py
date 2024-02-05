@@ -156,7 +156,7 @@ class Releaser(baserelease.Basereleaser):
             )
             builder.build("wheel", "./dist/")
         if not self.pypiconfig.upload_pypi():
-            logger.info("Upload to Pypi was disabled in configuration.")
+            logger.info("Upload to PyPI was disabled in the configuration.")
             return
         if not self.pypiconfig.is_pypi_configured():
             logger.error(
