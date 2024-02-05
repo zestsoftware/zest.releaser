@@ -155,7 +155,7 @@ class Releaser(baserelease.Basereleaser):
                 self.data["tagworkingdir"],
             )
             builder.build("wheel", "./dist/")
-        if not self.pypiconfig.upload_pypi():
+        if not self.zest_releaser_config.upload_pypi():
             logger.info("Upload to PyPI was disabled in the configuration.")
             return
         if not self.pypiconfig.is_pypi_configured():
