@@ -83,6 +83,11 @@ release = true / false
     default answer for the question if you want to create a checkout
     of the tag.
 
+upload-pypi = true / false
+    Default: true. Normally you won't use this setting. Only if you want to make a
+    release without actually uploading it, set it to false. (Note that you still need
+    release=true).
+
 create-wheel = true / false
     Default: true, if the recommended ``wheel`` package is installed.
     Set to false if you do not want zest.releaser to create Python wheels.

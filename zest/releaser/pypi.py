@@ -467,6 +467,19 @@ class ZestReleaserConfig:
             return False
         return self.config.get("create-wheel", True)
 
+    def upload_pypi(self):
+        """Should we upload the package to Pypi?
+
+        [Configure this mode by adding a ``upload-pypi`` option::
+
+            [zest.releaser]
+            upload-pypi = no
+
+        The default when this option has not been set is True.
+
+        """
+        return self.config.get("upload-pypi", True)
+
     def register_package(self):
         """Should we try to register this package with a package server?
 

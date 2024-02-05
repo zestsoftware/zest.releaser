@@ -4,7 +4,10 @@ Changelog for zest.releaser
 9.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- If you want to build a release package (release=true, the default), but don't want to
+  actually upload it, you can now set the ``upload-pypi`` option to false (default is
+  true).
+  [leplatrem]
 
 
 9.1.1 (2023-10-11)
