@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.1.3 (unreleased)
+9.1.3 (2024-02-07)
 ------------------
 
 - Fix to the project setup. ``tox.ini`` uses ``extras =`` instead of ``deps =`` to to
