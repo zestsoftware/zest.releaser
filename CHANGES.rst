@@ -10,7 +10,7 @@ Changelog for zest.releaser
 9.1.3 (2024-02-07)
 ------------------
 
-- Fix to the project setup. ``tox.ini`` uses ``extras =`` instead of ``deps =`` to to
+- Fix to the project setup. ``tox.ini`` uses ``extras =`` instead of ``deps =`` to
   install the test extras.
   [mtelka]
 
