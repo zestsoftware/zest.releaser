@@ -4,7 +4,9 @@ Changelog for zest.releaser
 9.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed version handling documentation to use ``importlib`` instead of
+  ``pkg_resources``.
+  [reinout]
 
 
 9.1.3 (2024-02-07)
