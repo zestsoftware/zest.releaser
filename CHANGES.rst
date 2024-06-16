@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.1.4 (unreleased)
+9.2.0 (2024-06-16)
 ------------------
 
 - Fixed version handling documentation to use ``importlib`` instead of

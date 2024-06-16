@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zest.releaser"
-version = "9.1.4.dev0"
+version = "9.2.0"
 description = "Software releasing made easy and repeatable"
 license = {text = "GPL"}
 authors = [
