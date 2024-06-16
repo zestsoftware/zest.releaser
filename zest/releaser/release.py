@@ -164,8 +164,8 @@ class Releaser(baserelease.Basereleaser):
                     "Making a wheel of a fresh tag checkout (in %s).",
                     self.data["tagworkingdir"],
                 )
-            env.install(builder.get_requires_for_build("wheel"))
-            builder.build("wheel", "./dist/")
+                env.install(builder.get_requires_for_build("wheel"))
+                builder.build("wheel", "./dist/")
         if not self.zest_releaser_config.upload_pypi():
             logger.info("Upload to PyPI was disabled in the configuration.")
             return
