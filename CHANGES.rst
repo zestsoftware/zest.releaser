@@ -4,7 +4,10 @@ Changelog for zest.releaser
 9.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Build distributions in an isolated environment.
+  Otherwise `build` cannot install packages needed for the build system, for example `hatchling`.
+  Fixes `issue 448 <https://github.com/zestsoftware/zest.releaser/issues/448>`_.
+  [maurits]
 
 
 9.1.3 (2024-02-07)
