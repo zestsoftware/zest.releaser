@@ -4,6 +4,10 @@ Changelog for zest.releaser
 9.1.4 (unreleased)
 ------------------
 
+- Fixed version handling documentation to use ``importlib`` instead of
+  ``pkg_resources``.
+  [reinout]
+
 - Build distributions in an isolated environment.
   Otherwise `build` cannot install packages needed for the build system, for example `hatchling`.
   Fixes `issue 448 <https://github.com/zestsoftware/zest.releaser/issues/448>`_.

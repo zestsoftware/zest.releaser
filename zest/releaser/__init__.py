@@ -1,6 +1,5 @@
 from colorama import init
-
-import pkg_resources
+from importlib.metadata import version
 
 
 # Initialize colorized output.  Set it to reset after each print, so
@@ -9,4 +8,4 @@ import pkg_resources
 # but it looks like it already does that itself.
 init(autoreset=True)
 
-__version__ = pkg_resources.get_distribution("zest.releaser").version
+__version__ = version("zest.releaser")

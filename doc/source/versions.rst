@@ -83,14 +83,13 @@ discussion.
 - The version in the ``setup.py`` is the real version.
 
 - Add a ``__version__`` attribute in your main module. Often this will be an
-  ``__init__.py``. Set this version attribute with ``pkg_resources``, which is
-  automatically installed as part of setuptools/distribute. Here's `the code
-  <https://github.com/zestsoftware/zest.releaser/blob/master/zest/releaser/__init__.py>`_
+  ``__init__.py``. Set this version attribute with ``importlib.metadata``. Here's `the
+  code <https://github.com/zestsoftware/zest.releaser/blob/master/zest/releaser/__init__.py>`_
   from ``zest/releaser/__init__.py``::
 
-      import pkg_resources
+      from importlib.metadata import version
 
-      __version__ = pkg_resources.get_distribution("zest.releaser").version
+      __version__ = version("zest.releaser")
 
   This way you can do::
 
