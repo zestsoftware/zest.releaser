@@ -1,6 +1,7 @@
 # GPL, (c) Reinout van Rees
 
 from build import ProjectBuilder
+from build.env import DefaultIsolatedEnv
 from colorama import Fore
 from urllib import request
 from urllib.error import HTTPError
@@ -147,14 +148,24 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        builder = ProjectBuilder(source_dir=".", runner=_project_builder_runner)
-        builder.build("sdist", "./dist/")
-        if self.zest_releaser_config.create_wheel():
-            logger.info(
-                "Making a wheel of a fresh tag checkout (in %s).",
-                self.data["tagworkingdir"],
+        with DefaultIsolatedEnv() as env:
+            # We use an isolated env, otherwise `build` cannot install packages
+            # needed for the build system, for example `hatchling`.
+            # See https://github.com/zestsoftware/zest.releaser/issues/448
+            builder = ProjectBuilder.from_isolated_env(
+                env,
+                source_dir=".",
+                runner=_project_builder_runner,
             )
-            builder.build("wheel", "./dist/")
+            env.install(builder.build_system_requires)
+            builder.build("sdist", "./dist/")
+            if self.zest_releaser_config.create_wheel():
+                logger.info(
+                    "Making a wheel of a fresh tag checkout (in %s).",
+                    self.data["tagworkingdir"],
+                )
+                env.install(builder.get_requires_for_build("wheel"))
+                builder.build("wheel", "./dist/")
         if not self.zest_releaser_config.upload_pypi():
             logger.info("Upload to PyPI was disabled in the configuration.")
             return
