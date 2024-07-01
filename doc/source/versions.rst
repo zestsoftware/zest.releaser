@@ -98,6 +98,6 @@ discussion.
       '3.44'
 
 - If you use `Sphinx <http://sphinx.pocoo.org/>`_ for generating your
-  documentation, use the same ``pkg_resources`` trick to set the version and
+  documentation, use the same ``importlib.metadata`` trick to set the version and
   release in your Sphinx's ``conf.py``. See `zest.releaser's conf.py
   <https://github.com/zestsoftware/zest.releaser/blob/master/doc/source/conf.py>`_.
