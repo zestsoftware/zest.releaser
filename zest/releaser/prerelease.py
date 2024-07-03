@@ -90,6 +90,7 @@ class Prereleaser(baserelease.Basereleaser):
         self._write_version()
         if self.data["update_history"]:
             self._write_history()
+        self.data["commit_msg"] += self.data["history_this_release"]
         self._diff_and_commit()
 
     def _grab_version(self, initial=False):
