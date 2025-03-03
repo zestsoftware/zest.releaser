@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.2.1 (unreleased)
+9.3.0 (unreleased)
 ------------------
 
 - Added python 3.13 compatibility (=pkg_resources deprecation).
