@@ -68,11 +68,11 @@ class BaseVersionControl:
             # Determine relative path from root of repo.
             self.relative_path_in_repo = os.path.relpath(self.workingdir, reporoot)
         if utils.TESTMODE:
-            pypirc_old = pkg_resources.resource_filename(
-                "zest.releaser.tests", "pypirc_old.txt"
+            pypirc = pkg_resources.resource_filename(
+                "zest.releaser.tests", "pypirc.txt"
             )
             self.zest_releaser_config = pypi.ZestReleaserConfig(
-                pypirc_config_filename=pypirc_old
+                pypirc_config_filename=pypirc
             )
         else:
             self.zest_releaser_config = pypi.ZestReleaserConfig()

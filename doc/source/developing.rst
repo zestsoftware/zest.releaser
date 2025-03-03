@@ -8,7 +8,7 @@ You just need ``git`` and ``tox``.
 If you still run into problems, there is a solution however: docker.
 See the next section on this page.
 It is still work-in-progress, we'll probably add a docker-compose file, for
-example. And support for testing different python versions with docker. (3.8
+example. And support for testing different python versions with docker. (3.13
 is used now).
 
 So: for easy testing, use the docker commands, described next.
@@ -65,7 +65,7 @@ developing::
 Python versions
 ---------------
 
-The tests currently pass on python 3.8-3.11 and PyPy3.
+The tests currently pass on python 3.10-3.13 and PyPy 3.11.
 
 
 Necessary programs
