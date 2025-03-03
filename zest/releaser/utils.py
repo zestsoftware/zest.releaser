@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 from colorama import Fore
 from packaging.version import parse as parse_version
 
-import importlib
 import logging
 import os
 import re
@@ -20,6 +19,11 @@ logger = logging.getLogger(__name__)
 WRONG_IN_VERSION = ["svn", "dev", "("]
 AUTO_RESPONSE = False
 VERBOSE = False
+
+if sys.version_info.major == 3 and sys.version_info.minor < 10:
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def fs_to_text(fs_name):
@@ -603,7 +607,7 @@ def run_entry_points(which_releaser, when, data):
 
     """
     group = f"zest.releaser.{which_releaser}.{when}"
-    for entrypoint in importlib.metadata.entry_points(group=group):
+    for entrypoint in entry_points(group=group):
         # Grab the function that is the actual plugin.
         plugin = entrypoint.load()
         # Feed the data dict to the plugin.

@@ -73,12 +73,12 @@ class Basereleaser:
         }
         self.setup_cfg = pypi.SetupConfig()
         if utils.TESTMODE:
-            pypirc_old = pkg_resources.resource_filename(
-                "zest.releaser.tests", "pypirc_old.txt"
+            pypirc = pkg_resources.resource_filename(
+                "zest.releaser.tests", "pypirc.txt"
             )
-            self.pypiconfig = pypi.PypiConfig(pypirc_old)
+            self.pypiconfig = pypi.PypiConfig(pypirc)
             self.zest_releaser_config = pypi.ZestReleaserConfig(
-                pypirc_config_filename=pypirc_old
+                pypirc_config_filename=pypirc
             )
         else:
             self.pypiconfig = pypi.PypiConfig()

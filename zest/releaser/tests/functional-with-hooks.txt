@@ -107,13 +107,14 @@ The release script tags the release and uploads it:
     creating src/tha.example.egg-info
     ...
     Creating ...
-    removing 'tha_example-0.1' ...
+    removing ...
     releaser_before_upload
     Question: Upload to pypi (Y/n)?
     Our reply: y
-    MOCK twine dispatch upload ... dist/tha_example-0.1.tar.gz
+    MOCK twine dispatch upload ...example-0.1.tar.gz
     releaser_after
 
+(Note: depending in the Python/setuptools version, the filename may contain ``tha.example`` or ``tha_example``.)
 
 And the postrelease script ups the version:
 
