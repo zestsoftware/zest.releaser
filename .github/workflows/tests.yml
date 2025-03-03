@@ -13,13 +13,13 @@ jobs:
       matrix:
         config:
         # [Python version, tox env]
-        - ["3.8",   "py38"]
-        - ["3.9",   "py39"]
         - ["3.10",   "py310"]
         - ["3.11",   "py311"]
+        - ["3.12",   "py312"]
+        - ["3.13",   "py313"]
         - ["pypy3.8", "pypy3"]
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: ${{ matrix.config[1] }}
     steps:
     - uses: actions/checkout@v4
