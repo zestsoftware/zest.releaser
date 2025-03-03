@@ -11,8 +11,8 @@ Changelog for zest.releaser
   worked fine, 3.13 needed the pkg_resources fix mentioned above.
   [reinout]
 
-- Dropping support for python 3.8 and 3.9 as the `importlib` we now use is still
-  provisional in 3.8/3.9 and results in some errors.
+- Dropping support for python 3.8 as it is end of life.
+  Also, the `importlib` we now use is still provisional in 3.8 and results in some errors.
   [reinout]
 
 
