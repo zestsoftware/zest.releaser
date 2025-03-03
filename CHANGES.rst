@@ -7,6 +7,10 @@ Changelog for zest.releaser
 - Added python 3.13 compatibility (=pkg_resources deprecation).
   [stevepiercy]
 
+- Dropping support for python 3.8 and 3.9 as the `importlib` we now use is still
+  provisional in 3.8/3.9 and results in some errors.
+  [reinout]
+
 
 9.2.0 (2024-06-16)
 ------------------
