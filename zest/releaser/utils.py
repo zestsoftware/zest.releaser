@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 from colorama import Fore
-from packaging import version
+from packaging.version import parse as parse_version
 
 import importlib
 import logging
@@ -184,7 +184,7 @@ def suggest_version(
             # too tricky.
             return
         if final:
-            parsed_version = version.parse(current)
+            parsed_version = parse_version(current)
             if not parsed_version.pre:
                 logger.warning(
                     "Version is not a pre version, so we cannot "
@@ -872,11 +872,11 @@ def get_last_tag(vcs, allow_missing=False):
     # Note: if parsing the current version fails, there is nothing we can do:
     # there is no sane way of knowing which version is smaller than an unparsable
     # version, so we just break hard.
-    parsed_version = version.parse(version)
+    parsed_version = parse_version(version)
     found = parsed_found = None
     for tag in available_tags:
         try:
-            parsed_tag = version.parse(tag)
+            parsed_tag = parse_version(tag)
         except Exception:
             # I don't want to import this specific exception,
             # because it sounds unstable:
