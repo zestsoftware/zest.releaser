@@ -4,7 +4,12 @@ Changelog for zest.releaser
 9.3.1 (unreleased)
 ------------------
 
-- Removed remaining ``pkg_resources`` usage (in the tests).
+- Add ``packaging`` to our dependencies.
+  We were already pulling this in via another dependency.
+  [maurits]
+
+- Removed remaining ``pkg_resources`` usage.
+  [reinout, maurits]
 
 
 9.3.0 (2025-03-03)

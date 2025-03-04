@@ -2,10 +2,11 @@ from .utils import extract_zestreleaser_configparser
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
+from importlib.metadata import distribution
+from importlib.metadata import PackageNotFoundError
 
 import logging
 import os
-import pkg_resources
 import sys
 
 
@@ -17,8 +18,8 @@ except ImportError:
     import tomli as tomllib
 
 try:
-    pkg_resources.get_distribution("wheel")
-except pkg_resources.DistributionNotFound:
+    distribution("wheel")
+except PackageNotFoundError:
     USE_WHEEL = False
 else:
     USE_WHEEL = True
