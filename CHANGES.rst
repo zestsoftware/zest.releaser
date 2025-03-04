@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.3.1 (unreleased)
+9.3.1 (2025-03-04)
 ------------------
 
 - Add ``packaging`` to our dependencies.
