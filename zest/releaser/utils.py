@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from colorama import Fore
+from packaging.version import InvalidVersion
 from packaging.version import parse as parse_version
 
 import logging
@@ -881,10 +882,7 @@ def get_last_tag(vcs, allow_missing=False):
     for tag in available_tags:
         try:
             parsed_tag = parse_version(tag)
-        except Exception:
-            # I don't want to import this specific exception,
-            # because it sounds unstable:
-            # pkg_resources.extern.packaging.version.InvalidVersion
+        except InvalidVersion:
             logger.debug("Could not parse version: %s", tag)
             continue
         if parsed_tag == parsed_version:
