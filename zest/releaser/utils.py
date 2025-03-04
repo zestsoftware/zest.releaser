@@ -1045,3 +1045,14 @@ def extract_zestreleaser_configparser(config, config_filename):
         if key in integer_keys:
             result[key] = int(value)
     return result
+
+
+def filename_from_test_dir(filename: str) -> str:
+    # pkg_resources.resource_filename is deprecated and the replacement
+    # importlib.resources.files() is too cumbersome and really wants to be used as a
+    # context manager which isn't handy for the way we run our tests. So we use
+    # something more bare-bones that doesn't work when packaged in a .whl, which is
+    # fine for development.
+    this_dir = os.path.dirname(__file__)
+    test_dir = os.path.join(this_dir, "tests")
+    return os.path.join(test_dir, filename)
