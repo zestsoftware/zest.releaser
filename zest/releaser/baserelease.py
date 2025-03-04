@@ -5,12 +5,12 @@ from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import filename_from_test_dir
 from zest.releaser.utils import read_text_file
 from zest.releaser.utils import write_text_file
 
 import logging
 import os
-import pkg_resources
 import re
 import sys
 
@@ -73,9 +73,7 @@ class Basereleaser:
         }
         self.setup_cfg = pypi.SetupConfig()
         if utils.TESTMODE:
-            pypirc = pkg_resources.resource_filename(
-                "zest.releaser.tests", "pypirc.txt"
-            )
+            pypirc = filename_from_test_dir("pypirc.txt")
             self.pypiconfig = pypi.PypiConfig(pypirc)
             self.zest_releaser_config = pypi.ZestReleaserConfig(
                 pypirc_config_filename=pypirc

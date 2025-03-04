@@ -7,9 +7,9 @@ from zest.releaser import choose
 from zest.releaser import utils
 from zest.releaser.baserelease import NOTHING_CHANGED_YET
 from zest.releaser.utils import execute_command
+from zest.releaser.utils import filename_from_test_dir
 
 import os
-import pkg_resources
 import shutil
 import sys
 import tarfile
@@ -61,7 +61,7 @@ def setup(test):
     request.urlopen = _make_mock_urlopen(test.mock_pypi_available)
 
     # Extract example project
-    example_tar = pkg_resources.resource_filename("zest.releaser.tests", "example.tar")
+    example_tar = filename_from_test_dir("example.tar")
     with tarfile.TarFile(example_tar) as tf:
         tf.extractall(path=test.tempdir)
     sourcedir = os.path.join(test.tempdir, "tha.example")
