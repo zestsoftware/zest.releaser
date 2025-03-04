@@ -4,7 +4,7 @@ Changelog for zest.releaser
 9.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Removed remaining ``pkg_resources`` usage (in the tests).
 
 
 9.3.0 (2025-03-03)
@@ -18,7 +18,7 @@ Changelog for zest.releaser
   [reinout]
 
 - Dropping support for python 3.8 as it is end of life.
-  Also, the `importlib` we now use is still provisional in 3.8 and results in some errors.
+  Also, the ``importlib`` we now use is still provisional in 3.8 and results in some errors.
   [reinout]
 
 
