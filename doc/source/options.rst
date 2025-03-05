@@ -89,8 +89,7 @@ upload-pypi = true / false
     release=true).
 
 create-wheel = true / false
-    Default: true, if the recommended ``wheel`` package is installed.
-    Set to false if you do not want zest.releaser to create Python wheels.
+    Default: true. Set to false if you do not want zest.releaser to create Python wheels.
 
 extra-message = [ci skip]
     Extra message to add to each commit (prerelease, postrelease).
