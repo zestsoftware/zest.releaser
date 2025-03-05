@@ -110,7 +110,7 @@ Uploading wheels
 ----------------
 
 The ``wheel`` library is a dependency of zest.releaser (since 9.4.0), so it is always
-installed.  In the (rare) case where you do not want wheels, you can switch it of in our
+installed.  In the (rare) case where you do not want wheels, you can switch it off in our
 regular places (``pyproject.toml``, ``~/.pypirc``)::
 
   [zest.releaser]
