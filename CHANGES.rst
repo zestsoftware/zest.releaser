@@ -7,6 +7,8 @@ Changelog for zest.releaser
 - Requiring the ``wheel`` package now as everybody (rightfully so) uses wheels
   nowadays. It used to be an optional dependency beforehand, though often automatically
   included through setuptools' vendored libraries.
+  You can switch off creation of wheels by setting the option ``create-wheel = false``.
+  See our `options documentation <https://zestreleaser.readthedocs.io/en/latest/options.html>`_.
   [reinout]
 
 
