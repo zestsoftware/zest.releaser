@@ -66,14 +66,13 @@ installing ``zest.releaser[recommended]`` instead of ``zest.releaser``.  It
 contains a few trusted add-ons that we feel are useful for the great majority
 of ``zest.releaser`` users:
 
-- wheel_ for creating a Python wheel that we upload to PyPI next to
-  the standard source distribution.  Wheels are the official binary
-  distribution format for Python.
-  Since version 8.0.0a2 we always create wheels, except when you
-  explicitly switch this off in the config:
-  ``create-wheel = false``.
-  If you are sure you want "universal" wheels, follow the directions from the
-  `wheel documentation <https://wheel.readthedocs.io/en/stable/user_guide.html>`_.
+- wheel_ for creating a Python wheel that we upload to PyPI next to the standard source
+  distribution.  Wheels are the official distribution format for Python.  Since version
+  8.0.0a2 we always create wheels when the wheel package is installed, except when you
+  explicitly switch this off in the config: ``create-wheel = false``. Since 9.4.0 we
+  actually require the wheel package.  If you are sure you want "universal" wheels,
+  follow the directions from the `wheel documentation
+  <https://wheel.readthedocs.io/en/stable/user_guide.html>`_.
 
 - `check-manifest`_ checks your ``MANIFEST.in`` file for completeness,
   or tells you that you need such a file.  It basically checks if all

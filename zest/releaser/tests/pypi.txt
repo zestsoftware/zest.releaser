@@ -140,15 +140,10 @@ We can also specify to always do that checkout during a release:
 Creating a wheel
 ----------------
 
-When the ``wheel`` package is installed, we could create shiny new
-Python wheels, next to the standard old-style source distributions.
-In 2023 this seems good for most packages, so since version 8.0.0a2 this is by default true.
-
-If the package is installed, we set a constant:
-
-    >>> from zest.releaser.pypi import USE_WHEEL
-    >>> USE_WHEEL
-    True
+When the ``wheel`` package is installed, we could create shiny new Python wheels, next
+to the standard old-style source distributions.  In 2023 this seems good for most
+packages, so since version 8.0.0a2 this is by default true. Early 2025 (9.4.0) we
+started depending on the "wheel" package as everyone uses it.
 
 We try to read a [zest.releaser] section, in pypirc, setup.cfg or
 pyproject.toml and check for a ``create-wheel`` option.  In this case we

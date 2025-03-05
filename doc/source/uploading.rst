@@ -109,18 +109,12 @@ Since version 6.6.6 we use it in a way that should work with ``twine``
 Uploading wheels
 ----------------
 
-First, you should install the ``zest.releaser[recommended]`` extra, or
-run ``pip install wheel`` yourself next to ``zest.releaser``.  Then
-create or edit ``setup.cfg`` in your project (or globally in your
-``~/.pypirc``) and add this to create and upload a wheel to upload to
-PyPI::
+The ``wheel`` library is a dependency of zest.releaser (since 9.4.0), so it is always
+installed.  In the (rare) case where you do not want wheels, you can switch it off in our
+regular places (``pyproject.toml``, ``~/.pypirc``)::
 
   [zest.releaser]
-  create-wheel = yes
-
-See http://pythonwheels.com for deciding whether this is a good idea
-for your package.  Briefly, if it is a pure Python 2 *or* pure Python
-3 package: just do it.
+  create-wheel = no
 
 
 Registering a package
