@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.4.0 (unreleased)
+9.4.0 (2025-03-05)
 ------------------
 
 - Requiring the ``wheel`` package now as everybody (rightfully so) uses wheels
