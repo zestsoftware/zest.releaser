@@ -2,8 +2,6 @@ from .utils import extract_zestreleaser_configparser
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
-from importlib.metadata import distribution
-from importlib.metadata import PackageNotFoundError
 
 import logging
 import os
@@ -17,12 +15,6 @@ except ImportError:
     # Python 3.10-
     import tomli as tomllib
 
-try:
-    distribution("wheel")
-except PackageNotFoundError:
-    USE_WHEEL = False
-else:
-    USE_WHEEL = True
 DIST_CONFIG_FILE = ".pypirc"
 SETUP_CONFIG_FILE = "setup.cfg"
 PYPROJECTTOML_CONFIG_FILE = "pyproject.toml"
@@ -453,8 +445,6 @@ class ZestReleaserConfig:
 
         Changed in version 8.0.0a2: we ALWAYS create a wheel,
         unless this is explicitly switched off.
-        The `wheel` package must be installed though, which is in our
-        'recommended' extra.
 
         To switch this OFF, either in your ~/.pypirc or in a setup.cfg in
         a specific package, add this:
@@ -462,10 +452,6 @@ class ZestReleaserConfig:
         [zest.releaser]
         create-wheel = no
         """
-        if not USE_WHEEL:
-            # If the wheel package is not available, we obviously
-            # cannot create wheels.
-            return False
         return self.config.get("create-wheel", True)
 
     def upload_pypi(self):
