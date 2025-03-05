@@ -4,7 +4,10 @@ Changelog for zest.releaser
 9.3.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Requiring the ``wheel`` package now as everybody (rightfully so) uses wheels
+  nowadays. It used to be an optional dependency beforehand, though often automatically
+  included through setuptools' vendored libraries.
+  [reinout]
 
 
 9.3.1 (2025-03-04)

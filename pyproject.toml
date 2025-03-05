@@ -22,6 +22,7 @@ dependencies = [
     "setuptools >= 61.0.0",  # older versions can't read pyproject.toml configurations
     "tomli; python_version<'3.11'",
     "twine >= 1.6.0",
+    "wheel",
 ]
 requires-python = ">=3.9"
 classifiers = [
@@ -49,10 +50,8 @@ recommended = [
     "check-manifest",
     "pep440",
     "pyroma",
-    "wheel",
 ]
 test = [
-    "wheel",
     "zope.testing",
     "zope.testrunner",
 ]
