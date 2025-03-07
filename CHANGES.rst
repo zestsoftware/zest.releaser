@@ -4,6 +4,11 @@ Changelog for zest.releaser
 9.4.1 (unreleased)
 ------------------
 
+- Try hard to determine our own installed version, but do not fail when this does not work.
+  Report the version as "unknown" then.
+  There is no sense in failing to start up just because Python packaging is having a rough day...
+  [maurits]
+
 - Really build source dist and wheel in isolation.
   Previously we passed along our own ``PYTHONPATH``, but that could lead to an unintended ``setuptools`` version being used.
   [maurits]
