@@ -4,7 +4,9 @@ Changelog for zest.releaser
 9.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Really build source dist and wheel in isolation.
+  Previously we passed along our own ``PYTHONPATH``, but that could lead to an unintended ``setuptools`` version being used.
+  [maurits]
 
 
 9.4.0 (2025-03-05)

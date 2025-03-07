@@ -67,10 +67,47 @@ def _project_builder_runner(cmd, cwd=None, extra_environ=None):
     extra_environ will contain for example:
 
     {'PEP517_BUILD_BACKEND': 'setuptools.build_meta:__legacy__'}
+
+    The default runner is `pyproject_hooks.default_subprocess_runner`,
+    which currently does this:
+
+        env = os.environ.copy()
+        if extra_environ:
+            env.update(extra_environ)
+        check_call(cmd, cwd=cwd, env=env)
+
+    So let's do the same, but use our wrapper for only showing interesting lines.
+    Note that originally we simply passed along the extra_environ.  But
+    execute_command then combined this with the current environment and with
+    the PYTHONPATH.  That last part gave unwanted results: an upper bound
+    on the setuptools version in the build-system was ignored.
     """
-    utils.show_interesting_lines(
-        execute_command(cmd, cwd=cwd, extra_environ=extra_environ)
-    )
+    env = os.environ.copy()
+    if extra_environ:
+        env.update(extra_environ)
+    utils.show_interesting_lines(execute_command(cmd, cwd=cwd, env=env))
+
+
+def _build_in_isolated_env(distribution):
+    """Build distribution in isolated env.
+
+    This is our variant of the _build_in_isolated_env function from the
+    `build` module.
+    """
+    if distribution not in {"sdist", "wheel"}:
+        raise ValueError(f"Invalid argument passed: {distribution=}")
+    with DefaultIsolatedEnv(installer="pip") as env:
+        # We use an isolated env, otherwise `build` cannot install packages
+        # needed for the build system, for example `hatchling`.
+        # See https://github.com/zestsoftware/zest.releaser/issues/448
+        builder = ProjectBuilder.from_isolated_env(
+            env,
+            source_dir=".",
+            runner=_project_builder_runner,
+        )
+        env.install(builder.build_system_requires)
+        env.install(builder.get_requires_for_build(distribution))
+        builder.build(distribution, "./dist/")
 
 
 class Releaser(baserelease.Basereleaser):
@@ -148,24 +185,13 @@ class Releaser(baserelease.Basereleaser):
             "Making a source distribution of a fresh tag checkout (in %s).",
             self.data["tagworkingdir"],
         )
-        with DefaultIsolatedEnv() as env:
-            # We use an isolated env, otherwise `build` cannot install packages
-            # needed for the build system, for example `hatchling`.
-            # See https://github.com/zestsoftware/zest.releaser/issues/448
-            builder = ProjectBuilder.from_isolated_env(
-                env,
-                source_dir=".",
-                runner=_project_builder_runner,
+        _build_in_isolated_env("sdist")
+        if self.zest_releaser_config.create_wheel():
+            logger.info(
+                "Making a wheel of a fresh tag checkout (in %s).",
+                self.data["tagworkingdir"],
             )
-            env.install(builder.build_system_requires)
-            builder.build("sdist", "./dist/")
-            if self.zest_releaser_config.create_wheel():
-                logger.info(
-                    "Making a wheel of a fresh tag checkout (in %s).",
-                    self.data["tagworkingdir"],
-                )
-                env.install(builder.get_requires_for_build("wheel"))
-                builder.build("wheel", "./dist/")
+            _build_in_isolated_env("wheel")
         if not self.zest_releaser_config.upload_pypi():
             logger.info("Upload to PyPI was disabled in the configuration.")
             return
@@ -190,6 +216,10 @@ class Releaser(baserelease.Basereleaser):
         register = self.zest_releaser_config.register_package()
 
         # If TWINE_REPOSITORY_URL is set, use it.
+        print(f"Current working directory: {os.getcwd()}")
+        print("These files are ready for upload:")
+        for filename in files_in_dist:
+            print(f"- {filename}")
         if self.pypiconfig.twine_repository_url():
             if not self._ask_upload(
                 package, self.pypiconfig.twine_repository_url(), register
