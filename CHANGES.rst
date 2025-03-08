@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.4.1 (unreleased)
+9.5.0 (unreleased)
 ------------------
 
 - Worked around python 3.9 version-reporting issue that could prevent startup.
