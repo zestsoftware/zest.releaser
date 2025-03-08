@@ -647,14 +647,18 @@ def format_command(command):
     return " ".join(args)
 
 
-def _execute_command(command, cwd=None, extra_environ=None):
+def _execute_command(command, cwd=None, extra_environ=None, env=None):
     """Execute a command, returning stdout, plus maybe parts of stderr."""
     # Enforce the command to be a list or arguments.
     assert isinstance(command, (list, tuple))
+    if extra_environ and env:
+        raise ValueError("You cannot pass both 'extra_environ' and 'env'.")
     logger.debug("Running command: '%s'", format_command(command))
-    env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-    if extra_environ is not None:
-        env.update(extra_environ)
+    if env is None:
+        env = os.environ.copy()
+        env["PYTHONPATH"] = os.pathsep.join(sys.path)
+        if extra_environ is not None:
+            env.update(extra_environ)
     # By default we show errors, of course.
     show_stderr = True
     if command[0].startswith(sys.executable):
@@ -731,7 +735,7 @@ def get_errors(stderr_output):
 
 
 def execute_command(
-    command, allow_retry=False, fail_message="", cwd=None, extra_environ=None
+    command, allow_retry=False, fail_message="", cwd=None, extra_environ=None, env=None
 ):
     """Run the command and possibly retry it.
 
@@ -739,6 +743,11 @@ def execute_command(
     _execute_command and return the result.
 
     When allow_retry is True, a few things change.
+
+    You can either pass extra_environ options that we then add to a copy of the
+    current OS environment, plus we add the PYTHONPATH.
+    Or you can pass your own env.
+    You can only use one of these two options.
 
     We print interesting lines.  When all is right, this will be the
     first and last few lines, otherwise the full standard output plus
@@ -753,7 +762,7 @@ def execute_command(
 
     It might be a warning, but we cannot detect the distinction.
     """
-    result = _execute_command(command, cwd=cwd, extra_environ=extra_environ)
+    result = _execute_command(command, cwd=cwd, extra_environ=extra_environ, env=env)
     if not allow_retry:
         if ERROR_EXIT_CODE in result:
             print(result)

@@ -4,7 +4,12 @@ Changelog for zest.releaser
 9.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Worked around python 3.9 version-reporting issue that could prevent startup.
+  [maurits]
+
+- Really build source dist and wheel in isolation.
+  Previously we passed along our own ``PYTHONPATH``, but that could lead to an unintended ``setuptools`` version being used.
+  [maurits]
 
 
 9.4.0 (2025-03-05)
