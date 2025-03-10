@@ -35,6 +35,7 @@ DATA = {
     ),
     "history_last_release": ("Full text of all history entries of the current release"),
     "history_lines": "List with all history file lines (when found)",
+    "history_this_release": "The changes from the release being made",
     "name": "Name of the project being released",
     "new_version": "New version to write, possibly with development marker",
     "nothing_changed_yet": (
