@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.5.1 (unreleased)
+9.6.0 (2025-04-08)
 ------------------
 
 - Require ``build`` 1.2.0 or higher.
