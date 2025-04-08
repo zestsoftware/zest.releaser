@@ -4,7 +4,9 @@ Changelog for zest.releaser
 9.5.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Require ``build`` 1.2.0 or higher.
+  This added the ``installer`` argument to ``DefaultIsolatedEnv``.
+  [maurits]
 
 
 9.5.0 (2025-03-08)
