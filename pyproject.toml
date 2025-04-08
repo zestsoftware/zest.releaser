@@ -13,7 +13,7 @@ authors = [
     {name = "Maurits van Rees", email = "maurits@vanrees.org"},
 ]
 dependencies = [
-    "build >= 1.0.0",  # 1.0.0 changed the API slightly, we support the new syntax
+    "build >= 1.2.0",  # 1.2.0 added the 'installer' argument to DefaultIsolatedEnv
     "colorama",
     "importlib-metadata; python_version<'3.10'",
     "packaging",
