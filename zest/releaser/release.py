@@ -96,7 +96,7 @@ def _build_in_isolated_env(distribution):
     """
     if distribution not in {"sdist", "wheel"}:
         raise ValueError(f"Invalid argument passed: {distribution=}")
-    with DefaultIsolatedEnv(installer="pip") as env:
+    with DefaultIsolatedEnv() as env:
         # We use an isolated env, otherwise `build` cannot install packages
         # needed for the build system, for example `hatchling`.
         # See https://github.com/zestsoftware/zest.releaser/issues/448
