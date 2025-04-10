@@ -28,7 +28,7 @@ requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 6 - Mature",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "GPL-2.0-or-later",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
