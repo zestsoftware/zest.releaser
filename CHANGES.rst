@@ -4,7 +4,9 @@ Changelog for zest.releaser
 9.6.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adminstrative change: our pyproject.toml now has the license `in the new SPDX format
+  <https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license>`_.
+  [reinout]
 
 
 9.6.1 (2025-04-10)
