@@ -41,7 +41,7 @@ extensions = [
 templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = ".rst"
+source_suffix = {".rst": "restructuredtext"}
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
@@ -209,4 +209,4 @@ latex_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"http://docs.python.org/": None}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
