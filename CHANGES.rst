@@ -4,7 +4,8 @@ Changelog for zest.releaser
 9.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed readthedocs documentation generation.
+  [reinout]
 
 
 9.6.0 (2025-04-08)
