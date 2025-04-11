@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.6.2 (unreleased)
+9.6.2 (2025-04-11)
 ------------------
 
 - Adminstrative change: our pyproject.toml now has the license `in the new SPDX format
