@@ -1,6 +1,6 @@
 [build-system]
 # See https://snarky.ca/what-the-heck-is-pyproject-toml/
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
