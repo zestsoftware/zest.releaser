@@ -4,8 +4,9 @@ Changelog for zest.releaser
 9.6.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Append the changes written in the change log file to the commit message.
+  This allows integration with GitHub releases.
+  Fixes issue #218 [gforcada]
 
 9.6.2 (2025-04-11)
 ------------------
