@@ -56,27 +56,35 @@ tests it is again ugly, but the exit code is zero, which is good.
     ...
     RuntimeError: SYSTEM EXIT (code=0)
 
-Now a feature bump::
+Now a feature bump that we combine with a beta release::
 
-    >>> sys.argv[1:] = ['--feature']
+    >>> sys.argv[1:] = ['--feature', '--beta']
     >>> bumpversion.main()
-    Checking version bump for feature release.
+    Checking version bump for feature release and beta prerelease.
     Last tag: 2.9.4
     Current version: 2.9.5.dev0
-    Question: Enter version [2.10.0.dev0]:
+    Question: Enter version [2.10.0b1.dev0]:
     Our reply: <ENTER>
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    version = '2.10.0.dev0'
+    version = '2.10.0b1.dev0'
     >>> githead('CHANGES.txt')
     Changelog of tha.example
     ========================
     <BLANKLINE>
-    2.10.0 (unreleased)
-    -------------------
+    2.10.0b1 (unreleased)
+    ---------------------
+
+Try the same again.  Nothing should change::
+
+    >>> sys.argv[1:] = ['--feature', '--beta']
+    >>> bumpversion.main()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=0)
 
 Now a breaking bump, and for this test we explicitly say to create a release candidate::
 
@@ -85,7 +93,7 @@ Now a breaking bump, and for this test we explicitly say to create a release can
     >>> bumpversion.main()
     Checking version bump for breaking release.
     Last tag: 2.9.4
-    Current version: 2.10.0.dev0
+    Current version: 2.10.0b1.dev0
     Question: Enter version [3.0.0.dev0]:
     Our reply: 3.0.0rc1.dev0
     Checking data dict
@@ -100,6 +108,21 @@ Now a breaking bump, and for this test we explicitly say to create a release can
     <BLANKLINE>
     3.0.0rc1 (unreleased)
     ---------------------
+
+Switch to Markdown to see that we can handle that as well::
+
+    >>> lines = [
+    ...     "[zest.releaser]",
+    ...     "history_format = md"]
+    >>> with open('setup.cfg', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> lines = [
+    ...     "# Changelog",
+    ...     "",
+    ...     "## 3.0.0rc1 (unreleased)"]
+    >>> with open('CHANGES.txt', 'w') as f:
+    ...     _ = f.write('\n'.join(lines))
+    >>> commit_all_changes()
 
 Now a final release, where we keep the dev marker::
 
@@ -118,38 +141,51 @@ Now a final release, where we keep the dev marker::
     from setuptools import setup, find_packages
     version = '3.0.0.dev0'
     >>> githead('CHANGES.txt')
-    Changelog of tha.example
-    ========================
+    # Changelog
     <BLANKLINE>
-    3.0.0 (unreleased)
-    ------------------
+    ## 3.0.0 (unreleased)
 
-It will also work if we use Markdown::
+Now ask for a breaking beta release.  The version should not be bumped to 4::
 
-    >>> lines = [
-    ...     "[zest.releaser]",
-    ...     "history_format = md"]
-    >>> with open('setup.cfg', 'w') as f:
-    ...     _ = f.write('\n'.join(lines))
-    >>> lines = [
-    ...     "# Changelog",
-    ...     "",
-    ...     "## 3.0.0 (unreleased)"]
-    >>> with open('CHANGES.txt', 'w') as f:
-    ...     _ = f.write('\n'.join(lines))
-    >>> commit_all_changes()
     >>> utils.test_answer_book.set_answers(['', ''])
-    >>> sys.argv[1:] = ['--final']
+    >>> sys.argv[1:] = ['--breaking', '--beta']
     >>> bumpversion.main()
-    Checking version bump for final release.
+    Checking version bump for breaking release and beta prerelease.
     Last tag: 2.9.4
     Current version: 3.0.0.dev0
-    Question: Enter version [3.0.1.dev0]:
+    Question: Enter version [3.0.0b1.dev0]:
     Our reply: <ENTER>
     Checking data dict
     Question: OK to commit this (Y/n)?
     Our reply: <ENTER>
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '3.0.0b1.dev0'
     >>> githead('CHANGES.txt')
     # Changelog
     <BLANKLINE>
-    ## 3.0.1 (unreleased)
+    ## 3.0.0b1 (unreleased)
+
+Do a fullrelease::
+
+    >>> sys.argv[1:] = ['--no-input']
+    >>> fullrelease.main()
+    lists of files in version control and sdist match
+    ...
+    git tag 3.0.0b1...
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '3.0.0b2.dev0'
+    >>> githead('CHANGES.txt')
+    # Changelog
+    <BLANKLINE>
+    ## 3.0.0b2 (unreleased)
+
+Now again a breaking beta release.  Again the version should not be bumped to 4::
+
+    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> sys.argv[1:] = ['--breaking', '--beta']
+    >>> bumpversion.main()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=0)

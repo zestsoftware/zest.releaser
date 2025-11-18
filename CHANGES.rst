@@ -1,10 +1,19 @@
 Changelog for zest.releaser
 ===========================
 
-9.6.3 (unreleased)
+9.7.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- ``bumpversion`` command: added ``--alpha``, ``--beta``, and ``--rc`` options
+  to set the version to an alpha, beta, or release candidate version.
+  [maurits]
+
+- You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.
+  Other combinations are mutually exclusive.
+  [maurits]
+
+- Do not support breaking/feature release on a pre release.
+  [maurits]
 
 
 9.6.2 (2025-04-11)

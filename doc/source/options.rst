@@ -44,13 +44,22 @@ Or on multiple lines::
 
   This was difficult."
 
-The ``bumpversion`` and ``postrelease`` commands accept some mutually exclusive options:
+The ``bumpversion`` and ``postrelease`` commands accept some options:
 
 - With ``--feature`` we update the minor version.
 
 - With ``--breaking`` we update the major version.
 
+- With ``--alpha`` we set an alpha version.
+
+- With ``--beta`` we set a beta version.
+
+- With ``--rc`` we set a release candidate version.
+
 - With ``--final`` we remove alpha / beta / rc markers from the version.
+
+- You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.
+  Other combinations are mutually exclusive.
 
 
 Global options

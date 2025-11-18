@@ -251,14 +251,14 @@ First prepare a bugfix release.
     from setuptools import setup, find_packages
     version = '1.5.1.dev0'
 
-Now say that the next version should be a feature release:
+Now say that the next version should be a feature release in beta:
 
     >>> utils.test_answer_book.set_answers(['', '', 'n'])
     >>> import sys
-    >>> sys.argv[1:] = ['--feature']
+    >>> sys.argv[1:] = ['--feature', '--beta']
     >>> postrelease.main()
     Current version is 1.5.1
-    Question: Enter new development version ('.dev0' will be appended) [1.6.0]:
+    Question: Enter new development version ('.dev0' will be appended) [1.6.0b1]:
     Our reply: <ENTER>
     Checking data dict
     Question: OK to commit this (Y/n)?
@@ -267,14 +267,14 @@ Now say that the next version should be a feature release:
     Our reply: n
     >>> githead('setup.py')
     from setuptools import setup, find_packages
-    version = '1.6.0.dev0'
+    version = '1.6.0b1.dev0'
 
 Now say that the next version should be a breaking release, but make it an alpha:
 
     >>> utils.test_answer_book.set_answers(['2.0.0a1', '', 'n'])
     >>> sys.argv[1:] = ['--breaking']
     >>> postrelease.main()
-    Current version is 1.6.0
+    Current version is 1.6.0b1
     Question: Enter new development version ('.dev0' will be appended) [2.0.0]:
     Our reply: 2.0.0a1
     Checking data dict

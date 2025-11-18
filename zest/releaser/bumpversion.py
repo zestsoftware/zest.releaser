@@ -19,11 +19,15 @@ COMMIT_MSG = "Bumped version for %(release)s release."
 DATA = baserelease.DATA.copy()
 DATA.update(
     {
+        "alpha": "True if we handle an alpha version",
+        "beta": "True if we handle a beta version",
         "breaking": "True if we handle a breaking (major) change",
         "clean_new_version": "Clean new version (say 1.1)",
         "feature": "True if we handle a feature (minor) change",
         "final": "True if we handle a final release",
+        "rc": "True if we handle a release candidate version",
         "release": "Type of release: breaking, feature, normal, final",
+        "prerelease": "Type of prerelease: alpha, beta, rc",
     }
 )
 
@@ -35,7 +39,16 @@ class BumpVersion(baserelease.Basereleaser):
 
     """
 
-    def __init__(self, vcs=None, breaking=False, feature=False, final=False):
+    def __init__(
+        self,
+        vcs=None,
+        breaking=False,
+        feature=False,
+        final=False,
+        alpha=False,
+        beta=False,
+        rc=False,
+    ):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         if breaking:
@@ -45,14 +58,28 @@ class BumpVersion(baserelease.Basereleaser):
         elif final:
             release = "final"
         else:
+            # unknown release, treat as normal version bump
             release = "normal"
+        if alpha:
+            prerelease = "alpha"
+        elif beta:
+            prerelease = "beta"
+        elif rc:
+            prerelease = "rc"
+        else:
+            prerelease = ""
+
         self.data.update(
             dict(
+                alpha=alpha,
+                beta=beta,
                 breaking=breaking,
                 commit_msg=COMMIT_MSG,
                 feature=feature,
                 final=final,
                 history_header=HISTORY_HEADER,
+                rc=rc,
+                prerelease=prerelease,
                 release=release,
                 update_history=True,
             )
@@ -60,7 +87,14 @@ class BumpVersion(baserelease.Basereleaser):
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
-        print("Checking version bump for {} release.".format(self.data["release"]))
+        if self.data["prerelease"]:
+            print(
+                "Checking version bump for {} release and {} prerelease.".format(
+                    self.data["release"], self.data["prerelease"]
+                )
+            )
+        else:
+            print("Checking version bump for {} release.".format(self.data["release"]))
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
@@ -96,6 +130,9 @@ class BumpVersion(baserelease.Basereleaser):
             breaking = self.data["breaking"]
             feature = self.data["feature"]
             final = self.data["final"]
+            alpha = self.data["alpha"]
+            beta = self.data["beta"]
+            rc = self.data["rc"]
             # Compare the suggestion for the last tag with the current version.
             # The wanted version bump may already have been done.
             last_tag_version = utils.get_last_tag(self.vcs, allow_missing=True)
@@ -105,27 +142,61 @@ class BumpVersion(baserelease.Basereleaser):
             else:
                 print(f"Last tag: {last_tag_version}")
             print(f"Current version: {original_version}")
-            params = dict(
-                feature=feature,
-                breaking=breaking,
-                final=final,
+            # Initially try without alpha/beta/rc.
+            base_params = dict(
                 less_zeroes=self.zest_releaser_config.less_zeroes(),
                 levels=self.zest_releaser_config.version_levels(),
                 dev_marker=self.zest_releaser_config.development_marker(),
             )
+            release_params = dict(
+                feature=feature,
+                breaking=breaking,
+                final=final,
+            )
+            prerelease_params = dict(
+                alpha=alpha,
+                beta=beta,
+                rc=rc,
+            )
+            # First try to see if a bump is needed without prerelease.
+            params = dict(**base_params, **release_params)
+            release_bump_needed = False
             if final:
+                # Remove alpha/beta/rc markers from current version.
                 minimum_version = utils.suggest_version(original_version, **params)
                 if minimum_version is None:
                     print("No version bump needed.")
                     sys.exit(0)
+                release_bump_needed = True
+            elif (breaking or feature) and parse_version(last_tag_version).pre:
+                # Version is a pre version, so we cannot calculate a suggestion
+                # for a breaking or feature version.
+                pass
             else:
+                # Compare with last tag version.
                 minimum_version = utils.suggest_version(last_tag_version, **params)
-                if parse_version(minimum_version) <= parse_version(
-                    utils.cleanup_version(original_version)
-                ):
+                if minimum_version is not None and parse_version(
+                    minimum_version
+                ) > parse_version(parse_version(original_version).base_version):
+                    release_bump_needed = True
+            if not release_bump_needed:
+                # No bump needed, see if a prerelease bump is needed.
+                if not (alpha or beta or rc):
                     print("No version bump needed.")
                     sys.exit(0)
+                params = dict(**base_params, **prerelease_params)
+                minimum_version = utils.suggest_version(original_version, **params)
+                if minimum_version is None:
+                    print("No version bump needed.")
+                    sys.exit(0)
+
             # A bump is needed.  Get suggestion for next version.
+            if release_bump_needed:
+                params = dict(**base_params, **release_params, **prerelease_params)
+            else:
+                # The original version is already bumped compared to last tag.
+                # We don't need to bump again for release type, only for prerelease.
+                params = dict(**base_params, **prerelease_params)
             suggestion = utils.suggest_version(original_version, **params)
         if not initial:
             new_version = utils.ask_version("Enter version", default=suggestion)
@@ -158,6 +229,27 @@ def main():
         help="Bump for breaking release (increase major version)",
     )
     parser.add_argument(
+        "--alpha",
+        action="store_true",
+        dest="alpha",
+        default=False,
+        help="Add alpha marker",
+    )
+    parser.add_argument(
+        "--beta",
+        action="store_true",
+        dest="beta",
+        default=False,
+        help="Add beta marker",
+    )
+    parser.add_argument(
+        "--rc",
+        action="store_true",
+        dest="rc",
+        default=False,
+        help="Add rc marker",
+    )
+    parser.add_argument(
         "--final",
         action="store_true",
         dest="final",
@@ -165,14 +257,16 @@ def main():
         help="Bump for final release (remove alpha/beta/rc from version)",
     )
     options = utils.parse_options(parser)
-    # How many options are enabled?
-    if len(list(filter(None, [options.breaking, options.feature, options.final]))) > 1:
-        print("ERROR: Only enable one option of breaking/feature/final.")
-        sys.exit(1)
+    # Fail if mutually exclusive options are enabled.
+    utils.check_mutially_exclusive_options(options, "breaking", "feature", "final")
+    utils.check_mutially_exclusive_options(options, "alpha", "beta", "rc", "final")
     utils.configure_logging()
     bumpversion = BumpVersion(
         breaking=options.breaking,
         feature=options.feature,
         final=options.final,
+        alpha=options.alpha,
+        beta=options.beta,
+        rc=options.rc,
     )
     bumpversion.run()
