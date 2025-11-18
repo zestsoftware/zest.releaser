@@ -169,9 +169,7 @@ class Releaser(baserelease.Basereleaser):
                 print(execute_command(cmd))
             else:
                 # all commands are needed in order to proceed normally
-                print(
-                    "Please create a tag %s for %s yourself and rerun." % (tag, version)
-                )
+                print(f"Please create a tag {tag} for {version} yourself and rerun.")
                 sys.exit(1)
         if not self.vcs.tag_exists(tag):
             print(f"\nFailed to create tag {tag}!")

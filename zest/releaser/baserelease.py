@@ -436,7 +436,7 @@ class Basereleaser:
         prefix_message = self.zest_releaser_config.prefix_message()
         extra_message = self.zest_releaser_config.extra_message()
         if prefix_message:
-            msg = "%s %s" % (prefix_message, msg)
+            msg = f"{prefix_message} {msg}"
         if extra_message:
             msg += "\n\n%s" % extra_message
         return msg
