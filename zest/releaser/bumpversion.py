@@ -27,6 +27,7 @@ DATA.update(
         "final": "True if we handle a final release",
         "rc": "True if we handle a release candidate version",
         "release": "Type of release: breaking, feature, normal, final",
+        "prerelease": "Type of prerelease: alpha, beta, rc",
     }
 )
 
@@ -56,15 +57,18 @@ class BumpVersion(baserelease.Basereleaser):
             release = "feature"
         elif final:
             release = "final"
-        elif alpha:
-            release = "alpha"
-        elif beta:
-            release = "beta"
-        elif rc:
-            release = "rc"
         else:
             # unknown release, treat as normal version bump
             release = "normal"
+        if alpha:
+            prerelease = "alpha"
+        elif beta:
+            prerelease = "beta"
+        elif rc:
+            prerelease = "rc"
+        else:
+            prerelease = ""
+
         self.data.update(
             dict(
                 alpha=alpha,
@@ -75,6 +79,7 @@ class BumpVersion(baserelease.Basereleaser):
                 final=final,
                 history_header=HISTORY_HEADER,
                 rc=rc,
+                prerelease=prerelease,
                 release=release,
                 update_history=True,
             )
@@ -82,7 +87,14 @@ class BumpVersion(baserelease.Basereleaser):
 
     def prepare(self):
         """Prepare self.data by asking about new dev version"""
-        print("Checking version bump for {} release.".format(self.data["release"]))
+        if self.data["prerelease"]:
+            print(
+                "Checking version bump for {} release and {} prerelease.".format(
+                    self.data["release"], self.data["prerelease"]
+                )
+            )
+        else:
+            print("Checking version bump for {} release.".format(self.data["release"]))
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
@@ -186,6 +198,27 @@ def main():
         help="Bump for breaking release (increase major version)",
     )
     parser.add_argument(
+        "--alpha",
+        action="store_true",
+        dest="alpha",
+        default=False,
+        help="Add alpha marker",
+    )
+    parser.add_argument(
+        "--beta",
+        action="store_true",
+        dest="beta",
+        default=False,
+        help="Add beta marker",
+    )
+    parser.add_argument(
+        "--rc",
+        action="store_true",
+        dest="rc",
+        default=False,
+        help="Add rc marker",
+    )
+    parser.add_argument(
         "--final",
         action="store_true",
         dest="final",
@@ -197,10 +230,22 @@ def main():
     if len(list(filter(None, [options.breaking, options.feature, options.final]))) > 1:
         print("ERROR: Only enable one option of breaking/feature/final.")
         sys.exit(1)
+    if (
+        len(
+            list(filter(None, [options.alpha, options.beta, options.rc, options.final]))
+        )
+        > 1
+    ):
+        print("ERROR: Only enable one option of alpha/beta/rc/final.")
+        sys.exit(1)
+
     utils.configure_logging()
     bumpversion = BumpVersion(
         breaking=options.breaking,
         feature=options.feature,
         final=options.final,
+        alpha=options.alpha,
+        beta=options.beta,
+        rc=options.rc,
     )
     bumpversion.run()
