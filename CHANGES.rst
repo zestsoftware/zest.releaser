@@ -4,15 +4,15 @@ Changelog for zest.releaser
 9.7.0 (unreleased)
 ------------------
 
-- Do not support breaking/feature release on a pre release.
+- ``bumpversion`` command: added ``--alpha``, ``--beta``, and ``--rc`` options
+  to set the version to an alpha, beta, or release candidate version.
   [maurits]
 
 - You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.
   Other combinations are mutually exclusive.
   [maurits]
 
-- ``bumpversion`` command: added ``--alpha``, ``--beta``, and ``--rc`` options
-  to set the version to an alpha, beta, or release candidate version.
+- Do not support breaking/feature release on a pre release.
   [maurits]
 
 
