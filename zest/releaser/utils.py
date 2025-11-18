@@ -150,9 +150,27 @@ def suggest_version(
       levels=0 would mean: do not change the number of levels.
     """
     # How many options are enabled?
-    if len(list(filter(None, [breaking, feature, final, alpha, beta, rc]))) > 1:
-        print("ERROR: Only enable one option of breaking/feature/final/alpha/beta/rc.")
+    if len(list(filter(None, [breaking, feature, final]))) > 1:
+        print("ERROR: Only enable one option of breaking/feature/final.")
         sys.exit(1)
+    if len(list(filter(None, [final, alpha, beta, rc]))) > 1:
+        print("ERROR: Only enable one option of final/alpha/beta/rc.")
+        sys.exit(1)
+    # Save the original options, as we need to call this function again
+    # for some combinations of options.
+    orig_options = dict(
+        current=current,
+        feature=feature,
+        breaking=breaking,
+        less_zeroes=less_zeroes,
+        levels=levels,
+        dev_marker=dev_marker,
+        final=final,
+        alpha=alpha,
+        beta=beta,
+        rc=rc,
+    )
+
     dev = ""
     base_dev_marker = strip_last_number(dev_marker)
     if base_dev_marker in current:
@@ -175,6 +193,18 @@ def suggest_version(
         current = current[: -len(last_number[-1])]
         last_number = str(int(last_number[-1]) + 1)
         return current + last_number + dev
+    if (alpha or beta or rc) and (breaking or feature):
+        # Call this function once for each option.
+        # First do breaking/feature.
+        first_options = dict(orig_options)
+        first_options.update(dict(alpha=False, beta=False, rc=False))
+        intermediate_version = suggest_version(**first_options)
+        second_options = dict(orig_options)
+        # Then to alpha/beta/rc on the intermediate result.
+        second_options.update(
+            dict(feature=False, breaking=False, current=intermediate_version)
+        )
+        return suggest_version(**second_options)
     if alpha:
         if not parsed_version.pre:
             # Create new alpha version.

@@ -189,3 +189,4 @@ There are some additional tools:
   major version.  With ``--alpha``, ``--beta``, or ``--rc`` we set the version
   to an alpha, beta, or release candidate version.  With ``--final`` we remove
   alpha / beta / rc markers from the version.
+  You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.

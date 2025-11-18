@@ -4,6 +4,10 @@ Changelog for zest.releaser
 9.6.3 (unreleased)
 ------------------
 
+- You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.
+  Other combinations are mutually exclusive.
+  [maurits]
+
 - ``bumpversion`` command: added ``--alpha``, ``--beta``, and ``--rc`` options
   to set the version to an alpha, beta, or release candidate version.
   [maurits]

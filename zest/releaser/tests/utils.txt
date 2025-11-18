@@ -246,6 +246,30 @@ You can get a suggestion for a release candidate:
     >>> utils.suggest_version('1.2.3rc1.dev0', rc=True) or ''
     ''
 
+Various options are mutually exclusive:
+
+    >>> utils.suggest_version('1.2.3', feature=True, breaking=True)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+    >>> utils.suggest_version('1.2.3', alpha=True, beta=True)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+    >>> utils.suggest_version('1.2.3', rc=True, final=True)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 1
+
+You can combine some options:
+
+    >>> utils.suggest_version('1.2.3', alpha=True, breaking=True)
+    '2.0.0a1'
+    >>> utils.suggest_version('1.2.3.dev0', beta=True, feature=True)
+    '1.3.0b1.dev0'
+    >>> utils.suggest_version('1.2.3', rc=True, breaking=True)
+    '2.0.0rc1'
+
 
 Asking input
 ------------
