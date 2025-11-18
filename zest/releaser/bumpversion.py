@@ -19,10 +19,13 @@ COMMIT_MSG = "Bumped version for %(release)s release."
 DATA = baserelease.DATA.copy()
 DATA.update(
     {
+        "alpha": "True if we handle an alpha version",
+        "beta": "True if we handle a beta version",
         "breaking": "True if we handle a breaking (major) change",
         "clean_new_version": "Clean new version (say 1.1)",
         "feature": "True if we handle a feature (minor) change",
         "final": "True if we handle a final release",
+        "rc": "True if we handle a release candidate version",
         "release": "Type of release: breaking, feature, normal, final",
     }
 )
