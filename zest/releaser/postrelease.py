@@ -177,18 +177,9 @@ def main():
         help="Bump for final release (remove alpha/beta/rc from version)",
     )
     options = utils.parse_options(parser)
-    # How many options are enabled?
-    if len(list(filter(None, [options.breaking, options.feature, options.final]))) > 1:
-        print("ERROR: Only enable one option of breaking/feature/final.")
-        sys.exit(1)
-    if (
-        len(
-            list(filter(None, [options.alpha, options.beta, options.rc, options.final]))
-        )
-        > 1
-    ):
-        print("ERROR: Only enable one option of alpha/beta/rc/final.")
-        sys.exit(1)
+    # Fail if mutually exclusive options are enabled.
+    utils.check_mutially_exclusive_options(options, "breaking", "feature", "final")
+    utils.check_mutially_exclusive_options(options, "alpha", "beta", "rc", "final")
     utils.configure_logging()
     postreleaser = Postreleaser(
         breaking=options.breaking,

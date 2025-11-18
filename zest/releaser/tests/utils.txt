@@ -6,6 +6,48 @@ We're testing ``utils.py`` here:
     >>> from zest.releaser import utils
     >>> from pprint import pprint
 
+Mutually exclusive options
+--------------------------
+
+    >>> parser = utils.base_option_parser()
+    >>> _ = parser.add_argument(
+    ...    "--feature",
+    ...    action="store_true",
+    ...    dest="feature",
+    ...    default=False,
+    ...    help="Bump for feature release (increase minor version)",
+    ... )
+    >>> _ = parser.add_argument(
+    ...    "--breaking",
+    ...    action="store_true",
+    ...    dest="breaking",
+    ...    default=False,
+    ...    help="Bump for breaking release (increase major version)",
+    ... )
+    >>> _ = parser.add_argument(
+    ...    "--final",
+    ...    action="store_true",
+    ...    dest="final",
+    ...    default=False,
+    ...    help="Bump for final release (remove alpha/beta/rc from version)",
+    ... )
+    >>> import sys
+    >>> sys.argv[1:] = ['--breaking', '--feature']
+    >>> options = utils.parse_options(parser)
+    >>> utils.check_mutially_exclusive_options(options, "breaking", "feature", "final")
+    Traceback (most recent call last):
+      File "/Users/maurits/.local/share/uv/python/cpython-3.13.3-macos-aarch64-none/lib/python3.13/doctest.py", line 1395, in __run
+        exec(compile(example.source, filename, "single",
+      File "<doctest utils.txt[8]>", line 1, in <module>
+        utils.check_mutially_exclusive_options(options, "breaking", "feature")
+      File "/Users/maurits/community/zest.releaser/zest/releaser/utils.py", line 1145, in check_mutially_exclusive_options
+        sys.exit(1)
+    SystemExit: 1
+    >>> utils.check_mutially_exclusive_options(options, "other", "options")
+    >>> sys.argv[1:] = ['--breaking']
+    >>> options = utils.parse_options(parser)
+    >>> utils.check_mutially_exclusive_options(options, "breaking", "feature", "final")
+
 
 Log level
 ---------

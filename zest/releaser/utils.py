@@ -1133,3 +1133,13 @@ def filename_from_test_dir(filename: str) -> str:
     this_dir = os.path.dirname(__file__)
     test_dir = os.path.join(this_dir, "tests")
     return os.path.join(test_dir, filename)
+
+
+def check_mutially_exclusive_options(options, *names):
+    count = 0
+    for name in names:
+        if getattr(options, name, 0):
+            count += 1
+            if count > 1:
+                print(f"ERROR: Only enable one option of {'/'.join(names)}.")
+                sys.exit(1)
