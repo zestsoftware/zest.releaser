@@ -35,7 +35,16 @@ class BumpVersion(baserelease.Basereleaser):
 
     """
 
-    def __init__(self, vcs=None, breaking=False, feature=False, final=False):
+    def __init__(
+        self,
+        vcs=None,
+        breaking=False,
+        feature=False,
+        final=False,
+        alpha=False,
+        beta=False,
+        rc=False,
+    ):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         if breaking:
@@ -44,15 +53,25 @@ class BumpVersion(baserelease.Basereleaser):
             release = "feature"
         elif final:
             release = "final"
+        elif alpha:
+            release = "alpha"
+        elif beta:
+            release = "beta"
+        elif rc:
+            release = "rc"
         else:
+            # unknown release, treat as normal version bump
             release = "normal"
         self.data.update(
             dict(
+                alpha=alpha,
+                beta=beta,
                 breaking=breaking,
                 commit_msg=COMMIT_MSG,
                 feature=feature,
                 final=final,
                 history_header=HISTORY_HEADER,
+                rc=rc,
                 release=release,
                 update_history=True,
             )
@@ -96,6 +115,9 @@ class BumpVersion(baserelease.Basereleaser):
             breaking = self.data["breaking"]
             feature = self.data["feature"]
             final = self.data["final"]
+            alpha = self.data["alpha"]
+            beta = self.data["beta"]
+            rc = self.data["rc"]
             # Compare the suggestion for the last tag with the current version.
             # The wanted version bump may already have been done.
             last_tag_version = utils.get_last_tag(self.vcs, allow_missing=True)
@@ -109,6 +131,9 @@ class BumpVersion(baserelease.Basereleaser):
                 feature=feature,
                 breaking=breaking,
                 final=final,
+                alpha=alpha,
+                beta=beta,
+                rc=rc,
                 less_zeroes=self.zest_releaser_config.less_zeroes(),
                 levels=self.zest_releaser_config.version_levels(),
                 dev_marker=self.zest_releaser_config.development_marker(),

@@ -126,6 +126,9 @@ def suggest_version(
     levels=0,
     dev_marker=".dev0",
     final=False,
+    alpha=False,
+    beta=False,
+    rc=False,
 ):
     """Suggest new version.
 
@@ -135,14 +138,20 @@ def suggest_version(
     - feature: increase major version, 1.2.3 -> 1.3.
     - breaking: increase minor version, 1.2.3 -> 2 (well, 2.0)
     - final: remove a/b/rc, 6.0.0rc1 -> 6.0.0
+    - alpha: increase alpha version, 1.0a1 -> 1.0a2
+      or create alpha version: 1.0 -> 1.0a1
+    - beta: increase beta version, 1.0b1 -> 1.0b2
+      or create beta version: 1.0a1 -> 1.0b1
+    - rc: increase rc version, 1.0rc1 -> 1.0rc2
+      or create rc version: 1.0b1 -> 1.0rc1
     - less_zeroes: instead of 2.0.0, suggest 2.0.
       Only makes sense in combination with feature or breaking.
     - levels: number of levels to aim for.  3 would give: 1.2.3.
       levels=0 would mean: do not change the number of levels.
     """
     # How many options are enabled?
-    if len(list(filter(None, [breaking, feature, final]))) > 1:
-        print("ERROR: Only enable one option of breaking/feature/final.")
+    if len(list(filter(None, [breaking, feature, final, alpha, beta, rc]))) > 1:
+        print("ERROR: Only enable one option of breaking/feature/final/alpha/beta/rc.")
         sys.exit(1)
     dev = ""
     base_dev_marker = strip_last_number(dev_marker)
@@ -151,8 +160,35 @@ def suggest_version(
         # Put the standard development marker back at the end.
         dev = dev_marker
         current = current[:index]
-    if final:
+    try:
         parsed_version = parse_version(current)
+    except InvalidVersion:
+        logger.warning("Cannot parse version '%s'", current)
+        # Try to at least detect if there is a number at the end.
+        last_number = re.findall(r"\d+$", current)
+        if not last_number:
+            logger.warning(
+                "Version does not end with a number, so we can't "
+                "calculate a suggestion for a next version."
+            )
+            return
+        current = current[: -len(last_number[-1])]
+        last_number = str(int(last_number[-1]) + 1)
+        return current + last_number + dev
+    if alpha:
+        if not parsed_version.pre:
+            # Create new alpha version.
+            return f"{current}a1{dev}"
+        return
+    if beta:
+        if not parsed_version.pre or parsed_version.pre[0] == "a":
+            return f"{parsed_version.base_version}b1{dev}"
+        return
+    if rc:
+        if not parsed_version.pre or parsed_version.pre[0] in ("a", "b"):
+            return f"{parsed_version.base_version}rc1{dev}"
+        return
+    if final:
         if not parsed_version.pre:
             logger.warning(
                 "Version is not a pre version, so we cannot "
@@ -197,7 +233,6 @@ def suggest_version(
             # too tricky.
             return
         if final:
-            parsed_version = parse_version(current)
             if not parsed_version.pre:
                 logger.warning(
                     "Version is not a pre version, so we cannot "

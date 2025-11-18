@@ -201,6 +201,51 @@ If no final release is needed, you get no suggestion:
     >>> utils.suggest_version('6.0.0.dev0', final=True) is None
     True
 
+You can get a suggestion for an alpha release:
+
+    >>> utils.suggest_version('1.2.3', alpha=True)
+    '1.2.3a1'
+    >>> utils.suggest_version('1.2.3.dev0', alpha=True)
+    '1.2.3a1.dev0'
+    >>> utils.suggest_version('1.2.3a1', alpha=True) or ''
+    ''
+    >>> utils.suggest_version('1.2.3a1.dev0', alpha=True) or ''
+    ''
+    >>> utils.suggest_version('1.2.3b1.dev0', alpha=True) or ''
+    ''
+    >>> utils.suggest_version('1.2.3rc1.dev0', alpha=True) or ''
+    ''
+
+You can get a suggestion for a beta release:
+
+    >>> utils.suggest_version('1.2.3', beta=True)
+    '1.2.3b1'
+    >>> utils.suggest_version('1.2.3.dev0', beta=True)
+    '1.2.3b1.dev0'
+    >>> utils.suggest_version('1.2.3a1', beta=True) or ''
+    '1.2.3b1'
+    >>> utils.suggest_version('1.2.3a1.dev0', beta=True) or ''
+    '1.2.3b1.dev0'
+    >>> utils.suggest_version('1.2.3b1.dev0', beta=True) or ''
+    ''
+    >>> utils.suggest_version('1.2.3rc1.dev0', beta=True) or ''
+    ''
+
+You can get a suggestion for a release candidate:
+
+    >>> utils.suggest_version('1.2.3', rc=True)
+    '1.2.3rc1'
+    >>> utils.suggest_version('1.2.3.dev0', rc=True)
+    '1.2.3rc1.dev0'
+    >>> utils.suggest_version('1.2.3a1', rc=True) or ''
+    '1.2.3rc1'
+    >>> utils.suggest_version('1.2.3a1.dev0', rc=True) or ''
+    '1.2.3rc1.dev0'
+    >>> utils.suggest_version('1.2.3b1.dev0', rc=True) or ''
+    '1.2.3rc1.dev0'
+    >>> utils.suggest_version('1.2.3rc1.dev0', rc=True) or ''
+    ''
+
 
 Asking input
 ------------

@@ -186,4 +186,6 @@ There are some additional tools:
 - **bumpversion**: do not release, only bump the version.  A
   development marker is kept when it is there.  With ``--feature`` we
   update the minor version.  With option ``--breaking`` we update the
-  major version.
+  major version.  With ``--alpha``, ``--beta``, or ``--rc`` we set the version
+  to an alpha, beta, or release candidate version.  With ``--final`` we remove
+  alpha / beta / rc markers from the version.

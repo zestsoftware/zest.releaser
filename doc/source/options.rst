@@ -50,6 +50,12 @@ The ``bumpversion`` and ``postrelease`` commands accept some mutually exclusive 
 
 - With ``--breaking`` we update the major version.
 
+- With ``--alpha`` we set an alpha version.
+
+- With ``--beta`` we set a beta version.
+
+- With ``--rc`` we set a release candidate version.
+
 - With ``--final`` we remove alpha / beta / rc markers from the version.
 
 
