@@ -1,5 +1,4 @@
-"""Do the checks and tasks that have to happen after doing a release.
-"""
+"""Do the checks and tasks that have to happen after doing a release."""
 
 from packaging.version import parse as parse_version
 from zest.releaser import baserelease

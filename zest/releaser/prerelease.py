@@ -1,5 +1,4 @@
-"""Do the checks and tasks that have to happen before doing a release.
-"""
+"""Do the checks and tasks that have to happen before doing a release."""
 
 from zest.releaser import baserelease
 from zest.releaser import utils

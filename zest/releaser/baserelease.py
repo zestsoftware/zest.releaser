@@ -1,6 +1,5 @@
 """Provide a base for the three releasers"""
 
-
 from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils

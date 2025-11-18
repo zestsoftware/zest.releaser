@@ -1,5 +1,4 @@
-"""Add a changelog entry.
-"""
+"""Add a changelog entry."""
 
 from zest.releaser import baserelease
 from zest.releaser import utils
