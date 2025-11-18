@@ -142,30 +142,65 @@ class BumpVersion(baserelease.Basereleaser):
             else:
                 print(f"Last tag: {last_tag_version}")
             print(f"Current version: {original_version}")
-            params = dict(
-                feature=feature,
-                breaking=breaking,
-                final=final,
-                alpha=alpha,
-                beta=beta,
-                rc=rc,
+            # Initially try without alpha/beta/rc.
+            base_params = dict(
                 less_zeroes=self.zest_releaser_config.less_zeroes(),
                 levels=self.zest_releaser_config.version_levels(),
                 dev_marker=self.zest_releaser_config.development_marker(),
             )
+            release_params = dict(
+                feature=feature,
+                breaking=breaking,
+                final=final,
+            )
+            prerelease_params = dict(
+                alpha=alpha,
+                beta=beta,
+                rc=rc,
+            )
+            # First try to see if a bump is needed without prerelease.
+            # params = dict(
+            #     feature=feature,
+            #     breaking=breaking,
+            #     final=final,
+            #     less_zeroes=self.zest_releaser_config.less_zeroes(),
+            #     levels=self.zest_releaser_config.version_levels(),
+            #     dev_marker=self.zest_releaser_config.development_marker(),
+            # )
+            params = dict(**base_params, **release_params)
+            release_bump_needed = False
             if final:
+                # Remove alpha/beta/rc markers from current version.
                 minimum_version = utils.suggest_version(original_version, **params)
                 if minimum_version is None:
                     print("No version bump needed.")
                     sys.exit(0)
+                release_bump_needed = True
             else:
+                # Compare with last tag version.
                 minimum_version = utils.suggest_version(last_tag_version, **params)
-                if parse_version(minimum_version) <= parse_version(
-                    utils.cleanup_version(original_version)
-                ):
+                if minimum_version is not None and parse_version(
+                    minimum_version
+                ) > parse_version(parse_version(original_version).base_version):
+                    release_bump_needed = True
+            if not release_bump_needed:
+                # No bump needed, see if a prerelease bump is needed.
+                if not (alpha or beta or rc):
                     print("No version bump needed.")
                     sys.exit(0)
+                params = dict(**base_params, **prerelease_params)
+                minimum_version = utils.suggest_version(original_version, **params)
+                if minimum_version is None:
+                    print("No version bump needed.")
+                    sys.exit(0)
+
             # A bump is needed.  Get suggestion for next version.
+            if release_bump_needed:
+                params = dict(**base_params, **release_params, **prerelease_params)
+            else:
+                # The original version is already bumped compared to last tag.
+                # We don't need to bump again for release type, only for prerelease.
+                params = dict(**base_params, **prerelease_params)
             suggestion = utils.suggest_version(original_version, **params)
         if not initial:
             new_version = utils.ask_version("Enter version", default=suggestion)

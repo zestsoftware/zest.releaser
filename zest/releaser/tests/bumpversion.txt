@@ -78,6 +78,14 @@ Now a feature bump that we combine with a beta release::
     2.10.0b1 (unreleased)
     ---------------------
 
+Try the same again.  Nothing should change::
+
+    >>> sys.argv[1:] = ['--feature', '--beta']
+    >>> bumpversion.main()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=0)
+
 Now a breaking bump, and for this test we explicitly say to create a release candidate::
 
     >>> utils.test_answer_book.set_answers(['3.0.0rc1.dev0', ''])
@@ -136,3 +144,24 @@ Now a final release, where we keep the dev marker::
     # Changelog
     <BLANKLINE>
     ## 3.0.0 (unreleased)
+
+Now ask for a breaking beta release.  The the version should not be bumped to 4::
+
+    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> sys.argv[1:] = ['--breaking', '--beta']
+    >>> bumpversion.main()
+    Checking version bump for breaking release and beta prerelease.
+    Last tag: 2.9.4
+    Current version: 3.0.0.dev0
+    Question: Enter version [3.0.0b1.dev0]:
+    Our reply: <ENTER>
+    Checking data dict
+    Question: OK to commit this (Y/n)?
+    Our reply: <ENTER>
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '3.0.0b1.dev0'
+    >>> githead('CHANGES.txt')
+    # Changelog
+    <BLANKLINE>
+    ## 3.0.0b1 (unreleased)
