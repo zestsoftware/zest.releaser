@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.6.3 (unreleased)
+9.7.0 (unreleased)
 ------------------
 
 - Do not support breaking/feature release on a pre release.
