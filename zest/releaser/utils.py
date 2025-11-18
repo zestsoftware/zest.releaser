@@ -151,6 +151,14 @@ def suggest_version(
         # Put the standard development marker back at the end.
         dev = dev_marker
         current = current[:index]
+    if final:
+        parsed_version = parse_version(current)
+        if not parsed_version.pre:
+            logger.warning(
+                "Version is not a pre version, so we cannot "
+                "calculate a suggestion for the final version."
+            )
+            return
     # Split in first and last part, where last part is one integer and the
     # first part can contain more integers plus dots.
     current_split = current.split(".")

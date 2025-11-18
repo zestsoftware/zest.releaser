@@ -198,6 +198,8 @@ If no final release is needed, you get no suggestion:
 
     >>> utils.suggest_version('6.0.0dev0', final=True) is None
     True
+    >>> utils.suggest_version('6.0.0.dev0', final=True) is None
+    True
 
 
 Asking input
