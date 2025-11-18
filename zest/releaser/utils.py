@@ -138,12 +138,9 @@ def suggest_version(
     - feature: increase major version, 1.2.3 -> 1.3.
     - breaking: increase minor version, 1.2.3 -> 2 (well, 2.0)
     - final: remove a/b/rc, 6.0.0rc1 -> 6.0.0
-    - alpha: increase alpha version, 1.0a1 -> 1.0a2
-      or create alpha version: 1.0 -> 1.0a1
-    - beta: increase beta version, 1.0b1 -> 1.0b2
-      or create beta version: 1.0a1 -> 1.0b1
-    - rc: increase rc version, 1.0rc1 -> 1.0rc2
-      or create rc version: 1.0b1 -> 1.0rc1
+    - alpha: create alpha version: 1.0 -> 1.0a1
+    - beta: create beta version: 1.0a1 -> 1.0b1
+    - rc: create rc version: 1.0b1 -> 1.0rc1
     - less_zeroes: instead of 2.0.0, suggest 2.0.
       Only makes sense in combination with feature or breaking.
     - levels: number of levels to aim for.  3 would give: 1.2.3.

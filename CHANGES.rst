@@ -4,6 +4,9 @@ Changelog for zest.releaser
 9.6.3 (unreleased)
 ------------------
 
+- Do not support breaking/feature release on a pre release.
+  [maurits]
+
 - You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.
   Other combinations are mutually exclusive.
   [maurits]

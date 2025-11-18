@@ -176,6 +176,10 @@ class BumpVersion(baserelease.Basereleaser):
                     print("No version bump needed.")
                     sys.exit(0)
                 release_bump_needed = True
+            elif (breaking or feature) and parse_version(last_tag_version).pre:
+                # Version is a pre version, so we cannot calculate a suggestion
+                # for a breaking or feature version.
+                pass
             else:
                 # Compare with last tag version.
                 minimum_version = utils.suggest_version(last_tag_version, **params)

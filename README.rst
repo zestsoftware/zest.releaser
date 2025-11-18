@@ -190,3 +190,6 @@ There are some additional tools:
   to an alpha, beta, or release candidate version.  With ``--final`` we remove
   alpha / beta / rc markers from the version.
   You can combine ``--alpha/--beta/--rc`` with ``--feature/--breaking``.
+  If a version is already an alpha/beta/rc version, you cannot use
+  ``--feature`` or ``--breaking`` unless you first use ``--final`` to
+  remove the pre-release marker.

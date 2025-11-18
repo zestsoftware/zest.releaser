@@ -145,7 +145,7 @@ Now a final release, where we keep the dev marker::
     <BLANKLINE>
     ## 3.0.0 (unreleased)
 
-Now ask for a breaking beta release.  The the version should not be bumped to 4::
+Now ask for a breaking beta release.  The version should not be bumped to 4::
 
     >>> utils.test_answer_book.set_answers(['', ''])
     >>> sys.argv[1:] = ['--breaking', '--beta']
@@ -165,3 +165,27 @@ Now ask for a breaking beta release.  The the version should not be bumped to 4:
     # Changelog
     <BLANKLINE>
     ## 3.0.0b1 (unreleased)
+
+Do a fullrelease::
+
+    >>> sys.argv[1:] = ['--no-input']
+    >>> fullrelease.main()
+    lists of files in version control and sdist match
+    ...
+    git tag 3.0.0b1...
+    >>> githead('setup.py')
+    from setuptools import setup, find_packages
+    version = '3.0.0b2.dev0'
+    >>> githead('CHANGES.txt')
+    # Changelog
+    <BLANKLINE>
+    ## 3.0.0b2 (unreleased)
+
+Now again a breaking beta release.  Again the version should not be bumped to 4::
+
+    >>> utils.test_answer_book.set_answers(['', ''])
+    >>> sys.argv[1:] = ['--breaking', '--beta']
+    >>> bumpversion.main()
+    Traceback (most recent call last):
+    ...
+    RuntimeError: SYSTEM EXIT (code=0)
