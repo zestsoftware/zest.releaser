@@ -19,6 +19,8 @@ DEV_VERSION_TEMPLATE = "%(new_version)s%(development_marker)s"
 DATA = baserelease.DATA.copy()
 DATA.update(
     {
+        "alpha": "True if we handle an alpha version",
+        "beta": "True if we handle a beta version",
         "breaking": "True if we handle a breaking (major) change",
         "dev_version": "New version with development marker (so 1.1.dev0)",
         "dev_version_template": "Template for development version number",
@@ -26,6 +28,7 @@ DATA.update(
         "feature": "True if we handle a feature (minor) change",
         "final": "True if we handle a final release",
         "new_version": "New version, without development marker (so 1.1)",
+        "rc": "True if we handle a release candidate version",
     }
 )
 
@@ -37,18 +40,30 @@ class Postreleaser(baserelease.Basereleaser):
 
     """
 
-    def __init__(self, vcs=None, breaking=False, feature=False, final=False):
+    def __init__(
+        self,
+        vcs=None,
+        breaking=False,
+        feature=False,
+        final=False,
+        alpha=False,
+        beta=False,
+        rc=False,
+    ):
         baserelease.Basereleaser.__init__(self, vcs=vcs)
         # Prepare some defaults for potential overriding.
         self.data.update(
             dict(
+                alpha=alpha,
+                beta=beta,
                 breaking=breaking,
                 commit_msg=COMMIT_MSG,
-                feature=feature,
-                final=final,
                 dev_version_template=DEV_VERSION_TEMPLATE,
                 development_marker=self.zest_releaser_config.development_marker(),
+                feature=feature,
+                final=final,
                 history_header=HISTORY_HEADER,
+                rc=rc,
                 update_history=True,
             )
         )
@@ -79,12 +94,15 @@ class Postreleaser(baserelease.Basereleaser):
         # Clean it up to a non-development version.
         current = utils.cleanup_version(current)
         params = dict(
+            alpha=self.data["alpha"],
+            beta=self.data["beta"],
             breaking=self.data["breaking"],
+            dev_marker=self.zest_releaser_config.development_marker(),
             feature=self.data["feature"],
             final=self.data["final"],
             less_zeroes=self.zest_releaser_config.less_zeroes(),
             levels=self.zest_releaser_config.version_levels(),
-            dev_marker=self.zest_releaser_config.development_marker(),
+            rc=self.data["rc"],
         )
         suggestion = utils.suggest_version(current, **params)
         print("Current version is %s" % current)
@@ -131,6 +149,27 @@ def main():
         help="Bump for breaking release (increase major version)",
     )
     parser.add_argument(
+        "--alpha",
+        action="store_true",
+        dest="alpha",
+        default=False,
+        help="Add alpha marker",
+    )
+    parser.add_argument(
+        "--beta",
+        action="store_true",
+        dest="beta",
+        default=False,
+        help="Add beta marker",
+    )
+    parser.add_argument(
+        "--rc",
+        action="store_true",
+        dest="rc",
+        default=False,
+        help="Add rc marker",
+    )
+    parser.add_argument(
         "--final",
         action="store_true",
         dest="final",
@@ -142,10 +181,21 @@ def main():
     if len(list(filter(None, [options.breaking, options.feature, options.final]))) > 1:
         print("ERROR: Only enable one option of breaking/feature/final.")
         sys.exit(1)
+    if (
+        len(
+            list(filter(None, [options.alpha, options.beta, options.rc, options.final]))
+        )
+        > 1
+    ):
+        print("ERROR: Only enable one option of alpha/beta/rc/final.")
+        sys.exit(1)
     utils.configure_logging()
     postreleaser = Postreleaser(
         breaking=options.breaking,
         feature=options.feature,
         final=options.final,
+        alpha=options.alpha,
+        beta=options.beta,
+        rc=options.rc,
     )
     postreleaser.run()
