@@ -75,9 +75,7 @@ class BaseVersionControl:
             self.zest_releaser_config = pypi.ZestReleaserConfig()
 
     def __repr__(self):
-        return "<{} at {} {}>".format(
-            self.__class__.__name__, self.reporoot, self.relative_path_in_repo
-        )
+        return f"<{self.__class__.__name__} at {self.reporoot} {self.relative_path_in_repo}>"
 
     def is_setuptools_helper_package_installed(self):
         try:

@@ -12,7 +12,7 @@ import unittest
 
 
 def mock_dispatch(*args):
-    print("MOCK twine dispatch {}".format(" ".join(*args)))
+    print(f'MOCK twine dispatch {" ".join(*args)}')
     return True
 
 

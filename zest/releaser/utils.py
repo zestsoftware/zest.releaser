@@ -1056,7 +1056,7 @@ def get_list_item(lines):
         prefix = stripped[0]
         # Restore stripped whitespace.
         white = line.find(prefix)
-        unordered_list.append("{}{}".format(" " * white, prefix))
+        unordered_list.append(f'{" " * white}{prefix}')
     # Get sane default.
     best = "-"
     count = 0
