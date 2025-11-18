@@ -159,14 +159,6 @@ class BumpVersion(baserelease.Basereleaser):
                 rc=rc,
             )
             # First try to see if a bump is needed without prerelease.
-            # params = dict(
-            #     feature=feature,
-            #     breaking=breaking,
-            #     final=final,
-            #     less_zeroes=self.zest_releaser_config.less_zeroes(),
-            #     levels=self.zest_releaser_config.version_levels(),
-            #     dev_marker=self.zest_releaser_config.development_marker(),
-            # )
             params = dict(**base_params, **release_params)
             release_bump_needed = False
             if final:
