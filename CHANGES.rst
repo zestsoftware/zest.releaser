@@ -4,6 +4,9 @@ Changelog for zest.releaser
 9.7.0 (unreleased)
 ------------------
 
+- Support Python 3.14
+  [maurits]
+
 - ``bumpversion`` command: added ``--alpha``, ``--beta``, and ``--rc`` options
   to set the version to an alpha, beta, or release candidate version.
   [maurits]

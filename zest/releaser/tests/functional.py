@@ -44,6 +44,14 @@ def setup(test):
             # print "Mock opening", url
             package = url.replace("https://pypi.org/simple/", "")
             if package not in mock_pypi_available:
+                # On Python 3.14 we get a ResourceWarning because the HTTPError
+                # is a tempfile and we should clean it up, instead of relying
+                # on Python to do it for us.  We can fix that with:
+                # with HTTPError(...) as not_found_error:
+                #     raise not_found_error
+                # But that gives an error on Python 3.9:
+                # AttributeError: 'NoneType' object has no attribute 'closed'
+                # So we can only do that once we drop 3.9 support.
                 raise HTTPError(
                     url,
                     404,
