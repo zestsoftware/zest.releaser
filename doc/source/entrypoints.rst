@@ -234,6 +234,12 @@ version
 ``postrelease`` data dict items
 -------------------------------
 
+alpha
+    True if we handle an alpha version
+
+beta
+    True if we handle a beta version
+
 breaking
     True if we handle a breaking (major) change
 
@@ -255,6 +261,9 @@ final
 new_version
     New version, without development marker (so 1.1)
 
+rc
+    True if we handle a release candidate version
+
 ``addchangelogentry`` data dict items
 -------------------------------------
 
@@ -267,6 +276,12 @@ message
 ``bumpversion`` data dict items
 -------------------------------
 
+alpha
+    True if we handle an alpha version
+
+beta
+    True if we handle a beta version
+
 breaking
     True if we handle a breaking (major) change
 
@@ -278,6 +293,12 @@ feature
 
 final
     True if we handle a final release
+
+prerelease
+    Type of prerelease: alpha, beta, rc
+
+rc
+    True if we handle a release candidate version
 
 release
     Type of release: breaking, feature, normal, final
