@@ -1,5 +1,4 @@
-"""Do the checks and tasks that have to happen before doing a release.
-"""
+"""Do the checks and tasks that have to happen before doing a release."""
 
 from zest.releaser import baserelease
 from zest.releaser import utils
@@ -71,9 +70,7 @@ class Prereleaser(baserelease.Basereleaser):
         self._grab_history()
         if self.data["update_history"]:
             # Print changelog for this release.
-            print(
-                "Changelog entries for version {}:\n".format(self.data["new_version"])
-            )
+            print(f"Changelog entries for version {self.data['new_version']}:\n")
             print(self.data.get("history_last_release"))
         # Grab and set new version.
         self._grab_version()

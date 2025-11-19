@@ -1,6 +1,5 @@
 """Provide a base for the three releasers"""
 
-
 from zest.releaser import choose
 from zest.releaser import pypi
 from zest.releaser import utils
@@ -296,7 +295,7 @@ class Basereleaser:
             if index == 0:
                 line = f"{prefix} {line}"
             else:
-                line = "{}  {}".format(" " * len(prefix), line)
+                line = f"{' ' * len(prefix)}  {line}"
             lines.append(line)
         lines.append("")
         self.data["history_lines"][insert:insert] = lines
@@ -316,8 +315,8 @@ class Basereleaser:
         # printing text with a u'unicode marker' in front...
         pretty_nothing_changed = f'"{nothing_yet}"'
         if not utils.ask(
-            "WARNING: Changelog contains {}. Are you sure you "
-            "want to release?".format(pretty_nothing_changed),
+            f"WARNING: Changelog contains {pretty_nothing_changed}. "
+            "Are you sure you want to release?",
             default=False,
         ):
             logger.info(
@@ -344,11 +343,11 @@ class Basereleaser:
             if text in history_last_release:
                 # Found it, all is fine.
                 return
-        pretty_required = '"{}"'.format('", "'.join(required))
+        pretty_required = '", "'.join(required)
         if not utils.ask(
             "WARNING: Changelog should contain at least one of "
-            "these required strings: {}. Are you sure you "
-            "want to release?".format(pretty_required),
+            f'these required strings: "{pretty_required}". '
+            "Are you sure you want to release?",
             default=False,
         ):
             sys.exit(1)
@@ -437,7 +436,7 @@ class Basereleaser:
         prefix_message = self.zest_releaser_config.prefix_message()
         extra_message = self.zest_releaser_config.extra_message()
         if prefix_message:
-            msg = "%s %s" % (prefix_message, msg)
+            msg = f"{prefix_message} {msg}"
         if extra_message:
             msg += "\n\n%s" % extra_message
         return msg

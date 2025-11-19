@@ -1,5 +1,4 @@
-"""Do the checks and tasks that have to happen after doing a release.
-"""
+"""Do the checks and tasks that have to happen after doing a release."""
 
 from packaging.version import parse as parse_version
 from zest.releaser import baserelease
@@ -89,12 +88,11 @@ class BumpVersion(baserelease.Basereleaser):
         """Prepare self.data by asking about new dev version"""
         if self.data["prerelease"]:
             print(
-                "Checking version bump for {} release and {} prerelease.".format(
-                    self.data["release"], self.data["prerelease"]
-                )
+                f"Checking version bump for {self.data['release']} release "
+                f"and {self.data['prerelease']} prerelease."
             )
         else:
-            print("Checking version bump for {} release.".format(self.data["release"]))
+            print(f"Checking version bump for {self.data['release']} release.")
         if not utils.sanity_check(self.vcs):
             logger.critical("Sanity check failed.")
             sys.exit(1)
