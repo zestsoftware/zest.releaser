@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.7.0 (unreleased)
+9.7.0 (2025-11-19)
 ------------------
 
 - Support Python 3.14
