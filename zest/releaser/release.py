@@ -284,7 +284,8 @@ class Releaser(baserelease.Basereleaser):
         if twine_command == "register":
             pass
         elif twine_command == "upload":
-            twine_args += ("--skip-existing",)
+            # twine_args += ("--skip-existing",)
+            pass
         else:
             print(Fore.RED + "Unknown twine command: %s" % twine_command)
             sys.exit(1)
