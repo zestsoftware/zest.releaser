@@ -4,7 +4,10 @@ Changelog for zest.releaser
 9.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make compatible with ``twine`` 6.2.0+ by not using the ``--skip-existing`` flag.
+  This fixes releasing to indexes other than PyPI and TestPyPI,
+  `issue 474 <https://github.com/zestsoftware/zest.releaser/issues/474>`_.
+  [1letter]
 
 
 9.7.0 (2025-11-19)
