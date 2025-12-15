@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.7.1 (unreleased)
+9.8.0 (2025-12-15)
 ------------------
 
 - Make compatible with ``twine`` 6.2.0+ by not using the ``--skip-existing`` flag.
