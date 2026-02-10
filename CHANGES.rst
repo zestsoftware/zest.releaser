@@ -1,10 +1,12 @@
 Changelog for zest.releaser
 ===========================
 
-9.8.1 (unreleased)
+9.9.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added suport for ``path`` in ``[tool.hatch.version]``: hatch uses it for dynamic
+  version files. If found, it is used as the value for ``python-file-with-version`` in
+  zest.releaser's config.
 
 
 9.8.0 (2025-12-15)

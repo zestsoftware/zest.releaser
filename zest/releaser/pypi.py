@@ -266,6 +266,14 @@ class PyprojectTomlConfig(BaseConfig):
         with open(self.config_filename, "rb") as tomlconfig:
             self.config = tomllib.load(tomlconfig)
 
+    def _file_with_version_from_hatch(self):
+        # Hatch also has an option for a dynamic version.
+        try:
+            file_with_version = self.config["tool"]["hatch"]["version"]["path"]
+        except KeyError:
+            return None
+        return file_with_version
+
     def zest_releaser_config(self):
         if self.config is None:
             return None
@@ -275,8 +283,13 @@ class PyprojectTomlConfig(BaseConfig):
             logger.debug(
                 f"No [tool.zest-releaser] section found in the {self.config_filename}"
             )
-            return None
-        return result
+            result = {}
+        hatch_file_with_version = self._file_with_version_from_hatch()
+        if hatch_file_with_version:
+            logger.debug("Found version file path in the hatch config")
+            # Inject it as if it is a zest.releaser config option.
+            result["python-file-with-version"] = hatch_file_with_version
+        return result if result else None
 
 
 class ZestReleaserConfig:
