@@ -382,3 +382,16 @@ Enable the option:
     >>> zestreleaserconfig = pypi.ZestReleaserConfig()
     >>> zestreleaserconfig.python_file_with_version()
     'reinout/maurits.py'
+
+Hatch also has a mechanism for pointing at a file.
+
+    >>> hatch_config = """
+    ... [tool.hatch.version]
+    ... path = "src/maurits/reinout.py"
+    ... """
+    >>> with open(pypi.PYPROJECTTOML_CONFIG_FILE, 'w') as f:
+    ...    _ = f.write(hatch_config)
+    >>> os.remove(pypi.SETUP_CONFIG_FILE)
+    >>> zestreleaserconfig = pypi.ZestReleaserConfig()
+    >>> zestreleaserconfig.python_file_with_version()
+    'src/maurits/reinout.py'
