@@ -386,8 +386,6 @@ Enable the option:
 Hatch also has a mechanism for pointing at a file.
 
     >>> hatch_config = """
-    ... [tool.zest-releaser]
-    ... somesetting = "some tool.zest-releaser is needed"
     ... [tool.hatch.version]
     ... path = "src/maurits/reinout.py"
     ... """

@@ -283,13 +283,13 @@ class PyprojectTomlConfig(BaseConfig):
             logger.debug(
                 f"No [tool.zest-releaser] section found in the {self.config_filename}"
             )
-            return None
+            result = {}
         hatch_file_with_version = self._file_with_version_from_hatch()
         if hatch_file_with_version:
             logger.debug("Found version file path in the hatch config")
             # Inject it as if it is a zest.releaser config option.
             result["python-file-with-version"] = hatch_file_with_version
-        return result
+        return result if result else None
 
 
 class ZestReleaserConfig:
