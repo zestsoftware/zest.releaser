@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.8.1 (unreleased)
+9.9.0 (unreleased)
 ------------------
 
 - Added suport for ``path`` in ``[tool.hatch.version]``: hatch uses it for dynamic
