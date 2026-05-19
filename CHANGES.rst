@@ -1,7 +1,7 @@
 Changelog for zest.releaser
 ===========================
 
-9.9.1 (unreleased)
+9.9.1 (2026-05-20)
 ------------------
 
 - Fix checking if a package is on PyPI.
