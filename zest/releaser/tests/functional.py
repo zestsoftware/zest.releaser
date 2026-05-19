@@ -34,7 +34,7 @@ def setup(test):
 
     sys.exit = _exit
 
-    # Monkey the requests library for PyPI access mocking.
+    # Monkey patch the requests library for PyPI access mocking.
     test.orig_requests_head = requests.head
     test.mock_pypi_available = []
 
