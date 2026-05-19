@@ -3,8 +3,7 @@
 from build import ProjectBuilder
 from build.env import DefaultIsolatedEnv
 from colorama import Fore
-from urllib import request
-from urllib.error import HTTPError
+from packaging.utils import canonicalize_name
 
 import logging
 import os
@@ -51,12 +50,12 @@ logger = logging.getLogger(__name__)
 
 def package_in_pypi(package):
     """Check whether the package is registered on pypi"""
-    url = "https://pypi.org/simple/%s" % package
+    url = f"https://pypi.org/simple/{canonicalize_name(package)}/"
     try:
-        request.urlopen(url)
-        return True
-    except HTTPError as e:
-        logger.debug("Package not found on pypi: %s", e)
+        response = requests.head(url)
+        return response.ok
+    except requests.HTTPError as e:
+        logger.debug("Package %s not found on pypi: %s", package, e)
         return False
 
 

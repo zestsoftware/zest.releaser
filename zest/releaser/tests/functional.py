@@ -1,8 +1,6 @@
 """Set up functional test fixtures"""
 
-from io import StringIO
-from urllib import request
-from urllib.error import HTTPError
+from packaging.utils import canonicalize_name
 from zest.releaser import choose
 from zest.releaser import utils
 from zest.releaser.baserelease import NOTHING_CHANGED_YET
@@ -10,6 +8,7 @@ from zest.releaser.utils import execute_command
 from zest.releaser.utils import filename_from_test_dir
 
 import os
+import requests
 import shutil
 import sys
 import tarfile
@@ -35,38 +34,27 @@ def setup(test):
 
     sys.exit = _exit
 
-    # Monkey patch urllib for pypi access mocking.
-    test.orig_urlopen = request.urlopen
+    # Monkey patch the requests library for PyPI access mocking.
+    test.orig_requests_head = requests.head
     test.mock_pypi_available = []
 
-    def _make_mock_urlopen(mock_pypi_available):
-        def _mock_urlopen(url):
-            # print "Mock opening", url
-            package = url.replace("https://pypi.org/simple/", "")
-            if package not in mock_pypi_available:
-                # On Python 3.14 we get a ResourceWarning because the HTTPError
-                # is a tempfile and we should clean it up, instead of relying
-                # on Python to do it for us.  We can fix that with:
-                # with HTTPError(...) as not_found_error:
-                #     raise not_found_error
-                # But that gives an error on Python 3.9:
-                # AttributeError: 'NoneType' object has no attribute 'closed'
-                # So we can only do that once we drop 3.9 support.
-                raise HTTPError(
-                    url,
-                    404,
-                    "HTTP Error 404: Not Found (%s does not have any releases)"
-                    % package,
-                    None,
-                    None,
-                )
-            else:
-                answer = " ".join(mock_pypi_available)
-            return StringIO(answer)
+    class MockResponse:
+        def __init__(self, ok):
+            self.ok = ok
 
-        return _mock_urlopen
+    def _make_mock_head(mock_pypi_available):
+        def _mock_head(url):
+            package = url.replace("https://pypi.org/simple/", "").replace("/", "")
+            # package my.example has been canonicalized to my-example,
+            # so we do the same in our mock list.
+            canonical_packages = [
+                canonicalize_name(name) for name in mock_pypi_available
+            ]
+            return MockResponse(package in canonical_packages)
 
-    request.urlopen = _make_mock_urlopen(test.mock_pypi_available)
+        return _mock_head
+
+    requests.head = _make_mock_head(test.mock_pypi_available)
 
     # Extract example project
     example_tar = filename_from_test_dir("example.tar")
@@ -130,7 +118,7 @@ def setup(test):
 
 def teardown(test):
     sys.exit = test.orig_exit
-    request.urlopen = test.orig_urlopen
+    requests.head = test.orig_requests_head
     os.chdir(test.orig_dir)
     sys.argv[1:] = test.orig_argv
     shutil.rmtree(test.tempdir)
