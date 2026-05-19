@@ -4,7 +4,10 @@ Changelog for zest.releaser
 9.9.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix checking if a package is on PyPI.
+  We were for example checking this url: https://pypi.org/simple/collective.recipe.backup
+  This worked for years.  But now it should be: https://pypi.org/simple/collective-recipe-backup/
+  [maurits]
 
 
 9.9.0 (2026-02-10)
