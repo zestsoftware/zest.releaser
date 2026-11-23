@@ -18,7 +18,7 @@ htmlcov
 doc/build/
 
 .tox/
-
+.venv
 lib-python/
 lib_pypy/
 site-packages/

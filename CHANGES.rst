@@ -1,10 +1,14 @@
 Changelog for zest.releaser
 ===========================
 
-9.9.2 (unreleased)
-------------------
+9.10.0 (unreleased)
+-------------------
 
-- Nothing changed yet.
+- Allow choosing the twine repository per package.  Add a
+  ``[zest.releaser.twine_repositories]`` section to your ``~/.pypirc``
+  with lines like ``collective.sentry = collective``.  For that package this
+  wins over the ``TWINE_REPOSITORY`` environment variable.
+  [maurits]
 
 
 9.9.1 (2026-05-20)

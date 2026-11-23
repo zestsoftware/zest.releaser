@@ -2,6 +2,7 @@ from .utils import extract_zestreleaser_configparser
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
+from packaging.utils import canonicalize_name
 
 import logging
 import os
@@ -19,6 +20,9 @@ DIST_CONFIG_FILE = ".pypirc"
 SETUP_CONFIG_FILE = "setup.cfg"
 PYPROJECTTOML_CONFIG_FILE = "pyproject.toml"
 DEFAULT_REPOSITORY = "https://upload.pypi.org/legacy/"
+# Optional section in .pypirc (or setup.cfg) mapping package names to the
+# twine repository (a section name) that should be used for them.
+TWINE_REPOSITORIES_SECTION = "zest.releaser.twine_repositories"
 
 logger = logging.getLogger(__name__)
 
@@ -188,37 +192,61 @@ class PypiConfig(BaseConfig):
         if not self.omit_package_config_in_test:
             self.config.read(SETUP_CONFIG_FILE)
 
-    def twine_repository(self):
-        """Gets the repository from Twine environment variables."""
+    def twine_repository(self, package=None):
+        """Gets the twine repository to use.
+
+        If a package name is given, and the config has a
+        [zest.releaser.twine_repositories] section with an option for
+        this package, we use its value.  Otherwise we use the
+        TWINE_REPOSITORY environment variable.
+
+        Package names are compared after normalizing them, so
+        'collective.sentry' matches 'Collective_Sentry'.
+        """
+        if package and self.config is not None:
+            section = TWINE_REPOSITORIES_SECTION
+            if self.config.has_section(section):
+                wanted = canonicalize_name(package)
+                for name, repository in self.config.items(section):
+                    if canonicalize_name(name) == wanted and repository.strip():
+                        return repository.strip()
         return os.getenv("TWINE_REPOSITORY")
 
     def twine_repository_url(self):
         """Gets the repository URL from Twine environment variables."""
         return os.getenv("TWINE_REPOSITORY_URL")
 
-    def is_pypi_configured(self):
+    def is_pypi_configured(self, package=None):
         """Determine if we're configured to publish to 1+ PyPi server.
 
-        PyPi is considered to be 'configued' if the TWINE_REPOSITORY_URL is set,
+        PyPi is considered to be 'configured' if the TWINE_REPOSITORY_URL is set,
         or if we have a config which contains at least 1 PyPi server.
         """
-        servers = len(self.distutils_servers()) > 0
+        servers = len(self.distutils_servers(package=package)) > 0
         twine_url = self.twine_repository_url() is not None
         return any((servers, twine_url))
 
-    def distutils_servers(self):
+    def distutils_servers(self, package=None):
         """Return a list of known distutils servers.
+
+        If a twine repository is configured for this package, or in the
+        TWINE_REPOSITORY environment variable, only return that one.
 
         If the config has an old pypi config, remove the default pypi
         server from the list.
         """
-        twine_repository = self.twine_repository()
+        twine_repository = self.twine_repository(package=package)
 
         if twine_repository and self.config:
             # If there is no section we can't upload there
             if self.config.has_section(twine_repository):
                 return [twine_repository]
             else:
+                logger.warning(
+                    "Twine repository %r is not a section in %s.",
+                    twine_repository,
+                    self.config_filename,
+                )
                 return []
 
         # If we don't have a config we can't continue

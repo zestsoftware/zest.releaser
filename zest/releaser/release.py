@@ -192,7 +192,7 @@ class Releaser(baserelease.Basereleaser):
         if not self.zest_releaser_config.upload_pypi():
             logger.info("Upload to PyPI was disabled in the configuration.")
             return
-        if not self.pypiconfig.is_pypi_configured():
+        if not self.pypiconfig.is_pypi_configured(package=package):
             logger.error(
                 "You must have a properly configured %s file in "
                 "your home dir to upload to a Python package index.",
@@ -231,7 +231,7 @@ class Releaser(baserelease.Basereleaser):
             return
 
         # Upload to the repository in the environment or .pypirc
-        servers = self.pypiconfig.distutils_servers()
+        servers = self.pypiconfig.distutils_servers(package=package)
 
         for server in servers:
             if not self._ask_upload(package, server, register):
