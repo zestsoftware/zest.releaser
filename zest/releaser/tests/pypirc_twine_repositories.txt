@@ -1,0 +1,18 @@
+[pypi]
+username:user
+password:password
+
+[collective]
+repository:https://upload.pypi.org/legacy/
+username:__token__
+password:collective-token
+
+[plone]
+repository:https://upload.pypi.org/legacy/
+username:__token__
+password:plone-token
+
+[zest.releaser.twine_repositories]
+collective.sentry = collective
+Plone_RestAPI = plone
+some.package = nonexisting

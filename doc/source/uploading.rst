@@ -65,6 +65,20 @@ Or restrict the index servers, for example::
   index-servers =
       internal-pypi-customer1
 
+You can set the ``TWINE_REPOSITORY`` environment variable to the name of one section in
+your ``.pypirc``.  zest.releaser then only offers to upload to that server.  Since version
+9.10.0, you can choose a different section for some packages, for example
+because they need a different API token.  Add a ``[zest.releaser.twine_repositories]``
+section to your ``.pypirc`` that maps package names to section names::
+
+  [zest.releaser.twine_repositories]
+  collective.sentry = collective
+  plone.restapi = plone
+
+For these packages this setting wins over ``TWINE_REPOSITORY``; other packages are not
+affected.  Package names are normalized, so ``plone.restapi`` and ``plone-restapi``
+are the same.  The section you point to must exist in your ``.pypirc``.
+
 Note that after creating the tag we still ask you if you want to checkout that
 tag for tweaks or pypi/distutils server upload.  We could add some extra
 checks to see if that is really needed, but someone who does not have

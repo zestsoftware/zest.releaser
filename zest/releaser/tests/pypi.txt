@@ -106,6 +106,72 @@ A simple file with just a pypi section is also possible:
     ['pypi']
 
 
+Twine repository per package
+----------------------------
+
+The ``TWINE_REPOSITORY`` environment variable selects a single section
+of the config file to upload to.  Let's make sure it is not set yet:
+
+    >>> import os
+    >>> orig_twine_repository = os.environ.pop('TWINE_REPOSITORY', None)
+
+You can choose a different repository for specific packages, using a
+``[zest.releaser.twine_repositories]`` section:
+
+    >>> pypirc_twine = filename_from_test_dir('pypirc_twine_repositories.txt')
+    >>> with open(pypirc_twine) as pypifile:
+    ...    print(pypifile.read())
+    [pypi]
+    ...
+    [zest.releaser.twine_repositories]
+    collective.sentry = collective
+    Plone_RestAPI = plone
+    some.package = nonexisting
+    >>> pypiconfig = pypi.PypiConfig(config_filename=pypirc_twine, omit_package_config_in_test=True)
+
+Without a package name, or with an unlisted package, nothing changes:
+
+    >>> pypiconfig.twine_repository() is None
+    True
+    >>> pypiconfig.twine_repository(package='other.package') is None
+    True
+    >>> pypiconfig.distutils_servers(package='other.package')
+    ['pypi']
+
+For listed packages we use the configured repository.  Names are
+normalized, so dots, dashes, underscores and case do not matter:
+
+    >>> pypiconfig.twine_repository(package='collective.sentry')
+    'collective'
+    >>> pypiconfig.distutils_servers(package='collective-sentry')
+    ['collective']
+    >>> pypiconfig.distutils_servers(package='plone.restapi')
+    ['plone']
+
+The per-package setting wins over the environment variable, which is
+still used for other packages:
+
+    >>> os.environ['TWINE_REPOSITORY'] = 'pypi'
+    >>> pypiconfig.distutils_servers(package='collective.sentry')
+    ['collective']
+    >>> pypiconfig.distutils_servers(package='other.package')
+    ['pypi']
+
+A repository that has no section in the config file cannot be used:
+
+    >>> pypiconfig.distutils_servers(package='some.package')
+    []
+    >>> pypiconfig.is_pypi_configured(package='some.package')
+    False
+
+Restore the environment:
+
+    >>> if orig_twine_repository is None:
+    ...     del os.environ['TWINE_REPOSITORY']
+    ... else:
+    ...     os.environ['TWINE_REPOSITORY'] = orig_twine_repository
+
+
 Asking for making a release or not
 ----------------------------------
 
