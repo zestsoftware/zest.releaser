@@ -52,27 +52,20 @@ To be sure: the packages that you release with ``zest.releaser`` may
 very well work on other Python versions: that totally depends on your
 package.
 
-We depend on:
+Some pakages we depend on:
 
-- ``setuptools`` for the entrypoint hooks that we offer.
+- ``build`` for building the source distribution and wheel.
 
 - ``colorama`` for colorized output (some errors printed in red).
 
-- ``twine`` for secure uploading via https to pypi. Plain setuptools doesn't
-  support this.
+- ``readme_renderer`` for our ``longtest`` command.
+
+- ``twine`` for uploading to PyPI.
 
 Since version 4.0 there is a ``recommended`` extra that you can get by
 installing ``zest.releaser[recommended]`` instead of ``zest.releaser``.  It
 contains a few trusted add-ons that we feel are useful for the great majority
 of ``zest.releaser`` users:
-
-- wheel_ for creating a Python wheel that we upload to PyPI next to the standard source
-  distribution.  Wheels are the official distribution format for Python.  Since version
-  8.0.0a2 we always create wheels when the wheel package is installed, except when you
-  explicitly switch this off in the config: ``create-wheel = false``. Since 9.4.0 we
-  actually require the wheel package.  If you are sure you want "universal" wheels,
-  follow the directions from the `wheel documentation
-  <https://wheel.readthedocs.io/en/stable/user_guide.html>`_.
 
 - `check-manifest`_ checks your ``MANIFEST.in`` file for completeness,
   or tells you that you need such a file.  It basically checks if all
@@ -84,14 +77,22 @@ of ``zest.releaser`` users:
   packaging.  Mostly it performs checks on the ``setup.py`` file, like
   checking for Python version classifiers.
 
-- readme_renderer_ to check your long description in the same way as pypi does. No more
-  unformatted restructured text on your pypi page just because there was a
-  small error somewhere. Handy.
+- `zest.pocompile`_ looks for `.po` translation files and compiles them
+  to `.mo` files.  It is called when making a release, before creating the
+  distributions.  You may need to update a ``MANIFEST.in`` file to make
+  sure these files get included in a distribution.
+  Added in versiom 9.10.0.
 
-.. _wheel: https://pypi.org/project/wheel
-.. _`check-manifest`: https://pypi.org/project/check-manifest
-.. _pyroma: https://pypi.org/project/pyroma
-.. _readme_renderer: https://pypi.org/project/readme_renderer
+- `zestreleaser.towncrier`_ takes news snippets and puts them in your
+  ``CHANGES/HISTORY`` file, during the ``prerelease`` phase.
+  If you don't use towncrier_, nothing changes.
+  Added in versiom 9.10.0.
+
+.. _`check-manifest`: https://pypi.org/project/check-manifest/
+.. _pyroma: https://pypi.org/project/pyroma/
+.. _`zest.pocompile`: https://pypi.org/project/zest.pocompile/
+.. _`zestreleaser.towncrier`: https://pypi.org/project/zestreleaser.towncrier/
+.. _towncrier: https://towncrier.readthedocs.io/
 
 
 Installation
