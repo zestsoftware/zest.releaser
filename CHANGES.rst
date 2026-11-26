@@ -8,6 +8,9 @@ Changelog for zest.releaser
   ``[zest.releaser.twine_repositories]`` section to your ``~/.pypirc``
   with lines like ``collective.sentry = collective``.  For that package this
   wins over the ``TWINE_REPOSITORY`` environment variable.
+- Added ``zest.pocompile`` and ``zestreleaser.towncrier`` to the ``recommended`` extra.
+  This is expected by Plone packages.
+  If you don't have ``.po`` files and don't have any ``towncrier`` settings, this changes nothing.
   [maurits]
 
 

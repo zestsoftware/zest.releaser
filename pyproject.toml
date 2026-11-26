@@ -51,6 +51,8 @@ recommended = [
     "check-manifest",
     "pep440",
     "pyroma",
+    "zest.pocompile",
+    "zestreleaser.towncrier",
 ]
 test = [
     "zope.testing",
