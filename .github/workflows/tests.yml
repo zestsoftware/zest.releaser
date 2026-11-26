@@ -12,15 +12,17 @@ jobs:
     strategy:
       matrix:
         config:
-        # [Python version, tox env]
-        - ["3.9",   "py39"]
-        - ["3.10",   "py310"]
-        - ["3.11",   "py311"]
-        - ["3.12",   "py312"]
-        - ["3.13",   "py313"]
-        - ["pypy3.11", "pypy311"]
+        # [Python version, tox env, runner]
+        - ["3.9",      "py39",    "ubuntu-24.04"]
+        - ["3.10",     "py310",   "ubuntu-latest"]
+        - ["3.11",     "py311",   "ubuntu-latest"]
+        - ["3.12",     "py312",   "ubuntu-latest"]
+        - ["3.13",     "py313",   "ubuntu-latest"]
+        - ["3.14",     "py314",   "ubuntu-latest"]
+        - ["3.15",     "py315",   "ubuntu-latest"]
+        - ["pypy3.11", "pypy311", "ubuntu-latest"]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.config[2] }}
     name: ${{ matrix.config[1] }}
     steps:
     - uses: actions/checkout@v7
